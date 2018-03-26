@@ -363,7 +363,7 @@ public class Jsr310DateUtil {
 		public static int intervalYears(String strFixDate) {
 			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			LocalDate targetDate = LocalDate.now();
-			return fixDate.until(targetDate).getYears();
+			return targetDate.until(fixDate).getYears();
 		}
 		
 		/**
@@ -375,7 +375,7 @@ public class Jsr310DateUtil {
 		public static int intervalMonths(String strFixDate) {
 			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			LocalDate targetDate = LocalDate.now();
-			return fixDate.until(targetDate).getMonths();
+			return targetDate.until(fixDate).getMonths();
 		}
 		
 		/**
@@ -387,7 +387,7 @@ public class Jsr310DateUtil {
 		public static int intervalDays(String strFixDate) {
 			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			LocalDate targetDate = LocalDate.now();
-			return fixDate.until(targetDate).getDays();
+			return targetDate.until(fixDate).getDays();
 		}
 	}
 	
@@ -409,7 +409,7 @@ public class Jsr310DateUtil {
 		public static int intervalHours(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
 			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) fixTime.until(targetTime, ChronoUnit.HOURS);
+			return (int) targetTime.until(fixTime, ChronoUnit.HOURS);
 		}
 		
 		/**
@@ -421,7 +421,7 @@ public class Jsr310DateUtil {
 		public static int intervalMinutes(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
 			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) fixTime.until(targetTime, ChronoUnit.MINUTES);
+			return (int) targetTime.until(fixTime, ChronoUnit.MINUTES);
 		}
 		
 		/**
@@ -433,8 +433,8 @@ public class Jsr310DateUtil {
 		public static int intervalSeconds(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
 			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) fixTime.until(targetTime, ChronoUnit.SECONDS);
-		}		
+			return (int) targetTime.until(fixTime, ChronoUnit.SECONDS);
+		}
 	}
 	
 	/**
