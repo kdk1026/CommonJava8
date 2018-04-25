@@ -1,6 +1,8 @@
 package common.spring.resolver;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,6 +109,17 @@ public class ParamCollector {
 	
 	public boolean getBoolean(String key) {
 		return map.getBoolean(key);
+	}
+	
+	public List<Object> getArray(String key) {
+		@SuppressWarnings("unchecked")
+		List<Object> list = (List<Object>) map.get(key);
+		
+		if (list == null) {
+			list = new ArrayList<>();
+			list.add(map.get(key));
+		}
+		return list;
 	}
 	
 	public MultipartFile getMultipartFile(String key) {
