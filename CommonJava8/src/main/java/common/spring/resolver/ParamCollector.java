@@ -111,12 +111,13 @@ public class ParamCollector {
 		return map.getBoolean(key);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Object> getArray(String key) {
-		@SuppressWarnings("unchecked")
-		List<Object> list = (List<Object>) map.get(key);
-		
-		if (list == null) {
-			list = new ArrayList<>();
+		List<Object> list = null;
+		try {
+			list = (List<Object>) map.get(key);
+		} catch (ClassCastException e) {
+			list = new ArrayList<Object>();
 			list.add(map.get(key));
 		}
 		return list;
