@@ -94,7 +94,7 @@ public class PropertiesUtil {
 			
 			switch (type) {
 			case 0:
-				fileNmae = PROP_CLASS_PATH + propFileName;
+				fileNmae = PropertiesUtil.class.getClassLoader().getResource(PROP_CLASS_PATH + propFileName).getPath();
 				break;
 			case 1:
 				String webRootPath = request.getSession().getServletContext().getRealPath("/");
