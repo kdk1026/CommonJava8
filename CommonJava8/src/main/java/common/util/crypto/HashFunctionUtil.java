@@ -67,7 +67,7 @@ public class HashFunctionUtil {
 			}
 			strEncodedText = sb.toString();
 		} catch (NoSuchAlgorithmException e) {
-			logger.error("searchHashAlgorithm NoSuchAlgorithmException", e);
+			logger.error("", e);
 		}
 		return strEncodedText;
 	}

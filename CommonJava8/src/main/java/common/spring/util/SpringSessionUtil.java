@@ -20,7 +20,8 @@ public class SpringSessionUtil {
 	 * @param obj
 	 */
 	public static void setSessionLoginInfo(Object obj) {
-		HttpServletRequest request	= ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
 		HttpSession session = request.getSession(false);
 		session.invalidate();
 		session = request.getSession(true);
@@ -41,21 +42,24 @@ public class SpringSessionUtil {
 	 * @return
 	 */
 	public static Object getSessionLoginInfo() {
-		HttpServletRequest request	= ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
 		HttpSession session = request.getSession(false);
 		return (session == null ? null : session.getAttribute(LOGIN_SESSION_ID));
 	}
 
 
 	public static void setSessionAttribute(String sKey, Object obj) {
-		HttpServletRequest request	= ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
 		HttpSession session = request.getSession();
 
 		session.setAttribute(sKey, obj);
 	}
 
 	public static void setSessionAttribute(String sKey, Object obj, int nSecond) {
-		HttpServletRequest request	= ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
 		HttpSession session = request.getSession();
 
 		session.setAttribute(sKey, obj);
@@ -64,7 +68,8 @@ public class SpringSessionUtil {
 	}
 
 	public static Object getSessionAttribute(String sKey) {
-		HttpServletRequest request	= ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
 		HttpSession session = request.getSession(false);
 		return (session == null ? null : session.getAttribute(sKey));
 	}

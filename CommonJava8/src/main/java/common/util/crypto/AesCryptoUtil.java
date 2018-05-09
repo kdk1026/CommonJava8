@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  *        → $JAVA_HOME/jre/lib/security
  * - 패딩
  *   > NoPadding 인 경우, 평문 길이가 암호화 키와 동일해야 함
- * - base64
+ *   
+ * - Base64
  * 	 > java 8
  * </pre>
  */
@@ -66,7 +67,7 @@ public class AesCryptoUtil {
 			byte[] textBytes = cipher.doFinal(strPlainText.getBytes(CHARSET));
 			strEncryptText = Base64.getEncoder().encodeToString(textBytes);
 		} catch (Exception e) {
-			logger.error("aesEncrypt Exception", e);
+			logger.error("", e);
 		}
 		return strEncryptText;
 	}
@@ -91,7 +92,7 @@ public class AesCryptoUtil {
 			byte[] textBytes = Base64.getDecoder().decode(strEncryptText);
 			strDecryptText = new String(cipher.doFinal(textBytes), CHARSET);
 		} catch (Exception e) {
-			logger.error("aesDecrypt Exception", e);
+			logger.error("", e);
 		}
 		return strDecryptText;
 	}

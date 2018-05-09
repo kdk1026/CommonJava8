@@ -37,7 +37,8 @@ import common.util.file.NioFileUtil;
  *  - 공개키로 암호화하고, 그와 다른 비밀키로만 열 수 있는 암호화 알고리즘
  *  - RSA 기반 웹페이지 암호화 로그인
  *    > http://kwon37xi.egloos.com/4427199
- *  - base64
+ *    
+ *  - Base64
  *    > java 8
  * </pre>
  */

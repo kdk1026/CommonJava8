@@ -1,12 +1,22 @@
 package common.util.crypto.seed;
 
 import java.io.IOException;
-
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <pre>
+ * SEED ECB 암호화
+ * 
+ * - 암호화 키
+ * > 128비트(16자)
+ * 
+ * - Base64
+ * 	 > java 8
+ * </pre>
+ */
 public class SeedEcbUtil {
 	
 	private SeedEcbUtil() {
@@ -33,7 +43,7 @@ public class SeedEcbUtil {
 			int nDataLen = bData.length;
 			bCipher = KISA_SEED_ECB.SEED_ECB_Encrypt(bKey, bData, 0, nDataLen);
 
-			sEncData = DatatypeConverter.printBase64Binary(bCipher);
+			sEncData = new String(Base64.getEncoder().encode(bCipher));
 		} catch (Exception e) {
 			logger.error("", e);
 		}
@@ -54,7 +64,7 @@ public class SeedEcbUtil {
 			byte[] bCipher = new byte[50];
 			byte[] bPlain = new byte[16];
 			
-			bCipher = DatatypeConverter.parseBase64Binary(sEncData);
+			bCipher = Base64.getDecoder().decode(sEncData);
 			
 			bKey = setPadding(bKey, 16);
 			byte[] bData = bCipher;
