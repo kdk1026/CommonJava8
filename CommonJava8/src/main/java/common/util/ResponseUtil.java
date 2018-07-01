@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 
 public class ResponseUtil {
 	
@@ -56,7 +55,7 @@ public class ResponseUtil {
 	}
 	
 	public static void setJsonResponse(HttpServletResponse response, String message) throws IOException {
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		response.setContentType("application/json");
 		response.setCharacterEncoding(UTF8);
 		response.getWriter().write(message);
 	}

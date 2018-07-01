@@ -31,9 +31,6 @@ ext {
 	web = [
 		servletVersion: '3.1.0'
 	]
-	spring = [
-		springVersion: '4.3.14.RELEASE'
-	]
 	httpclientVersion = '4.5.5'
 	log = [
 		slf4jVersion: '1.7.5',
@@ -65,10 +62,6 @@ dependencies {
 		 exclude module: 'slf4j-api'
 	}
 
-/* Spring */
-	// https://mvnrepository.com/artifact/org.springframework/spring-webmvc
-	compile group: 'org.springframework', name: 'spring-webmvc', version: spring.springVersion
-	
 /* Apache */
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
@@ -154,7 +147,6 @@ dependencies {
     }
     
 /* Test */
-	testCompile group: 'org.springframework', name: 'spring-test', version: spring.springVersion
 	testCompile group: 'junit', name: 'junit', version: junitVersion
 }
 
