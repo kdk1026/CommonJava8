@@ -1,6 +1,7 @@
 package common.util.file;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +23,28 @@ public class NioFileTypeUtil {
 	
 	
 	/**
+	 * <pre>
+	 * 파일 MIME Type 구하기
+	 *   - Apache Tika 사용
+	 * </pre>
+	 * @param is
+	 * @return
+	 */
+	public static String getFileMimeTypeTika(InputStream is) {
+		String mimeType = "";
+		Tika tika = new Tika();
+		
+		try {
+			mimeType = tika.detect(is);
+			
+		} catch (IOException e) {
+			logger.error("", e);
+		}
+		
+		return mimeType;
+	}
+	
+	/**
 	 * 파일 MIME Type 구하기
 	 * @param filePath
 	 * @return
@@ -33,7 +56,7 @@ public class NioFileTypeUtil {
 		try {
 			mimeType = Files.probeContentType(path);
 		} catch (IOException e) {
-			logger.error("getFileMimeType IOException", e);
+			logger.error("", e);
 		}
 		
 		return mimeType;
@@ -54,7 +77,7 @@ public class NioFileTypeUtil {
 		try {
 			mimeType = new NioFileTypeDetector().probeContentType(path);
 		} catch (IOException e) {
-			logger.error("getFileMimeTypeTika IOException", e);
+			logger.error("", e);
 		}
 		
 		return mimeType;
