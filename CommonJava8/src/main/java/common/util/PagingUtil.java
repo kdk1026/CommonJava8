@@ -130,6 +130,14 @@ public class PagingUtil {
 		this.end = this.currentPage * this.pagePerRow;
     	return this.end;
     }
+	
+	public int getStart() {
+		return start;
+	}
+
+	public int getEnd() {
+		return end;
+	}
 
 	@Override
 	public String toString() {
