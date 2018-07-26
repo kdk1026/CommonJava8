@@ -60,32 +60,29 @@ public class NioNonBloackingSocketServer {
 	public void execute(Selector selector) throws IOException {
 		logger.info("Trying to connect to server : NioSocketServer");
 		
-		// TODO : 쓰레드 확인 
-//		while (true) {
-			selector.select();
-			Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+		selector.select();
+		Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+		
+		while (it.hasNext()) {
+			SelectionKey selectionKey = it.next();
+			SocketChannel clientSocketChannel = null;
 			
-			while (it.hasNext()) {
-				SelectionKey selectionKey = it.next();
-				SocketChannel clientSocketChannel = null;
+			if (selectionKey.isAcceptable()) {
+				clientSocketChannel = serverSocketChannel.accept();
+				clientSocketChannel.configureBlocking(false);
+				clientSocketChannel.register(selector, SelectionKey.OP_READ);
+			} 
+			else if(selectionKey.isReadable()) {
+				clientSocketChannel = (SocketChannel) selectionKey.channel();
+				receivedFromClient(clientSocketChannel);
 				
-				if (selectionKey.isAcceptable()) {
-					clientSocketChannel = serverSocketChannel.accept();
-					clientSocketChannel.configureBlocking(false);
-					clientSocketChannel.register(selector, SelectionKey.OP_READ);
-				} 
-				else if(selectionKey.isReadable()) {
-					clientSocketChannel = (SocketChannel) selectionKey.channel();
-					receivedFromClient(clientSocketChannel);
-					
-					if (sRecvMsg.length() > 0) {
-						sendToClient(clientSocketChannel);
-					}
+				if (sRecvMsg.length() > 0) {
+					sendToClient(clientSocketChannel);
 				}
-				
-				it.remove();
 			}
-//		}
+			
+			it.remove();
+		}
 	}
 	
 	private void receivedFromClient(SocketChannel clientSocketChannel) throws IOException {

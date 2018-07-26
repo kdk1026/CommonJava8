@@ -30,7 +30,7 @@ public class ByteUtils {
 				}
 			}
 		} catch (Exception e) {
-			logger.error("getByteLength Exception", e);
+			logger.error("", e);
 		}
 		return nByteLen;
 	}
@@ -51,7 +51,7 @@ public class ByteUtils {
 				nByteLen += (String.valueOf(map.get(key))).getBytes(sEncoding).length;
 			}
 		} catch (Exception e) {
-			logger.error("getByteLength Exception", e);
+			logger.error("", e);
 		}
 		return nByteLen;
 	}

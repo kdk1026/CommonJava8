@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class ByteStringUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
 
-	public static final String UTF_8 = "UTF-8";
-	public static final String EUC_KR = "EUC-KR";
+	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
+	public static final String EUC_KR = StandardCharsets.UTF_8.toString();
 	
 	public static byte[] toBytes(String str) {
 		return str.getBytes();
@@ -33,7 +34,7 @@ public class ByteStringUtils {
 			bByte = str.getBytes(charsetName);
 			
 		} catch (UnsupportedEncodingException e) {
-			logger.error("toBytes UnsupportedEncodingException", e);
+			logger.error("", e);
 		}
 	
 		return bByte;
@@ -67,7 +68,7 @@ public class ByteStringUtils {
 			nLen = str.getBytes(charsetName).length;
 			
 		} catch (UnsupportedEncodingException e) {
-			logger.error("getByteLength UnsupportedEncodingException", e);
+			logger.error("", e);
 		}
 		
 		return nLen;
@@ -87,7 +88,7 @@ public class ByteStringUtils {
 			resFlag = strByte > maxByte;
 			
 		} catch (Exception e) {
-			logger.error("isByteOver Exception", e);
+			logger.error("", e);
 		}
 		
 		return resFlag;
@@ -108,7 +109,7 @@ public class ByteStringUtils {
 			resFlag = strByte > maxByte;
 			
 		} catch (Exception e) {
-			logger.error("isByteOver Exception", e);
+			logger.error("", e);
 		}
 		
 		return resFlag;
@@ -129,7 +130,7 @@ public class ByteStringUtils {
 			bResData = sData.getBytes(charsetName); 
 			
 		} catch (UnsupportedEncodingException e) {
-			logger.error("toByteEncoding UnsupportedEncodingException", e);
+			logger.error("", e);
 		}
 		
 		return bResData;
@@ -173,7 +174,7 @@ public class ByteStringUtils {
 			}
 			
 		} catch (Exception e) {
-			logger.error("checkByteEucKr Exception", e);
+			logger.error("", e);
 		}
 		
 		return nChkByte;
@@ -218,7 +219,7 @@ public class ByteStringUtils {
 			sRes = new String(bByte, nStartIdx, nEndIdx, EUC_KR);
 			
 		} catch (UnsupportedEncodingException e) {
-			logger.error("subStrByteEucKr UnsupportedEncodingException", e);
+			logger.error("", e);
 		}
 		
 		return sRes;
@@ -275,7 +276,7 @@ public class ByteStringUtils {
 			sRes = cBuf.toString();
 			
 		} catch (Exception e) {
-			logger.error("subStrByteBufferEucKr Exception", e);
+			logger.error("", e);
 		}
 		
 		return sRes;
@@ -296,7 +297,7 @@ public class ByteStringUtils {
 		try {
 			buf = ByteBuffer.wrap(sData.getBytes(charsetName));
 		} catch (UnsupportedEncodingException e) {
-			logger.error("subStrByteBuffer Exception", e);
+			logger.error("", e);
 		}
 		
 		if (buf != null) {
@@ -313,7 +314,7 @@ public class ByteStringUtils {
 				try {
 					str = new String(bResData, charsetName).trim();
 				} catch (UnsupportedEncodingException e) {
-					logger.error("subStrByteBuffer Exception", e);
+					logger.error("", e);
 				}
 				resList.add(str);
 				

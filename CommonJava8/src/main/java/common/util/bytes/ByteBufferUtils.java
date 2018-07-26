@@ -24,7 +24,7 @@ public class ByteBufferUtils {
 		try {
 			b = str.getBytes(sEncoding);
 		} catch (UnsupportedEncodingException e) {
-			logger.error("toByteBufferString UnsupportedEncodingException", e);
+			logger.error("", e);
 		}
 		
 		if (b == null) {
@@ -41,7 +41,7 @@ public class ByteBufferUtils {
 			try {
 				nByteLen += s.getBytes(sEncoding).length;
 			} catch (UnsupportedEncodingException e) {
-				logger.error("toByteBufferString UnsupportedEncodingException1", e);
+				logger.error("", e);
 			}
 		}
 		
@@ -51,7 +51,7 @@ public class ByteBufferUtils {
 			try {
 				buffer.put(s.getBytes(sEncoding));
 			} catch (UnsupportedEncodingException e) {
-				logger.error("toByteBufferString UnsupportedEncodingException2", e);
+				logger.error("", e);
 			}
 		}
 		
@@ -69,7 +69,7 @@ public class ByteBufferUtils {
 			}
 			
 		} catch (Exception e) {
-			logger.error("toByteBufferObject Exception", e);
+			logger.error("", e);
 		}
 		
 		ByteBuffer buffer = ByteBuffer.allocate(nByteLen);
@@ -81,7 +81,7 @@ public class ByteBufferUtils {
 			}
 			
 		} catch (Exception e) {
-			logger.error("toByteBufferObject Exception", e);
+			logger.error("", e);
 		}
 		
 		buffer.flip();
@@ -99,7 +99,7 @@ public class ByteBufferUtils {
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
 			} catch (Exception e) {
-				logger.error("toByteBufferObject Exception1", e);
+				logger.error("", e);
 			}
 		}
 		
@@ -112,7 +112,7 @@ public class ByteBufferUtils {
 					buffer.put(f.get(obj).toString().getBytes(sEncoding));
 				}
 			} catch (Exception e) {
-				logger.error("toByteBufferObject Exception2", e);
+				logger.error("", e);
 			}
 		}
 		
@@ -137,7 +137,7 @@ public class ByteBufferUtils {
 			try {
 				buffer.put(String.valueOf(map.get(sKey)).getBytes(sEncoding));
 			} catch (UnsupportedEncodingException e) {
-				logger.error("toByteBufferMap UnsupportedEncodingException", e);
+				logger.error("", e);
 			}
 		}
 		
@@ -167,7 +167,7 @@ public class ByteBufferUtils {
 				try {
 					buffer.put(String.valueOf(map.get(sKey)).getBytes(sEncoding));
 				} catch (UnsupportedEncodingException e) {
-					logger.error("toByteBufferMap UnsupportedEncodingException", e);
+					logger.error("", e);
 				}
 			}
 		}
