@@ -146,6 +146,7 @@ dependencies {
         exclude module: 'log4j'
     }
     
+    
 /* Test */
 	testCompile group: 'junit', name: 'junit', version: junitVersion
 }

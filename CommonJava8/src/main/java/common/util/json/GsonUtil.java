@@ -32,7 +32,10 @@ public class GsonUtil {
 	public static String converterMapToJsonStr(Map<String, Object> map) {
 		String jsonStr = "";
 
-		Gson gson = new Gson();
+		/*
+		 * XXX : <pre>유니코드 문제로 new Gson() 대신 new GsonBuilder().disableHtmlEscaping().create() 사용
+		 */
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			jsonStr = gson.toJson(map);
 		} catch (Exception e) {
@@ -44,7 +47,7 @@ public class GsonUtil {
 	public static String converterListToJsonStr(List<Map<String, Object>> list) {
 		String jsonStr = "";
 
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			jsonStr = gson.toJson(list);
 		} catch (Exception e) {
@@ -57,7 +60,7 @@ public class GsonUtil {
 	public static Map<String, Object> converterJsonStrToMap(String jsonStr) {
 		Map<String, Object> map = new HashMap<>();
 
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			map = gson.fromJson(jsonStr, Map.class);
 		} catch (Exception e) {
@@ -69,7 +72,7 @@ public class GsonUtil {
 	public static JsonObject converterJsonStrToJsonObj(String jsonStr) {
 		JsonObject jsonObj = null;
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			jsonObj = gson.fromJson(jsonStr, JsonObject.class);
 		} catch (Exception e) {
@@ -82,7 +85,7 @@ public class GsonUtil {
 	public static List<Map<String, Object>> converterJsonStrToList(String jsonArrStr) {
 		List<Map<String, Object>> list = new ArrayList<>();
 
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			list = gson.fromJson(jsonArrStr, List.class);
 		} catch (Exception e) {
@@ -94,7 +97,7 @@ public class GsonUtil {
 	public static JsonArray converterJsonStrToJsonArray(String jsonArrStr) {
 		JsonArray jsonArray = null;
 		
-		Gson gson = new Gson();
+		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 		try {
 			jsonArray = gson.fromJson(jsonArrStr, JsonArray.class);
 		} catch (Exception e) {

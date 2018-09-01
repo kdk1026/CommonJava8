@@ -377,6 +377,7 @@ public class RsaCryptoUtil {
 		}
 	}
 	
+	/*
 	public static void main(String[] args) {
 		String plainText = "admin!@34";
 		
@@ -405,5 +406,6 @@ public class RsaCryptoUtil {
 		boolean isVerify = verifySignature(decryptText, sSign, publicKey);
 		logger.debug("\n{}\n{}\n{}", encryptText, decryptText, isVerify);
 	}
+	*/
 	
 }
