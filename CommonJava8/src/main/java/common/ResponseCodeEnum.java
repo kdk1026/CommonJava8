@@ -2,7 +2,7 @@ package common;
 
 import java.text.MessageFormat;
 
-public enum ResponseCodeEnum {
+public enum ResponseCodeEnum { 
 	
 	SUCCESS("0000", "처리 성공"),
 	ERROR("9999", "처리 실패 (기타 오류, 알 수 없는 오류)"),
