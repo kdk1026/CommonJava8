@@ -1,143 +1,157 @@
+/**
+ * 
+ */
 package common.util.map;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Enumeration;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @since 2018. 9. 3.
+ * @author 김대광
+ * @Description	: Commons lang, beanutils Standard 
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * 2018. 9. 3. 김대광	최초작성
+ * </pre>
+ */
 public class MapUtil {
-	
-	private MapUtil() {
-		super();
-	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(MapUtil.class);
 
-	public static boolean isBlank(Map<String, Object> dataMap, String key) {
-		String str = (String) dataMap.get(key);
-		return (str == null) || (str.trim().length() == 0);
+	private MapUtil() {
+		super();
 	}
 
 	/**
-	 * 요청 파라미터를 Map에 설정
-	 * @param request
-	 * @return
-	 */
-	public static Map<String, Object> setReqParamToMap(HttpServletRequest request) {
-		Map<String, Object> commandMap = new HashMap<>();
-		Enumeration<?> paramEnum = request.getParameterNames();
-
-		while (paramEnum.hasMoreElements()) {
-			String key = (String) paramEnum.nextElement();
-			Object[] values = request.getParameterValues(key);
-			commandMap.put(key, (values.length > 1) ? values:values[0]);
-		}
-		return commandMap;
-	}
-
-	/**
-	 * 요청 파라미터를 Map에 설정 후, 값이 null인 Key에 기본 값 설정
-	 * @param request
-	 * @param commandMap
-	 * @param nameArray
-	 */
-	public static Map<String, Object> setReqParamToDefaultValMap(HttpServletRequest request,
-			String[] nameArray, String str) {
-		Map<String, Object> commandMap = setReqParamToMap(request);
-
-		for (String key : nameArray) {
-			Object value = request.getParameter(key);
-			commandMap.put(key, (value != null) ? value:str);
-		}
-		return commandMap;
-	}
-
-	/**
-	 * 해당 Map을 해당 Object로 변환
-	 * @param map
+	 * @Description
+	 * <pre>
+	 * Object를 Map<String, String> 으로 변환
+	 * </pre>
 	 * @param obj
 	 * @return
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 3. 김대광	최초작성
+	 * </pre>
 	 */
-	public static Object convertMapToObject(Map<String, Object> map, Object obj) {
-		String key = "";
-		String setMethodStr = "set";
-		String methodStr = "";
-
-		Iterator<String> it = map.keySet().iterator();
-		while ( it.hasNext() ) {
-			key = it.next();
-			methodStr = setMethodStr+key.substring(0,1).toUpperCase()+key.substring(1);
-			try {
-				Method[] methods = obj.getClass().getDeclaredMethods();
-				for (int i=0; i<methods.length; i++) {
-					if ( methodStr.equals(methods[i].getName()) ) {
-						methods[i].invoke(obj, map.get(key));
-					}
-				}
-			} catch (Exception e) {
-				logger.error("convertMapToObject Exception", e);
-			}
+	public static Map<String, String> objectToMap(Object obj) {
+		Map<String, String> map = null;
+		
+		try {
+			map = BeanUtils.describe(obj);
+			map.remove("class");
+			
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			logger.error("", e);
 		}
-		return obj;
+		
+		return map;
 	}
 	
 	/**
-	 * 해당 Map을 해당 Struct로 변환
+	 * @Description
+	 * <pre>
+	 * Map의 Key가 Blank인지 체크
+	 * </pre>
 	 * @param map
-	 * @param obj
+	 * @param key
 	 * @return
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 3. 김대광	최초작성
+	 * </pre>
 	 */
-	public static Object convertMapToStruct(Map<String, Object> map, Object obj) {
+	public static boolean isBlank(Map<String, Object> map, String key) {
+		if ( map.get(key) == null ) {
+			return true;
+		} else {
+			return StringUtils.isBlank( String.valueOf(map.get(key)) );
+		}
+	}
+	
+	/**
+	 * @Description
+	 * <pre>
+	 * Map에 Key가 없으면 Blank 처리
+	 * </pre>
+	 * @param map
+	 * @param keys
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 3. 김대광	최초작성
+	 * </pre>
+	 */
+	public static void notContainsKeyToBlank(Map<String, Object> map, String ... keys) {
 		String key = "";
-
+		
+		for (int i=0; i < keys.length; i++) {
+			key = keys[i];
+		
+			if ( !map.containsKey(key) ) {
+				map.put(key, "");
+			}
+		}
+	}
+	
+	/**
+	 * @Description
+	 * <pre>
+	 * Null을 Blank 처리
+	 * </pre>
+	 * @param map
+	 * @param keys
+	 * @since 1.8
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 3. 김대광	최초작성
+	 * </pre>
+	 */
+	public static void nullToBlank(Map<String, Object> map) {
+		String key = "";
+		
 		Iterator<String> it = map.keySet().iterator();
-		while ( it.hasNext() ) {
+		while (it.hasNext()) {
 			key = it.next();
 			
-			try {
-				Field[] fields = obj.getClass().getDeclaredFields();
-				String name = "";
-				Class<?> cls = obj.getClass();
-				
-				for (int i=0; i<fields.length; i++) {
-					name = fields[i].getName();
-					
-					if ( key.equals(name) ) {
-						cls.getField(name).set(obj, map.get(key));
-					}
-				}
-			} catch (Exception e) {
-				logger.error("", e);
-			}
+			map.computeIfAbsent(key, k -> "");
 		}
-		return obj;
 	}
-
+	
 	/**
-	 * 해당 Object를 해당 Map에 변환하여 추가
-	 * @param obj
-	 * @param commandMap
-	 * @return
+	 * @Description
+	 * <pre>
+	 * Space를 Blank 처리
+	 * </pre>
+	 * @param map
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 3. 김대광	최초작성
+	 * </pre>
 	 */
-	public static Map<String, Object> addObjectToMap(Object obj, Map<String, Object> commandMap) {
-		try {
-			Field[] fields = obj.getClass().getDeclaredFields();
-			for (int i=0; i<fields.length; i++) {
-				fields[i].setAccessible(true);
-				String key = fields[i].getName();
-				Object value = fields[i].get(obj);
-				commandMap.put(key, (value != null) ? value:"");
+	public static void spaceToBlank(Map<String, Object> map) {
+		String key = "";
+		
+		Iterator<String> it = map.keySet().iterator();
+		while (it.hasNext()) {
+			key = it.next();
+			
+			if (" ".equals( String.valueOf(map.get(key)) )) {
+				map.put(key, "");
 			}
-		} catch (Exception e) {
-			logger.error("addObjectToMap Exception", e);
 		}
-		return commandMap;
 	}
+	
 }

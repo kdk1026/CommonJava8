@@ -72,6 +72,7 @@ public class StringUtilsSub {
 	}
 	
 	/**
+	 * StringEscapeUtils.escapeHtml4 권장
 	 * XSS 공격 대상 HTML 특수문자를 아스키 코드로 변환
 	 * @param str
 	 * @return
@@ -87,6 +88,7 @@ public class StringUtilsSub {
 	}
 
 	/**
+	 * StringEscapeUtils.unescapeHtml4 권장
 	 * XSS 공격 대상 아스키 코드를 HTML 특수문자로 변환
 	 * @param str
 	 * @return

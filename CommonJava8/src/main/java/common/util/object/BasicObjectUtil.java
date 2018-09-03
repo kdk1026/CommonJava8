@@ -1,24 +1,33 @@
-package common.util;
+package common.util.object;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ObjectUtil {
+public class BasicObjectUtil {
 	
-	private ObjectUtil() {
+	private BasicObjectUtil() {
 		super();
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
 
+	/**
+	 * Object의 Field가 Blank인지 체크 
+	 * @param obj
+	 * @param fieldName
+	 * @return
+	 */
 	public static boolean isBlank(Object obj, String fieldName) {
 		String str = null;
 		try {
@@ -31,7 +40,50 @@ public class ObjectUtil {
 		}
 		return (str == null) || (str.trim().length() == 0);
 	}
+	
+	/**
+	 * Object의 Field명 추출 
+	 * @param obj
+	 * @return
+	 */
+	public static List<String> getFieldNames(Object obj) {
+		List<String> list = new ArrayList<>();
+		
+		Field[] fields = obj.getClass().getDeclaredFields();
+		for (Field f : fields) {
+			f.setAccessible(true);
+			list.add(f.getName());
+		}
+		
+		return list;
+	}
 
+	/**
+	 * 해당 Object를 Map으로 변환
+	 * @param obj
+	 * @param map
+	 * @throws Exception
+	 */
+	public static Map<String, Object> convertObjectToMap(Object obj) {
+		Map<String, Object> commandMap = new HashMap<>();
+
+		try {
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (int i=0; i<fields.length; i++) {
+				fields[i].setAccessible(true);
+				String key = fields[i].getName();
+				Object value = fields[i].get(obj);
+				
+				if ( !key.equals("serialVersionUID") ) {
+					commandMap.put(key, (value != null) ? value:"");
+				}
+			}
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return commandMap;
+	}
+	
 	/**
 	 * 요청 파라미터를 해당 Object에 설정
 	 * @param request
@@ -60,31 +112,28 @@ public class ObjectUtil {
 		}
 		return obj;
 	}
-
+	
 	/**
-	 * 해당 Object를 Map으로 변환
+	 * Object를 Http Response에 설정
 	 * @param obj
-	 * @param map
-	 * @throws Exception
+	 * @param response
+	 * @return
 	 */
-	public static Map<String, Object> convertObjectToMap(Object obj) {
-		Map<String, Object> commandMap = new HashMap<>();
-
+	public static void setHttpResponse(Object obj, HttpServletResponse response) {
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
 			for (int i=0; i<fields.length; i++) {
 				fields[i].setAccessible(true);
 				String key = fields[i].getName();
 				Object value = fields[i].get(obj);
-				
+
 				if ( !key.equals("serialVersionUID") ) {
-					commandMap.put(key, (value != null) ? value:"");
+					response.setHeader(key, String.valueOf(value) );
 				}
 			}
 		} catch (Exception e) {
 			logger.error("", e);
 		}
-		return commandMap;
 	}
 
 }

@@ -1,4 +1,4 @@
-package common.util;
+package common.util.valid;
 
 public class ValidUtil {
 

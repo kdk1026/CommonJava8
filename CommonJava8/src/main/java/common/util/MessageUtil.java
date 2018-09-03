@@ -27,7 +27,7 @@ public class MessageUtil {
 			prop.load(is);
 			is.close();
 		} catch (Exception e) {
-			logger.error("getAge ParseException", e);
+			logger.error("", e);
 		}
 		return prop;
 	}
