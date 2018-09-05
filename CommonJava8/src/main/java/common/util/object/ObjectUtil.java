@@ -169,4 +169,64 @@ public class ObjectUtil {
 		}
 	}
 	
+	/**
+	 * @Description
+	 * <pre>
+	 * Object의 필드 변수 길이 구함
+	 * </pre>
+	 * @param obj
+	 * @param sEncoding
+	 * @return
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 4. 김대광	최초작성
+	 * </pre>
+	 */
+	public static int getByteLength(Object obj, String sEncoding) {
+		int nByteLen = 0;
+		try {
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (Field f : fields) {
+				if (f.get(obj) != null) {
+					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return nByteLen;
+	}
+
+	/**
+	 * @Description
+	 * <pre>
+	 * Object의 필드 변수 길이 구함
+	 *  - 해당 필드를 제외한 길이 구함
+	 * </pre>
+	 * @param obj
+	 * @param sFieldName
+	 * @param sEncoding
+	 * @return
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 9. 4. 김대광	최초작성
+	 * </pre>
+	 */
+	public static int getByteLength(Object obj, String sFieldName, String sEncoding) {
+		int nByteLen = 0;
+		try {
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (Field f : fields) {
+				if ( f.get(obj) != null  && !f.getName().equals(sFieldName) ) {
+					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
+				}
+			}
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return nByteLen;
+	}
+	
 }

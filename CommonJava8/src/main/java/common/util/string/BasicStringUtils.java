@@ -3,9 +3,9 @@ package common.util.string;
 /**
  * commons.lang 라이브러리 사용 권장
  */
-public class StringUtils {
+public class BasicStringUtils {
 	
-	private StringUtils() {
+	private BasicStringUtils() {
 		super();
 	}
 

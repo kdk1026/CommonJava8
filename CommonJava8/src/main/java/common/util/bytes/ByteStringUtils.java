@@ -23,23 +23,6 @@ public class ByteStringUtils {
 	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
 	public static final String EUC_KR = StandardCharsets.UTF_8.toString();
 	
-	public static byte[] toBytes(String str) {
-		return str.getBytes();
-	}
-	
-	public static byte[] toBytes(String str, String charsetName) {
-		byte[] bByte = null;
-		
-		try {
-			bByte = str.getBytes(charsetName);
-			
-		} catch (UnsupportedEncodingException e) {
-			logger.error("", e);
-		}
-	
-		return bByte;
-	}
-	
 	/**
 	 * <pre>
 	 * 문자열의 Bytes 길이 구하기
