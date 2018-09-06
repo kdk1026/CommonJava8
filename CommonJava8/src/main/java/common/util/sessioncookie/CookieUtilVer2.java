@@ -24,12 +24,12 @@ public class CookieUtilVer2 {
 		cookie.setMaxAge(maxAge);
 		cookie.setPath("/");
 		
-		if (isUseJs) {
-			cookie.setHttpOnly(true);
-		}
-		
 		if (isSecure) {
 			cookie.setSecure(true);
+		}
+		
+		if (!isUseJs) {
+			cookie.setHttpOnly(true);
 		}
 		
 		response.addCookie(cookie);
