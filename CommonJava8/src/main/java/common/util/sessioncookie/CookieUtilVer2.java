@@ -13,23 +13,26 @@ public class CookieUtilVer2 {
 	/**
 	 * Servlet 3.0 쿠키 설정
 	 * @param response
-	 * @param cookieName
-	 * @param cookieValue
-	 * @param maxAge
+	 * @param name
+	 * @param value
+	 * @param expiry
 	 * @param isUseJs
 	 * @param isSecure
+	 * @param domain
 	 */
-	public static void addCookie(HttpServletResponse response, String cookieName, String cookieValue, int maxAge, boolean isUseJs, boolean isSecure) {
-		Cookie cookie = new Cookie(cookieName, cookieValue);
-		cookie.setMaxAge(maxAge);
+	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, boolean isUseJs, String domain) {
+		Cookie cookie = new Cookie(name, value);
+		cookie.setMaxAge(expiry);
 		cookie.setPath("/");
 		
-		if (isSecure) {
-			cookie.setSecure(true);
-		}
+		cookie.setSecure(isSecure);
 		
 		if (!isUseJs) {
 			cookie.setHttpOnly(true);
+		}
+		
+		if ( (domain != null) && (domain.trim().length() > 0) ) {
+			cookie.setDomain(domain);
 		}
 		
 		response.addCookie(cookie);
