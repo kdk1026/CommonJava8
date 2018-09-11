@@ -1,5 +1,6 @@
 package common.util.date;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -75,6 +76,17 @@ public class Jsr310DateUtil {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.format(DateTimeFormatter.ofPattern(dateFormat));
 		}
+		
+		/**
+		 * yyyyMMddHHmmss 형식의 String 타입을 해당 포맷의 String 타입으로 반환
+		 * @param strDate
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String getStringDateTime(String strDate, String dateFormat) {
+			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+		}
 	}
 	
 	/**
@@ -122,7 +134,18 @@ public class Jsr310DateUtil {
 		public static String getDateToString(Date date, String dateFormat) {
 			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			return localDate.format(DateTimeFormatter.ofPattern(dateFormat));
-		}		
+		}
+		
+		/**
+		 * LocalDateTime 타입 객체를 해당 포맷의 String 타입으로 반환
+		 * @param localDateTime
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String getLocalDateTimeToString(LocalDateTime localDateTime, String dateFormat) {
+			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+		}
+		
 	}
 	
 	/**
@@ -537,6 +560,54 @@ public class Jsr310DateUtil {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		}
+	}
+	
+	/**
+	 * Unix Timestamp 
+	 */
+	public static class UnixTimestamp {
+
+		private UnixTimestamp() {
+			super();
+		}
+		
+		/**
+		 * System.currentTimeMillis() 동일하나 ms에 미세한 차이 있음
+		 * @return
+		 */
+		public static long currentMillis() {
+			return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+		}
+		
+		/**
+		 * milliseconds to LocalDateTime
+		 * @param mills
+		 * @return
+		 */
+		public static LocalDateTime millsToLocalDateTime(long mills) {
+			return Instant.ofEpochMilli(mills).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		}
+		
+		/**
+		 * <pre>
+		 * current Unix Timestamp
+		 * https://www.epochconverter.com/
+		 * </pre>
+		 * @return
+		 */
+		public static long getUnixTimestamp() {
+			return currentMillis() / 1000;
+		}
+		
+		/**
+		 * timestamp to DateTime
+		 * @param timestamp (sec)
+		 * @return
+		 */
+		public static LocalDateTime timestampToDateTime(long timestamp) {
+			return Instant.ofEpochSecond(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		}
+		
 	}
 	
 }
