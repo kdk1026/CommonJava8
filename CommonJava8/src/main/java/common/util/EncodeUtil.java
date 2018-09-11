@@ -17,24 +17,20 @@ public class EncodeUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
 
 	/**
-	 * <pre>
 	 * Base64 인코딩
-	 *   - java 8
-	 * </pre>
 	 * @param binaryData
 	 * @return
+	 * @since 1.8
 	 */
 	public static String encodeBase64(byte[] binaryData) {
 		return Base64.getEncoder().encodeToString(binaryData);
 	}
 
 	/**
-	 * <pre>
 	 * Base64 디코딩
-	 *   - java 8
-	 * </pre>
 	 * @param binaryData
 	 * @return
+	 * @since 1.8
 	 */
 	public static byte[] decodeBase64(String base64Data) {
 		return Base64.getDecoder().decode(base64Data);
