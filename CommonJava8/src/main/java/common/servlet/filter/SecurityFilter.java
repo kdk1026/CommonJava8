@@ -42,7 +42,7 @@ public class SecurityFilter implements Filter {
 		/**	X-Frame-Options
 		 * 		- DENY, SAMEORIGIN, ALLO-FROM origin
 		 * */
-		response.setHeader("X-Frame-Options", "SAMEORIGIN");
+		response.addHeader("X-Frame-Options", "SAMEORIGIN");
 
 		/** X-XSS-Protection */
 		response.setHeader("X-XSS-Protection", "1; mode=block");

@@ -53,6 +53,7 @@ public class CommonsFileUtil {
 	 * 파일의 존재여부 확인
 	 * @param filePath
 	 * @return
+	 * @since 1.7
 	 */
 	public static boolean isExistsFile(String filePath) {
 		Path path = Paths.get(filePath);

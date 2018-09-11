@@ -41,6 +41,7 @@ public class ObjectUtil {
 	 * @param obj
 	 * @param fieldName
 	 * @return
+	 * @since 1.7
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력
@@ -68,6 +69,7 @@ public class ObjectUtil {
 	 * </pre>
 	 * @param obj
 	 * @return
+	 * @since 1.7
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력
@@ -92,6 +94,7 @@ public class ObjectUtil {
 	 * </pre>
 	 * @param request
 	 * @param obj
+	 * @since 1.7 
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력
@@ -113,6 +116,7 @@ public class ObjectUtil {
 	 * Map을 Object로 변환
 	 * </pre>
 	 * @param obj
+	 * @since 1.7
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력

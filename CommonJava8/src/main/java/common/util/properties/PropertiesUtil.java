@@ -34,6 +34,7 @@ public class PropertiesUtil {
 	 * </pre> 
 	 * @param propFileName
 	 * @return
+	 * @since 1.7
 	 */
 	public static Properties getPropertiesClasspath(String propFileName) {
 		Properties prop = new Properties();
@@ -57,6 +58,7 @@ public class PropertiesUtil {
 	 * @param request
 	 * @param propFileName
 	 * @return
+	 * @since 1.7
 	 */
 	public static Properties getPropertiesWebInf(HttpServletRequest request, String propFileName) {
 		Properties prop = new Properties();
@@ -85,6 +87,7 @@ public class PropertiesUtil {
 	 * @param request (Classpath 는 null)
 	 * @param propFileName
 	 * @param prop
+	 * @since 1.7
 	 */
 	public static void saveProperties(int type, HttpServletRequest request, String propFileName, Properties prop) {
 		if ( (prop != null) && (!prop.isEmpty()) ) {

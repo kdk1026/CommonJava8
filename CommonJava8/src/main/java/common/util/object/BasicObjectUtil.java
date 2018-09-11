@@ -45,6 +45,7 @@ public class BasicObjectUtil {
 	 * Object의 Field명 추출 
 	 * @param obj
 	 * @return
+	 * @since 1.7
 	 */
 	public static List<String> getFieldNames(Object obj) {
 		List<String> list = new ArrayList<>();
@@ -62,7 +63,7 @@ public class BasicObjectUtil {
 	 * 해당 Object를 Map으로 변환
 	 * @param obj
 	 * @param map
-	 * @throws Exception
+	 * @since 1.7
 	 */
 	public static Map<String, Object> convertObjectToMap(Object obj) {
 		Map<String, Object> commandMap = new HashMap<>();

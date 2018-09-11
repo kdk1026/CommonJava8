@@ -21,7 +21,7 @@ public class ByteStringUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
 
 	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
-	public static final String EUC_KR = StandardCharsets.UTF_8.toString();
+	public static final String EUC_KR = Charset.forName("EUC-KR").toString();
 	
 	/**
 	 * <pre>
@@ -270,6 +270,7 @@ public class ByteStringUtils {
 	 * @param sData
 	 * @param nLimit
 	 * @param charsetName
+	 * @since 1.7
 	 * @return
 	 */
 	public static List<String> subStrByteBuffer(String sData, int nLimit, String charsetName) {

@@ -37,6 +37,7 @@ public class MapUtil {
 	 * </pre>
 	 * @param obj
 	 * @return
+	 * @since 1.7
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력
