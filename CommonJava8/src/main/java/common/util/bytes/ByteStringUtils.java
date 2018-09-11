@@ -20,6 +20,9 @@ public class ByteStringUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
 
+	/**
+	 * @since 1.7
+	 */
 	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
 	public static final String EUC_KR = Charset.forName("EUC-KR").toString();
 	

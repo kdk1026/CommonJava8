@@ -41,6 +41,9 @@ public class AesCryptoUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AesCryptoUtil.class);
 	
 	private static final byte[] IV_BYTES = new byte[16];
+	/**
+	 * @since 1.7
+	 */
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 	
 	public static final String AES_CBC_NOPADDING ="AES/CBC/NoPadding";

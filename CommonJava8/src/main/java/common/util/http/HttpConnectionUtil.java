@@ -33,7 +33,7 @@ public class HttpConnectionUtil {
 	}
 	
 	/**
-	 * Java 1.7 Base 
+	 * @since 1.7
 	 */
 	private static final String DEFAULT_CHARSET = StandardCharsets.UTF_8.toString();
 	

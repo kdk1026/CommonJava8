@@ -51,6 +51,9 @@ public class RsaCryptoUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RsaCryptoUtil.class);
 
+	/**
+	 * @since 1.7
+	 */
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 	
 	private static final int DEFAULT_KEY_SIZE = 2048;

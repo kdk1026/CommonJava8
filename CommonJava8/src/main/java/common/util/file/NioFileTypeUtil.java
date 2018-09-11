@@ -13,6 +13,9 @@ import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * @since 1.7
+ */
 public class NioFileTypeUtil {
 	
 	private NioFileTypeUtil() {

@@ -17,8 +17,16 @@ public class DBEncodingUtil {
 		super();
 	}
 	
+	/**
+	 * @since 1.7
+	 */
 	private static final String ISO_8859_1 = StandardCharsets.ISO_8859_1.toString();
+	
 	private static final String MS949 = Charset.forName("ms949").toString();
+	
+	/**
+	 * @since 1.7
+	 */
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
 	public static class US7ASCII {

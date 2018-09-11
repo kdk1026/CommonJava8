@@ -27,6 +27,11 @@ public class SeedEcbUtil {
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(SeedEcbUtil.class);
+	
+	/**
+	 * @since 1.7
+	 */
+	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
 	/**
 	 * SEED ECB 암호화 (Base64 인코딩)
@@ -73,7 +78,7 @@ public class SeedEcbUtil {
 			
 			sEncData = new String(Base64.getEncoder().encode(bCipher));
 			
-			sEncData = URLEncoder.encode(sEncData, StandardCharsets.UTF_8.toString());
+			sEncData = URLEncoder.encode(sEncData, UTF_8);
 			
 		} catch (Exception e) {
 			logger.error("", e);
@@ -120,7 +125,7 @@ public class SeedEcbUtil {
 	public static String seedUrlDec(String sEncData, String sKey) {
 		String sPlainData = "";
 		try {
-			sEncData = URLDecoder.decode(sEncData, StandardCharsets.UTF_8.toString());
+			sEncData = URLDecoder.decode(sEncData, UTF_8);
 			
 			byte[] bKey	= sKey.getBytes();
 			byte[] bCipher = null;
