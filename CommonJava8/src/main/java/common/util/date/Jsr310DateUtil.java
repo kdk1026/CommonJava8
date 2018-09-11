@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Java 1.8 Base
+ * @since 1.8
  */
 public class Jsr310DateUtil {
 
