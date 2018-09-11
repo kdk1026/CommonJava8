@@ -605,7 +605,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static LocalDateTime timestampToDateTime(long timestamp) {
-			return Instant.ofEpochSecond(timestamp).atZone(ZoneId.systemDefault()).toLocalDateTime();
+			return millsToLocalDateTime(timestamp * 1000);
 		}
 		
 	}
