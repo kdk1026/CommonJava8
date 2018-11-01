@@ -33,6 +33,18 @@ public class JacksonUtil {
 		}
 		return sortJson;
 	}
+	
+	public static String converterObjToJsonStr(Object obj) {
+		String jsonStr = "";
+
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			jsonStr = mapper.writeValueAsString(obj);
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return jsonStr;
+	}
 
 	public static String converterMapToJsonStr(Map<String, Object> map) {
 		String jsonStr = "";

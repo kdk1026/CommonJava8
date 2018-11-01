@@ -29,6 +29,18 @@ public class GsonUtil {
 		return gson.toJson(jsonStr);
 	}
 	
+	public static String converterObjToJsonStr(Object obj) {
+		String jsonStr = "";
+
+		Gson gson = new Gson();
+		try {
+			jsonStr = gson.toJson(obj);
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return jsonStr;
+	}
+	
 	public static String converterMapToJsonStr(Map<String, Object> map) {
 		String jsonStr = "";
 
