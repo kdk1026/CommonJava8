@@ -20,7 +20,7 @@ public class Jsr310DateUtil {
 	}
 	
 	private static final String YYYYMMDD = "yyyyMMdd";
-	public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+	private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 	
 	/**
 	 * 현재 날짜 및 시간 반환
@@ -132,8 +132,18 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getDateToString(Date date, String dateFormat) {
-			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			return localDate.format(DateTimeFormatter.ofPattern(dateFormat));
+			LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+		}
+		
+		/**
+		 * LocalDateTime 타입 객체를 해당 포맷의 String 타입으로 반환
+		 * @param localDateTime
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String getLocalDateTimeToString(LocalDateTime localDateTime, String dateFormat) {
+			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
 		}
 		
 	}
@@ -570,13 +580,12 @@ public class Jsr310DateUtil {
 		}
 		
 		/**
-		 * milliseconds to String
+		 * milliseconds to LocalDateTime
 		 * @param mills
 		 * @return
 		 */
-		public static String millsToString(long mills) {
-			LocalDateTime localDateTime = Instant.ofEpochMilli(mills).atZone(ZoneId.systemDefault()).toLocalDateTime(); 
-			return localDateTime.format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+		public static LocalDateTime millsToLocalDateTime(long mills) {
+			return Instant.ofEpochMilli(mills).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		}
 		
 		/**
@@ -591,12 +600,12 @@ public class Jsr310DateUtil {
 		}
 		
 		/**
-		 * timestamp to String
+		 * timestamp to DateTime
 		 * @param timestamp (sec)
 		 * @return
 		 */
-		public static String timestampToString(long timestamp) {
-			return millsToString(timestamp * 1000);
+		public static LocalDateTime timestampToDateTime(long timestamp) {
+			return millsToLocalDateTime(timestamp * 1000);
 		}
 		
 	}
