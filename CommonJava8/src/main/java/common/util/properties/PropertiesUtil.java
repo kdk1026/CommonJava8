@@ -43,6 +43,10 @@ public class PropertiesUtil {
 		try ( InputStream is = PropertiesUtil.class.getClassLoader().getResourceAsStream(fileNmae) ) {
 			prop.load(is);
 			
+			if ( propFileName.lastIndexOf("xml") > -1 ) {
+				prop.loadFromXML(is);
+			}
+			
 		} catch (IOException e) {
 			logger.error("", e);
 		}
@@ -70,6 +74,10 @@ public class PropertiesUtil {
 		try (FileInputStream fis = new FileInputStream(fileNmae)) {
 			is = new BufferedInputStream(fis);
 			prop.load(is);
+			
+			if ( propFileName.lastIndexOf("xml") > -1 ) {
+				prop.loadFromXML(is);
+			}
 			
 		} catch (IOException e) {
 			logger.error("", e);
