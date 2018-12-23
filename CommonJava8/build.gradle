@@ -150,4 +150,3 @@ dependencies {
 /* Test */
 	testCompile group: 'junit', name: 'junit', version: junitVersion
 }
-

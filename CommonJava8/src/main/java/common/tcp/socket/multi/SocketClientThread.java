@@ -1,0 +1,138 @@
+package common.tcp.socket.multi;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * <pre>
+ * 소켓 클라이언트
+ *  - Multi Thread
+ * </pre>
+ * @since 2018. 12. 23.
+ * @author 김대광
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * 2018. 12. 23. 김대광	최초작성
+ * </pre>
+ */
+public class SocketClientThread {
+
+	private static final Logger logger = LoggerFactory.getLogger(SocketClientThread.class);
+	
+	private static final int TIMEOUT = 15*1000;		// 15초
+	
+	private Socket mSocket;
+	
+	public void startClient(String sServerIp, int nPort, String sCharsetName) {
+		Thread thread = new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					mSocket = new Socket();
+					
+					SocketAddress socketAddr = new InetSocketAddress(sServerIp, nPort);
+					
+					mSocket.connect(socketAddr, TIMEOUT);
+					mSocket.setSoTimeout(TIMEOUT);
+					
+					logger.info("[연결 완료: {}]", mSocket.getInetAddress().getHostAddress());
+					
+				} catch (Exception e) {
+					logger.error("", e);
+					
+					if ( mSocket.isConnected() ) {
+						stopClient();
+					}
+				}
+			}
+			
+		};
+		
+		thread.start();
+	}
+	
+	public void stopClient() {
+		try {
+			mSocket.close();
+			
+			logger.info("[연결 끊음]");
+			
+		} catch (IOException e) {
+			logger.error("", e);
+		}
+	}
+	
+	public String receive() {
+		String sRecvData = null;
+		
+		while (true) {
+			try {
+				StringBuilder sb = new StringBuilder();
+				
+				InputStream is = mSocket.getInputStream();
+				BufferedInputStream bis = new BufferedInputStream(is);
+				byte[] buffer = new byte[4096];
+				
+				int nRead = bis.read(buffer, 0, buffer.length);
+				if (nRead > 0) {
+					sb.append(new String(buffer, 0, nRead));
+				}
+				
+				sRecvData = sb.toString();
+				
+				if ( sRecvData == null || "".equals(sRecvData) ) {
+					throw new IOException();
+				}
+				
+				logger.info("[받기 완료: {}]", sRecvData);
+				
+				break;
+				
+			} catch (Exception e) {
+				logger.error("", e);
+				
+				stopClient();
+				break;
+			}
+		}
+		
+		return sRecvData;
+	}
+	
+	public void send(byte[] bSendData) {
+		Thread thread = new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					OutputStream os = mSocket.getOutputStream();
+					BufferedOutputStream bos = new BufferedOutputStream(os);
+					
+					bos.write(bSendData);
+					bos.flush();
+					
+					logger.info("[보내기 완료: {}]", new String(bSendData));
+					
+				} catch (Exception e) {
+					logger.error("", e);
+					stopClient();
+				}
+			}
+			
+		};
+		
+		thread.start();
+	}
+	
+}

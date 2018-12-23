@@ -17,14 +17,14 @@ public class UsageCodec {
 
 	private static String ENCODED_TEXT = "";
 	private static String DECODED_TExT = "";
-	private static final String PLAIN_TEXT = "Commons Codec 테스트";
+	private static final String PLAIN_TEXT = "admin!@34";
 
 	@Test
 	public void test() {
 		//base64Codec();
 		//urlCodec();
-		//hashing();
-		checkSum();
+		hashing();
+		//checkSum();
 		//hex();
 		//binary();
 	}
