@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,8 @@ public class SocketClientThread {
 	
 	private Socket mSocket;
 	
+	private String mScharsetName;
+	
 	public void startClient(String sServerIp, int nPort, String sCharsetName) {
 		Thread thread = new Thread() {
 
@@ -47,6 +50,8 @@ public class SocketClientThread {
 					mSocket.setSoTimeout(TIMEOUT);
 					
 					logger.info("[연결 완료: {}]", mSocket.getInetAddress().getHostAddress());
+					
+					mScharsetName = sCharsetName;
 					
 				} catch (Exception e) {
 					logger.error("", e);
@@ -89,7 +94,11 @@ public class SocketClientThread {
 					sb.append(new String(buffer, 0, nRead));
 				}
 				
-				sRecvData = sb.toString();
+				if ( mScharsetName.equals(Charset.defaultCharset().name()) ) {
+					sRecvData = sb.toString();
+				} else {
+					sRecvData = new String(sb.toString().getBytes(mScharsetName));
+				}
 				
 				if ( sRecvData == null || "".equals(sRecvData) ) {
 					throw new IOException();

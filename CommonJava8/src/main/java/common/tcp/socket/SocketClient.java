@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +32,15 @@ public class SocketClient {
 	
 	private static final int TIMEOUT = 15*1000;		// 15초
 	
-    private String sRecvMsg;
+    private String sRecvData;
     
-	public String getsRecvMsg() {
-		return sRecvMsg;
+	public String getsRecvData() {
+		return sRecvData;
 	}
+
+	private String mScharsetName;
 	
-	public void start(String sServerIp, int nPort, byte[] bSendData) throws IOException {
+	public void start(String sServerIp, int nPort, byte[] bSendData, String sCharsetName) throws IOException {
 		SocketAddress socketAddr = new InetSocketAddress(sServerIp, nPort);
 		
 		try ( Socket socket = new Socket() ) {
@@ -46,6 +49,8 @@ public class SocketClient {
 			socket.setSoTimeout(TIMEOUT);
 			
 			logger.info("[연결 완료: {}]", socket.getRemoteSocketAddress());
+			
+			mScharsetName = sCharsetName;
 			
 			if ( socket.isConnected() ) {
 				OutputStream os = socket.getOutputStream();
@@ -64,12 +69,6 @@ public class SocketClient {
 	private void sendToServer(OutputStream os, byte[] bSendData) throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(os);
 		
-		/*
-		 * 케릭터셋 인코딩 맞추어야 할 경우, 참고
-		 * 	- common.util.bytes.ByteStringUtils
-		 * 		> toByteEncoding
-		 */
-		
 		bos.write(bSendData);
 		bos.flush();
 		
@@ -87,9 +86,13 @@ public class SocketClient {
 			sb.append(new String(buffer, 0, nRead));
 		}
 		
-		this.sRecvMsg = sb.toString();
+		if ( mScharsetName.equals(Charset.defaultCharset().name()) ) {
+			this.sRecvData = sb.toString();
+		} else {
+			this.sRecvData = new String(sb.toString().getBytes(mScharsetName));
+		}
 		
-		logger.info("[받기 완료: {}]", this.sRecvMsg);
+		logger.info("[받기 완료: {}]", this.sRecvData);
 	}
 	
 }

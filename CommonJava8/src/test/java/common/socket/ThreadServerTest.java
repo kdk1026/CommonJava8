@@ -1,6 +1,6 @@
 package common.socket;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import common.tcp.socketchannel.multi.NioNonBlockingServerThread;
 
@@ -13,14 +13,14 @@ import common.tcp.socketchannel.multi.NioNonBlockingServerThread;
  * 2018. 12. 23. 김대광	최초작성
  * </pre>
  */
-public class ServerTest {
+public class ThreadServerTest {
 
 	public static void main(String[] args) {
 //		SocketServerRunnable server = new SocketServerRunnable();
 //		NioBlockingServerRunnable server = new NioBlockingServerRunnable();
 		NioNonBlockingServerThread server = new NioNonBlockingServerThread();
 		
-		server.startServer(9797, StandardCharsets.UTF_8.name());
+		server.startServer(9797, Charset.forName("utf-8").name());
 	}
 	
 }

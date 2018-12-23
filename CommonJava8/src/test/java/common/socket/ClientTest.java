@@ -1,13 +1,12 @@
 package common.socket;
 
-import java.nio.charset.StandardCharsets;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import com.google.gson.JsonObject;
 
-import common.tcp.socketchannel.multi.NioSocketClientThread;
+import common.tcp.socketchannel.NioSocketClient;
 
 /**
  * @since 2018. 12. 23.
@@ -19,40 +18,40 @@ import common.tcp.socketchannel.multi.NioSocketClientThread;
  * </pre>
  */
 public class ClientTest {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ClientTest.class);
 
 	public static void main(String[] args) {
-//		SocketClient client = new SocketClient();
-//		NioSocketClient client = new NioSocketClient();
+		String sCharsetName = Charset.forName("utf-8").name();
 		
-//		SocketClientThread client = new SocketClientThread();
-		NioSocketClientThread client = new NioSocketClientThread();
-		
-		client.startClient("127.0.0.1", 9797, StandardCharsets.UTF_8.name());
-		
-		String sRecvData = "";
 		JsonObject obj = new JsonObject();
-		obj.addProperty("a", "가1");
-		obj.addProperty("b", "나1");
-		obj.addProperty("c", "다1");
+		obj.addProperty("a", "가나다");
+		obj.addProperty("b", "라마바");
+		obj.addProperty("c", "사아자");
 		
-		client.send(obj.toString().getBytes());
-		sRecvData = client.receive();
+		byte[] bSendData = null;
 		
-		logger.debug("========== {}", sRecvData);
+		try {
+			if ( sCharsetName != Charset.defaultCharset().name() ) {
+				bSendData = obj.toString().getBytes(sCharsetName);
+			} else {
+				bSendData = obj.toString().getBytes();
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
-		obj = new JsonObject();
-		obj.addProperty("aa", "가나1");
-		obj.addProperty("bb", "다라1");
-		obj.addProperty("cc", "마바1");
 		
-		client.send(obj.toString().getBytes());
-		sRecvData = client.receive();
-		
-		logger.debug("========== {}", sRecvData);
-		
-		client.stopClient();
+//		SocketClient client = new SocketClient();
+		NioSocketClient client = new NioSocketClient();
+		try {
+			client.start("127.0.0.1", 9797, bSendData, sCharsetName);
+			
+			System.out.println( client.getsRecvData() );
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 }
