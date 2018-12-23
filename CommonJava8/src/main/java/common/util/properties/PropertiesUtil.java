@@ -16,6 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import common.util.file.NioFileUtil;
 
+/**
+ * @since 2018. 12. 24.
+ * @author 김대광
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * 2018. 12. 24. 김대광	최초작성
+ * </pre>
+ */
 public class PropertiesUtil {
 	
 	private PropertiesUtil() {
@@ -29,12 +38,58 @@ public class PropertiesUtil {
 	
 	/**
 	 * <pre>
+	 * Properties 로드
+	 *   - properties 파일 / properties xml 파일
+	 *   - Java 7 base: Try-with-resources 
+	 * </pre> 
+	 * @param request
+	 * @param propFileName
+	 */
+	public static Properties getProperties(HttpServletRequest request, String propFileName) {
+		Properties prop = new Properties();
+		
+		String fileNmae = "";
+		
+		if ( request == null ) {
+			fileNmae = propFileName;
+			
+			try ( InputStream is = PropertiesUtil.class.getClassLoader().getResourceAsStream(fileNmae) ) {
+				prop.load(is);
+				
+				if ( propFileName.lastIndexOf("xml") > -1 ) {
+					prop.loadFromXML(is);
+				}
+				
+			} catch (IOException e) {
+				logger.error("", e);
+			}
+		} else {
+			String webRootPath = request.getSession().getServletContext().getRealPath("/");
+			fileNmae = webRootPath + propFileName;
+			
+			try ( InputStream is = new BufferedInputStream(new FileInputStream(fileNmae)) ) {
+				prop.load(is);
+				
+				if ( propFileName.lastIndexOf("xml") > -1 ) {
+					prop.loadFromXML(is);
+				}
+				
+			} catch (IOException e) {
+				logger.error("", e);
+			}
+		}
+		
+		return prop;
+	}
+	
+	/**
+	 * <pre>
 	 * Classpath의 Properties 로드
 	 *   - properties 파일 / properties xml 파일
+	 *   - Java 7 base: Try-with-resources 
 	 * </pre> 
 	 * @param propFileName
 	 * @return
-	 * @since 1.7
 	 */
 	public static Properties getPropertiesClasspath(String propFileName) {
 		Properties prop = new Properties();
@@ -58,21 +113,19 @@ public class PropertiesUtil {
 	 * <pre>
 	 * WEB-INF의 Properties 로드
 	 *   - properties 파일 / properties xml 파일
+	 *   - Java 7 base: Try-with-resources 
 	 * </pre> 
 	 * @param request
 	 * @param propFileName
 	 * @return
-	 * @since 1.7
 	 */
 	public static Properties getPropertiesWebInf(HttpServletRequest request, String propFileName) {
 		Properties prop = new Properties();
-		InputStream is = null;
 		
 		String webRootPath = request.getSession().getServletContext().getRealPath("/");
 		String fileNmae = webRootPath + PROP_WEB_INF_PATH + propFileName;
 		
-		try (FileInputStream fis = new FileInputStream(fileNmae)) {
-			is = new BufferedInputStream(fis);
+		try ( InputStream is = new BufferedInputStream(new FileInputStream(fileNmae)) ) {
 			prop.load(is);
 			
 			if ( propFileName.lastIndexOf("xml") > -1 ) {
@@ -90,12 +143,12 @@ public class PropertiesUtil {
 	 * <pre>
 	 * Properties 생성/덮어쓰기
 	 *   - Classpath의 경우 서버 리로드를 해야 반영되므로 생성/덮어쓰기 권장안함
+	 *   - Java 7 base: Try-with-resources 
 	 * </pre> 
-	 * @param type (0: Classpath, 1 : WEB-INF)
-	 * @param request (Classpath 는 null)
+	 * @param type		- 0: Classpath, 1: WEB-INF, 2: Path+Name
+	 * @param request 	- [type 0 = null] [type 1 = required] [type 2 = webRootPath인 경우, required]
 	 * @param propFileName
 	 * @param prop
-	 * @since 1.7
 	 */
 	public static void saveProperties(int type, HttpServletRequest request, String propFileName, Properties prop) {
 		if ( (prop != null) && (!prop.isEmpty()) ) {
