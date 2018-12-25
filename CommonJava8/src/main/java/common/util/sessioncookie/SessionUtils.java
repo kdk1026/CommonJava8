@@ -3,59 +3,117 @@ package common.util.sessioncookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+/**
+ * <pre>
+ * 세션 처리 유틸 클래스
+ *  - 타임아웃 적용 우선 순위
+ *    1. setMaxInactiveInterval (단위: 초)
+ *    2. web.xml (단위: 분)
+ *    3. WAS 설정
+ *       ex) Tomcat경로/conf/web.xml (단위: 분, default: 30분)
+ * </pre>
+ * @since 2018. 12. 24.
+ * @author 김대광
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * 2018. 12. 24. 김대광	최초작성
+ * </pre>
+ */
 public class SessionUtils {
 	
-	private SessionUtils() {
+	protected SessionUtils() {
 		super();
 	}
 	
-	public static final String LOGIN_SESSION_ID = "__userInfo__";
-
 	/**
-	 * 로그인 정보를 세션에 저장
+	 * 로그인 정보 처리 내부 클래스
+	 * @since 2018. 12. 24.
+	 * @author 김대광
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * 2018. 12. 24. 김대광	최초작성
+	 * </pre>
+	 */
+	public static class LoginInfo {
+		
+		protected LoginInfo() {
+			super();
+		}
+
+		public static final String SESSION_KEY = "__userInfo__";
+		public static final int INACTIVE_INTERVAL = 60*20;
+		
+		/**
+		 * 로그인 정보를 세션에 저장
+		 * @param request
+		 * @param obj
+		 */
+		public static void setAttribute(HttpServletRequest request, Object obj) {
+			HttpSession session = request.getSession();
+			
+			session.setAttribute(SESSION_KEY, obj);
+	        session.setMaxInactiveInterval(INACTIVE_INTERVAL);
+		}
+		
+		/**
+		 * 로그인 정보를 세션에 저장
+		 * @param request
+		 * @param sKey
+		 * @param obj
+		 * @param nSecond
+		 */
+		public static void setAttribute(HttpServletRequest request, Object obj, int nSecond) {
+			HttpSession session = request.getSession();
+			
+			session.setAttribute(SESSION_KEY, obj);
+			session.setMaxInactiveInterval(nSecond);
+		}
+		
+		/**
+		 * 로그인 정보를 세션에서 가져오기
+		 * @return
+		 */
+		public static Object getSession(HttpServletRequest request) {
+			HttpSession session = request.getSession(false);
+			return (session == null ? null : session.getAttribute(SESSION_KEY));
+		}
+	}
+	
+	/**
+	 * 세션에 저장
 	 * @param request
+	 * @param sKey
 	 * @param obj
 	 */
-	public static void setSessionLoginInfo(HttpServletRequest request, Object obj) {
-		HttpSession session = request.getSession(false);
-		session.invalidate();
-		session = request.getSession(true);
+	public static void setAttribute(HttpServletRequest request, String sKey, Object obj) {
+		HttpSession session = request.getSession();
 
-		session.setAttribute(LOGIN_SESSION_ID, obj);
-
-		/*
-		 * 세션 타임아웃 적용 우선 순위
-		 * 	1. [특정 세션] 유효시간 설정 (단위:초)
-		 * 	2. [공통 세션] 유효시간 설정 web.xml (단위:분)
-		 * 	3. [공통 세션] 유효시간 설정 Tomcat경로/conf/web.xml (단위:분)
-		 */
-        session.setMaxInactiveInterval(60*20);
+		session.setAttribute(sKey, obj);
 	}
 
 	/**
-	 * 로그인 정보를 세션에서 가져옴
-	 * @return
+	 * 세션에 저장
+	 * @param request
+	 * @param sKey
+	 * @param obj
+	 * @param nSecond
 	 */
-	public static Object getSessionLoginInfo(HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		return (session == null ? null : session.getAttribute(LOGIN_SESSION_ID));
-	}
-
-
-	public static void setSessionAttribute(HttpServletRequest request, String sKey, Object obj) {
+	public static void setAttribute(HttpServletRequest request, String sKey, Object obj, int nSecond) {
 		HttpSession session = request.getSession();
-
+		
 		session.setAttribute(sKey, obj);
-	}
-
-	public static void setSessionAttribute(HttpServletRequest request, String sKey, Object obj, int nSecond) {
-		HttpSession session = request.getSession();
-		session.setAttribute(sKey, obj);
-
 		session.setMaxInactiveInterval(nSecond);
 	}
 
-	public static Object getSessionAttribute(HttpServletRequest request, String sKey) {
+	/**
+	 * 세션에서 가져오기
+	 * @param request
+	 * @param sKey
+	 * @return
+	 */
+	public static Object getAttribute(HttpServletRequest request, String sKey) {
 		HttpSession session = request.getSession(false);
 		return (session == null ? null : session.getAttribute(sKey));
 	}
