@@ -1,6 +1,7 @@
 package common.socket;
 
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,28 +24,46 @@ public class ThreadClientTest {
 	private static final Logger logger = LoggerFactory.getLogger(ThreadClientTest.class);
 
 	public static void main(String[] args) {
+		String sCharsetName = Charset.forName("euc-kr").name();
+		
+		JsonObject obj = null;
+		byte[] bSendData = null;
+		String sRecvData = null;
+		
 //		SocketClientThread client = new SocketClientThread();
 		NioSocketClientThread client = new NioSocketClientThread();
 		
-		client.startClient("127.0.0.1", 9797, StandardCharsets.UTF_8.name());
+		client.startClient("127.0.0.1", 9797, sCharsetName);
 		
-		String sRecvData = "";
-		JsonObject obj = new JsonObject();
-		obj.addProperty("a", "가1");
-		obj.addProperty("b", "나1");
-		obj.addProperty("c", "다1");
+		try {
+			obj = new JsonObject();
+			obj.addProperty("aa", "가나1");
+			obj.addProperty("bb", "다라1");
+			obj.addProperty("cc", "마바1");
+			
+			bSendData = obj.toString().getBytes(sCharsetName);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		
-		client.send(obj.toString().getBytes());
+		client.send(bSendData);
 		sRecvData = client.receive();
 		
 		logger.debug("========== {}", sRecvData);
 		
-		obj = new JsonObject();
-		obj.addProperty("aa", "가나1");
-		obj.addProperty("bb", "다라1");
-		obj.addProperty("cc", "마바1");
 		
-		client.send(obj.toString().getBytes());
+		try {
+			obj = new JsonObject();
+			obj.addProperty("aa", "가나1");
+			obj.addProperty("bb", "다라1");
+			obj.addProperty("cc", "마바1");
+			
+			bSendData = obj.toString().getBytes(sCharsetName);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
+		
+		client.send(bSendData);
 		sRecvData = client.receive();
 		
 		logger.debug("========== {}", sRecvData);

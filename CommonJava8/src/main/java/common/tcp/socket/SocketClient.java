@@ -68,11 +68,11 @@ public class SocketClient {
 	
 	private void sendToServer(OutputStream os, byte[] bSendData) throws IOException {
 		BufferedOutputStream bos = new BufferedOutputStream(os);
-		
 		bos.write(bSendData);
 		bos.flush();
 		
-		logger.info("[보내기 완료: {}]", new String(bSendData));
+		String sSendData = new String(bSendData, mScharsetName);
+		logger.info("[보내기 완료: {}]", sSendData);
 	}
 	
 	private void receivedFromServer(InputStream is) throws IOException {
@@ -86,11 +86,7 @@ public class SocketClient {
 			sb.append(new String(buffer, 0, nRead));
 		}
 		
-		if ( mScharsetName.equals(Charset.defaultCharset().name()) ) {
-			this.sRecvData = sb.toString();
-		} else {
-			this.sRecvData = new String(sb.toString().getBytes(mScharsetName));
-		}
+		this.sRecvData = new String(sb.toString().getBytes(Charset.defaultCharset()));
 		
 		logger.info("[받기 완료: {}]", this.sRecvData);
 	}

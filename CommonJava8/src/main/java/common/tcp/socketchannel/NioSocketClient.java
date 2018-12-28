@@ -28,7 +28,7 @@ public class NioSocketClient {
 	
 	private static final Logger logger = LoggerFactory.getLogger(NioSocketClient.class);
 	
-	private static final int TIMEOUT = 15*1000;		// 15초
+	private static final int TIMEOUT = 20*1000;		// 20초
 	
     private String sRecvData;
     
@@ -68,7 +68,8 @@ public class NioSocketClient {
 		ByteBuffer buffer = ByteBuffer.wrap(bSendData);
 		socketChannel.write(buffer);
 		
-		logger.info("[보내기 완료: {}]", new String(bSendData));
+		String sSendData = new String(bSendData, mScharsetName);
+		logger.info("[보내기 완료: {}]", sSendData);
 	}
 	
 	private void receivedFromServer(SocketChannel socketChannel) throws IOException {
@@ -76,8 +77,7 @@ public class NioSocketClient {
 		socketChannel.read(byteBuffer);
 		byteBuffer.flip();
 		
-		Charset charset = Charset.forName(mScharsetName);
-		
+		Charset charset = Charset.defaultCharset();
 		this.sRecvData = charset.decode(byteBuffer).toString();
 		
 		logger.info("[받기 완료: {}]", this.sRecvData);

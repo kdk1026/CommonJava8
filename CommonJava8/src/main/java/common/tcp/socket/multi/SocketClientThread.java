@@ -78,6 +78,31 @@ public class SocketClientThread {
 		}
 	}
 	
+	public void send(byte[] bSendData) {
+		Thread thread = new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					OutputStream os = mSocket.getOutputStream();
+					BufferedOutputStream bos = new BufferedOutputStream(os);
+					bos.write(bSendData);
+					bos.flush();
+					
+					String sSendData = new String(bSendData, mScharsetName);
+					logger.info("[보내기 완료: {}]", sSendData);
+					
+				} catch (Exception e) {
+					logger.error("", e);
+					stopClient();
+				}
+			}
+			
+		};
+		
+		thread.start();
+	}
+	
 	public String receive() {
 		String sRecvData = null;
 		
@@ -94,11 +119,7 @@ public class SocketClientThread {
 					sb.append(new String(buffer, 0, nRead));
 				}
 				
-				if ( mScharsetName.equals(Charset.defaultCharset().name()) ) {
-					sRecvData = sb.toString();
-				} else {
-					sRecvData = new String(sb.toString().getBytes(mScharsetName));
-				}
+				sRecvData = new String(sb.toString().getBytes(Charset.defaultCharset()));
 				
 				if ( sRecvData == null || "".equals(sRecvData) ) {
 					throw new IOException();
@@ -108,7 +129,7 @@ public class SocketClientThread {
 				
 				break;
 				
-			} catch (Exception e) {
+			} catch (IOException e) {
 				logger.error("", e);
 				
 				stopClient();
@@ -117,31 +138,6 @@ public class SocketClientThread {
 		}
 		
 		return sRecvData;
-	}
-	
-	public void send(byte[] bSendData) {
-		Thread thread = new Thread() {
-
-			@Override
-			public void run() {
-				try {
-					OutputStream os = mSocket.getOutputStream();
-					BufferedOutputStream bos = new BufferedOutputStream(os);
-					
-					bos.write(bSendData);
-					bos.flush();
-					
-					logger.info("[보내기 완료: {}]", new String(bSendData));
-					
-				} catch (Exception e) {
-					logger.error("", e);
-					stopClient();
-				}
-			}
-			
-		};
-		
-		thread.start();
 	}
 	
 }

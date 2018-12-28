@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 
 import com.google.gson.JsonObject;
 
-import common.tcp.socketchannel.NioSocketClient;
+import common.tcp.socket.SocketClient;
 
 /**
  * @since 2018. 12. 23.
@@ -20,7 +20,7 @@ import common.tcp.socketchannel.NioSocketClient;
 public class ClientTest {
 
 	public static void main(String[] args) {
-		String sCharsetName = Charset.forName("utf-8").name();
+		String sCharsetName = Charset.forName("euc-kr").name();
 		
 		JsonObject obj = new JsonObject();
 		obj.addProperty("a", "가나다");
@@ -28,25 +28,16 @@ public class ClientTest {
 		obj.addProperty("c", "사아자");
 		
 		byte[] bSendData = null;
-		
 		try {
-			if ( sCharsetName != Charset.defaultCharset().name() ) {
-				bSendData = obj.toString().getBytes(sCharsetName);
-			} else {
-				bSendData = obj.toString().getBytes();
-			}
-			
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			bSendData = obj.toString().getBytes(sCharsetName);
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
 		}
 		
-		
-//		SocketClient client = new SocketClient();
-		NioSocketClient client = new NioSocketClient();
+		SocketClient client = new SocketClient();
+//		NioSocketClient client = new NioSocketClient();
 		try {
 			client.start("127.0.0.1", 9797, bSendData, sCharsetName);
-			
-			System.out.println( client.getsRecvData() );
 			
 		} catch (IOException e) {
 			e.printStackTrace();

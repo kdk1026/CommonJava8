@@ -76,6 +76,29 @@ public class NioSocketClientThread {
 		}
 	}
 	
+	public void send(byte[] bSendData) {
+		Thread thread = new Thread() {
+
+			@Override
+			public void run() {
+				try {
+					ByteBuffer byteBuffer = ByteBuffer.wrap(bSendData);
+					mSocketChannel.write(byteBuffer);
+					
+					String sSendData = new String(bSendData, mScharsetName);
+					logger.info("[보내기 완료: {}]", sSendData);
+					
+				} catch (Exception e) {
+					logger.error("", e);
+					stopClient();
+				}
+			}
+			
+		};
+		
+		thread.start();
+	}
+	
 	public String receive() {
 		String sRecvData = null;
 		
@@ -90,7 +113,7 @@ public class NioSocketClientThread {
 				
 				byteBuffer.flip();
 				
-				Charset charset = Charset.forName(mScharsetName);
+				Charset charset = Charset.defaultCharset();
 				sRecvData = charset.decode(byteBuffer).toString();
 				
 				logger.info("[받기 완료: {}]", sRecvData);
@@ -106,28 +129,6 @@ public class NioSocketClientThread {
 		}
 		
 		return sRecvData;
-	}
-	
-	public void send(byte[] bSendData) {
-		Thread thread = new Thread() {
-
-			@Override
-			public void run() {
-				try {
-					ByteBuffer byteBuffer = ByteBuffer.wrap(bSendData);
-					mSocketChannel.write(byteBuffer);
-					
-					logger.info("[보내기 완료: {}]", new String(byteBuffer.array()));
-					
-				} catch (Exception e) {
-					logger.error("", e);
-					stopClient();
-				}
-			}
-			
-		};
-		
-		thread.start();
 	}
 	
 }

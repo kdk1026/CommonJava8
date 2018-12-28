@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -137,7 +138,7 @@ public class SocketServerRunnable {
 							
 							int nRead = bis.read(buffer, 0, buffer.length);
 							if (nRead > 0) {
-								sb.append(new String(buffer, 0, nRead));
+								sb.append(new String(buffer, 0, nRead, mScharsetName));
 							}
 							
 							String sRecvData = sb.toString();
@@ -155,7 +156,7 @@ public class SocketServerRunnable {
 							
 							logger.info("[응답 데이터: {}]", sSendMsg);
 							
-							byte[] bSendData = sSendMsg.getBytes(mScharsetName);
+							byte[] bSendData = sSendMsg.getBytes(Charset.defaultCharset());
 							
 							for ( Client client : mConnections ) {
 								if ( sRemoteAddr.equals(client.getsRemoteAddr()) ) {

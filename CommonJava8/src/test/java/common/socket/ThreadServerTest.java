@@ -20,7 +20,7 @@ public class ThreadServerTest {
 //		NioBlockingServerRunnable server = new NioBlockingServerRunnable();
 		NioNonBlockingServerThread server = new NioNonBlockingServerThread();
 		
-		server.startServer(9797, Charset.forName("utf-8").name());
+		server.startServer(9797, Charset.forName("euc-kr").name());
 	}
 	
 }
