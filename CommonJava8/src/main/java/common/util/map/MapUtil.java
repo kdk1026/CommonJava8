@@ -1,6 +1,8 @@
 package common.util.map;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -25,6 +27,30 @@ public class MapUtil {
 
 	private MapUtil() {
 		super();
+	}
+	
+	/**
+	 * Object를 Map<String, Object> 으로 변환
+	 * @param obj
+	 * @param map
+	 */
+	public static Map<String, Object> objectToMapObject(Object obj) {
+		Map<String, Object> map = new HashMap<>();
+
+		try {
+			Field[] fields = obj.getClass().getDeclaredFields();
+			for (int i=0; i<fields.length; i++) {
+				fields[i].setAccessible(true);
+				String key = fields[i].getName();
+				Object value = fields[i].get(obj);
+				map.put(key, (value != null) ? value:"");
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return map;
 	}
 
 	/**
