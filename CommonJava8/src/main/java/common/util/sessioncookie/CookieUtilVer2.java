@@ -47,11 +47,13 @@ public class CookieUtilVer2 {
 	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
 		Cookie cookie = null;
 		Cookie[] cookies = request.getCookies();
-
-		for (Cookie c : cookies) {
-			if ( cookieName.equals(c.getName()) ) {
-				cookie = c;
-				break;
+		
+		if ( cookies != null ) {
+			for (Cookie c : cookies) {
+				if ( cookieName.equals(c.getName()) ) {
+					cookie = c;
+					break;
+				}
 			}
 		}
 
