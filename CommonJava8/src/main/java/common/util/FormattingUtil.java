@@ -345,4 +345,15 @@ public class FormattingUtil {
 		return sb.toString();
 	}
 	
+	/**
+	 * 비밀번호 마스킹
+	 * @param str
+	 * @return
+	 */
+	public static String passwordMasking(String str) {
+		char[] c = new char[str.length()];
+		Arrays.fill(c, '*');
+		return String.valueOf(c);
+	}
+	
 }

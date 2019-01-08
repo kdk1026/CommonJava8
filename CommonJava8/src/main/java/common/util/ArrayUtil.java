@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ArrayUtil {
 	
-	private ArrayUtil() {
+	protected ArrayUtil() {
 		super();
 	}
 

@@ -49,9 +49,9 @@ public enum ResponseCodeEnum {
 	ACCESS_DENIED("7000", "접근 권한이 없습니다."),
 	IS_NOT_ALLOWED_IP("7001", "허용되지 않은 IP 입니다."),
 	IS_NOT_HTTP_METHOD("7002", "허용되지 않은 HTTP Method 입니다."),
-	ACCESS_TOEKN_INVALID("7003", "Access Token 거부"),
-	ACCESS_TOKEN_EXPIRED("7004", "Access Token 만료"),
-	REFRESH_TOKEN_EXPIRED("7005", "Refresh Token 만료"),
+	ACCESS_TOEKN_INVALID("7003", "인증정보가 올바르지 않습니다."),
+	ACCESS_TOKEN_EXPIRED("7004", "인증정보가 만료되었습니다."),
+	REFRESH_TOKEN_EXPIRED("7005", "인증정보 갱신기간이 만료되었습니다."),
 	;
 	
 	// XXX : 그외 부류는 A000 ~ Z900 으로 처리
