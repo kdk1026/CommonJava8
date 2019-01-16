@@ -126,7 +126,7 @@ public class ByteStringUtils {
 	 * byte 단위로 문자열 자르기
 	 * @param sData
 	 * @param nStartByte
-	 * @param nCutByte
+	 * @param nEndByte
 	 * @param isUtf8
 	 * @return
 	 */
@@ -136,8 +136,24 @@ public class ByteStringUtils {
 		int nChkByte = 0;
 		int nEndByte = nStartByte + nCutByte;
 		
-		for (int i = 0; i < sData.length(); i++) {
-			String ch = Character.toString(sData.charAt(i+1));
+		byte[] bByte = null;
+		int nByteLen = 0;
+		
+		try {
+			bByte = sData.getBytes(EUC_KR);
+			nByteLen = bByte.length;
+
+			// XXX : 확실치 않음...
+			if (nEndByte > nByteLen) {
+				nEndByte = (isUtf8) ? nByteLen - 1 : nByteLen - 2;
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+		}
+		
+		for (int i=0; i < sData.length(); i++) {
+			String ch = Character.toString(sData.charAt(i));
 			
 			if ( isUtf8 ) {
 				nChkByte += ch.getBytes().length >= 2 ? 3 : 1;
@@ -154,7 +170,7 @@ public class ByteStringUtils {
 				break;
 			}
 		}
-
+		
 		return sData.substring(nBeginIndex, nEndIndex);
 	}
 	
