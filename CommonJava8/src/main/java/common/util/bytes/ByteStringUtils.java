@@ -1,8 +1,13 @@
 package common.util.bytes;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,5 +157,241 @@ public class ByteStringUtils {
 
 		return sData.substring(nBeginIndex, nEndIndex);
 	}
+	
+	/**
+	 * <pre>
+	 * 문자열의 해당 위치까지 문자의 영/한 여부 체크
+	 *   - 0:영문, 1:한글 첫번째 Byte, 2:한글 두번째 Byte
+	 * </pre>
+	 * @param sData
+	 * @param nChkPos
+	 * @return
+	 */
+	public static int checkByteEucKr(String sData, int nChkPos) {
+		int nChkByte = 0;
+		byte[] bByte = null;
+		int nByteLen = 0;
+		
+		try {
+			bByte = sData.getBytes(EUC_KR);
+			nByteLen = bByte.length;
+			
+			int i;
+			for (i=0; i < nChkPos; i++) {
+				if (nChkPos > nByteLen) {
+					break;
+				}
+				
+				char c = (char) bByte[i];
+				if ( (int)c > 127 ) {
+					nChkByte = 1;
+					i++;
+				} else {
+					nChkByte = 0;
+				}
+			}
+			
+			
+			if ( nChkByte == 1 && (i-1) == (nChkPos-1) ) {
+				nChkByte = 2;
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return nChkByte;
+	}
+	
+	/**
+	 * byte 단위로 문자열 자르기
+	 *   - subStrByteBuffer 보다 다소 성능 ↓ 
+	 * </pre>
+	 * @param sData
+	 * @param nStart
+	 * @param nLen
+	 * @return
+	 */
+	public static String subStrByteEucKr(String sData, int nStart, int nLen) {
+		byte[] bByte = null;
+		int nByteLen = 0;
+		int nChkByte = 0;
+		int nStartIdx = 0;
+		int nEndIdx = 0;
+		String sRes = "";
+		
+		try {
+			bByte = sData.getBytes(EUC_KR);
+			nByteLen = bByte.length;
+
+			nStartIdx = nStart;
+			nEndIdx = nStart + nLen;
+			
+			if (nEndIdx > nByteLen) {
+				nEndIdx = nByteLen - nLen;
+			}
+			
+			if (nEndIdx >= nByteLen || nLen == 0) {
+				nEndIdx = nByteLen;
+			}
+			
+			nChkByte = checkByteEucKr(sData, nStart);
+			switch (nChkByte) {
+			case 1:
+				nStartIdx = nStartIdx - 1;
+				break;
+			case 2:
+				nStartIdx = nStartIdx - 2;
+				break;
+			default:
+				break;
+			}
+			
+			nChkByte = checkByteEucKr(sData, nEndIdx);
+			
+			// XXX : 확실치 않음...
+			switch (nChkByte) {
+			case 1:
+				nEndIdx = (nStart == 0) ? nEndIdx - 1 : nEndIdx + 1;
+				break;
+			case 2:
+				nEndIdx = (nStart == 0) ? nEndIdx - 2 : nEndIdx + 2;
+				break;
+			default:
+				break;
+			}
+			
+			sRes = new String(bByte, nStartIdx, nEndIdx, EUC_KR);
+			
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+		}
+		
+		return sRes;
+	}
+	
+	/**
+	 * <pre>
+	 * byte 단위로 문자열 자르기
+	 *   - subStrByte 보다 다소 성능 ↑
+	 * </pre>
+	 * @param sData
+	 * @param nStart
+	 * @param nLen
+	 * @return
+	 */
+	public static String subStrByteBufferEucKr(String sData, int nStart, int nLen) {
+		final String sEncoding = EUC_KR;
+		
+		int nByteLen = 0;
+		int nChkByte = 0;
+		int nStartIdx = 0;
+		int nEndIdx = 0;
+		String sRes = "";
+		
+		try {
+			Charset charset =  Charset.forName(sEncoding);
+			CharsetEncoder encoder = charset.newEncoder();
+			ByteBuffer bBuf = null;
+			CharBuffer cBuf = null;
+			
+			bBuf = encoder.encode(CharBuffer.wrap(sData));
+			
+			nByteLen = bBuf.limit();
+			
+			nStartIdx = nStart;
+			nEndIdx = nStart + nLen;
+			
+			if (nEndIdx > nByteLen) {
+				nEndIdx = nByteLen - nLen;
+			}
+			
+			if (nEndIdx >= nByteLen || nLen == 0) {
+				nEndIdx = nByteLen;
+			}
+			
+			nChkByte = checkByteEucKr(sData, nStart);
+			switch (nChkByte) {
+			case 1:
+				nStartIdx = nStartIdx - 1;
+				break;
+			case 2:
+				nStartIdx = nStartIdx - 2;
+				break;
+			default:
+				break;
+			}
+			
+			nChkByte = checkByteEucKr(sData, nEndIdx);
+			// XXX : 확실치 않음...
+			switch (nChkByte) {
+			case 1:
+				nEndIdx = (nStart == 0) ? nEndIdx - 1 : nEndIdx + 1;
+				break;
+			case 2:
+				nEndIdx = (nStart == 0) ? nEndIdx - 2 : nEndIdx + 2;
+				break;
+			default:
+				break;
+			}
+			
+			bBuf.position(nStartIdx);
+			bBuf.limit(bBuf.position() + nEndIdx);
+			
+			cBuf = charset.decode(bBuf);
+			
+			sRes = cBuf.toString();
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return sRes;
+	}
+	
+	/**
+	 * byte 단위로 문자열 잘라서 List로 반환
+	 * @param sData
+	 * @param nLimit
+	 * @param charsetName
+	 * @since 1.7
+	 * @return
+	 */
+	// TODO : 확인 > 수정 필요
+	public static List<String> subStrByteBuffer(String sData, int nLimit, String charsetName) {
+		List<String> resList = new ArrayList<>();
+		String str = "";
+		ByteBuffer buf = null;
+		
+		try {
+			buf = ByteBuffer.wrap(sData.getBytes(charsetName));
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+		}
+		
+		if (buf != null) {
+			int nLen = buf.limit();
+			int nPos = 0;
+			byte[] bResData = null;
+			
+			while (nPos < nLen) {
+				buf.position(nPos);
+				buf.limit(buf.position() + nLimit);
+				bResData = new byte[buf.remaining()];
+				buf.get(bResData);
+				
+				try {
+					str = new String(bResData, charsetName).trim();
+				} catch (UnsupportedEncodingException e) {
+					logger.error("", e);
+				}
+				resList.add(str);
+				
+				nPos = nPos + nLimit;
+			}
+		}
+		
+		return resList;
+	}	
 	
 }
