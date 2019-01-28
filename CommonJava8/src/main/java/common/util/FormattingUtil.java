@@ -11,7 +11,8 @@ public class FormattingUtil {
 		super();
 	}
 
-	private static final String FORMAT = "$1-$2-$3";
+	private static final String FORMAT_HYPHEN = "$1-$2-$3";
+	private static final String FORMAT_NOT_HYPHEN = "$1$2$3";
 
 	/**
 	 * <pre>
@@ -20,14 +21,15 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makePhoneNumber(String str) {
+	public static String makePhoneNumber(String str, boolean isHyphen) {
 		String sPattern = "^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, FORMAT);
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -37,9 +39,10 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makePhoneNumberMasking(String str) {
+	public static String makePhoneNumberMasking(String str, boolean isHyphen) {
 		Pattern pattern = Pattern
 				.compile("^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$");
 
@@ -62,7 +65,7 @@ public class FormattingUtil {
 			return null;
 		}
 
-		return sPhoneNum.replaceAll(sMaskingPattern, FORMAT);
+		return sPhoneNum.replaceAll(sMaskingPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -72,14 +75,15 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeCellPhoneNumber(String str) {
+	public static String makeCellPhoneNumber(String str, boolean isHyphen) {
 		String sPattern = "^(01[016789])-?(\\d{3,4})-?(\\d{4})$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, FORMAT);
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -89,9 +93,10 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeCellPhoneNumberMasking(String str) {
+	public static String makeCellPhoneNumberMasking(String str, boolean isHyphen) {
 		Pattern pattern = Pattern.compile("^(01[016789])-?(\\d{3,4})-?(\\d{4})$");
 
 		Matcher matcher = pattern.matcher(str);
@@ -113,7 +118,7 @@ public class FormattingUtil {
 			return null;
 		}
 
-		return sCellPhoneNum.replaceAll(sMaskingPattern, FORMAT);
+		return sCellPhoneNum.replaceAll(sMaskingPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -123,14 +128,15 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param sBusinessRegNum
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeBusinessRegNum(String str) {
+	public static String makeBusinessRegNum(String str, boolean isHyphen) {
 		String sPattern = "^(\\d{3})-?(\\d{2})-?(\\d{5})$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, FORMAT);
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -140,14 +146,15 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeYYYYMMDD(String str) {
+	public static String makeYYYYMMDD(String str, boolean isHyphen) {
 		String sPattern = "^([0-9]{4})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, FORMAT);
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -158,9 +165,10 @@ public class FormattingUtil {
 	 * 
 	 * @param str
 	 * @param isShowHundred
+	 *  @param isHyphen
 	 * @return
 	 */
-	public static String makeBirthdayMasking(String str, boolean isShowHundred) {
+	public static String makeBirthdayMasking(String str, boolean isShowHundred, boolean isHyphen) {
 		Pattern pattern = Pattern
 				.compile("^([0-9]{2})([0-9]{2})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$");
 
@@ -185,7 +193,7 @@ public class FormattingUtil {
 		}
 
 		String sPattern = "^(.{4})(.{2})(.{2})$";
-		return sb.toString().replaceAll(sPattern, FORMAT);
+		return sb.toString().replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -393,21 +401,22 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeCardNo(String str) {
+	public static String makeCardNo(String str, boolean isHyphen) {
 		String sPattern = "";
 		String sFormat = "";
 
 		switch (str.length()) {
 		case 16:
 			sPattern = "^(\\d{4})-?(\\d{4})-?(\\d{4})-?(\\d{4})$";
-			sFormat = "$1-$2-$3-$4";
+			sFormat = (isHyphen) ? "$1-$2-$3-$4" : "$1$2$3$4";
 			break;
 
 		case 15:
 			sPattern = "^(\\d{4})-?(\\d{6})-?(\\d{5})$";
-			sFormat = FORMAT;
+			sFormat = (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN;
 			break;
 
 		default:
@@ -429,9 +438,10 @@ public class FormattingUtil {
 	 * </pre>
 	 * 
 	 * @param str
+	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeCardNoMasking(String str) {
+	public static String makeCardNoMasking(String str, boolean isHyphen) {
 		String sCardNo = "";
 		StringBuilder sb = new StringBuilder();
 		
@@ -467,7 +477,7 @@ public class FormattingUtil {
 			sCardNo = sb.toString();
 			sMaskingPattern = "(\\d{4})-?(\\d{2})([*]{2})-?([*]{4})-?(\\d{4})+$";
 			
-			sFormat = "$1-$2$3-$4-$5";
+			sFormat = (isHyphen) ? "$1-$2$3-$4-$5" : "$1$2$3$4$5";
 			
 			break;
 
@@ -493,7 +503,7 @@ public class FormattingUtil {
 			sCardNo = sb.toString();
 			sMaskingPattern = "(\\d{4})-?(\\d{2})([*]{4})-?([*]{2})(\\d{3})+$";
 			
-			sFormat = "$1-$2$3-$4$5";
+			sFormat = (isHyphen) ? "$1-$2$3-$4$5" : "$1$2$3$4$5";
 			
 			break;
 
