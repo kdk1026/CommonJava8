@@ -1,20 +1,20 @@
 package common.util.sshsftp;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.Channel;
-import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 
 /**
  * <pre>
- * SSH 클라이언트 유틸
+ * SFTP 클라이언트 유틸
  *  - Jsch Standard
  * </pre>
  * @since 2019. 2. 12.
@@ -25,20 +25,20 @@ import com.jcraft.jsch.Session;
  * 2019. 2. 12. 김대광	최초작성
  * </pre>
  */
-public class SshClientUtil {
-
-	private static final Logger logger = LoggerFactory.getLogger(SshClientUtil.class);
+public class SftpClientUtil {
 	
-	public SshClientUtil() {
+	private static final Logger logger = LoggerFactory.getLogger(SftpClientUtil.class);
+
+	public SftpClientUtil() {
 		super();
 	}
 	
 	private Session session = null;
 	private Channel channel = null;
-	private ChannelExec channelExec = null;
-	
+	private ChannelSftp channelSftp = null;
+
 	/**
-	 * SSH 연결
+	 * SFTP 연결
 	 * @param sHost
 	 * @param nPort
 	 * @param sUsername
@@ -62,64 +62,36 @@ public class SshClientUtil {
 			
 			session.connect();
 			
-			channel = session.openChannel("exec");
+			channel = session.openChannel("sftp");
+			
 			
 			isConnected = true;
-			logger.info("SSH Connected");
+			logger.info("SFTP Connected");
 			
 		} catch (Exception e) {
 			isConnected = false;
 			
-			logger.info("SSH Not Connected");
+			logger.info("SFTP Not Connected");
 			logger.error("", e);
 		}
 		
 		if (isConnected) {
-			channelExec = (ChannelExec) channel;
+			channelSftp = (ChannelSftp) channel;
 		}
 		
 		return isConnected;
 	}
 	
 	/**
-	 * 명령어 수행, 결과 응답
-	 * @param sCommand
-	 * @return
-	 * @throws Exception
+	 * 파일 전송
+	 * @param sDestPath
+	 * @param file
 	 */
-	public String runExecRet(String sCommand) {
-		String sRet = "";
-		
-		try {
-			channelExec.connect();
-			channelExec.setCommand(sCommand);
-			
-			InputStream is = channel.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			byte[] buffer = new byte[4096];
-			
-			StringBuilder sb = new StringBuilder();
-			int nRead = bis.read(buffer, 0, buffer.length);
-			if (nRead > 0) {
-				sb.append(new String(buffer, 0, nRead));
-			}
-			
-			sRet = sb.toString();
-			
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		
-		return sRet;
-	}
-	
-	/**
-	 * 명령어 수행
-	 * @param sCommand
-	 */
-	public void runExec(String sCommand) {
-		try {
-			channelExec.setCommand(sCommand);
+	public void upload(String sDestPath, File file) {
+		try ( FileInputStream fis = new FileInputStream(file) ) {
+			channelSftp.cd(sDestPath);
+			channelSftp.rm(file.getAbsolutePath());
+			channelSftp.put(fis, file.getName());
 			
 		} catch (Exception e) {
 			logger.error("", e);
@@ -127,11 +99,11 @@ public class SshClientUtil {
 	}
 	
 	/**
-	 * SSH 종료
+	 * SFTP 종료
 	 */
 	public void disconnect() {
-		if (channelExec != null) {
-			channelExec.disconnect();
+		if (channelSftp != null) {
+			channelSftp.disconnect();
 		}
 		
 		if (channel != null) {
@@ -141,5 +113,5 @@ public class SshClientUtil {
 			session.disconnect();
 		}
 	}
-
+	
 }
