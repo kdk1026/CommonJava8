@@ -3,6 +3,7 @@ package common.util.sshsftp;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
 
 /**
  * <pre>
@@ -90,7 +92,18 @@ public class SftpClientUtil {
 	public void upload(String sDestPath, File file) {
 		try ( FileInputStream fis = new FileInputStream(file) ) {
 			channelSftp.cd(sDestPath);
-			channelSftp.rm(file.getAbsolutePath());
+			
+			@SuppressWarnings("unchecked")
+			Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
+			
+			for (LsEntry le : lsVec) {
+				String sFileNm = le.getFilename();
+				
+				if ( sFileNm.equals(file.getName()) ) {
+					channelSftp.rm(file.getAbsolutePath());
+				}
+			}
+			
 			channelSftp.put(fis, file.getName());
 			
 		} catch (Exception e) {
