@@ -127,6 +127,45 @@ public class SftpClientUtil {
 			logger.error("", e);
 		}
 	}
+	
+	/**
+	 * 해당 경로의 파일, 디렉토리 확인
+	 * @param sDestPath
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public Vector<LsEntry> ls(String sDestPath) {
+		Vector<LsEntry> lsVec = null;
+		
+		try {
+			lsVec = channelSftp.ls(sDestPath);
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return lsVec;
+	}
+	
+	/**
+	 * 파일/디렉토리 명 변경
+	 * @param sOldPath
+	 * @param sNewPath
+	 * @return
+	 */
+	public boolean rename(String sOldPath, String sNewPath) {
+		boolean isSuccess = false;
+		
+		try {
+			channelSftp.rename(sOldPath, sNewPath);
+			isSuccess = true;
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}	
+		
+		return isSuccess;
+	}
 
 	/**
 	 * SFTP 종료
