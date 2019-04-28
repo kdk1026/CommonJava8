@@ -2,8 +2,11 @@ package common.util.map;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -39,11 +42,27 @@ public class MapUtil {
 
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
+			
 			for (int i=0; i<fields.length; i++) {
 				fields[i].setAccessible(true);
-				String key = fields[i].getName();
-				Object value = fields[i].get(obj);
-				map.put(key, (value != null) ? value:"");
+				
+				if ( Collection.class.isAssignableFrom(fields[i].getType() )) {
+					String sArrKey = fields[i].getName();
+					@SuppressWarnings("unchecked")
+					List<Object> objList = (List<Object>) fields[i].get(obj);
+					
+					List<Map<String, Object>> mapList = new ArrayList<>();
+					
+					for (Object objArr : objList) {
+						Map<String, Object> objMap = objectToMapObject(objArr);
+						mapList.add(objMap);
+						map.put(sArrKey, mapList);
+					}
+				} else {
+					String sKey = fields[i].getName();
+					Object value = fields[i].get(obj);
+					map.put(sKey, (value != null) ? value:"");
+				}
 			}
 			
 		} catch (Exception e) {
