@@ -1,8 +1,10 @@
 package common.util.excel;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -12,7 +14,6 @@ import java.util.Map;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,69 +28,175 @@ public class PoiUtil {
 	private PoiUtil() {
 		super();
 	}
-
+	
 	/**
-	 * 엑셀 파일 생성
-	 * @param strDestFilePath
-	 * @param fileName
-	 * @param list
+	 * 엑셀 파일 읽기
+	 * @param file
+	 * @param cellNames
 	 * @return
 	 */
-	public static boolean writeExcel(String strDestFilePath, String fileName, List<Map<String, Object>> list) {
+	public static List<Map<String, Object>> readExcel(File file, String[] cellNames) {
+		List<Map<String, Object>> resList = new ArrayList<>();
+		
+		String sFileName = file.getName();
+		String sFileExt = sFileName.substring(sFileName.lastIndexOf('.') + 1);
+
+		try {
+			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			Workbook wb = null;
+			
+			switch (sFileExt) {
+			case "xls":
+				wb = new HSSFWorkbook(is);
+				break;
+				
+			case "xlsx":
+				wb = new XSSFWorkbook(is);
+				break;
+
+			default:
+				break;
+			}
+			
+			is.close();
+			
+			Sheet sheet = wb.getSheetAt(0);
+			int nRowCnt = sheet.getPhysicalNumberOfRows();
+
+			for (int rowIdx=0; rowIdx < nRowCnt; rowIdx++) {
+				Row row = sheet.getRow(rowIdx+1);
+
+				if (row != null) {
+					int nCellCnt = row.getPhysicalNumberOfCells();
+					Map<String, Object> map = new HashMap<>();
+					
+					for (int cellIdx=0; cellIdx < nCellCnt; cellIdx++) {
+						Cell cell = row.getCell(cellIdx);
+						
+						if (cell != null) {
+							Object obj = null;
+							int cellType = cell.getCellType();
+							
+							switch (cellType) {
+							case Cell.CELL_TYPE_BLANK:
+								obj = "";
+								break;
+								
+							case Cell.CELL_TYPE_NUMERIC:
+								obj = cell.getNumericCellValue();
+								break;
+								
+							case Cell.CELL_TYPE_STRING:
+								obj = cell.getStringCellValue();
+								break;
+								
+							case Cell.CELL_TYPE_FORMULA:
+								obj = cell.getCellFormula();
+								break;
+								
+							case Cell.CELL_TYPE_BOOLEAN:
+								obj = cell.getBooleanCellValue();
+								break;
+								
+							case Cell.CELL_TYPE_ERROR:
+								obj = cell.getErrorCellValue();
+								break;
+								
+							default:
+								break;
+							}
+							
+							String sCellNm = "";
+							
+							if ( cellNames != null ) {
+								sCellNm = cellNames[cellIdx];
+							} else {
+								sCellNm = cell.getSheet().getRow(0).getCell(cellIdx).getRichStringCellValue().toString();
+							}
+							
+							map.put(sCellNm, obj);
+						}
+					}
+					
+					resList.add(map);
+				}
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		return resList;
+	}
+	
+	/**
+	 * 엑셀 파일 생성
+	 * @param destFilePath
+	 * @param fileName
+	 * @param contentsList
+	 * @return
+	 */
+	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList) {
 		boolean isSuccess = false;
 
-		Workbook wb = null;
-		String fileExt = fileName.substring(fileName.lastIndexOf('.')+1);
+		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
 		
-		if ( "xls".equals(fileExt) ) {
+		Workbook wb = null;
+		
+		switch (sFileExt) {
+		case "xls":
 			wb = new HSSFWorkbook();
-		}
-		else if ( "xlsx".equals(fileExt) ) {
+			break;
+			
+		case "xlsx":
 			wb = new XSSFWorkbook();
+			break;
+
+		default:
+			break;
 		}
 
 		Sheet sheet = wb.createSheet();
 		Row row = null;
 
 		Map<String, Object> dataMap = null;
-		int cellCnt = 0;
+		int nCellCnt = 0;
 
 		// 타이틀
 		row = sheet.createRow(0);
-		dataMap = list.get(0);
-		for ( String key : dataMap.keySet() ) {
-			row.createCell(cellCnt).setCellValue(key);
-			cellCnt = cellCnt + 1;
+		dataMap = contentsList.get(0);
+		
+		for ( String sKey : dataMap.keySet() ) {
+			row.createCell(nCellCnt).setCellValue(sKey);
+			nCellCnt = nCellCnt + 1;
 		}
 
 		// 내용
-		for (int i=0; i < list.size(); i++) {
-			cellCnt = 0;
+		for (int i=0; i < contentsList.size(); i++) {
+			nCellCnt = 0;
 
 			row = sheet.createRow(i+1);
-			dataMap = list.get(i);
+			dataMap = contentsList.get(i);
 			
 			for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
 				Object value = entry.getValue();
 				
 				if ( value instanceof String ) {
-					row.createCell(cellCnt).setCellValue((String) value);
+					row.createCell(nCellCnt).setCellValue((String) value);
 				}
 				else if ( value instanceof Integer ) {
-					row.createCell(cellCnt).setCellValue((Integer) value);
+					row.createCell(nCellCnt).setCellValue((Integer) value);
 				}
 				else if ( value instanceof Boolean ) {
-					row.createCell(cellCnt).setCellValue((Boolean) value);
+					row.createCell(nCellCnt).setCellValue((Boolean) value);
 				}
 				
-				cellCnt = cellCnt + 1;
+				nCellCnt = nCellCnt + 1;
 			}
 		}
 
-		OutputStream os = null;
 		try {
-			File outFile = new File(strDestFilePath + File.separator + fileName);
-			os = new FileOutputStream(outFile);
+			File outFile = new File(destFilePath + File.separator + fileName);
+			OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile));
 			wb.write(os);
 
 			os.close();
@@ -97,95 +204,9 @@ public class PoiUtil {
 
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (wb != null) {
-				try {
-					wb.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 		
 		return isSuccess;
-	}
-
-	/**
-	 * <pre>
-	 * 엑셀 파일 읽기
-	 * </pre>
-	 * @param is
-	 * @param fileName
-	 * @return
-	 */
-	public static List<Map<String, Object>> readExcel(InputStream is, String fileName) {
-		List<Map<String, Object>> resList = new ArrayList<>();
-
-		Workbook wb = null;
-		String fileExt = fileName.substring(fileName.lastIndexOf('.')+1);
-		
-		try {
-			if ( "xls".equals(fileExt) ) {
-				wb = new HSSFWorkbook(is);
-			}
-			else if ( "xlsx".equals(fileExt) ) {
-				wb = new XSSFWorkbook(is);
-			}
-
-			Sheet sheet = wb.getSheetAt(0);
-			int rowCnt = sheet.getPhysicalNumberOfRows();
-			int cellCnt = 0;
-
-			Row row = null;
-			Cell cell = null;
-
-			String cellName = "";
-			Map<String, Object> map = null;
-			Object obj = null;
-			CellType cellType = null;
-			
-			for (int rowIdx=0; rowIdx < rowCnt; rowIdx++) {
-				row = sheet.getRow(rowIdx+1);
-
-				if (row == null) {
-					break;
-				}
-				
-				cellCnt = row.getPhysicalNumberOfCells();
-				map = new HashMap<>();
-
-				for (int cellIdx=0; cellIdx < cellCnt; cellIdx++) {
-					cell = row.getCell(cellIdx);
-
-					obj = null;
-					
-					cellType = cell.getCellTypeEnum();
-					
-					if ( cellType.equals(CellType.STRING) ) {
-						obj = cell.getStringCellValue();
-					}
-					else if ( cellType.equals(CellType.NUMERIC) ) {
-						obj = cell.getNumericCellValue();
-					}
-					else if ( cellType.equals(CellType.BOOLEAN) ) {
-						obj = cell.getBooleanCellValue();
-					}
-					else if ( cellType.equals(CellType.ERROR) ) {
-						obj = cell.getErrorCellValue();
-					}
-					else if ( cellType.equals(CellType.BLANK) ) {
-						obj = "";
-					}
-					
-					cellName = cell.getSheet().getRow(0).getCell(cellIdx).getRichStringCellValue().toString();
-					map.put(cellName, obj);
-				}
-				resList.add(map);
-			}
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		return resList;
 	}
 	
 }

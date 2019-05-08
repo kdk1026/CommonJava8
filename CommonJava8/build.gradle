@@ -113,7 +113,7 @@ dependencies {
 	compile group: 'org.apache.tika', name: 'tika-core', version: '1.17'
 	
 	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
+	//compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
 	
 /* Google */
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson
@@ -146,6 +146,13 @@ dependencies {
         exclude module: 'log4j'
     }
     
+	// https://mvnrepository.com/artifact/net.sf.jxls/jxls-core
+	compile("net.sf.jxls:jxls-core:1.0.6") {
+		 exclude module: 'commons-beanutils'
+		 exclude module: 'commons-collections'
+		 exclude module: 'commons-logging'
+	}
+
     
 /* Test */
 	testCompile group: 'junit', name: 'junit', version: junitVersion
