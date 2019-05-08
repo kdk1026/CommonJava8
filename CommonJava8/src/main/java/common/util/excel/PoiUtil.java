@@ -65,61 +65,65 @@ public class PoiUtil {
 
 			for (int rowIdx=0; rowIdx < nRowCnt; rowIdx++) {
 				Row row = sheet.getRow(rowIdx+1);
+				
+				if (row == null) {
+					continue;
+				}
 
-				if (row != null) {
-					int nCellCnt = row.getPhysicalNumberOfCells();
-					Map<String, Object> map = new HashMap<>();
+				int nCellCnt = row.getPhysicalNumberOfCells();
+				Map<String, Object> map = new HashMap<>();
+				
+				for (int cellIdx=0; cellIdx < nCellCnt; cellIdx++) {
+					Cell cell = row.getCell(cellIdx);
 					
-					for (int cellIdx=0; cellIdx < nCellCnt; cellIdx++) {
-						Cell cell = row.getCell(cellIdx);
-						
-						if (cell != null) {
-							Object obj = null;
-							int cellType = cell.getCellType();
-							
-							switch (cellType) {
-							case Cell.CELL_TYPE_BLANK:
-								obj = "";
-								break;
-								
-							case Cell.CELL_TYPE_NUMERIC:
-								obj = cell.getNumericCellValue();
-								break;
-								
-							case Cell.CELL_TYPE_STRING:
-								obj = cell.getStringCellValue();
-								break;
-								
-							case Cell.CELL_TYPE_FORMULA:
-								obj = cell.getCellFormula();
-								break;
-								
-							case Cell.CELL_TYPE_BOOLEAN:
-								obj = cell.getBooleanCellValue();
-								break;
-								
-							case Cell.CELL_TYPE_ERROR:
-								obj = cell.getErrorCellValue();
-								break;
-								
-							default:
-								break;
-							}
-							
-							String sCellNm = "";
-							
-							if ( cellNames != null ) {
-								sCellNm = cellNames[cellIdx];
-							} else {
-								sCellNm = cell.getSheet().getRow(0).getCell(cellIdx).getRichStringCellValue().toString();
-							}
-							
-							map.put(sCellNm, obj);
-						}
+					if (cell == null) {
+						continue;
 					}
 					
-					resList.add(map);
+					Object obj = null;
+					int cellType = cell.getCellType();
+					
+					switch (cellType) {
+					case Cell.CELL_TYPE_BLANK:
+						obj = "";
+						break;
+						
+					case Cell.CELL_TYPE_NUMERIC:
+						obj = cell.getNumericCellValue();
+						break;
+						
+					case Cell.CELL_TYPE_STRING:
+						obj = cell.getStringCellValue();
+						break;
+						
+					case Cell.CELL_TYPE_FORMULA:
+						obj = cell.getCellFormula();
+						break;
+						
+					case Cell.CELL_TYPE_BOOLEAN:
+						obj = cell.getBooleanCellValue();
+						break;
+						
+					case Cell.CELL_TYPE_ERROR:
+						obj = cell.getErrorCellValue();
+						break;
+						
+					default:
+						break;
+					}
+					
+					String sCellNm = "";
+					
+					if ( cellNames != null ) {
+						sCellNm = cellNames[cellIdx];
+					} else {
+						sCellNm = cell.getSheet().getRow(0).getCell(cellIdx).getRichStringCellValue().toString();
+					}
+					
+					map.put(sCellNm, obj);
 				}
+				
+				resList.add(map);
 			}
 			
 		} catch (Exception e) {
