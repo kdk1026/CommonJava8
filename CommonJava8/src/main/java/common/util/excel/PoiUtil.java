@@ -52,15 +52,15 @@ public class PoiUtil {
 
 		try {
 			InputStream is = new BufferedInputStream(new FileInputStream(file));
-			Workbook wb = null;
+			Workbook workbook = null;
 			
 			switch (sFileExt) {
 			case "xls":
-				wb = new HSSFWorkbook(is);
+				workbook = new HSSFWorkbook(is);
 				break;
 				
 			case "xlsx":
-				wb = new XSSFWorkbook(is);
+				workbook = new XSSFWorkbook(is);
 				break;
 
 			default:
@@ -69,7 +69,7 @@ public class PoiUtil {
 			
 			is.close();
 			
-			Sheet sheet = wb.getSheetAt(0);
+			Sheet sheet = workbook.getSheetAt(0);
 			int nRowCnt = sheet.getPhysicalNumberOfRows();
 
 			for (int rowIdx=0; rowIdx < nRowCnt; rowIdx++) {
@@ -151,28 +151,28 @@ public class PoiUtil {
 	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
 		
-		Workbook wb = null;
+		Workbook workbook = null;
 		
 		switch (sFileExt) {
 		case "xls":
-			wb = new HSSFWorkbook();
+			workbook = new HSSFWorkbook();
 			break;
 			
 		case "xlsx":
-			wb = new XSSFWorkbook();
+			workbook = new XSSFWorkbook();
 			break;
 
 		default:
 			break;
 		}
 
-		Sheet sheet = wb.createSheet();
+		Sheet sheet = workbook.createSheet();
 		Row row = null;
 		
-		Font font = wb.createFont();
+		Font font = workbook.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 		
-		CellStyle cellStyle = wb.createCellStyle();
+		CellStyle cellStyle = workbook.createCellStyle();
 		cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
 		cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		cellStyle.setFont(font);
@@ -222,7 +222,7 @@ public class PoiUtil {
 			}
 		}
 		
-		return wb;
+		return workbook;
 	}
 	
 	/**
@@ -236,12 +236,12 @@ public class PoiUtil {
 	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		boolean isSuccess = false;
 		
-		Workbook wb = createWorkbookFromContents(fileName, contentsList, cellTitles);
+		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);
 
 		try {
 			File outFile = new File(destFilePath + File.separator + fileName);
 			OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile));
-			wb.write(os);
+			workbook.write(os);
 
 			os.close();
 			isSuccess = true;
@@ -264,12 +264,12 @@ public class PoiUtil {
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
 			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		
-		Workbook wb = createWorkbookFromContents(fileName, contentsList, cellTitles);
+		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);
 		
 		setResponseForFile(request, response, fileName);
 		
 		try {
-			wb.write(response.getOutputStream());
+			workbook.write(response.getOutputStream());
 			
 		} catch (IOException e) {
 			logger.error("", e);
