@@ -145,6 +145,7 @@ public class PoiUtil {
 	 * 컨텐츠로부터 Workbook 생성
 	 * @param fileName
 	 * @param contentsList
+	 * @param cellTitles
 	 * @return
 	 */
 	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
@@ -258,6 +259,7 @@ public class PoiUtil {
 	 * @param response
 	 * @param fileName
 	 * @param contentsList
+	 * @param cellTitles
 	 */
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
 			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
