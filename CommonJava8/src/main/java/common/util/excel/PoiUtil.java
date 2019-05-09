@@ -5,15 +5,24 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -133,15 +142,12 @@ public class PoiUtil {
 	}
 	
 	/**
-	 * 엑셀 파일 생성
-	 * @param destFilePath
+	 * 컨텐츠로부터 Workbook 생성
 	 * @param fileName
 	 * @param contentsList
 	 * @return
 	 */
-	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList) {
-		boolean isSuccess = false;
-
+	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
 		
 		Workbook wb = null;
@@ -161,6 +167,14 @@ public class PoiUtil {
 
 		Sheet sheet = wb.createSheet();
 		Row row = null;
+		
+		Font font = wb.createFont();
+		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		
+		CellStyle cellStyle = wb.createCellStyle();
+		cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		cellStyle.setFont(font);
 
 		Map<String, Object> dataMap = null;
 		int nCellCnt = 0;
@@ -169,9 +183,12 @@ public class PoiUtil {
 		row = sheet.createRow(0);
 		dataMap = contentsList.get(0);
 		
-		for ( String sKey : dataMap.keySet() ) {
-			row.createCell(nCellCnt).setCellValue(sKey);
-			nCellCnt = nCellCnt + 1;
+		for ( String sCellTitle : cellTitles ) {
+			Cell rowCell = row.createCell(nCellCnt); 
+			
+			rowCell.setCellStyle(cellStyle);
+			rowCell.setCellValue(sCellTitle);
+			nCellCnt = nCellCnt + 1;			
 		}
 
 		// 내용
@@ -184,7 +201,10 @@ public class PoiUtil {
 			for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
 				Object value = entry.getValue();
 				
-				if ( value instanceof String ) {
+				if ( value == null ) {
+					row.createCell(nCellCnt).setCellValue("");
+				}
+				else if ( value instanceof String ) {
 					row.createCell(nCellCnt).setCellValue((String) value);
 				}
 				else if ( value instanceof Integer ) {
@@ -193,10 +213,29 @@ public class PoiUtil {
 				else if ( value instanceof Boolean ) {
 					row.createCell(nCellCnt).setCellValue((Boolean) value);
 				}
+				else {
+					row.createCell(nCellCnt).setCellValue(String.valueOf(value));
+				}
 				
 				nCellCnt = nCellCnt + 1;
 			}
 		}
+		
+		return wb;
+	}
+	
+	/**
+	 * 엑셀 파일 생성
+	 * @param destFilePath
+	 * @param fileName
+	 * @param contentsList
+	 * @param cellTitles
+	 * @return
+	 */
+	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
+		boolean isSuccess = false;
+		
+		Workbook wb = createWorkbookFromContents(fileName, contentsList, cellTitles);
 
 		try {
 			File outFile = new File(destFilePath + File.separator + fileName);
@@ -211,6 +250,56 @@ public class PoiUtil {
 		}
 		
 		return isSuccess;
+	}
+	
+	/**
+	 * 엑셀 파일 다운로드
+	 * @param request
+	 * @param response
+	 * @param fileName
+	 * @param contentsList
+	 */
+	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
+			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
+		
+		Workbook wb = createWorkbookFromContents(fileName, contentsList, cellTitles);
+		
+		setResponseForFile(request, response, fileName);
+		
+		try {
+			wb.write(response.getOutputStream());
+			
+		} catch (IOException e) {
+			logger.error("", e);
+		}
+	}
+	
+	private static void setResponseForFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
+		String reportFileName = setFileNameByBrowser(request, fileName);
+
+		response.setHeader("Content-Transfer-Encoding", "binary");
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + reportFileName+ "\"");
+	}
+	
+	private static String setFileNameByBrowser(HttpServletRequest request, String str) {
+		String sRes = "";
+		String userAgent = request.getHeader("User-Agent");
+		
+		try {
+			final String UTF_8 = StandardCharsets.UTF_8.name();
+			final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
+			
+			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+				sRes = URLEncoder.encode(str, UTF_8).replaceAll("\\+", " ");
+			} else {
+				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
+			}
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return sRes;
 	}
 	
 }
