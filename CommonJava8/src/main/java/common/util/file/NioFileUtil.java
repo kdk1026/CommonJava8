@@ -170,7 +170,12 @@ public class NioFileUtil {
 	 */
 	public static void writeFile(String filePath, byte[] bData) {
 		Path path = Paths.get(filePath);
-		Files.write(path, bData);
+		try {
+			Files.write(path, bData);
+
+		} catch (IOException e) {
+			logger.error("", e);
+		}
 	}
 
 	/**
