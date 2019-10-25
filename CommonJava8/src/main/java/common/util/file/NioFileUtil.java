@@ -19,7 +19,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @since 1.7
+ * @author 김대광
+ * @Description	: 1.7 기반
+ * <pre>
+ * -----------------------------------
+ * </pre>
  */
 public class NioFileUtil {
 

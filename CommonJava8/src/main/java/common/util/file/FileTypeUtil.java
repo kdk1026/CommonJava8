@@ -1,13 +1,11 @@
 package common.util.file;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.spi.FileTypeDetector;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
@@ -15,41 +13,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author 김대광
- * @Description	: 1.7 기반
+ * @Description	: 1.6 기반
  * <pre>
  * -----------------------------------
  * </pre>
  */
-public class NioFileTypeUtil {
+public class FileTypeUtil {
 
-	private NioFileTypeUtil() {
+	private FileTypeUtil() {
 		super();
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
-
-
-	/**
-	 * <pre>
-	 * 파일 MIME Type 구하기
-	 *   - Apache Tika 사용
-	 * </pre>
-	 * @param is
-	 * @return
-	 */
-	public static String getFileMimeTypeTika(InputStream is) {
-		String mimeType = "";
-		Tika tika = new Tika();
-
-		try {
-			mimeType = tika.detect(is);
-
-		} catch (IOException e) {
-			logger.error("", e);
-		}
-
-		return mimeType;
-	}
+	private static final Logger logger = LoggerFactory.getLogger(FileTypeUtil.class);
 
 	/**
 	 * 파일 MIME Type 구하기
@@ -57,46 +32,33 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeType(String filePath) {
-		String mimeType = "";
-		Path path = Paths.get(filePath);
+		File file = new File(filePath);
+		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 
-		try {
-			mimeType = Files.probeContentType(path);
-		} catch (IOException e) {
-			logger.error("", e);
-		}
-
-		return mimeType;
+		return mimeTypesMap.getContentType(file);
 	}
 
 	/**
 	 * <pre>
 	 * 파일 MIME Type 구하기
-	 *   - nio + Apache Tika 사용
+	 *   - Apache Tika 사용
 	 * </pre>
 	 * @param filePath
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
 		String mimeType = "";
-		Path path = Paths.get(filePath);
+		File file = new File(filePath);
+		Tika tika = new Tika();
 
 		try {
-			mimeType = new NioFileTypeDetector().probeContentType(path);
+			mimeType = tika.detect(file);
+
 		} catch (IOException e) {
-			logger.error("", e);
+			logger.error("getFileMimeType IOException", e);
 		}
 
 		return mimeType;
-	}
-
-	private static class NioFileTypeDetector extends FileTypeDetector {
-		private final Tika tika = new Tika();
-
-		@Override
-		public String probeContentType(Path path) throws IOException {
-			return tika.detect(path);
-		}
 	}
 
 	/**
