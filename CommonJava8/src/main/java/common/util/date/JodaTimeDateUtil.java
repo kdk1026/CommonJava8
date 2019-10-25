@@ -1,31 +1,35 @@
 package common.util.date;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 import java.util.Locale;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Minutes;
+import org.joda.time.Months;
+import org.joda.time.Seconds;
+import org.joda.time.Years;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 /**
  * @author 김대광
- * @Description	1.8 기반
+ * @Description	JODA-TIME 필요
+ * 	- 1.8 이하에서 사용
  * <pre>
  * 개정이력
  * -----------------------------------
  * </pre>
  */
-public class Jsr310DateUtil {
+public class JodaTimeDateUtil {
 
-	private Jsr310DateUtil() {
+	private JodaTimeDateUtil() {
 		super();
 	}
 
 	private static final String YYYYMMDD = "yyyyMMdd";
-	private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+	public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
 	/**
 	 * 현재 날짜 및 시간 반환
@@ -41,7 +45,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getTodayString() {
-			return LocalDateTime.now().format(DateTimeFormatter.ofPattern(YYYYMMDD));
+			return DateTime.now().toString(YYYYMMDD);
 		}
 
 		/**
@@ -50,7 +54,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getTodayString(String dateFormat) {
-			return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
+			return DateTime.now().toString(dateFormat);
 		}
 
 		/**
@@ -58,7 +62,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getCurrentTime() {
-			return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
+			return DateTime.now().toString("HHmmss");
 		}
 	}
 
@@ -78,8 +82,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getStringDate(String strDate, String dateFormat) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.format(DateTimeFormatter.ofPattern(dateFormat));
+			return DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD)).toString(dateFormat);
 		}
 
 		/**
@@ -89,8 +92,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getStringDateTime(String strDate, String dateFormat) {
-			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+			return DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDDHHMMSS)).toString(dateFormat);
 		}
 	}
 
@@ -111,11 +113,9 @@ public class Jsr310DateUtil {
 		public static Date getStringToDate(String strDate) {
 			Date date = null;
 			if (strDate.length() == 14) {
-				LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-				date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+				date = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDDHHMMSS)).toDate();
 			} else {
-				LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-				date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+				date = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD)).toDate();
 			}
 			return date;
 		}
@@ -126,8 +126,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getDateToString(Date date) {
-			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-			return localDate.format(DateTimeFormatter.ofPattern(YYYYMMDD));
+			return DateTimeFormat.forPattern(YYYYMMDD).print(date.getTime());
 		}
 
 		/**
@@ -137,20 +136,18 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getDateToString(Date date, String dateFormat) {
-			LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+			return DateTimeFormat.forPattern(dateFormat).print(date.getTime());
 		}
 
 		/**
-		 * LocalDateTime 타입 객체를 해당 포맷의 String 타입으로 반환
-		 * @param localDateTime
+		 * DateTime 타입 객체를 해당 포맷의 String 타입으로 반환
+		 * @param dateTime
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String getLocalDateTimeToString(LocalDateTime localDateTime, String dateFormat) {
-			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+		public static String getDateTimeToString(DateTime dateTime, String dateFormat) {
+			return dateTime.toString(dateFormat);
 		}
-
 	}
 
 	/**
@@ -171,11 +168,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusDay(int days) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.now();
 			if (days > 0) {
-				strDateRes = localDate.plusDays(days).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().plusDays(days).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusDays((days*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().minusDays(days*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -190,11 +186,11 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusDay(String strDate, int days) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
 			if (days > 0) {
-				strDateRes = localDate.plusDays(days).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).plusDays(days).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusDays((days*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).minusDays(days*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -208,11 +204,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusMonth(int months) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.now();
 			if (months > 0) {
-				strDateRes = localDate.plusMonths(months).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().plusMonths(months).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusMonths((months*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().minusMonths(months*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -227,11 +222,11 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusMonth(String strDate, int months) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
 			if (months > 0) {
-				strDateRes = localDate.plusMonths(months).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).plusDays(months).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusMonths((months*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).minusDays(months*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -245,11 +240,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusYear(int years) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.now();
 			if (years > 0) {
-				strDateRes = localDate.plusYears(years).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().plusYears(years).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusYears((years*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.now().minusYears(years*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -264,11 +258,11 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusYear(String strDate, int years) {
 			String strDateRes = "";
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
 			if (years > 0) {
-				strDateRes = localDate.plusYears(years).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).plusYears(years).toString(YYYYMMDD);
 			} else {
-				strDateRes = localDate.minusYears((years*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+				strDateRes = DateTime.parse(strDate, formatter).minusYears(years*-1).toString(YYYYMMDD);
 			}
 			return strDateRes;
 		}
@@ -292,11 +286,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusHour(int hours) {
 			String strDateRes = "";
-			LocalDateTime localDateTime = LocalDateTime.now();
 			if (hours > 0) {
-				strDateRes = localDateTime.plusHours(hours).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().plusHours(hours).toString(YYYYMMDDHHMMSS);
 			} else {
-				strDateRes = localDateTime.minusHours((hours*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().minusHours(hours*-1).toString(YYYYMMDDHHMMSS);
 			}
 			return strDateRes;
 		}
@@ -311,11 +304,11 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusHour(String strDate, int hours) {
 			String strDateRes = "";
-			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDDHHMMSS);
 			if (hours > 0) {
-				strDateRes = localDateTime.plusHours(hours).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.parse(strDate, formatter).plusHours(hours).toString(YYYYMMDDHHMMSS);
 			} else {
-				strDateRes = localDateTime.minusHours((hours*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.parse(strDate, formatter).minusHours(hours*-1).toString(YYYYMMDDHHMMSS);
 			}
 			return strDateRes;
 		}
@@ -329,11 +322,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusMinute(int minutes) {
 			String strDateRes = "";
-			LocalDateTime localDateTime = LocalDateTime.now();
 			if (minutes > 0) {
-				strDateRes = localDateTime.plusMinutes(minutes).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().plusMinutes(minutes).toString(YYYYMMDDHHMMSS);
 			} else {
-				strDateRes = localDateTime.minusMinutes((minutes*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().minusMinutes(minutes*-1).toString(YYYYMMDDHHMMSS);
 			}
 			return strDateRes;
 		}
@@ -348,11 +340,11 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusMinute(String strDate, int minutes) {
 			String strDateRes = "";
-			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDDHHMMSS);
 			if (minutes > 0) {
-				strDateRes = localDateTime.plusMinutes(minutes).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.parse(strDate, formatter).plusMinutes(minutes).toString(YYYYMMDDHHMMSS);
 			} else {
-				strDateRes = localDateTime.minusMinutes((minutes*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.parse(strDate, formatter).minusMinutes(minutes*-1).toString(YYYYMMDDHHMMSS);
 			}
 			return strDateRes;
 		}
@@ -366,11 +358,10 @@ public class Jsr310DateUtil {
 		 */
 		public static String plusMinusSecond(int seconds) {
 			String strDateRes = "";
-			LocalDateTime localDateTime = LocalDateTime.now();
 			if (seconds > 0) {
-				strDateRes = localDateTime.plusSeconds(seconds).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().plusSeconds(seconds).toString(YYYYMMDDHHMMSS);
 			} else {
-				strDateRes = localDateTime.minusSeconds((seconds*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
+				strDateRes = DateTime.now().minusSeconds(seconds*-1).toString(YYYYMMDDHHMMSS);
 			}
 			return strDateRes;
 		}
@@ -392,9 +383,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalYears(String strFixDate) {
-			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			LocalDate targetDate = LocalDate.now();
-			return targetDate.until(fixDate).getYears();
+			DateTime fixDate = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDD));
+			DateTime targetDate = DateTime.now();
+			return Years.yearsBetween(targetDate, fixDate).toPeriod().getYears();
 		}
 
 		/**
@@ -404,9 +395,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalMonths(String strFixDate) {
-			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			LocalDate targetDate = LocalDate.now();
-			return targetDate.until(fixDate).getMonths();
+			DateTime fixDate = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDD));
+			DateTime targetDate = DateTime.now();
+			return Months.monthsBetween(targetDate, fixDate).toPeriod().getMonths();
 		}
 
 		/**
@@ -416,9 +407,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalDays(String strFixDate) {
-			LocalDate fixDate = LocalDate.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			LocalDate targetDate = LocalDate.now();
-			return targetDate.until(fixDate).getDays();
+			DateTime fixDate = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDD));
+			DateTime targetDate = DateTime.now();
+			return Days.daysBetween(targetDate, fixDate).toPeriod().getDays();
 		}
 	}
 
@@ -438,9 +429,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalHours(String strFixDate) {
-			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) targetTime.until(fixTime, ChronoUnit.HOURS);
+			DateTime fixTime = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDDHHMMSS));
+			DateTime targetTime = DateTime.now();
+			return Hours.hoursBetween(targetTime, fixTime).toPeriod().getHours();
 		}
 
 		/**
@@ -450,9 +441,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalMinutes(String strFixDate) {
-			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) targetTime.until(fixTime, ChronoUnit.MINUTES);
+			DateTime fixTime = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDDHHMMSS));
+			DateTime targetTime = DateTime.now();
+			return Minutes.minutesBetween(targetTime, fixTime).toPeriod().getMinutes();
 		}
 
 		/**
@@ -462,9 +453,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int intervalSeconds(String strFixDate) {
-			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
-			return (int) targetTime.until(fixTime, ChronoUnit.SECONDS);
+			DateTime fixTime = DateTime.parse(strFixDate, DateTimeFormat.forPattern(YYYYMMDDHHMMSS));
+			DateTime targetTime = DateTime.now();
+			return Seconds.secondsBetween(targetTime, fixTime).toPeriod().getSeconds();
 		}
 	}
 
@@ -483,7 +474,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getDayOfWeek() {
-			return LocalDate.now().getDayOfWeek().getValue();
+			return DateTime.now().getDayOfWeek();
 		}
 
 		/**
@@ -492,8 +483,8 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getDayOfWeek(String strDate) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.getDayOfWeek().getValue();
+			DateTime dt = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD));
+			return dt.getDayOfWeek();
 		}
 
 		/**
@@ -501,9 +492,9 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getFirstDayOfWeek() {
-			String strDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM01"));
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.getDayOfWeek().getValue();
+			String strDate = DateTime.now().toString("yyyyMM01");
+			DateTime dt = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD));
+			return dt.getDayOfWeek();
 		}
 
 		/**
@@ -512,8 +503,8 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getFirstDayOfWeek(String strDate) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.withDayOfMonth(1).getDayOfWeek().getValue();
+			DateTime dt = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD));
+			return dt.withDayOfMonth(1).getDayOfWeek();
 		}
 
 		/**
@@ -522,8 +513,8 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getDayOfWeekLocale(Locale locale) {
-			LocalDate localDate = LocalDate.now();
-			return localDate.format(DateTimeFormatter.ofPattern("E", locale));
+			DateTime dt = DateTime.now();
+			return DateTimeFormat.forPattern("E").withLocale(locale).print(dt);
 		}
 
 		/**
@@ -533,8 +524,8 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getDayOfWeekLocale(String strDate, Locale locale) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.format(DateTimeFormatter.ofPattern("E", locale));
+			DateTime dt = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD));
+			return DateTimeFormat.forPattern("E").withLocale(locale).print(dt);
 		}
 	}
 
@@ -552,8 +543,7 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getLastDayOfMonth() {
-			LocalDate localDate = LocalDate.now();
-			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+			return DateTime.now().dayOfMonth().getMaximumValue();
 		}
 
 		/**
@@ -562,10 +552,11 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static int getLastDayOfMonth(String strDate) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
-			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+			DateTime dt = DateTime.parse(strDate, DateTimeFormat.forPattern(YYYYMMDD));
+			return dt.dayOfMonth().getMaximumValue();
 		}
 	}
+
 
 	/**
 	 * Unix Timestamp
@@ -581,16 +572,17 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static long currentMillis() {
-			return LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+			return new DateTime().getMillis();
 		}
 
 		/**
-		 * milliseconds to LocalDateTime
+		 * milliseconds to String
 		 * @param mills
 		 * @return
 		 */
-		public static LocalDateTime millsToLocalDateTime(long mills) {
-			return Instant.ofEpochMilli(mills).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		public static String millsToString(long mills) {
+			DateTime dateTime = new DateTime(mills);
+			return dateTime.toString(YYYYMMDDHHMMSS);
 		}
 
 		/**
@@ -605,12 +597,12 @@ public class Jsr310DateUtil {
 		}
 
 		/**
-		 * timestamp to DateTime
+		 * timestamp to String
 		 * @param timestamp (sec)
 		 * @return
 		 */
-		public static LocalDateTime timestampToDateTime(long timestamp) {
-			return millsToLocalDateTime(timestamp * 1000);
+		public static String timestampToString(long timestamp) {
+			return millsToString(timestamp * 1000);
 		}
 
 	}

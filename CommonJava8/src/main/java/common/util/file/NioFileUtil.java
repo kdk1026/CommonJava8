@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
  * @Description	: 1.7 기반
  * <pre>
  * -----------------------------------
+ * 개정이력
  * </pre>
  */
 public class NioFileUtil {

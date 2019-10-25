@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * @Description	: 1.6 기반
  * <pre>
  * -----------------------------------
+ * 개정이력
  * </pre>
  */
 public class FileTypeUtil {

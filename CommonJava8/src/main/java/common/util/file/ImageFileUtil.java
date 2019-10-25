@@ -16,24 +16,23 @@ import javax.swing.ImageIcon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
+ * @author 김대광
  * <pre>
- * 개정이력
  * -----------------------------------
+ * 개정이력
  * 2019. 5. 4. 김대광	최초작성
  * </pre>
- * 
- *
- * @author 김대광
  */
 public class ImageFileUtil {
 
 	private ImageFileUtil() {
-		
+
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ImageFileUtil.class);
-	
+
 	/**
 	 * 이미지 리사이즈
 	 * @param sSrcPath
@@ -59,37 +58,37 @@ public class ImageFileUtil {
 	public static void resize(File srcFile, File destFile, int nWidth, int nHeight, boolean isScale) {
 		final String sSrcPath = srcFile.getPath();
 		final String sImageFormat = sSrcPath.substring(sSrcPath.lastIndexOf('.')+1);
-		
+
 		BufferedImage bufImg = null;
 		Image image = null;
 		Image resizedImg = null;
-		
+
 		try {
 			// 원본 이미지 가져오기
 			image = new ImageIcon(srcFile.getAbsolutePath()).getImage();
-			
+
 			if (image.getWidth(null) < 1 || image.getHeight(null) < 1) {
 				throw new IllegalArgumentException("파일이 존재하지 않습니다.");
 			}
-			
+
 			bufImg = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
-			
+
 			AffineTransform ax = new AffineTransform();
 			ax.setToScale(1, 1);
-			
+
 			Graphics2D g2d = bufImg.createGraphics();
 			g2d.drawImage(image, ax, null);
-			
+
 			int nNewWith = nWidth;
 			int nNewHeight = nHeight;
-			
+
 			if (isScale) {
 				double dScale = getScale(nWidth, nHeight, image.getWidth(null), image.getHeight(null));
-				
+
 				nNewWith = (int) (dScale * image.getWidth(null));
 				nNewHeight = (int) (dScale * image.getHeight(null));
 			}
-			
+
 			/**
 			 * <참고>
 			 * Image.SCALE_DEFAULT : 기본 이미지 스케일링 알고리즘 사용
@@ -98,16 +97,16 @@ public class ImageFileUtil {
 			 * Image.SCALE_AREA_AVERAGING  : 평균 알고리즘 사용
 			 */
 			resizedImg = bufImg.getScaledInstance(nNewWith, nNewHeight, Image.SCALE_SMOOTH);
-			
+
 			writeImage(resizedImg, sImageFormat, destFile);
-			
+
 			//원본파일 삭제
 			Path path = Paths.get(srcFile.getPath());
 			Files.delete(path);
-			
+
 		} catch (IOException e) {
 			logger.error("", e);
-			
+
 		} finally {
 			if (resizedImg != null) {
 				resizedImg.flush();
@@ -120,7 +119,7 @@ public class ImageFileUtil {
 			}
 		}
 	}
-	
+
 	/**
 	 * 이미지 저장
 	 * @param image
@@ -129,23 +128,23 @@ public class ImageFileUtil {
 	 */
 	private static void writeImage(Image image, String sImageFormat, File destFile) {
 		BufferedImage bufImg = null;
-		
+
 		try {
 			bufImg = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_3BYTE_BGR);
 			Graphics2D g2d = bufImg.createGraphics();
 			g2d.drawImage(image, 0, 0, null);
 			ImageIO.write(bufImg, sImageFormat, destFile);
-			
+
 		} catch (IOException e) {
 			logger.error("", e);
-			
+
 		} finally {
 			if (bufImg != null) {
 				bufImg.flush();
 			}
 		}
 	}
-	
+
 	/**
 	 * <pre>
 	 * 리사이즈할 사이즈와 원본 이미지 사이즈로 스케일 비율 구함
@@ -167,5 +166,5 @@ public class ImageFileUtil {
 		}
 	}
 
-	
+
 }
