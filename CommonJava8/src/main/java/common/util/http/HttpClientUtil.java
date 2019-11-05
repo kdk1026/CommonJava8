@@ -15,7 +15,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -57,7 +56,7 @@ public class HttpClientUtil {
 	public static final String BODY_KEY = "body";
 	public static final String HEADERS_KEY = "headers";
 
-	private static final int TIMEOUT = 5;
+	//private static final int TIMEOUT = 5;
 
 	/**
 	 * <pre>
@@ -89,6 +88,8 @@ public class HttpClientUtil {
 		return httpClient;
 	}
 
+	// XXX : 설정 시, 시간을 늘려도 timeout 발생하는 경우 있음
+	/*
 	private static RequestConfig getConfigWithTimeout(int timeoutInMilliseconds) {
 		return RequestConfig.custom()
                 .setSocketTimeout(timeoutInMilliseconds)
@@ -96,6 +97,7 @@ public class HttpClientUtil {
                 .setConnectionRequestTimeout(timeoutInMilliseconds)
                 .build();
 	}
+	*/
 
 	public static class GetRequest {
 		private GetRequest() {
@@ -122,7 +124,7 @@ public class HttpClientUtil {
 
 			} else {
 				HttpGet httpGet = new HttpGet(url);
-				httpGet.setConfig(getConfigWithTimeout(TIMEOUT));
+				//httpGet.setConfig(getConfigWithTimeout(TIMEOUT));
 
 				if (header != null) {
 			        Iterator<String> it = header.keySet().iterator();
@@ -220,7 +222,7 @@ public class HttpClientUtil {
 
 			} else {
 				HttpPost httpPost = new HttpPost(url);
-				httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
 
 				if (header != null) {
 			        Iterator<String> it = header.keySet().iterator();
@@ -319,7 +321,7 @@ public class HttpClientUtil {
 			} else {
 				String contentType = (isJson) ? "application/json" : "application/xml";
 				HttpPost httpPost = new HttpPost(url);
-				httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
 
 				if (header != null) {
 			        Iterator<String> it = header.keySet().iterator();
@@ -404,7 +406,7 @@ public class HttpClientUtil {
 
 			} else {
 				HttpPost httpPost = new HttpPost(url);
-				httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
 
 				if (header != null) {
 			        Iterator<String> it = header.keySet().iterator();
