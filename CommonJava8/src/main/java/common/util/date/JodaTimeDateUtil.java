@@ -64,8 +64,48 @@ public class JodaTimeDateUtil {
 		public static String getCurrentTime() {
 			return DateTime.now().toString("HHmmss");
 		}
+		
+		/**
+		 * 현재 연도 반환
+		 * @return
+		 */
+		public static int getYear() {
+			return DateTime.now().getYear();
+		}
+		
+		/**
+		 * 현재 월 반환
+		 * @return
+		 */
+		public static int getMonth() {
+			return DateTime.now().getMonthOfYear();
+		}
+		
+		/**
+		 * 현재 일 반환
+		 * @return
+		 */
+		public static int getDayOfMonth() {
+			return DateTime.now().getDayOfMonth();
+		}
+		
+		/**
+		 * 현재 시간 반환
+		 * @return
+		 */
+		public static int getHour() {
+			return DateTime.now().getHourOfDay();
+		}
+		
+		/**
+		 * 현재 분 반환
+		 * @return
+		 */
+		public static int getMinute() {
+			return DateTime.now().getMinuteOfHour();
+		}
 	}
-
+	
 	/**
 	 * String 타입 형식의 포맷 변환
 	 */
