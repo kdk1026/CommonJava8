@@ -99,5 +99,17 @@ public class ConvertCaseUtil {
 
 		return sb.toString();
 	}
+	
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static String camelCaseToUnderScroe(String str) {
+		String sRegEx = "([a-z])([A-Z]+)";
+		String sReplacement = "$1_$2";
+		
+		return str.replaceAll(sRegEx, sReplacement);
+	}
 
 }
