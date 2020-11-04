@@ -104,6 +104,10 @@ public class CookieUtilVer2 {
 			cookie.setSecure(true);
 		}
 		
+		if ( cookie.isHttpOnly() ) {
+			cookie.setHttpOnly(true);
+		}
+		
 		response.addCookie(cookie);
 	}
 	
