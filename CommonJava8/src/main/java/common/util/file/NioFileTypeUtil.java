@@ -147,5 +147,18 @@ public class NioFileTypeUtil {
 
 		return listExt.contains(sExtension) && listMime.contains(sMimeType);
 	}
+	
+	/**
+	 * 실행 파일 체크
+	 * @param sFileName
+	 * @return
+	 */
+	public static boolean isRunableFile(String sFileName) {
+		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
+		
+		if(sFileName == null) return false;
+		
+		return sFileName.matches(RUNABLE_FILE_EXT);
+	}
 
 }

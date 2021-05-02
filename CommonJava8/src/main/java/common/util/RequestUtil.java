@@ -26,23 +26,35 @@ public class RequestUtil {
 	public static String getRequestIpAddress(HttpServletRequest request) {
 		String sIpAddr = request.getHeader("X-Forwarded-For");
 		
-		if (sIpAddr == null) {
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) {
 			sIpAddr = request.getHeader("Proxy-Client-IP");
 		}
-		
-		if (sIpAddr == null) {
+
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) {
 			sIpAddr = request.getHeader("WL-Proxy-Client-IP");
 		}
-		
-		if (sIpAddr == null) {
+
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) {
 			sIpAddr = request.getHeader("HTTP_CLIENT_IP");
 		}
-		
-		if (sIpAddr == null) {
+
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) {
 			sIpAddr = request.getHeader("HTTP_X_FORWARDED_FOR");
 		}
 		
-		if (sIpAddr == null) {
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) { 
+			sIpAddr = request.getHeader("X-Real-IP"); 
+        }
+		
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) { 
+			sIpAddr = request.getHeader("X-RealIP"); 
+		}
+		
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) { 
+			sIpAddr = request.getHeader("REMOTE_ADDR"); 
+		}
+
+		if (sIpAddr == null || sIpAddr.length() == 0 || "unknown".equalsIgnoreCase(sIpAddr)) {
 			sIpAddr = request.getRemoteAddr();
 		}
 		
