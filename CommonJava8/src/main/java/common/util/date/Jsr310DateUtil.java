@@ -479,7 +479,7 @@ public class Jsr310DateUtil {
 		 */
 		public static int intervalHours(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
+			LocalDateTime targetTime = LocalDateTime.now().withNano(0);
 			return (int) targetTime.until(fixTime, ChronoUnit.HOURS);
 		}
 
@@ -491,7 +491,7 @@ public class Jsr310DateUtil {
 		 */
 		public static int intervalMinutes(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
+			LocalDateTime targetTime = LocalDateTime.now().withNano(0);
 			return (int) targetTime.until(fixTime, ChronoUnit.MINUTES);
 		}
 
@@ -503,7 +503,7 @@ public class Jsr310DateUtil {
 		 */
 		public static int intervalSeconds(String strFixDate) {
 			LocalDateTime fixTime = LocalDateTime.parse(strFixDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
-			LocalDateTime targetTime = LocalDateTime.now();
+			LocalDateTime targetTime = LocalDateTime.now().withNano(0);
 			return (int) targetTime.until(fixTime, ChronoUnit.SECONDS);
 		}
 	}
