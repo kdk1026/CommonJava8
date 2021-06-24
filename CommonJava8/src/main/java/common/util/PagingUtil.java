@@ -5,7 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class PagingUtil {
 
-	/** 페이지당 행수 */
+	/** 페이지당 행수, MySQL LIMIT */
 	private int pagePerRow;
 	/** 화면당 페이지수 */
 	private int pagePerScreen;
@@ -23,17 +23,26 @@ public class PagingUtil {
 	/** 이전 페이지 번호 */
 	private int prevPage;
 	/** 다음 페이지 번호 */
-    private int nextPage;
+	private int nextPage;
 
-    /** 링크 URL */
-    private String linkUrl;
+	/** 링크 URL */
+	private String linkUrl;
 
-    /** SQL 시작 행번호<br/>MySQL의 경우 -1 (0부터 시작) */
-    private int start;
-	/** SQL 종료 행번호<br/>MySQL의 경우 사용안함 */
-    private int end;
+	/**
+	 * SQL 시작 행번호<br/>
+	 * MySQL의 경우 -1 (0부터 시작) 또는 offSet 사용
+	 */
+	private int start;
+	/**
+	 * SQL 종료 행번호<br/>
+	 * MySQL의 경우 사용안함
+	 */
+	private int end;
 
-    public PagingUtil(int pagePerRow, int pagePerScreen, int totalCnt, String currentPage, String linkUrl) {
+	/** MySQL OFFSET */
+	private int offSet;
+
+	public PagingUtil(int pagePerRow, int pagePerScreen, int totalCnt, String currentPage, String linkUrl) {
 		super();
 		this.pagePerRow = pagePerRow;
 		this.pagePerScreen = pagePerScreen;
@@ -43,38 +52,44 @@ public class PagingUtil {
 		this.pagingProcess();
 	}
 
-    /**
-     * 페이징 처리 수행
-     */
-    private void pagingProcess() {
-    	int nTotalPage = (this.totalCnt + (this.pagePerRow-1)) / this.pagePerScreen;
-    	this.setTotalPage(nTotalPage);
+	/**
+	 * 페이징 처리 수행
+	 */
+	private void pagingProcess() {
+		int nTotalPage = (this.totalCnt + (this.pagePerRow - 1)) / this.pagePerScreen;
+		this.setTotalPage(nTotalPage);
 
-		if (this.currentPage < 1) this.setCurrentPage(1);
-		else if (this.currentPage > this.totalPage) this.setCurrentPage(this.totalPage);
+		if (this.currentPage < 1)
+			this.setCurrentPage(1);
+		else if (this.currentPage > this.totalPage)
+			this.setCurrentPage(this.totalPage);
 
-		int nFirstPage = ((this.currentPage-1) / this.pagePerRow) * this.pagePerScreen + 1;
-    	this.setFirstPage(nFirstPage);
+		int nFirstPage = ((this.currentPage - 1) / this.pagePerRow) * this.pagePerScreen + 1;
+		this.setFirstPage(nFirstPage);
 
-    	int nLastPage = (this.firstPage+this.pagePerRow) - 1;
-    	nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
-    	this.setLastPage(nLastPage);
+		int nLastPage = (this.firstPage + this.pagePerRow) - 1;
+		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
+		this.setLastPage(nLastPage);
 
-    	int nPrevPage = this.firstPage - this.pagePerScreen;
-    	nPrevPage = (nPrevPage < 1) ? 1 : nPrevPage;
-    	this.setPrevPage(nPrevPage);
+		int nPrevPage = this.currentPage - 1;
+		nPrevPage = (nPrevPage < 1) ? 1 : nPrevPage;
+		this.setPrevPage(nPrevPage);
 
-    	int nNextPage = this.firstPage + this.pagePerScreen;
-    	nNextPage = (nNextPage > this.totalPage) ? this.totalPage : nNextPage;
-    	this.setNextPage(nNextPage);
+		int nNextPage = this.currentPage + 1;
+		nNextPage = (nNextPage > this.totalPage) ? this.totalPage : nNextPage;
+		this.setNextPage(nNextPage);
 
 		this.start = this.calcStart();
 		this.end = this.calcEnd();
-    }
 
-    public int getCurrentPage() {
+		int offSet = (this.currentPage - 1) * this.pagePerRow;
+		this.setOffSet(offSet);
+	}
+
+	public int getCurrentPage() {
 		return currentPage;
 	}
+
 	public void setCurrentPage(int currentPage) {
 		this.currentPage = currentPage;
 	}
@@ -82,55 +97,61 @@ public class PagingUtil {
 	public int getTotalPage() {
 		return this.totalPage;
 	}
-    public void setTotalPage(int totalPage) {
+
+	public void setTotalPage(int totalPage) {
 		this.totalPage = totalPage;
 	}
 
 	public int getFirstPage() {
-    	return this.firstPage;
-    }
-    public void setFirstPage(int firstPage) {
+		return this.firstPage;
+	}
+
+	public void setFirstPage(int firstPage) {
 		this.firstPage = firstPage;
 	}
 
 	public int getLastPage() {
-    	return this.lastPage;
-    }
-    public void setLastPage(int lastPage) {
+		return this.lastPage;
+	}
+
+	public void setLastPage(int lastPage) {
 		this.lastPage = lastPage;
 	}
 
 	public int getPrevPage() {
-    	return this.prevPage;
-    }
-    public void setPrevPage(int prevPage) {
+		return this.prevPage;
+	}
+
+	public void setPrevPage(int prevPage) {
 		this.prevPage = prevPage;
 	}
 
 	public int getNextPage() {
-    	return this.nextPage;
-    }
-    public void setNextPage(int nextPage) {
+		return this.nextPage;
+	}
+
+	public void setNextPage(int nextPage) {
 		this.nextPage = nextPage;
 	}
 
 	public String getLinkUrl() {
 		return linkUrl;
 	}
+
 	public void setLinkUrl(String linkUrl) {
 		this.linkUrl = linkUrl;
 	}
 
 	public int calcStart() {
-    	this.start = (this.currentPage-1) * this.pagePerRow + 1;
-    	return this.start;
-    }
+		this.start = (this.currentPage - 1) * this.pagePerRow + 1;
+		return this.start;
+	}
 
 	public int calcEnd() {
 		this.end = this.currentPage * this.pagePerRow;
-    	return this.end;
-    }
-	
+		return this.end;
+	}
+
 	public int getStart() {
 		return start;
 	}
@@ -139,9 +160,23 @@ public class PagingUtil {
 		return end;
 	}
 
+	/**
+	 * @return the offSet
+	 */
+	public int getOffSet() {
+		return offSet;
+	}
+
+	/**
+	 * @param offSet the offSet to set
+	 */
+	public void setOffSet(int offSet) {
+		this.offSet = offSet;
+	}
+
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
 	}
 
 }
