@@ -20,10 +20,15 @@ public class PagingUtil {
 	private int firstPage;
 	/** 종료 페이지 번호 */
 	private int lastPage;
-	/** 이전 페이지 번호 */
-	private int prevPage;
-	/** 다음 페이지 번호 */
-	private int nextPage;
+
+	/** 전체 블럭 */
+	private int totalBlock;
+	/** 현재 블럭 */
+	private int currentBlock;
+	/** 이전 블럭 */
+	private int prevBlock;
+	/** 다음 블럭 */
+	private int nextBlock;
 
 	/** 링크 URL */
 	private String linkUrl;
@@ -56,13 +61,14 @@ public class PagingUtil {
 	 * 페이징 처리 수행
 	 */
 	private void pagingProcess() {
-		int nTotalPage = (this.totalCnt + (this.pagePerRow - 1)) / this.pagePerScreen;
+		int nTotalPage = (int) Math.ceil((double)this.totalCnt / this.pagePerRow);
 		this.setTotalPage(nTotalPage);
 
-		if (this.currentPage < 1)
+		if (this.currentPage < 1) {
 			this.setCurrentPage(1);
-		else if (this.currentPage > this.totalPage)
+		} else if (this.currentPage > this.totalPage) {
 			this.setCurrentPage(this.totalPage);
+		}
 
 		int nFirstPage = ((this.currentPage - 1) / this.pagePerRow) * this.pagePerScreen + 1;
 		this.setFirstPage(nFirstPage);
@@ -71,75 +77,26 @@ public class PagingUtil {
 		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
 		this.setLastPage(nLastPage);
 
-		int nPrevPage = this.currentPage - 1;
-		nPrevPage = (nPrevPage < 1) ? 1 : nPrevPage;
-		this.setPrevPage(nPrevPage);
+		int nTotalBlock = this.totalPage / this.pagePerScreen;
+		this.setTotalBlock(nTotalBlock);
 
-		int nNextPage = this.currentPage + 1;
-		nNextPage = (nNextPage > this.totalPage) ? this.totalPage : nNextPage;
-		this.setNextPage(nNextPage);
+		int nCurrentBlock = this.currentPage / this.pagePerScreen;
+		if (this.currentPage % this.pagePerScreen > 0) {
+			nCurrentBlock ++;
+		}
+		this.setCurrentBlock( nCurrentBlock );
+
+		int nPrevBlock = this.currentBlock - 1;
+		this.setPrevBlock(nPrevBlock);
+
+		int nNextBlock = this.currentBlock + 1;
+		this.setNextBlock( (nNextBlock > nTotalBlock) ? 0 : nNextBlock );
 
 		this.start = this.calcStart();
 		this.end = this.calcEnd();
 
 		int offSet = (this.currentPage - 1) * this.pagePerRow;
 		this.setOffSet(offSet);
-	}
-
-	public int getCurrentPage() {
-		return currentPage;
-	}
-
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
-	}
-
-	public int getTotalPage() {
-		return this.totalPage;
-	}
-
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
-	}
-
-	public int getFirstPage() {
-		return this.firstPage;
-	}
-
-	public void setFirstPage(int firstPage) {
-		this.firstPage = firstPage;
-	}
-
-	public int getLastPage() {
-		return this.lastPage;
-	}
-
-	public void setLastPage(int lastPage) {
-		this.lastPage = lastPage;
-	}
-
-	public int getPrevPage() {
-		return this.prevPage;
-	}
-
-	public void setPrevPage(int prevPage) {
-		this.prevPage = prevPage;
-	}
-
-	public int getNextPage() {
-		return this.nextPage;
-	}
-
-	public void setNextPage(int nextPage) {
-		this.nextPage = nextPage;
-	}
-
-	public String getLinkUrl() {
-		return linkUrl;
-	}
-
-	public void setLinkUrl(String linkUrl) {
-		this.linkUrl = linkUrl;
 	}
 
 	public int calcStart() {
@@ -152,12 +109,200 @@ public class PagingUtil {
 		return this.end;
 	}
 
+	/**
+	 * @return the pagePerRow
+	 */
+	public int getPagePerRow() {
+		return pagePerRow;
+	}
+
+	/**
+	 * @param pagePerRow the pagePerRow to set
+	 */
+	public void setPagePerRow(int pagePerRow) {
+		this.pagePerRow = pagePerRow;
+	}
+
+	/**
+	 * @return the pagePerScreen
+	 */
+	public int getPagePerScreen() {
+		return pagePerScreen;
+	}
+
+	/**
+	 * @param pagePerScreen the pagePerScreen to set
+	 */
+	public void setPagePerScreen(int pagePerScreen) {
+		this.pagePerScreen = pagePerScreen;
+	}
+
+	/**
+	 * @return the totalCnt
+	 */
+	public int getTotalCnt() {
+		return totalCnt;
+	}
+
+	/**
+	 * @param totalCnt the totalCnt to set
+	 */
+	public void setTotalCnt(int totalCnt) {
+		this.totalCnt = totalCnt;
+	}
+
+	/**
+	 * @return the currentPage
+	 */
+	public int getCurrentPage() {
+		return currentPage;
+	}
+
+	/**
+	 * @param currentPage the currentPage to set
+	 */
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
+	/**
+	 * @return the totalPage
+	 */
+	public int getTotalPage() {
+		return totalPage;
+	}
+
+	/**
+	 * @param totalPage the totalPage to set
+	 */
+	public void setTotalPage(int totalPage) {
+		this.totalPage = totalPage;
+	}
+
+	/**
+	 * @return the firstPage
+	 */
+	public int getFirstPage() {
+		return firstPage;
+	}
+
+	/**
+	 * @param firstPage the firstPage to set
+	 */
+	public void setFirstPage(int firstPage) {
+		this.firstPage = firstPage;
+	}
+
+	/**
+	 * @return the lastPage
+	 */
+	public int getLastPage() {
+		return lastPage;
+	}
+
+	/**
+	 * @param lastPage the lastPage to set
+	 */
+	public void setLastPage(int lastPage) {
+		this.lastPage = lastPage;
+	}
+
+	/**
+	 * @return the totalBlock
+	 */
+	public int getTotalBlock() {
+		return totalBlock;
+	}
+
+	/**
+	 * @param totalBlock the totalBlock to set
+	 */
+	public void setTotalBlock(int totalBlock) {
+		this.totalBlock = totalBlock;
+	}
+
+	/**
+	 * @return the currentBlock
+	 */
+	public int getCurrentBlock() {
+		return currentBlock;
+	}
+
+	/**
+	 * @param currentBlock the currentBlock to set
+	 */
+	public void setCurrentBlock(int currentBlock) {
+		this.currentBlock = currentBlock;
+	}
+
+	/**
+	 * @return the prevBlock
+	 */
+	public int getPrevBlock() {
+		return prevBlock;
+	}
+
+	/**
+	 * @param prevBlock the prevBlock to set
+	 */
+	public void setPrevBlock(int prevBlock) {
+		this.prevBlock = prevBlock;
+	}
+
+	/**
+	 * @return the nextBlock
+	 */
+	public int getNextBlock() {
+		return nextBlock;
+	}
+
+	/**
+	 * @param nextBlock the nextBlock to set
+	 */
+	public void setNextBlock(int nextBlock) {
+		this.nextBlock = nextBlock;
+	}
+
+	/**
+	 * @return the linkUrl
+	 */
+	public String getLinkUrl() {
+		return linkUrl;
+	}
+
+	/**
+	 * @param linkUrl the linkUrl to set
+	 */
+	public void setLinkUrl(String linkUrl) {
+		this.linkUrl = linkUrl;
+	}
+
+	/**
+	 * @return the start
+	 */
 	public int getStart() {
 		return start;
 	}
 
+	/**
+	 * @param start the start to set
+	 */
+	public void setStart(int start) {
+		this.start = start;
+	}
+
+	/**
+	 * @return the end
+	 */
 	public int getEnd() {
 		return end;
+	}
+
+	/**
+	 * @param end the end to set
+	 */
+	public void setEnd(int end) {
+		this.end = end;
 	}
 
 	/**
