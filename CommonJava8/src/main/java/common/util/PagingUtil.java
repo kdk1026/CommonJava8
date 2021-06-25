@@ -70,12 +70,15 @@ public class PagingUtil {
 			this.setCurrentPage(this.totalPage);
 		}
 
-		int nFirstPage = ((this.currentPage - 1) / this.pagePerRow) * this.pagePerScreen + 1;
-		this.setFirstPage(nFirstPage);
-
-		int nLastPage = (this.firstPage + this.pagePerRow) - 1;
+		int nLastPage = (int) Math.ceil((double)this.currentPage / this.pagePerScreen) * this.pagePerScreen;
 		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
 		this.setLastPage(nLastPage);
+
+		int nFirstPage = this.lastPage - this.pagePerScreen + 1;
+		if (nFirstPage <= 0) {
+			nFirstPage = 1;
+		}
+		this.setFirstPage(nFirstPage);
 
 		int nTotalBlock = this.totalPage / this.pagePerScreen;
 		this.setTotalBlock(nTotalBlock);
