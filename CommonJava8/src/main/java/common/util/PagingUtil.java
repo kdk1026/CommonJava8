@@ -24,11 +24,16 @@ public class PagingUtil {
 	/** 전체 블럭 */
 	private int totalBlock;
 	/** 현재 블럭 */
-	private int currentBlock;
+//	private int currentBlock;
 	/** 이전 블럭 */
-	private int prevBlock;
+//	private int prevBlock;
 	/** 다음 블럭 */
-	private int nextBlock;
+//	private int nextBlock;
+
+	/** 이전 블럭 페이지 번호 */
+	private int prevBlockPage;
+	/** 다음 블럭 페이지 번호 */
+	private int nextBlockPage;
 
 	/** 링크 URL */
 	private String linkUrl;
@@ -83,6 +88,7 @@ public class PagingUtil {
 		int nTotalBlock = this.totalPage / this.pagePerScreen;
 		this.setTotalBlock(nTotalBlock);
 
+		/*
 		int nCurrentBlock = this.currentPage / this.pagePerScreen;
 		if (this.currentPage % this.pagePerScreen > 0) {
 			nCurrentBlock ++;
@@ -94,6 +100,19 @@ public class PagingUtil {
 
 		int nNextBlock = this.currentBlock + 1;
 		this.setNextBlock( (nNextBlock > nTotalBlock) ? 0 : nNextBlock );
+		*/
+
+		int nPrevBlockPage = this.firstPage - 1;
+		if (nPrevBlockPage < 1) {
+			nPrevBlockPage = 1;
+		}
+		this.setPrevBlockPage(nPrevBlockPage);
+
+		int nNextBlockPage = this.lastPage + 1;
+		if (nNextBlockPage > this.totalPage) {
+			nNextBlockPage = this.totalPage;
+		}
+		this.setNextBlockPage(nNextBlockPage);
 
 		this.start = this.calcStart();
 		this.end = this.calcEnd();
@@ -225,45 +244,31 @@ public class PagingUtil {
 	}
 
 	/**
-	 * @return the currentBlock
+	 * @return the prevBlockPage
 	 */
-	public int getCurrentBlock() {
-		return currentBlock;
+	public int getPrevBlockPage() {
+		return prevBlockPage;
 	}
 
 	/**
-	 * @param currentBlock the currentBlock to set
+	 * @param prevBlockPage the prevBlockPage to set
 	 */
-	public void setCurrentBlock(int currentBlock) {
-		this.currentBlock = currentBlock;
+	public void setPrevBlockPage(int prevBlockPage) {
+		this.prevBlockPage = prevBlockPage;
 	}
 
 	/**
-	 * @return the prevBlock
+	 * @return the nextBlockPage
 	 */
-	public int getPrevBlock() {
-		return prevBlock;
+	public int getNextBlockPage() {
+		return nextBlockPage;
 	}
 
 	/**
-	 * @param prevBlock the prevBlock to set
+	 * @param nextBlockPage the nextBlockPage to set
 	 */
-	public void setPrevBlock(int prevBlock) {
-		this.prevBlock = prevBlock;
-	}
-
-	/**
-	 * @return the nextBlock
-	 */
-	public int getNextBlock() {
-		return nextBlock;
-	}
-
-	/**
-	 * @param nextBlock the nextBlock to set
-	 */
-	public void setNextBlock(int nextBlock) {
-		this.nextBlock = nextBlock;
+	public void setNextBlockPage(int nextBlockPage) {
+		this.nextBlockPage = nextBlockPage;
 	}
 
 	/**
