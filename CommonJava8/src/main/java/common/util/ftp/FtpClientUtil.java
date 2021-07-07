@@ -89,6 +89,7 @@ public class FtpClientUtil {
 			this.procDestPath(ftpClient, destPath);
 			isSucesss = this.procFile(ftpClient, destPath);
 			
+			ftpClient.logout();
 			ftpClient.disconnect();
 			
 		} catch (Exception e) {
