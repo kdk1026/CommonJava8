@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,7 @@ public class FtpClientUtil {
 			ftpClient.enterLocalPassiveMode();
 			
 			this.procDestPath(ftpClient, destPath);
-			isSucesss = this.procFile(ftpClient);
+			isSucesss = this.procFile(ftpClient, destPath);
 			
 			ftpClient.disconnect();
 			
@@ -126,11 +127,12 @@ public class FtpClientUtil {
 			
 		} else {
 			ftpClient.makeDirectory(destPath);
-			showServerReply(ftpClient);				
+			
+			this.showServerReply(ftpClient);
 		}
 	}
 	
-	private boolean procFile(FTPClient ftpClient) throws IOException {
+	private boolean procFile(FTPClient ftpClient, String destPath) throws IOException {
 		boolean isSucesss = false;
 		
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
@@ -150,9 +152,13 @@ public class FtpClientUtil {
 				}
 			});
 			
+			this.removeFile(ftpClient, destPath);
+			
 			for (File file : fileNames) {
 				fis = new FileInputStream(file);
 				ftpClient.storeFile(file.getName(), fis);
+				
+				this.showServerReply(ftpClient);
 			}
 			
 			isSucesss = true;
@@ -161,6 +167,8 @@ public class FtpClientUtil {
 		if ( file != null ) {
 			fis = new FileInputStream(file);
 			isSucesss = ftpClient.storeFile(file.getName(), fis);
+			
+			this.showServerReply(ftpClient);
 		}
 		
 		if ( fileList != null ) {
@@ -168,6 +176,8 @@ public class FtpClientUtil {
 			for (File file : fileList) {
 				fis = new FileInputStream(file);
 				ftpClient.storeFile(file.getName(), fis);
+				
+				this.showServerReply(ftpClient);
 			}
 		}
 		
@@ -176,6 +186,15 @@ public class FtpClientUtil {
 		}
 		
 		return isSucesss;
+	}
+	
+	private void removeFile(FTPClient ftpClient, String destPath) throws IOException {
+		FTPFile[] ftpFiles = ftpClient.listFiles(destPath);
+		for (FTPFile ftpFile : ftpFiles) {
+			ftpClient.deleteFile(ftpFile.getName());
+			
+			this.showServerReply(ftpClient);
+		}
 	}
 	
 	private boolean isBlank(final String str) {
