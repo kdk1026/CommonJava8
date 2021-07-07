@@ -1,7 +1,9 @@
 package common.util.ftp;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +45,8 @@ public class FtpClientUtil {
 		return LazyHolder.INSTANCE;
 	}
 	
+	private final String ENCODING = StandardCharsets.UTF_8.toString();
+	
 	private String sourcePath = "";
 	private String extension = "";
 	private File file = null;
@@ -74,7 +78,7 @@ public class FtpClientUtil {
 		
 		try {
 			ftpClient.connect(host, port);
-			ftpClient.setControlEncoding(StandardCharsets.UTF_8.toString());
+			ftpClient.setControlEncoding(this.ENCODING);
 			int nReply = ftpClient.getReplyCode();
 			
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
@@ -200,6 +204,100 @@ public class FtpClientUtil {
 	
 	private boolean isBlank(final String str) {
 		return (str == null) || (str.trim().length() == 0);
+	}
+	
+	public boolean downloadAll(String host, int port, String username, String password, String destPath, String downloadPath) {
+		return this.download(host, port, username, password, destPath, null, downloadPath);
+	}
+	
+	public boolean download(String host, int port, String username, String password, String destPath, String fileName, String downloadPath) {
+		boolean isSucesss = false;
+		
+		FTPClient ftpClient = new FTPClient();
+		
+		try {
+			ftpClient.connect(host, port);
+			ftpClient.setControlEncoding(this.ENCODING);
+			int nReply = ftpClient.getReplyCode();
+			
+			if ( !FTPReply.isPositiveCompletion(nReply) ) {
+				ftpClient.disconnect();
+				throw new Exception(host + " FTP 서버 연결 실패");
+			}
+			
+			ftpClient.login(username, password);
+			
+			ftpClient.enterLocalPassiveMode();
+			
+			this.procDownloadDestPath(ftpClient, destPath);
+			
+			isSucesss = this.procDownloadFile(ftpClient, destPath, fileName, downloadPath);
+			
+			ftpClient.logout();
+			ftpClient.disconnect();
+			
+		} catch (Exception e) {
+			logger.error("", e);
+		}
+		
+		return isSucesss;
+	}
+	
+	private void procDownloadDestPath(FTPClient ftpClient, String destPath) throws IOException {
+		String[] pathElements = destPath.split("/");
+		if ( pathElements != null && pathElements.length > 0 ) {
+			
+			for (String path : pathElements) {
+				ftpClient.changeWorkingDirectory(path);
+			}
+			
+		}
+	}
+	
+	private boolean procDownloadFile(FTPClient ftpClient, String destPath, String fileName, String downloadPath) throws IOException {
+		boolean isSucesss = false;
+		
+		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+		
+		BufferedOutputStream bos = null;
+		File fPath = null;
+		File fDir = null;
+		File f = null;
+		
+		if ( !this.isBlank(fileName) ) {
+			fPath = new File(downloadPath);
+			fDir = fPath;
+			fDir.mkdirs();
+			
+			f = new File(downloadPath, fileName);
+			
+			bos = new BufferedOutputStream(new FileOutputStream(f));
+			isSucesss = ftpClient.retrieveFile(fileName, bos);
+			
+			this.showServerReply(ftpClient);
+			
+		} else {
+			FTPFile[] ftpFiles = ftpClient.listFiles(destPath);
+			for (FTPFile ftpFile : ftpFiles) {
+				// XXX : 디렉토리는 따로 지정해서 받게끔 시도해봤으나 실패함
+				if ( ftpFile.isFile() ) {
+					fPath = new File(downloadPath);
+					fDir = fPath;
+					fDir.mkdirs();
+					
+					f = new File(downloadPath, ftpFile.getName());
+					
+					bos = new BufferedOutputStream(new FileOutputStream(f));
+					ftpClient.retrieveFile(ftpFile.getName(), bos);
+					
+					this.showServerReply(ftpClient);
+				}
+			}
+			
+			isSucesss = true;
+		}
+		
+		return isSucesss;
 	}
 	
 }
