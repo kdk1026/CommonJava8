@@ -167,10 +167,12 @@ public class FtpClientUtil {
 			
 			// XXX : 디렉토리는 따로 지정해서 업로드, 명령어를 통한 방법도 동일함
 			for (File file : fileNames) {
-				fis = new FileInputStream(file);
-				ftpClient.storeFile(file.getName(), fis);
-				
-				this.showServerReply(ftpClient);
+				if ( file.isFile() ) {
+					fis = new FileInputStream(file);
+					ftpClient.storeFile(file.getName(), fis);
+
+					this.showServerReply(ftpClient);
+				}
 			}
 			
 			isSucesss = true;
@@ -201,7 +203,9 @@ public class FtpClientUtil {
 	}
 	
 	private void removeFile(FTPClient ftpClient, String destPath) throws IOException {
-		FTPFile[] ftpFiles = ftpClient.listFiles(destPath);
+		ftpClient.changeWorkingDirectory(destPath);
+		
+		FTPFile[] ftpFiles = ftpClient.listFiles();
 		for (FTPFile ftpFile : ftpFiles) {
 			ftpClient.deleteFile(ftpFile.getName());
 			
