@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * 2021. 7. 8. 김대광	최초작성
  * </pre>
  * 
- *
+ * 실행 가능한 JAR 프로젝트에 생성하여 nohup java -jar JAR파일 형태로 백그라운드로 실행
  * @author 김대광
  */
 public class FolderWatch {
