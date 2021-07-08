@@ -144,7 +144,7 @@ public class FtpClientUtil {
 		
 		FileInputStream fis = null;
 		
-		if ( !this.isBlank(this.sourcePath) && !this.isBlank(this.extension) ) {
+		if ( !this.isBlank(this.sourcePath) ) {
 			File dir = new File(this.sourcePath);
 			
 			File[] fileNames = null;
