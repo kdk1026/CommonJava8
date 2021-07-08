@@ -147,18 +147,25 @@ public class FtpClientUtil {
 		if ( !this.isBlank(this.sourcePath) && !this.isBlank(this.extension) ) {
 			File dir = new File(this.sourcePath);
 			
-			String sExtension = this.extension.replace(".", "");
-					
-			File[] fileNames = dir.listFiles(new FilenameFilter() {
+			File[] fileNames = null;
+			
+			if ( this.isBlank(this.extension) ) {
+				fileNames = dir.listFiles();
+			} else {
+				String sExtension = this.extension.replace(".", "");
 				
-				@Override
-				public boolean accept(File dir, String name) {
-					return name.endsWith(sExtension);
-				}
-			});
+				fileNames = dir.listFiles(new FilenameFilter() {
+					
+					@Override
+					public boolean accept(File dir, String name) {
+						return name.endsWith(sExtension);
+					}
+				});
+			}
 			
 			this.removeFile(ftpClient, destPath);
 			
+			// XXX : 디렉토리는 따로 지정해서 업로드, 명령어를 통한 방법도 동일함
 			for (File file : fileNames) {
 				fis = new FileInputStream(file);
 				ftpClient.storeFile(file.getName(), fis);
@@ -279,7 +286,7 @@ public class FtpClientUtil {
 		} else {
 			FTPFile[] ftpFiles = ftpClient.listFiles(destPath);
 			for (FTPFile ftpFile : ftpFiles) {
-				// XXX : 디렉토리는 따로 지정해서 받게끔 시도해봤으나 실패함
+				// XXX : 디렉토리는 따로 지정해서 다운로드, 명령어를 통한 방법도 동일함 (시도해봤으나 실패함...)
 				if ( ftpFile.isFile() ) {
 					fPath = new File(downloadPath);
 					fDir = fPath;
