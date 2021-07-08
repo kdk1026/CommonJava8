@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * 2021. 7. 8. kdk	최초작성
  * </pre>
  * 
- *
+ * @Description	: 1.7 기반
  * @author kdk
  */
 public class SymbolicLinkUtil {
