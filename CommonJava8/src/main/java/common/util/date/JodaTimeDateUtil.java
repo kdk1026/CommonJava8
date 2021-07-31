@@ -20,6 +20,7 @@ import org.joda.time.format.DateTimeFormatter;
  * <pre>
  * 개정이력
  * -----------------------------------
+ * 21.07.31	CalcDate 메소드 일부 추가
  * </pre>
  */
 public class JodaTimeDateUtil {
@@ -251,6 +252,23 @@ public class JodaTimeDateUtil {
 			}
 			return strDateRes;
 		}
+		/**
+		 * 현재 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param months
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusMonth(int months, String dateFormat) {
+			String strDateRes = "";
+			if (months > 0) {
+				strDateRes = DateTime.now().plusMonths(months).toString(dateFormat);
+			} else {
+				strDateRes = DateTime.now().minusMonths(months*-1).toString(dateFormat);
+			}
+			return strDateRes;
+		}
 
 		/**
 		 * yyyyMMdd 형식의 String 타입 날짜의 이전/이후 날짜를 yyyyMMdd 형식의 String 타입으로 반환<br/>
@@ -267,6 +285,25 @@ public class JodaTimeDateUtil {
 				strDateRes = DateTime.parse(strDate, formatter).plusDays(months).toString(YYYYMMDD);
 			} else {
 				strDateRes = DateTime.parse(strDate, formatter).minusDays(months*-1).toString(YYYYMMDD);
+			}
+			return strDateRes;
+		}
+		/**
+		 * 해당 포맷 형식의 String 타입 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param strDate
+		 * @param months
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusMonth(String strDate, int months, String dateFormat) {
+			String strDateRes = "";
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(dateFormat);
+			if (months > 0) {
+				strDateRes = DateTime.parse(strDate, formatter).plusDays(months).toString(dateFormat);
+			} else {
+				strDateRes = DateTime.parse(strDate, formatter).minusDays(months*-1).toString(dateFormat);
 			}
 			return strDateRes;
 		}
@@ -287,6 +324,23 @@ public class JodaTimeDateUtil {
 			}
 			return strDateRes;
 		}
+		/**
+		 * 현재 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param years
+		 * @param dateForamt
+		 * @return
+		 */
+		public static String plusMinusYear(int years, String dateForamt) {
+			String strDateRes = "";
+			if (years > 0) {
+				strDateRes = DateTime.now().plusYears(years).toString(dateForamt);
+			} else {
+				strDateRes = DateTime.now().minusYears(years*-1).toString(dateForamt);
+			}
+			return strDateRes;
+		}
 
 		/**
 		 * yyyyMMdd 형식의 String 타입 날짜의 이전/이후 날짜를 yyyyMMdd 형식의 String 타입으로 반환<br/>
@@ -297,6 +351,25 @@ public class JodaTimeDateUtil {
 		 * @return
 		 */
 		public static String plusMinusYear(String strDate, int years) {
+			String strDateRes = "";
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
+			if (years > 0) {
+				strDateRes = DateTime.parse(strDate, formatter).plusYears(years).toString(YYYYMMDD);
+			} else {
+				strDateRes = DateTime.parse(strDate, formatter).minusYears(years*-1).toString(YYYYMMDD);
+			}
+			return strDateRes;
+		}
+		/**
+		 * 해당 포맷 형식의 String 타입 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param strDate
+		 * @param years
+		 * @param dateForamt
+		 * @return
+		 */
+		public static String plusMinusYear(String strDate, int years, String dateForamt) {
 			String strDateRes = "";
 			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
 			if (years > 0) {

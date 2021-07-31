@@ -16,6 +16,7 @@ import java.util.Locale;
  * <pre>
  * 개정이력
  * -----------------------------------
+ * 21.07.31	CalcDate 메소드 일부 추가
  * </pre>
  */
 public class Jsr310DateUtil {
@@ -256,6 +257,24 @@ public class Jsr310DateUtil {
 			}
 			return strDateRes;
 		}
+		/**
+		 * 현재 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param months
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusMonth(int months, String dateFormat) {
+			String strDateRes = "";
+			LocalDate localDate = LocalDate.now();
+			if (months > 0) {
+				strDateRes = localDate.plusMonths(months).format(DateTimeFormatter.ofPattern(dateFormat));
+			} else {
+				strDateRes = localDate.minusMonths((months*-1)).format(DateTimeFormatter.ofPattern(dateFormat));
+			}
+			return strDateRes;
+		}
 
 		/**
 		 * yyyyMMdd 형식의 String 타입 날짜의 이전/이후 날짜를 yyyyMMdd 형식의 String 타입으로 반환<br/>
@@ -272,6 +291,25 @@ public class Jsr310DateUtil {
 				strDateRes = localDate.plusMonths(months).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 			} else {
 				strDateRes = localDate.minusMonths((months*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+			}
+			return strDateRes;
+		}
+		/**
+		 * 헤딩 포멧 형식의 String 타입 날짜의 이전/이후 날짜를 헤딩 포멧 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param strDate
+		 * @param months
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusMonth(String strDate, int months, String dateFormat) {
+			String strDateRes = "";
+			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(dateFormat));
+			if (months > 0) {
+				strDateRes = localDate.plusMonths(months).format(DateTimeFormatter.ofPattern(dateFormat));
+			} else {
+				strDateRes = localDate.minusMonths((months*-1)).format(DateTimeFormatter.ofPattern(dateFormat));
 			}
 			return strDateRes;
 		}
@@ -293,6 +331,24 @@ public class Jsr310DateUtil {
 			}
 			return strDateRes;
 		}
+		/**
+		 * 현재 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param years
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusYear(int years, String dateFormat) {
+			String strDateRes = "";
+			LocalDate localDate = LocalDate.now();
+			if (years > 0) {
+				strDateRes = localDate.plusYears(years).format(DateTimeFormatter.ofPattern(dateFormat));
+			} else {
+				strDateRes = localDate.minusYears((years*-1)).format(DateTimeFormatter.ofPattern(dateFormat));
+			}
+			return strDateRes;
+		}
 
 		/**
 		 * yyyyMMdd 형식의 String 타입 날짜의 이전/이후 날짜를 yyyyMMdd 형식의 String 타입으로 반환<br/>
@@ -309,6 +365,25 @@ public class Jsr310DateUtil {
 				strDateRes = localDate.plusYears(years).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 			} else {
 				strDateRes = localDate.minusYears((years*-1)).format(DateTimeFormatter.ofPattern(YYYYMMDD));
+			}
+			return strDateRes;
+		}
+		/**
+		 * 해당 포맷 형식의 String 타입 날짜의 이전/이후 날짜를 해당 포맷 형식의 String 타입으로 반환<br/>
+		 * 	- 인자 값이 음수 인 경우,이전 날짜 반환<br/>
+		 * 	- 인자 값이 양수 인 경우, 이후 날짜 반환
+		 * @param strDate
+		 * @param years
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String plusMinusYear(String strDate, int years, String dateFormat) {
+			String strDateRes = "";
+			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(dateFormat));
+			if (years > 0) {
+				strDateRes = localDate.plusYears(years).format(DateTimeFormatter.ofPattern(dateFormat));
+			} else {
+				strDateRes = localDate.minusYears((years*-1)).format(DateTimeFormatter.ofPattern(dateFormat));
 			}
 			return strDateRes;
 		}
