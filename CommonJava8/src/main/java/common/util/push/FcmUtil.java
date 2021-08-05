@@ -4,8 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -17,6 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * <pre>
@@ -37,6 +40,7 @@ import com.google.gson.JsonObject;
  * 개정이력
  * -----------------------------------
  * 2019. 3. 11. 김대광	최초작성
+ * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정, failedIds 추가
  *         </pre>
  */
 public class FcmUtil {
@@ -110,6 +114,7 @@ public class FcmUtil {
 		static final String FAILURE = "failure";
 		static final String RESULTS = "results";
 		static final String RESULTS_ERROR = "error";
+		static final String FAILED_REGISTRATION_IDS = "failed_registration_ids";
 	}
 
 	/** 외부에서 객체 인스턴스화 불가 */
@@ -169,6 +174,9 @@ public class FcmUtil {
 
 		/** 처리 개수 */
 		public int processCnt;
+		
+		/** 실패 토큰 */
+		public List<String> failedIds = new ArrayList<>();
 
 		@Override
 		public String toString() {
@@ -255,7 +263,7 @@ public class FcmUtil {
 		int iMaxCnt = 0;
 		JsonArray jArray = null;
 
-		for (int i = 0; i <= iTotalIdx; i++) {
+		for (int i = 0; i < iTotalIdx; i++) {
 			jArray = new JsonArray();
 
 			if (iTotalCnt - (FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN
@@ -285,9 +293,20 @@ public class FcmUtil {
 
 				int iSuccess = jResult.get(FcmResponseMessage.SUCCESS).getAsInt();
 				int iFailure = jResult.get(FcmResponseMessage.FAILURE).getAsInt();
+				
+				List<String> failedIds = null;
+				System.out.println(  jResult.toString() );
+				if ( jResult.has(FcmResponseMessage.FAILED_REGISTRATION_IDS) ) {
+					Type listType = new TypeToken<List<String>>() {}.getType();
+					failedIds = new Gson().fromJson(jResult.get(FcmResponseMessage.FAILED_REGISTRATION_IDS), listType);
+				}
 
 				fcmMultiSendResult.successCnt += iSuccess;
 				fcmMultiSendResult.failureCnt += iFailure;
+				
+				if ( failedIds != null ) {
+					fcmMultiSendResult.failedIds.addAll(failedIds);
+				}
 
 				// 1회 전송 후, 1초간 대기
 				try {
