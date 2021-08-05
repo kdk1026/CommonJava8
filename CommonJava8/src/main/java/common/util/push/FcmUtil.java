@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -40,7 +41,7 @@ import com.google.gson.reflect.TypeToken;
  * 개정이력
  * -----------------------------------
  * 2019. 3. 11. 김대광	최초작성
- * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정, failedIds 추가
+ * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정
  *         </pre>
  */
 public class FcmUtil {
@@ -114,7 +115,6 @@ public class FcmUtil {
 		static final String FAILURE = "failure";
 		static final String RESULTS = "results";
 		static final String RESULTS_ERROR = "error";
-		static final String FAILED_REGISTRATION_IDS = "failed_registration_ids";
 	}
 
 	/** 외부에서 객체 인스턴스화 불가 */
@@ -175,8 +175,13 @@ public class FcmUtil {
 		/** 처리 개수 */
 		public int processCnt;
 		
-		/** 실패 토큰 */
-		public List<String> failedIds = new ArrayList<>();
+		/**
+		 * <pre> 
+		 * 처리된 메시지의 상태 : message_id (성공), error (실패) 
+		 * 	- 요청 payload의 registration_ids와 순서가 동일함
+		 * </pre>
+		 * */
+		public List<Map<String, Object>> results = new ArrayList<>();
 
 		@Override
 		public String toString() {
@@ -294,19 +299,14 @@ public class FcmUtil {
 				int iSuccess = jResult.get(FcmResponseMessage.SUCCESS).getAsInt();
 				int iFailure = jResult.get(FcmResponseMessage.FAILURE).getAsInt();
 				
-				List<String> failedIds = null;
-				System.out.println(  jResult.toString() );
-				if ( jResult.has(FcmResponseMessage.FAILED_REGISTRATION_IDS) ) {
-					Type listType = new TypeToken<List<String>>() {}.getType();
-					failedIds = new Gson().fromJson(jResult.get(FcmResponseMessage.FAILED_REGISTRATION_IDS), listType);
-				}
+				JsonArray results = jResult.getAsJsonArray(FcmResponseMessage.RESULTS);
+				Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
+				
+				List<Map<String, Object>> resultList = new Gson().fromJson(results, listType);
 
 				fcmMultiSendResult.successCnt += iSuccess;
 				fcmMultiSendResult.failureCnt += iFailure;
-				
-				if ( failedIds != null ) {
-					fcmMultiSendResult.failedIds.addAll(failedIds);
-				}
+				fcmMultiSendResult.results = resultList;
 
 				// 1회 전송 후, 1초간 대기
 				try {
