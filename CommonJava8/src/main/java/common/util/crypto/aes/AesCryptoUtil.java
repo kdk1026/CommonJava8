@@ -1,4 +1,4 @@
-package common.util.crypto;
+package common.util.crypto.aes;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
