@@ -30,6 +30,17 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 6. 김대광	Javadoc 작성
+ * </pre>
+ * 
+ * 심각하게 구닥다리 버전 기준이라 deprecated가 1~2개가 아니다...어마어마 하구만...언젠가 갱신할 날이 오긴 하겠지?
+ *
+ * @author 김대광
+ */
 public class PoiUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PoiUtil.class);
