@@ -2,6 +2,23 @@ package common;
 
 import java.text.MessageFormat;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 6. 김대광	Javadoc 작성
+ * </pre>
+ * 
+ * <pre>
+ * 메시지 조금씩 손좀 볼 필요가 있다.
+ * 
+ * 코드는 일일이 부여한다는게 보통 내기가 아님...
+ * 최근 Java가 아닌 node.js 프로젝트 하면서 타협본거는
+ * 코드는 무조건 성공이면 200, 실패면 500
+ * 메시지만 다르게 처리 이게 가장 심플한거 같다!! 이래서 많이 보고 참고하는게 중요한데... 어디 좋은 Github 주소 없을려나 ㅋ
+ * </pre>
+ * @author 김대광
+ */
 public enum ResponseCodeEnum { 
 	
 	SUCCESS("0000", "처리 성공"),
