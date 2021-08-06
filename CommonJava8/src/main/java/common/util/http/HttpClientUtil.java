@@ -34,7 +34,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * HttpClient version 4.4 Standard
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 6. 김대광	Javadoc 작성
+ * </pre>
+ * 
+ * <pre>
+ * HttpClient version
+ * -----------------------------------
+ * 4.4 Standard
+ * 4.5.13 까지는 이상 없음 확인
+ * -----------------------------------
+ * 
+ * MultipartEntityBuilder, FileBody, HttpMultipartMode
+ * -----------------------------------
+ * HttpClient 대신 httpmime 이 있어야 함
+ *   - httpmime 디펜더시 하면 HttpClient 도 가지고 옴 (메모를 안했더니만 어느 순간 deprecated 되어서 어느 순간 삭제된줄 알았음...)
+ * -----------------------------------
+ * </pre>
+ *
+ * @author 김대광
  */
 public class HttpClientUtil {
 
