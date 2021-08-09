@@ -30,6 +30,16 @@ public class UsageCodec {
 		//binary();
 	}
 
+	/**
+	 * <pre>
+	 * Bye~ Bye~
+	 * Bye? 임창정 Bye ~~ ㅋ
+	 * 
+	 * 	[Java 8]
+	 * 		Base64.getEncoder().encodeToString(byte[] src);
+	 * 		new String(Base64.getDecoder().decode(String src));
+	 * </pre>
+	 */
 	public static void base64Codec() {
 		// encode
 		ENCODED_TEXT = new String(Base64.encodeBase64(PLAIN_TEXT.getBytes()));
