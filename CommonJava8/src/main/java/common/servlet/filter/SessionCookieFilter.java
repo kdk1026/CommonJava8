@@ -11,6 +11,26 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 9. 김대광	JavaDoc 작성
+ * </pre>
+ * 
+ * <pre>
+ * Servlet 2.5 시절 방식
+ * Servlet 3.0 이후는
+ * 	/WEB-INF/web.xml
+ * 		<session-config>
+ * 			<cookie-config>
+ * 				<http-only>true</http-only>
+ * 			</cookie-config>
+ * 		</session-config>
+ * </pre>
+ *
+ * @author 김대광
+ */
 public class SessionCookieFilter implements Filter {
 
 	@Override

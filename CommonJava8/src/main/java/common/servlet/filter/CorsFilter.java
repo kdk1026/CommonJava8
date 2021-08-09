@@ -10,6 +10,19 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 9. 김대광	JavaDoc 작성
+ * </pre>
+ * 
+ * <pre>
+ * Spring / SpringSeucirty 사용 시, 자체 설정 이용할 것
+ * </pre>
+ *
+ * @author 김대광
+ */
 public class CorsFilter implements Filter {
 
 	@Override
