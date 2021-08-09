@@ -51,6 +51,18 @@ public class UsageCodec {
 		System.out.println("Base64 DECODED_TExT :: " + DECODED_TExT);
 	}
 
+	/**
+	 * <pre>
+	 * 그대도 Bye~ Bye~
+	 * 
+	 *  [Java 8]
+	 *  	URLEncoder.encode(String s)
+	 *  	URLEncoder.encode(String s, String enc)
+	 *  
+	 *  	URLDecoder.decode(String s)
+	 *  	URLDecoder.decode(String s, String enc)
+	 *  </pre>
+	 */
 	public static void urlCodec() {
 		URLCodec urlCodec = new URLCodec();
 
