@@ -53,15 +53,15 @@ public class UsageCodec {
 
 	/**
 	 * <pre>
-	 * 그대도 Bye~ Bye~
-	 * 
-	 *  [Java 8]
+	 *  [Java]
 	 *  	URLEncoder.encode(String s)
 	 *  	URLEncoder.encode(String s, String enc)
 	 *  
 	 *  	URLDecoder.decode(String s)
 	 *  	URLDecoder.decode(String s, String enc)
 	 *  </pre>
+	 *  
+	 *  아.. Java 1부터 지원이였어 ㅋ 사용 방법은 아파치 재단이 편함
 	 */
 	public static void urlCodec() {
 		URLCodec urlCodec = new URLCodec();
