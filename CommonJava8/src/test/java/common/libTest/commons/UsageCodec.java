@@ -11,6 +11,7 @@ import org.apache.commons.codec.binary.BinaryCodec;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.codec.net.URLCodec;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
 public class UsageCodec {
@@ -64,13 +65,22 @@ public class UsageCodec {
 	}
 
 	public static void hashing() {
-		String strMd5 = DigestUtils.md5Hex(PLAIN_TEXT);
-		String strSha256 = DigestUtils.sha256Hex(PLAIN_TEXT);
-		String strSha512 = DigestUtils.sha512Hex(PLAIN_TEXT);
+		/*
+		 * 해싱의 경우, 반듯이 소금을 팍팍 쳐줘야 한다. 안쳐주면 브루트 포스(무작위 공격)에 걸려든다.
+		 */
+		String sSalt = RandomStringUtils.randomAscii(20);
+		
+		String strMd5 = DigestUtils.md5Hex(PLAIN_TEXT + sSalt);
+		String strSha256 = DigestUtils.sha256Hex(PLAIN_TEXT + sSalt);
+		String strSha512 = DigestUtils.sha512Hex(PLAIN_TEXT + sSalt);
 
 		System.out.println("DigestUtils MD5 String :: " + strMd5);
 		System.out.println("DigestUtils SHA256  String :: " + strSha256);
 		System.out.println("DigestUtils SHA512  String :: " + strSha512);
+		
+		System.out.println("Check MD5 hashing :: " + strMd5.equals(DigestUtils.md5Hex(PLAIN_TEXT + sSalt)));
+		System.out.println("Check MD5 SHA256 :: " + strSha256.equals(DigestUtils.sha256Hex(PLAIN_TEXT + sSalt)));
+		System.out.println("Check MD5 SHA512 :: " + strSha512.equals(DigestUtils.sha512Hex(PLAIN_TEXT + sSalt)));
 	}
 
 	public static void checkSum() {

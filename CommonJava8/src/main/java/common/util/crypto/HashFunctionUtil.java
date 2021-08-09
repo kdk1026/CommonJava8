@@ -7,10 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <pre>
  * 해쉬함수 알고리즘 기능 제공(대중적인 MD5, SHA256, SHA512)<br/>
  *  - 복호화가 불가능한 단방향 암호화 (예: 비밀번호)<br/>
  *  - 임의길이의 정보를 입력 받아, 고정된 길이의 해쉬값 출력 방식<br/>
  *  - commons.codec.DigestUtils 사용 권장
+ *  	> 소금도 쳐야 하는데, DigestUtils에서 제공하므로 무슨일이 있어도 이딴 유틸대신 DigestUtils 사용할 것!!!!
+ *  	> 아파치 재단은 진리인 것이다!!!
+ *  
+ *  참고 - {@link common.libTest.commons.UsageCodec#hashing}
+ *  </pre>
  */
 public class HashFunctionUtil {
 	
