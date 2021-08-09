@@ -6,6 +6,22 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 9. 김대광	JavaDoc 작성
+ * </pre>
+ * 
+ * <pre>
+ * Java 8 이전, Joda-Time 알기 전까지는 유용했으나 지금은 무조건 Bye~
+ * Java 8 부터는 Joda-Time과 유사한 JSR-310 을 제공하므로
+ * 
+ * {@link <a href="https://d2.naver.com/helloworld/645609">좋은자료 있으므로 읽어볼것</a>}
+ * </pre>
+ *
+ * @author 김대광
+ */
 public class UsageDateUtils {
 
 	//----------------------------------------------------
