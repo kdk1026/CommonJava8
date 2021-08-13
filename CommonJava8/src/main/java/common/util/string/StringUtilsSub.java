@@ -2,18 +2,28 @@ package common.util.string;
 
 import java.util.UUID;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class StringUtilsSub {
 	
 	private StringUtilsSub() {
 		super();
 	}
-
+	
 	/**
 	 * UUID 문자열에서 '-'를 제외한 32자리 문자열 반환
 	 * @return
 	 */
 	public static String getRandomString() {
-		return UUID.randomUUID().toString().replaceAll("-", "");
+		return UUID.randomUUID().toString().replace("-", "");
 	}
 
 	/**
@@ -39,22 +49,9 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String replaceCRLFToHtmlTag(String str) {
-		String sRes = "";
 		final String sCr = "<br/>";
 		
-		if ( str.indexOf('\r') > -1) {
-			sRes = str.replaceAll("\r", sCr);
-		}
-		
-		if ( str.indexOf('\n') > -1) {
-			sRes = str.replaceAll("\n", sCr);
-		}
-		
-		if ( str.indexOf("\r\n") > -1 ) {
-			sRes = str.replaceAll("\r\n", sCr);
-		}
-		
-		return sRes;
+		return str.replace("\r", sCr).replace("\n", sCr).replace("\r\n", sCr);
 	}
 
 	/**
@@ -63,12 +60,7 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String replaceHtmlTagToCRLF(String str) {
-		String sRes = str;
-		
-		sRes = sRes.replaceAll("<br>", "\r\n");
-		sRes = sRes.replaceAll("<br/>", "\r\n");
-		
-		return sRes;
+		return str.replace("<br>", "\r\n").replace("<br/>", "\r\n");
 	}
 	
 	/**
@@ -78,13 +70,7 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String escapeXss(String str) {
-		String sRes = str;
-		
-		sRes = sRes.replaceAll("\"", "&quot;").replaceAll("&", "&amp;");
-		sRes = sRes.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-		sRes = sRes.replaceAll("'", "\\'").replaceAll("\"", "\\\"");
-		
-		return sRes;
+		return str.replace("\"", "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "\\'").replace("\"", "\\\"");
 	}
 
 	/**
@@ -94,15 +80,9 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String unescapeXss(String str) {
-		String sRes = str;
-		
-		sRes = sRes.replaceAll("&quot;", "\"").replaceAll("&amp;", "&");
-		sRes = sRes.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
-		sRes = sRes.replaceAll("\\'", "'").replaceAll("\\\"", "\"");
-		
-		return sRes;
+		return str.replace("&quot;", "\"").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("\\'", "'").replace("\\\"", "\"");
 	}
-
+	
 	/**
 	 * <pre>
 	 * 별점 반환
@@ -115,7 +95,7 @@ public class StringUtilsSub {
 	public static String getStarRating(String strDoubleScore) {
 		String strStarRating = "";
 		double dScore = Double.parseDouble(strDoubleScore);
-		dScore = (double) Math.round(dScore * 10.0) / 10.0;
+		dScore = Math.round(dScore * 10.0) / 10.0;
 
 		String strScoreRound = Double.toString(dScore);
 
