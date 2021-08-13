@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 7. 7. 김대광	최초작성
+ * 2021. 7.  7. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (그냥 기본 Exception 이나 RuntimeException 쓰자... 만들려면 또 exception 패키지 만들어서 어! 상속도 받고 어!... 힘들어...)
  * </pre>
  * 
  * @Description	Apache Commons Net 기반
