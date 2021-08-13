@@ -1,15 +1,22 @@
 package common.util.crypto.aes;
 
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 8. 6. 김대광	최초작성
+ * 2021. 8.  6. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (그냥 복사해 왔지... throw new 해놓고, 메소드에 throws 왜 걸었지???)
+ * 			Cipher.getInstance 패딩 권장이긴 하지만... node.js 랑 맞춰진거니 별 수 있나 뭐...
  * </pre>
  * 
  * <pre>
@@ -37,10 +44,12 @@ public class AESCrypto {
      * 모드에 따른 암복호화 처리기
      * @param mode Cipher.ENCRYPT_MODE / Cipher.DECRYPT_MODE
      * @return Cipher
-     * @throws Exception - NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
      * @since 2021.02.24
      */
-    private Cipher getCipher(int mode) throws Exception{
+    private Cipher getCipher(int mode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         Key key = new SecretKeySpec(toBytes(cipherKey, 16), "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(mode, key);
@@ -52,10 +61,14 @@ public class AESCrypto {
      * AES(aes-128-ecb)암호화
      * @param src 평문
      * @return 암호화 된 HEX문자열
-     * @throws Exception
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
      * @since 2021.02.24
      */
-    public String encrypt(String src) throws Exception {
+    public String encrypt(String src) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = getCipher(Cipher.ENCRYPT_MODE);
         byte[] plain = src.getBytes();
         byte[] encrypt = cipher.doFinal(plain);
@@ -66,10 +79,14 @@ public class AESCrypto {
      * AES(aes-128-ecb)복호화
      * @param hex 암호화 된 HEX문자열
      * @return 복호화 된 평문
-     * @throws Exception
+     * @throws NoSuchPaddingException 
+     * @throws NoSuchAlgorithmException 
+     * @throws InvalidKeyException 
+     * @throws BadPaddingException 
+     * @throws IllegalBlockSizeException 
      * @since 2021.02.24
      */
-    public String decrypt(String hex) throws Exception {
+    public String decrypt(String hex) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
         byte[] encrypt = toBytesFromHexString(hex);
         byte[] decrypt = cipher.doFinal(encrypt);
@@ -82,11 +99,10 @@ public class AESCrypto {
      * @param digits 문자열
      * @param radix 진수 (8,10,16만 가능)
      * @return byte[]
-     * @throws Exception - NumberFormatException, IllegalArgumentException
      */
-    private byte[] toBytes(String digits, int radix) throws Exception {
+    private byte[] toBytes(String digits, int radix) {
         if (digits == null) {
-            return null;
+            return new byte[0];
         }
         if (radix != 16 && radix != 10 && radix != 8) {
             throw new IllegalArgumentException("For input radix: \"" + radix+ "\"");
@@ -109,11 +125,10 @@ public class AESCrypto {
      * 입력받은 HEX 문자열을 byte[] 로 변환
      * @param digits 입력 문자열
      * @return byte[]
-     * @throws Exception - IllegalArgumentException, NumberFormatException
      */
-    private byte[] toBytesFromHexString(String digits) throws Exception {
+    private byte[] toBytesFromHexString(String digits) {
         if (digits == null) {
-            return null;
+            return new byte[0];
         }
         int length = digits.length();
         if (length % 2 == 1) {
@@ -138,7 +153,7 @@ public class AESCrypto {
             return null;
         }
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (byte b : bytes) {
             result.append(Integer.toString((b & 0xF0) >> 4, 16));
             result.append(Integer.toString(b & 0x0F, 16));
