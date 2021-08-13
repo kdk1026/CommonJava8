@@ -1,6 +1,7 @@
 package common.util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -18,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * 개정이력
  * -----------------------------------
  * 2020. 9. 26. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (하지만... 가급적 try-with-resources 익숙해지기 위해~)
  * </pre>
  * 
  * @apiNote Jackson Databind
@@ -25,11 +27,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class AddrSerchApi {
 	
+	private AddrSerchApi() {
+		super();
+	}
+
 	private static final String CONFM_KEY = "U01TX0FVVEgyMDE4MTAxNzEzMTcwMDEwODI0MDM=";
 	private static final String RESULT_TYPE = "json";
 	
 	@SuppressWarnings("unchecked")
-	public static Map<String, Object> getJusoApi(int currentPage, int countPerPage, String keyword) throws Exception {
+	public static Map<String, Object> getJusoApi(int currentPage, int countPerPage, String keyword) throws IOException {
 		Map<String, Object> resultMap = new HashMap<>();
 		
 		String sApiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do";
@@ -40,15 +46,14 @@ public class AddrSerchApi {
 		sApiUrl += "&resultType=" + RESULT_TYPE;
 		
 		URL url = new URL(sApiUrl);
-		BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8.name()));
-
 		StringBuilder sb = new StringBuilder();
-		String line;
-		while ( (line = br.readLine()) != null ) {
-			sb.append(line);
-		}
 		
-		br.close();
+		try( BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), StandardCharsets.UTF_8.name()))) {
+			String line;
+			while ( (line = br.readLine()) != null ) {
+				sb.append(line);
+			}
+		}
 		
 		Map<String, Object> dataMap;
 		
