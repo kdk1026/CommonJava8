@@ -21,12 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (안바꿔 이건 Java 6 전용이거든~ Java 7 NIO 알고부터는 버렸거든 그리 알도록)
+ * </pre>
+ * 
+ *
  * @author 김대광
  * @Description	: 1.6 기반
- * <pre>
- * -----------------------------------
- * 개정이력
- * </pre>
  */
 public class FileUtil {
 
