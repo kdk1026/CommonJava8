@@ -3,6 +3,16 @@ package common.util;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정)
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class PagingUtil {
 
 	/** 페이지당 행수, MySQL LIMIT */
@@ -117,8 +127,8 @@ public class PagingUtil {
 		this.start = this.calcStart();
 		this.end = this.calcEnd();
 
-		int offSet = (this.currentPage - 1) * this.pagePerRow;
-		this.setOffSet(offSet);
+		int nOffSet = (this.currentPage - 1) * this.pagePerRow;
+		this.setOffSet(nOffSet);
 	}
 
 	public int calcStart() {
