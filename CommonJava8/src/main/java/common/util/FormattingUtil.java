@@ -5,6 +5,17 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : replaceAll -> replace)
+ * 			마음같아서는 FormattingUtil, MaskingUtil 분리하고 싶은데... 지금은 너무 귀찮구나...
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class FormattingUtil {
 
 	private FormattingUtil() {
@@ -217,7 +228,7 @@ public class FormattingUtil {
 	 * @return
 	 */
 	public static String convertMoneyHangul(String str) {
-		String sMoney = str.replaceAll(",", "");
+		String sMoney = str.replace(",", "");
 
 		String[] asHanNum1 = { "", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구" };
 		String[] asHanNum2 = { "", "십", "백", "천" };
