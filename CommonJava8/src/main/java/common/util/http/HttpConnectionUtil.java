@@ -24,6 +24,16 @@ import org.slf4j.LoggerFactory;
 /**
  * 성능 및 SSL 성공률이 다소 뒤처지므로 부득이한 경우가 아니면 Apache HttpClient 사용 권장
  */
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity 어쩔 수 없고, try-with-resources 로 바꾸기에는 좀 크다...)
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class HttpConnectionUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpConnectionUtil.class);
