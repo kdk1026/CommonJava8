@@ -37,7 +37,8 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 8. 6. 김대광	Javadoc 작성
+ * 2021. 8.  6. 김대광	Javadoc 작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity 어쩔 수 없고, 주석 갖고 딴지좀 걸지마리)
  * </pre>
  * 
  * <pre>
