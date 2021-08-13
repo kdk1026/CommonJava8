@@ -1,7 +1,7 @@
 package common.util;
 
 import java.io.File;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.activation.DataHandler;
@@ -27,6 +27,16 @@ import org.slf4j.LoggerFactory;
 
 import common.util.properties.PropertiesUtil;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : 인코딩 관련)
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class MailSenderUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MailSenderUtil.class);
@@ -166,7 +176,7 @@ public class MailSenderUtil {
 			email.addTo(mailTos);
 			email.setSubject(mailSubject);
 			email.setHtmlMsg(mailMsg);
-			email.setCharset(Charset.forName("UTF-8").toString());
+			email.setCharset(StandardCharsets.UTF_8.toString());
 			
 			if (attachFile != null) {
 				// 첨부파일
