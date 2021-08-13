@@ -8,13 +8,16 @@ import java.util.List;
 import com.ibm.icu.util.ChineseCalendar;
 
 /**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	너무 옛날거이기도 하고... 뭔가 좋은 방법이 따로 있을 듯... 고로... Java 6 버전에 맞춰진 상태로 유지... 세상에 Calendar 라니...
+ * </pre>
+ * 
+ *
  * @author 김대광
  * @Description Apache Commons Net 필요
  * 	- 공휴일 관련
- * <pre>
- * -----------------------------------
- * 개정이력
- * </pre>
  */
 public class Icu4JHolidayUtil {
 
