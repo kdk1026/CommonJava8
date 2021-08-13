@@ -10,6 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정)
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class ResponseUtil {
 	
 	private ResponseUtil() {
@@ -38,9 +48,9 @@ public class ResponseUtil {
 		
 		try {
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF8).replaceAll("\\+", " ");
+				sRes = URLEncoder.encode(str, UTF8).replace("\\+", " ");
 			} else {
-				sRes = new String(str.getBytes(UTF8), "ISO-8859-1");
+				sRes = new String(str.getBytes(UTF8), StandardCharsets.ISO_8859_1);
 			}
 			
 		} catch (Exception e) {
