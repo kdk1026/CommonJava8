@@ -18,7 +18,8 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 7. 8. 김대광	최초작성
+ * 2021. 7.  8. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (Complexity 는 언제나 그렇듯 어쩔 수가 없단다....) 
  * </pre>
  * 
  * 실행 가능한 JAR 프로젝트에 생성하여 nohup java -jar JAR파일 형태로 백그라운드로 실행
@@ -89,6 +90,10 @@ public class FolderWatch {
 
 		} catch (IOException | InterruptedException e) {
 			logger.error("", e);
+			
+			// Restore interrupted state...
+		    Thread.currentThread().interrupt();
+
 		}
 	}
 }
