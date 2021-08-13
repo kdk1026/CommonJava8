@@ -1,6 +1,7 @@
 package common.util.crypto.aes;
 
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.Base64;
 
 import javax.crypto.Cipher;
@@ -12,6 +13,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (SecureRandom 추가로... 이 버전에 맞춰놓은 Node.js 유틸도 수정해야 돼... 아... 귀찮아 죽겠다..)
+ * </pre>
+ * 
  * <pre>
  * 블록암호 알고리즘 기능 중 대중적인 AES 제공
  * - 복호화가 가능한 양방향 암호화
@@ -31,6 +38,8 @@ import org.slf4j.LoggerFactory;
  * - Base64
  * 	 > java 8
  * </pre>
+ * 
+ * @author 김대광
  */
 public class AesCryptoUtil {
 
@@ -41,11 +50,14 @@ public class AesCryptoUtil {
 	private static final Logger logger = LoggerFactory.getLogger(AesCryptoUtil.class);
 
 	private static final byte[] IV_BYTES = new byte[16];
+	
+	private static SecureRandom random = new SecureRandom();
+	
 	/**
 	 * @since 1.7
 	 */
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
-
+	
 	public static final String AES_CBC_NOPADDING ="AES/CBC/NoPadding";
 	public static final String AES_CBC_PKCS5PADDING ="AES/CBC/PKCS5Padding";
 	public static final String AES_ECB_NOPADDING ="AES/ECB/NoPadding";
@@ -61,6 +73,7 @@ public class AesCryptoUtil {
 
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
+				random.nextBytes(IV_BYTES);
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(IV_BYTES));
 
 			} else {
@@ -86,6 +99,7 @@ public class AesCryptoUtil {
 
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
+				random.nextBytes(IV_BYTES);
 				cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(IV_BYTES));
 
 			} else {
