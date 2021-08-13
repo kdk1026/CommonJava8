@@ -43,6 +43,7 @@ import com.google.gson.reflect.TypeToken;
  * 2019. 3. 11. 김대광	최초작성
  * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정
  * 2021. 8. 13. 김대광	대량 전송 시, 나누는 작업 문제가 있어서 뜯어고침 헝가리안도 구탁다리 개인 스타일 버리고, 현재 개인 스타일로 맞춤
+ * 			static class의 요소들에 public 없으면... 외부에서 접근 안될거 같은데... try-with-resources 바꾸기에는... 너무 많이 고쳐야 해서...
  * </pre>
  */
 public class FcmUtil {
@@ -338,7 +339,6 @@ public class FcmUtil {
 
 	/**
 	 * HTTP 요청
-	 * 
 	 * @param sJson
 	 * @return
 	 */
