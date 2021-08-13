@@ -1,5 +1,15 @@
 package common.util.valid;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (정규식은 어쩔수가 없구나... 님 이런건 넘어가주세요...)
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class ValidUtil {
 
 	private ValidUtil() {
@@ -12,7 +22,7 @@ public class ValidUtil {
 	 * @return
 	 */
 	public static boolean isBlank(String str) {
-		return (str == null || str.replace("/ /gi", "") == "");
+		return (str == null || str.replace("/ /gi", "").equals(""));
 	}
 	
 	/**
