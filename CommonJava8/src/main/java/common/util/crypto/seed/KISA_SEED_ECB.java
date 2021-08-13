@@ -1,5 +1,7 @@
 package common.util.crypto.seed;
 
+// 21.08.13 - SonarLint 지시에 따른 주저리 주저리 : 이건 KISA에서 제공하는거 가져오건거라.... 몰랐는데 변수명이랑 메소드명이랑 개판이구나... 컨벤션에 심각하게 어긋나는
+
 /**
  * @file KISA_SEED_ECB.java
  * @brief SEED CBC 암호 알고리즘
