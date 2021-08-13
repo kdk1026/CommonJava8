@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 7. 8. kdk	최초작성
+ * 2021. 8. 13. kdk	SonarLint 지시에 따른 수정 (symLinkPath.toFile().delete(); -> Files.delete(symLinkPath);)
  * </pre>
  * 
  * @Description	: 1.7 기반
@@ -59,7 +60,7 @@ public class SymbolicLinkUtil {
 			
 			boolean isSymLink = Files.isSymbolicLink(symLinkPath);
 			if ( !isSymLink ) {
-				symLinkPath.toFile().delete();
+				Files.delete(symLinkPath);
 				Files.createSymbolicLink(symLinkPath, srcPath);
 			}
 			

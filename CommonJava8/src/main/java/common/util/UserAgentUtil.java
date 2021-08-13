@@ -47,11 +47,13 @@ public class UserAgentUtil {
 	public boolean isMobile(HttpServletRequest request) {
 		String sUserAgent = request.getHeader(USER_AGENT);
 		
+		boolean isMobile = false;
+		
 		if ( sUserAgent.indexOf("Mobi") > -1 ) {
-			return true;
-		} else {
-			return false;
+			isMobile = true;
 		}
+		
+		return isMobile;
 	}
 	
 	/**
