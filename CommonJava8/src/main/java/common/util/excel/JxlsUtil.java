@@ -28,6 +28,7 @@ import net.sf.jxls.transformer.XLSTransformer;
  * 개정이력
  * -----------------------------------
  * 2019. 5. 10. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
  * </pre>
  * 
  *
@@ -129,7 +130,7 @@ public class JxlsUtil {
 			final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
 			
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF_8).replaceAll("\\+", " ");
+				sRes = URLEncoder.encode(str, UTF_8).replace("\\+", " ");
 			} else {
 				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
 			}
