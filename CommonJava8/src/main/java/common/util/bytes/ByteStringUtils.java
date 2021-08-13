@@ -12,6 +12,17 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 14. 김대광	SonarLint 지시에 따른 수정 및 주저리 (Complexity 어쩔 수 없다)
+ * 		훗... 비주얼 베이직 소스 보고 자바로 연구하던 시절이 무릇무릇 떠오르는구만 ㅋㅋㅋ
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class ByteStringUtils {
 	
 	private ByteStringUtils() {
@@ -199,7 +210,7 @@ public class ByteStringUtils {
 				}
 				
 				char c = (char) bByte[i];
-				if ( (int)c > 127 ) {
+				if ( c > 127 ) {
 					nChkByte = 1;
 					i++;
 				} else {
