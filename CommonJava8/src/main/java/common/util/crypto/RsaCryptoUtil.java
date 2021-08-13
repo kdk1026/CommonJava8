@@ -34,6 +34,13 @@ import common.util.file.NioFileUtil;
 
 /**
  * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (제시하는.. Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding");, Cipher.getInstance("RSA/None/OAEPWITHSHA-256ANDMGF1PADDING")
+ * 		RSA는 패딩을 전혀 몰라... RSA 자체가 어려움... 이딴거 쓰는데 지금까지... 1번 보기는 했던거 같구나....
+ * </pre>
+ * 
+ * <pre>
  * 공개키 암호화 방식인 RSA 암호화 기능 제공
  *  - 공개키로 암호화하고, 그와 다른 비밀키로만 열 수 있는 암호화 알고리즘
  *  - RSA 기반 웹페이지 암호화 로그인
@@ -42,6 +49,8 @@ import common.util.file.NioFileUtil;
  *  - Base64
  *    > java 8
  * </pre>
+ *
+ * @author 김대광
  */
 public class RsaCryptoUtil {
 	
