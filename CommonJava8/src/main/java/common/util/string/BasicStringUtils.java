@@ -1,7 +1,14 @@
 package common.util.string;
 
 /**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
+ * </pre>
+ * 
  * commons.lang 라이브러리 사용 권장
+ * @author 김대광
  */
 public class BasicStringUtils {
 	
@@ -70,7 +77,7 @@ public class BasicStringUtils {
 		StringBuilder sb = new StringBuilder();
 		
 	    for (int i = 0; i < chars.length; i++) {
-	    	sb.append(Integer.toHexString((int) chars[i]));
+	    	sb.append(Integer.toHexString(chars[i]));
 	    }
 	    return sb.toString();
 	}
