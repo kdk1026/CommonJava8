@@ -23,11 +23,12 @@ import com.jcraft.jsch.Session;
  * @since 2019. 2. 12.
  * @author 김대광
  * 
- *         <pre>
+ * <pre>
  * -----------------------------------
  * 개정이력
  * 2019. 2. 12. 김대광	최초작성
- *         </pre>
+ * 2021. 8. 13. 김대광	JavaDoc pre 태그 공백 수정 (그리고... SonarLint 님아... Vector 내가 쓰고 싶어서 쓴게 아니에요...)
+ * </pre>
  */
 public class SftpClientUtil {
 
