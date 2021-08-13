@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * -----------------------------------
  * 개정이력
- * 2018. 9. 3. 김대광	최초작성
+ * 2018. 9.  3. 김대광	최초작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (제시하는 map.computeIfAbsent 는 Java 8인데... Java 8은 일부만 알고 있구나... 어떻게 써야 할지 모르겠다...)
  * </pre>
  */
 public class MapUtil {
