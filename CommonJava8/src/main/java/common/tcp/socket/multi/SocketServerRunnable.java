@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * 2018. 12. 23. 김대광	최초작성
+ * 2021.  8. 14. 김대광	SonarLint 지시에 따른 주저리 주저리 (어절수 없는건 없는거고... 왜 lambda 를 제시하니... 몰라... 연구할 날이 올까? 애초에... Ctrl + Space 신공이 가능한건가???)
  * </pre>
  */
 public class SocketServerRunnable {

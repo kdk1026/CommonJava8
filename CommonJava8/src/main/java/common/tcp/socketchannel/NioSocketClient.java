@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * 2018. 12. 22. 김대광	최초작성
+ * 2021.  8. 14. 김대광	SonarLint 지시에 따른 수정
  * </pre>
  */
 public class NioSocketClient {
@@ -60,7 +61,7 @@ public class NioSocketClient {
 			
 		} catch (Exception e) {
 			logger.error("", e);
-			throw e;
+//			throw e;
 		}
 	}
 	

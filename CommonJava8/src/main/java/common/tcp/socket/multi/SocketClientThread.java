@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * 2018. 12. 23. 김대광	최초작성
+ * 2021.  8. 14. 김대광	SonarLint 지시에 따른 주저리 주저리 (Minor는 제낀다, 쓰레드라... null이나 빈값이면 Exception 필요할거 같은데... 아 몰라... Thread도 겁나 어려워...)
  * </pre>
  */
 public class SocketClientThread {

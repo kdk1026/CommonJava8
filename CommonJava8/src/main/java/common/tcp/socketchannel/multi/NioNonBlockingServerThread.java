@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * 2018. 12. 23. 김대광	최초작성
+ * 2021.  8. 14. 김대광	SonarLint 지시에 따른 주저리 주저리 (하나같이 어쩔 수 없는 것들이다... 블로킹/논블로킹 잘 몰라요... 이거야 말로 완벽한 맨땅에 헤딩 일단 돌아감 OK)
  * </pre>
  */
 public class NioNonBlockingServerThread {
