@@ -21,6 +21,7 @@ import org.joda.time.format.DateTimeFormatter;
  * 개정이력
  * -----------------------------------
  * 21.07.31	CalcDate 메소드 일부 추가
+ * 21.08.13 plusMinusYear 포맷으로 처리를 안해놨네
  * </pre>
  */
 public class JodaTimeDateUtil {
@@ -371,11 +372,11 @@ public class JodaTimeDateUtil {
 		 */
 		public static String plusMinusYear(String strDate, int years, String dateForamt) {
 			String strDateRes = "";
-			DateTimeFormatter formatter = DateTimeFormat.forPattern(YYYYMMDD);
+			DateTimeFormatter formatter = DateTimeFormat.forPattern(dateForamt);
 			if (years > 0) {
-				strDateRes = DateTime.parse(strDate, formatter).plusYears(years).toString(YYYYMMDD);
+				strDateRes = DateTime.parse(strDate, formatter).plusYears(years).toString(dateForamt);
 			} else {
-				strDateRes = DateTime.parse(strDate, formatter).minusYears(years*-1).toString(YYYYMMDD);
+				strDateRes = DateTime.parse(strDate, formatter).minusYears(years*-1).toString(dateForamt);
 			}
 			return strDateRes;
 		}
