@@ -14,6 +14,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (setAccessible 지워? 테스트 했더니 private 접근 불가라잖니... 음 그래... 해결책은 제시를 안했구나 ㅡㅡ)
+ * 		setReqParamToObject, setHttpResponse 는 웹 환경에서... 포함시켜서 실행했더니 JNI 에러 뜨네...
+ * </pre>
+ * 
+ *
+ * @author 김대광
+ */
 public class BasicObjectUtil {
 	
 	private BasicObjectUtil() {
@@ -21,7 +32,7 @@ public class BasicObjectUtil {
 	}
 	
 	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
-
+	
 	/**
 	 * Object의 Field가 Blank인지 체크 
 	 * @param obj
