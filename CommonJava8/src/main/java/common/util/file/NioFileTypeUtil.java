@@ -14,12 +14,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * <pre>
+ * 개정이력
+ * -----------------------------------
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (정규식은 방법이 없는 듯 하구나...)
+ * </pre>
+ * 
+ *
  * @author 김대광
  * @Description	: 1.7 기반
- * <pre>
- * -----------------------------------
- * 개정이력
- * </pre>
  */
 public class NioFileTypeUtil {
 
