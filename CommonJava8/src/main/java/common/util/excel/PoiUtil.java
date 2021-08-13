@@ -34,7 +34,9 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 8. 6. 김대광	Javadoc 작성
+ * 2021. 8.  6. 김대광	Javadoc 작성
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity는 언제나 별수 없고... dataMap = contentsList.get(0); 이건 진짜 모르겠다... 나 뭐 한거지? 나머지 하나는 실수로 무시하기 해버렸네... HSSFWorkbook 인데 finally close???)
+ * 		이건 갖다 버리고 새로 만들어야 함.... 너무 심하게 예전거야... deprecated 없으면 모를까.. 너무 많아...
  * </pre>
  * 
  * 심각하게 구닥다리 버전 기준이라 deprecated가 1~2개가 아니다...어마어마 하구만...언젠가 갱신할 날이 오긴 하겠지?
@@ -79,6 +81,10 @@ public class PoiUtil {
 			}
 			
 			is.close();
+			
+			if ( workbook == null ) {
+				return resList;
+			}
 			
 			Sheet sheet = workbook.getSheetAt(0);
 			int nRowCnt = sheet.getPhysicalNumberOfRows();
@@ -176,6 +182,10 @@ public class PoiUtil {
 		default:
 			break;
 		}
+		
+		if ( workbook == null ) {
+			return null;
+		}
 
 		Sheet sheet = workbook.createSheet();
 		Row row = null;
@@ -193,7 +203,7 @@ public class PoiUtil {
 
 		// 타이틀
 		row = sheet.createRow(0);
-		dataMap = contentsList.get(0);
+		dataMap = contentsList.get(0);	// 이건 진짜 뭘까... ㅡㅡ 나는 그시절 뭘 참고한걸까...
 		
 		for ( String sCellTitle : cellTitles ) {
 			Cell rowCell = row.createCell(nCellCnt); 
@@ -303,7 +313,7 @@ public class PoiUtil {
 			final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
 			
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF_8).replaceAll("\\+", " ");
+				sRes = URLEncoder.encode(str, UTF_8).replace("\\+", " ");
 			} else {
 				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
 			}
