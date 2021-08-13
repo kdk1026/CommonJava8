@@ -36,13 +36,14 @@ import com.google.gson.reflect.TypeToken;
  * @since 2019. 3. 11.
  * @author 김대광
  * 
- *         <pre>
+ * <pre>
  * -----------------------------------
  * 개정이력
  * -----------------------------------
  * 2019. 3. 11. 김대광	최초작성
  * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정
- *         </pre>
+ * 2021. 8. 13. 김대광	대량 전송 시, 나누는 작업 문제가 있어서 뜯어고침 헝가리안도 구탁다리 개인 스타일 버리고, 현재 개인 스타일로 맞춤
+ * </pre>
  */
 public class FcmUtil {
 
@@ -237,16 +238,16 @@ public class FcmUtil {
 
 		return fcmSendResult;
 	}
-
+	
 	/**
 	 * Gson 을 이용하여 FCM 대량 전송
 	 * 
-	 * @param sTokenList
+	 * @param tokenList
 	 * @param sJsonNoti
 	 * @param sJsonData
 	 * @return
 	 */
-	public FcmMultiSendResult sendMessage(List<String> sTokenList, String sJsonNoti, String sJsonData) {
+	public FcmMultiSendResult sendMessage(List<String> tokenList, String sJsonNoti, String sJsonData) {
 		FcmMultiSendResult fcmMultiSendResult = new FcmMultiSendResult();
 
 		// 페이로드 Json String을 Json Object로 변환
@@ -259,28 +260,40 @@ public class FcmUtil {
 		jObject.add(FcmMessageConfig.Payload.NOTIFICATION, jNoti);
 		jObject.add(FcmMessageConfig.Payload.DATA, jData);
 
-		// 1회 최대 토큰 개수 단위로 나누어 처리
-		int iTotalCnt = sTokenList.size();
-		double dTotalIdx = Math.ceil((double) iTotalCnt / FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN);
-		int iTotalIdx = (int) dTotalIdx;
+		// 대량 발송 처리 변수 설정
+		int nTotalCnt = tokenList.size();
+		double dTotalIdx = Math.ceil((double) nTotalCnt / FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN);
+		int nTotalIdx = (int) dTotalIdx;
+		
+		List<String> tokenProcessList = null;
+		int nStartIdx = 0;
+		int nEndIdx = nTotalCnt;
 
-		int iProcCnt = 0;
-		int iMaxCnt = 0;
+		if ( nEndIdx > FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN ) {
+			nEndIdx = FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN;
+		}
+
+		int nProcCnt = 0;
 		JsonArray jArray = null;
 
-		for (int i = 0; i < iTotalIdx; i++) {
+		for (int i = 0; i < nTotalIdx; i++) {
 			jArray = new JsonArray();
+			tokenProcessList = tokenList.subList(nStartIdx, nEndIdx);
 
-			if (iTotalCnt - (FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN
-					* i) >= FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN) {
-				iMaxCnt = FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN;
-			} else {
-				iMaxCnt = iTotalCnt;
+			nStartIdx = nEndIdx;
+			nEndIdx = nEndIdx + tokenList.size() - tokenProcessList.size();
+
+			if ( nEndIdx > nStartIdx + FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN ) {
+				nEndIdx = nStartIdx + FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN;
 			}
 
-			for (int j = 0; j < iMaxCnt; j++) {
-				jArray.add(sTokenList.get(j));
-				iProcCnt++;
+			if ( nEndIdx > tokenList.size() ) {
+				nEndIdx = tokenList.size();
+			}
+			
+			for (int j = 0; j < tokenProcessList.size(); j++) {
+				jArray.add(tokenProcessList.get(j));
+				nProcCnt++;
 			}
 
 			// 대상 설정
@@ -317,7 +330,7 @@ public class FcmUtil {
 				}
 			}
 
-			fcmMultiSendResult.processCnt = iProcCnt;
+			fcmMultiSendResult.processCnt = nProcCnt;
 		}
 
 		return fcmMultiSendResult;
