@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (SecureRandom 추가로... 이 버전에 맞춰놓은 Node.js 유틸도 수정해야 돼... 아... 귀찮아 죽겠다..)
+ * 2021. 8. 15. 김대광	SecureRandom 관련 메소드 추가해서 주저리 주저리 하고, 암/복호화 시에는 걷어냄
  * </pre>
  * 
  * <pre>
@@ -51,8 +52,6 @@ public class AesCryptoUtil {
 
 	private static final byte[] IV_BYTES = new byte[16];
 	
-	private static SecureRandom random = new SecureRandom();
-	
 	/**
 	 * @since 1.7
 	 */
@@ -62,6 +61,25 @@ public class AesCryptoUtil {
 	public static final String AES_CBC_PKCS5PADDING ="AES/CBC/PKCS5Padding";
 	public static final String AES_ECB_NOPADDING ="AES/ECB/NoPadding";
 	public static final String AES_ECB_PKCS5PADDING ="AES/ECB/PKCS5Padding";
+	
+	/**
+	 * <pre>
+	 * 랜덤 바이트 어레이 생성
+	 *   - 자세히 모르겠음...
+	 *   - 다른 시스템과 연계시에는 사용못할 듯
+	 *   
+	 *   - 단독 사용 시, 다음과 같은 형태로 사용해야 할 듯
+	 *   - 암호화/복호화 메소드 인자에 byte[] bytesIV 추가
+	 *   - new IvParameterSpec(bytesIV)
+	 * </pre>
+	 * @return
+	 */
+	public static byte[] makeSecureIv() {
+		byte[] bytesIV = new byte[16];
+		SecureRandom random = new SecureRandom();
+		random.nextBytes(bytesIV);
+		return bytesIV;
+	}
 
 	public static String aesEncrypt(String sKey, String sPadding, String strPlainText) {
 		String strEncryptText = "";
@@ -73,7 +91,6 @@ public class AesCryptoUtil {
 
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
-				random.nextBytes(IV_BYTES);
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey, new IvParameterSpec(IV_BYTES));
 
 			} else {
@@ -99,7 +116,6 @@ public class AesCryptoUtil {
 
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
-				random.nextBytes(IV_BYTES);
 				cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(IV_BYTES));
 
 			} else {

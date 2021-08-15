@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
  * 개정이력
  * -----------------------------------
  * 2020. 9. 18. 김대광	최초작성
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (Complexity는 어쩔 수 없단다)
  * </pre>
  * 
  *

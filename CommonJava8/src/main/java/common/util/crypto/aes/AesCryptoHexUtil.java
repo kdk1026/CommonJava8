@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  * 2021. 8.  6. 김대광	최초작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (그냥 복사해 왔지... throw new 해놓고, 메소드에 throws 왜 걸었지???)
  * 			Cipher.getInstance 패딩 권장이긴 하지만... node.js 랑 맞춰진거니 별 수 있나 뭐...
+ * 2021. 8. 15. 김대광	LazyHolder Singleton 패턴으로 변경 및 파일명 변경
  * </pre>
  * 
  * <pre>
@@ -24,21 +25,50 @@ import javax.crypto.spec.SecretKeySpec;
  * node.js 알고리즘 : aes-128-ecb
  * </pre>
  * 
+ * <pre>
+ * [사용 방법]
+ * 	AesCryptoHexUtil.getInstance().setCipherKey("012345678901234567890123456789ab");
+ * 	String en = AesCryptoHexUtil.getInstance().encrypt("apple");
+ * 	String de = AesCryptoHexUtil.getInstance().decrypt(en);
+ * </pre>
+ * 
  * {@link} <a href="https://www.steemcoinpan.com/hive-101145/@wonsama/aes-128-ecb-java-nodejs">Ref</a>
  * @author 김대광
  */
-public class AESCrypto {
+public class AesCryptoHexUtil {
+	
+	/** 외부에서 객체 인스턴스화 불가 */
+	private AesCryptoHexUtil() {
+		super();
+	}
+
+	/**
+	 * Singleton 인스턴스 생성
+	 * 
+	 * @return
+	 */
+	public static AesCryptoHexUtil getInstance() {
+		return LazyHolder.INSTANCE;
+	}
+
+	/**
+	 * LazyHolder Singleton 패턴
+	 * 
+	 * @return
+	 */
+	private static class LazyHolder {
+		private static final AesCryptoHexUtil INSTANCE = new AesCryptoHexUtil();
+	}
 
 	private String cipherKey;
-
+	
     /**
-     * 생성자
-     * @param cipherKey 암/복호화 키
-     * @since 2021.02.24
+     * 키의 길이는 32바이트
+     * @param cipherKey
      */
-    public AESCrypto(String cipherKey){
-        this.cipherKey = cipherKey;
-    }
+    public void setCipherKey(String cipherKey) {
+		this.cipherKey = cipherKey;
+	}
 
     /**
      * 모드에 따른 암복호화 처리기

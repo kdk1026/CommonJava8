@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * 2018. 9. 3. 김대광	최초작성
- * 2021. 8. 13. 김대광 SonarLint 지시에 주저리 주저리
+ * 2021. 8. 13. 김대광 SonarLint 지시에 주저리 주저리 (This accessibility bypass should be removed (뭐시기가 어쩌고 저째? 뭔소리여))
  * </pre>
  */
 public class ObjectUtil {
@@ -164,7 +164,6 @@ public class ObjectUtil {
 					name = f.getName();
 					
 					if ( key.equals(name) ) {
-						// This accessibility bypass should be removed (뭐시기가 어쩌고 저째? 뭔소리여)
 						cls.getField(name).set(obj, (map.get(key) != null) ? map.get(key) : "");
 					}
 				}

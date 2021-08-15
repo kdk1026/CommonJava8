@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : replaceAll -> replace)
+ * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : replaceAll -> replace , 정규식 관련은 어쩔 수가 없다...)
  * 			마음같아서는 FormattingUtil, MaskingUtil 분리하고 싶은데... 지금은 너무 귀찮구나...
  * </pre>
  * 
