@@ -53,7 +53,7 @@ public class FileUtil {
 
 	/**
 	 * 파일의 존재여부 확인
-	 * @param fileName
+	 * @param filePath
 	 * @return
 	 */
 	public static boolean isExistsFile(String filePath) {
@@ -63,7 +63,7 @@ public class FileUtil {
 
 	/**
 	 * 해당 경로에서 파일명 추출
-	 * @param path
+	 * @param filePath
 	 * @return
 	 */
 	public static String getFilename(String filePath) {
@@ -89,7 +89,7 @@ public class FileUtil {
 
 	/**
 	 * 파일 용량 구하기
-	 * @param filename
+	 * @param filePath
 	 * @return
 	 */
 	public static long getFileSize(String filePath) {
@@ -102,7 +102,7 @@ public class FileUtil {
 	 * 파일 용량 구하기
 	 *   - B, KB, MB, GB, TB
 	 * </pre>
-	 * @param size
+	 * @param fileSize
 	 * @return
 	 */
 	public static String readableFileSize(long fileSize) {
@@ -115,7 +115,7 @@ public class FileUtil {
 
 	/**
 	 * 파일의 수정한 날짜 구하기
-	 * @param filename
+	 * @param filePath
 	 * @return
 	 */
 	public static String lastModified(String filePath) {
@@ -127,7 +127,7 @@ public class FileUtil {
 
 	/**
 	 * 텍스트 내용을 행당 경로에 파일로 생성
-	 * @param path
+	 * @param filePath
 	 * @param text
 	 */
 	public static void writeFile(String filePath, String text) {
@@ -157,7 +157,7 @@ public class FileUtil {
 
 	/**
 	 * 텍스트 내용을 행당 경로에 파일로 생성
-	 * @param path
+	 * @param pafilePathth
 	 * @param text
 	 * @param encoding
 	 */
@@ -188,7 +188,7 @@ public class FileUtil {
 
 	/**
 	 * 파일을 텍스트로 읽음
-	 * @param file
+	 * @param filePath
 	 * @return
 	 */
 	public static String readFile(String filePath) {
@@ -228,7 +228,8 @@ public class FileUtil {
 
 	/**
 	 * 파일을 텍스트로 읽음
-	 * @param file
+	 * @param filePath
+	 * @param encoding
 	 * @return
 	 */
 	public static String readFile(String filePath, String encoding) {
@@ -277,7 +278,7 @@ public class FileUtil {
 
 	/**
 	 * 파일 삭제
-	 * @param file
+	 * @param filePath
 	 */
 	public static boolean deleteFile(String filePath) {
 		File file = new File(filePath);
@@ -293,8 +294,8 @@ public class FileUtil {
 
 	/**
 	 * 파일 복사
-	 * @param srcFile
-	 * @param destFile
+	 * @param srcFilePath
+	 * @param destFilePath
 	 */
 	public static void copyFile(String srcFilePath, String destFilePath) {
 		File srcFile = new File(srcFilePath);
@@ -345,7 +346,7 @@ public class FileUtil {
 
 	/**
 	 * 해당 경로의 모든 파일 및 디렉토리를 반환
-	 * @param path
+	 * @param filePath
 	 * @return
 	 */
 	public static List<String> getAllFileList(String filePath) {
@@ -358,7 +359,7 @@ public class FileUtil {
 
 	/**
 	 * 해당 경로의 파일 반환
-	 * @param path
+	 * @param filePath
 	 * @return
 	 */
 	public static List<String> getFileList(String filePath) {
@@ -382,7 +383,7 @@ public class FileUtil {
 
 	/**
 	 * 해당 경로의 디렉토리 반환
-	 * @param path
+	 * @param filePath
 	 * @return
 	 */
 	public static List<String> getDirectoryList(String filePath) {
