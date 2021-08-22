@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 public class TestMetadata {
 
 	public static void main(String[] args) {
+		
 		String sPath = "C:/test/반명함.jpg";
 		File file = new File(sPath);
 		
