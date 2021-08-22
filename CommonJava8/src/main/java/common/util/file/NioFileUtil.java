@@ -1,6 +1,7 @@
 package common.util.file;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -252,11 +253,25 @@ public class NioFileUtil {
 	 */
 	public static boolean deleteFile(String filePath) {
 		Path path = Paths.get(filePath);
-
+		
 		try {
-			Files.delete(path);
-
+			if ( path.toFile().isDirectory() ) {
+				File[] files = path.toFile().listFiles();
+				
+				for (File f : files) {
+					deleteFile(f.getPath());
+					logger.debug("파일이 삭제되었습니다.");
+				}
+				
+				Files.delete(path);
+				logger.debug("폴더가 삭제되었습니다.");
+			} else {
+				Files.delete(path);
+				logger.debug("파일이 삭제되었습니다.");				
+			}
+			
 			return true;
+			
 		} catch (IOException e) {
 			return false;
 		}

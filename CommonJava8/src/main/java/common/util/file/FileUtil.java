@@ -282,14 +282,24 @@ public class FileUtil {
 	 */
 	public static boolean deleteFile(String filePath) {
 		File file = new File(filePath);
-		if (file.isDirectory()) {
+		
+		if ( file.isDirectory() ) {
 			File[] files = file.listFiles();
-			for (File f : files) {
-				deleteFile(f.getPath());
-			}
+			
+            for (File f : files) {
+                deleteFile(f.getPath());
+                logger.debug("파일이 삭제되었습니다.");
+            }
+            
+            file.delete();
+            logger.debug("폴더가 삭제되었습니다.");
+			
+		} else {
+			logger.debug("파일이 삭제되었습니다.");
+			return file.delete();
 		}
-
-		return file.delete();
+        
+        return true;
 	}
 
 	/**
