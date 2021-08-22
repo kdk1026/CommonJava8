@@ -157,7 +157,7 @@ public class FileUtil {
 
 	/**
 	 * 텍스트 내용을 행당 경로에 파일로 생성
-	 * @param pafilePathth
+	 * @param filePath
 	 * @param text
 	 * @param encoding
 	 */
