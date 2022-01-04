@@ -98,6 +98,7 @@ public class ByteBufferUtils {
 			try {
 				fields = obj.getClass().getDeclaredFields();
 				for (Field f : fields) {
+					f.setAccessible(true);
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
 			} catch (Exception e) {
