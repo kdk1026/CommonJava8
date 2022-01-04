@@ -65,6 +65,7 @@ public class ByteBufferUtils {
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
 			for (Field f : fields) {
+				f.setAccessible(true);
 				nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 			}
 			
@@ -77,6 +78,7 @@ public class ByteBufferUtils {
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
 			for (Field f : fields) {
+				f.setAccessible(true);
 				buffer.put(f.get(obj).toString().getBytes(sEncoding));
 			}
 			
@@ -174,6 +176,12 @@ public class ByteBufferUtils {
 		
 		buffer.flip();
 		return buffer;
+	}
+	
+	public static byte[] getByteArrayFromByteBuffer(ByteBuffer byteBuffer) {
+		byte[] bytesArray = new byte[byteBuffer.remaining()];
+		byteBuffer.get(bytesArray, 0, bytesArray.length);
+		return bytesArray;
 	}
 	
 }
