@@ -179,6 +179,10 @@ public class ByteBufferUtils {
 		buffer.flip();
 		return buffer;
 	}
+	
+	public static ByteBuffer getByteBufferFromByteArray(byte[] bytesArray) {
+		return ByteBuffer.wrap(bytesArray);
+	}
 
 	public static byte[] getByteArrayFromByteBuffer(ByteBuffer byteBuffer) {
 		byte[] bytesArray = new byte[byteBuffer.remaining()];
