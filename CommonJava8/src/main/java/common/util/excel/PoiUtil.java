@@ -19,9 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -35,12 +36,10 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 8.  6. 김대광	Javadoc 작성
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity는 언제나 별수 없고... dataMap = contentsList.get(0); 이건 진짜 모르겠다... 나 뭐 한거지? 나머지 하나는 실수로 무시하기 해버렸네... HSSFWorkbook 인데 finally close???)
- * 		이건 갖다 버리고 새로 만들어야 함.... 너무 심하게 예전거야... deprecated 없으면 모를까.. 너무 많아...
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리
+ * 2022. 5. 25. 김대광	deprecated 수정
  * </pre>
  * 
- * 심각하게 구닥다리 버전 기준이라 deprecated가 1~2개가 아니다...어마어마 하구만...언젠가 갱신할 날이 오긴 하겠지?
- *
  * @author 김대광
  */
 public class PoiUtil {
@@ -57,7 +56,7 @@ public class PoiUtil {
 	 * @param cellNames
 	 * @return
 	 */
-	public static List<Map<String, Object>> readExcel(File file, String[] cellNames) {
+	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, boolean isDecimal) {
 		List<Map<String, Object>> resList = new ArrayList<>();
 		
 		String sFileName = file.getName();
@@ -107,30 +106,33 @@ public class PoiUtil {
 					}
 					
 					Object obj = null;
-					int cellType = cell.getCellType();
 					
-					switch (cellType) {
-					case Cell.CELL_TYPE_BLANK:
+					switch (cell.getCellTypeEnum()) {
+					case BLANK:
 						obj = "";
 						break;
 						
-					case Cell.CELL_TYPE_NUMERIC:
+					case NUMERIC:
 						obj = cell.getNumericCellValue();
+						
+						if ( !isDecimal ) {
+							obj = (int) cell.getNumericCellValue();
+						}
 						break;
 						
-					case Cell.CELL_TYPE_STRING:
+					case STRING:
 						obj = cell.getStringCellValue();
 						break;
 						
-					case Cell.CELL_TYPE_FORMULA:
+					case FORMULA:
 						obj = cell.getCellFormula();
 						break;
 						
-					case Cell.CELL_TYPE_BOOLEAN:
+					case BOOLEAN:
 						obj = cell.getBooleanCellValue();
 						break;
 						
-					case Cell.CELL_TYPE_ERROR:
+					case ERROR:
 						obj = cell.getErrorCellValue();
 						break;
 						
@@ -191,11 +193,12 @@ public class PoiUtil {
 		Row row = null;
 		
 		Font font = workbook.createFont();
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		
 		CellStyle cellStyle = workbook.createCellStyle();
-		cellStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		
+		cellStyle.setFillForegroundColor(HSSFColorPredefined.GREY_25_PERCENT.getIndex());
+		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		cellStyle.setFont(font);
 
 		Map<String, Object> dataMap = null;
@@ -203,7 +206,7 @@ public class PoiUtil {
 
 		// 타이틀
 		row = sheet.createRow(0);
-		dataMap = contentsList.get(0);	// 이건 진짜 뭘까... ㅡㅡ 나는 그시절 뭘 참고한걸까...
+		dataMap = contentsList.get(0);
 		
 		for ( String sCellTitle : cellTitles ) {
 			Cell rowCell = row.createCell(nCellCnt); 
@@ -324,5 +327,4 @@ public class PoiUtil {
 		
 		return sRes;
 	}
-	
 }
