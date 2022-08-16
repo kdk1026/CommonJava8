@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * - 암호화 키
  *   > 128비트(16자), 192비트(24자), 256비트(32자)
- *   > 192비트, 256비트 사용 조건
+ *   > 192비트, 256비트 사용 조건 - Java 8부터는 Default로 지원하는 듯
  *     1. Java Cryptography Extension (JCE) 다운로드
  *     2. local_policy.jar, US_export_policy.jar 파일을 다음 경로에 덮어쓰기
  *        → $JAVA_HOME/jre/lib/security
