@@ -14,7 +14,7 @@ import com.ibm.icu.util.ChineseCalendar;
  * 2021. 8. 13. 김대광	너무 옛날거이기도 하고... 뭔가 좋은 방법이 따로 있을 듯... 고로... Java 6 버전에 맞춰진 상태로 유지... 세상에 Calendar 라니...
  * </pre>
  *
- *
+ * 윤달인 경우, 석거탄신일이 하루 전...
  * @author 김대광
  * @Description Apache Commons Net 필요
  * 	- 공휴일 관련

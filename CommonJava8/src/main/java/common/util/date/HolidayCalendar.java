@@ -20,7 +20,7 @@ import com.ibm.icu.util.ChineseCalendar;
  * 2022. 8. 23. kdk	최초작성
  * </pre>
  *
- *
+ * 윤달인 경우, 석거탄신일이 하루 전...
  * @author kdk
  */
 public class HolidayCalendar {
