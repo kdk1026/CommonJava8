@@ -13,7 +13,7 @@ import com.ibm.icu.util.ChineseCalendar;
  * -----------------------------------
  * 2021. 8. 13. 김대광	너무 옛날거이기도 하고... 뭔가 좋은 방법이 따로 있을 듯... 고로... Java 6 버전에 맞춰진 상태로 유지... 세상에 Calendar 라니...
  * </pre>
- * 
+ *
  *
  * @author 김대광
  * @Description Apache Commons Net 필요
@@ -140,9 +140,25 @@ public class Icu4JHolidayUtil {
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
 
-		cal.set(Calendar.YEAR, Integer.parseInt(yyyyMMdd.substring(0, 4)));
-        cal.set(Calendar.MONTH, Integer.parseInt(yyyyMMdd.substring(4, 6)) - 1);
-        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(yyyyMMdd.substring(6)));
+		if (yyyyMMdd == null) return "";
+
+		String date = yyyyMMdd.trim();
+
+		if (date.length() != 8) {
+			if (date.length() == 4) {
+				date = date + "0101";
+			} else if (date.length() == 6) {
+				date = date + "01";
+			} else if (date.length() > 8) {
+				date = date.substring(0, 8);
+			} else {
+				return "";
+			}
+		}
+
+		cal.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
+        cal.set(Calendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
+        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
 
         chinaCal.setTimeInMillis(cal.getTimeInMillis());
 
@@ -168,29 +184,44 @@ public class Icu4JHolidayUtil {
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
 
-		cal.set(Calendar.YEAR, Integer.parseInt(yyyyMMdd.substring(0, 4)));
-        cal.set(Calendar.MONTH, Integer.parseInt(yyyyMMdd.substring(4, 6)) - 1);
-        cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(yyyyMMdd.substring(6)));
+		if (yyyyMMdd == null) return "";
 
-        chinaCal.setTimeInMillis(cal.getTimeInMillis());
+		String date = yyyyMMdd.trim();
 
-        int chinaCalYY = chinaCal.get(ChineseCalendar.EXTENDED_YEAR) - 2637 ;
+		if (date.length() != 8) {
+			if (date.length() == 4) {
+				date = date + "0101";
+			} else if (date.length() == 6) {
+				date = date + "01";
+			} else if (date.length() > 8) {
+				date = date.substring(0, 8);
+			} else {
+				return "";
+			}
+		}
+
+		cal.set(Calendar.YEAR, Integer.parseInt(date.substring(0, 4)));
+		cal.set(Calendar.MONTH, Integer.parseInt(date.substring(4, 6)) -1);
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
+
+		chinaCal.setTimeInMillis(cal.getTimeInMillis());
+
+		int chinaCalYY = chinaCal.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
         int chinaCalMM = chinaCal.get(ChineseCalendar.MONTH) + 1;
         int chinaCalDD = chinaCal.get(ChineseCalendar.DAY_OF_MONTH);
 
-        String sYY = Integer.toString(chinaCalYY);
-        String sMM = Integer.toString(chinaCalMM);
-        String sDD = Integer.toString(chinaCalDD);
+        if (chinaCalYY < 1000) sb.append("0");
+        else if (chinaCalYY < 100) sb.append("00");
+        else if (chinaCalYY < 10) sb.append("000");
+        sb.append(chinaCalYY);
 
-        if (sMM.length() < 2) {
-        	sMM = "0" + sMM;
-        }
-        if (sDD.length() < 2) {
-        	sDD = "0" + sDD;
-        }
+        if (chinaCalMM < 10) sb.append("0");
+        sb.append(chinaCalMM);
 
-        sb.append(sYY).append(sMM).append(sDD);
-		return sb.toString();
+        if (chinaCalDD < 10) sb.append("0");
+        sb.append(chinaCalDD);
+
+        return sb.toString();
 	}
 
 	/**
@@ -203,21 +234,43 @@ public class Icu4JHolidayUtil {
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
 
-		chinaCal.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(yyyyMMdd.substring(0, 4)) + 2637);
-		chinaCal.set(ChineseCalendar.MONTH, Integer.parseInt(yyyyMMdd.substring(4, 6)) - 1);
-		chinaCal.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(yyyyMMdd.substring(6)));
+		if (yyyyMMdd == null) return "";
+
+		String date = yyyyMMdd.trim();
+
+		if (date.length() != 8) {
+			if (date.length() == 4) {
+				date = date + "0101";
+			} else if (date.length() == 6) {
+				date = date + "01";
+			} else if (date.length() > 8) {
+				date = date.substring(0, 8);
+			} else {
+				return "";
+			}
+		}
+
+		chinaCal.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(date.substring(0, 4)) + 2637);
+		chinaCal.set(ChineseCalendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
+		chinaCal.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
 
 		cal.setTimeInMillis(chinaCal.getTimeInMillis());
 
-		String sYY = Integer.toString(cal.get(Calendar.YEAR));
-		String sMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
-		String sDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
+		int nYY = cal.get(Calendar.YEAR);
+		int nMM = cal.get(Calendar.MONTH) + 1;
+		int nDD = cal.get(Calendar.DAY_OF_MONTH);
 
-		if (sMM.length() < 2) {
-			sMM = "0" + sMM;
-		}
+		if (nYY < 1000) sb.append("0");
+		else if (nYY < 100) sb.append("00");
+		else if (nYY < 10) sb.append("000");
+		sb.append(nYY);
 
-		sb.append(sYY).append(sMM).append(sDD);
+		if (nMM < 10) sb.append("0");
+		sb.append(nMM);
+
+		if (nDD < 10) sb.append("0");
+		sb.append(nDD);
+
 		return sb.toString();
 	}
 
