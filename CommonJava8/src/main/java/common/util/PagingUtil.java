@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * -----------------------------------
  * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
@@ -89,7 +89,7 @@ public class PagingUtil {
 		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
 		this.setLastPage(nLastPage);
 
-		int nFirstPage = this.lastPage - this.pagePerScreen + 1;
+		int nFirstPage = (int) (Math.ceil((float)this.currentPage / this.pagePerScreen) * this.pagePerScreen) - (this.pagePerScreen -1);
 		if (nFirstPage <= 0) {
 			nFirstPage = 1;
 		}
