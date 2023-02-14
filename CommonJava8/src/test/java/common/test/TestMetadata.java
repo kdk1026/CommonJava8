@@ -35,8 +35,8 @@ public class TestMetadata {
 		int lightBlue = new Color(212, 228, 241).getRGB();
 		
 		System.out.println(lightBlue);
-		int fw = 0;
-		int fh = 0;
+//		int fw = 0;
+//		int fh = 0;
 
 		for (int w = 0; w < width; w++) {
 			for (int h = 0; h < height; h++) {
