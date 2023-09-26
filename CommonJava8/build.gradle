@@ -26,10 +26,12 @@ publishing {
     }
 }
 
+/*
 jar {
     baseName = rootProject.name
     version =  version
 }
+*/
 
 ext {
 	javaVersion = '1.8'
