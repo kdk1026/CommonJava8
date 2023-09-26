@@ -85,6 +85,10 @@ public class PagingUtil {
 			this.setCurrentPage(this.totalPage);
 		}
 
+		if (this.totalPage == 0) {
+			this.setCurrentPage(1);
+		}
+
 		int nLastPage = (int) Math.ceil((double)this.currentPage / this.pagePerScreen) * this.pagePerScreen;
 		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
 		this.setLastPage(nLastPage);
