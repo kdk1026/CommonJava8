@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  * @author kdk
  */
 public class MaskingUtil {
-	
+
 	private MaskingUtil() {
 		super();
 	}
@@ -82,21 +82,7 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String emailMasking(String email) {
-		String regex = "\\b(\\S+)+@(\\S+.\\S+)";
-
-		Matcher matcher = Pattern.compile(regex).matcher(email);
-		if ( matcher.find() ) {
-			String target = matcher.group(1);
-			int length = target.length();
-			if ( length > 3 ) {
-				char[] c = new char[length - 3];
-				Arrays.fill(c, '*');
-
-				return email.replace(target, target.substring(0, 3) + String.valueOf(c));
-			}
-		}
-
-		return email;
+		return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
 	}
 
 	/**
@@ -137,7 +123,7 @@ public class MaskingUtil {
 
 		return birthday;
 	}
-	
+
 	/**
 	 * 카드번호 가운데 8자리 마스킹
 	 * @param cardNo
@@ -159,7 +145,7 @@ public class MaskingUtil {
 
 		return cardNo;
 	}
-	
+
 	/**
 	 * 주소 마스킹 (숫자만)
 	 * @param address
