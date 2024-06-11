@@ -65,7 +65,7 @@ public class JacksonUtil {
 			return jsonStr;
 		}
 
-		public static String converterListToJsonStr(List<Map<String, Object>> list) {
+		public static String converterListToJsonStr(List<?> list) {
 			String jsonStr = "";
 
 			ObjectMapper mapper = new ObjectMapper();
@@ -82,7 +82,7 @@ public class JacksonUtil {
 			return mapper.valueToTree(map);
 		}
 
-		public static JsonNode converterListToJsonNode(List<Map<String, Object>> list) {
+		public static JsonNode converterListToJsonNode(List<?> list) {
 			ObjectMapper mapper = new ObjectMapper();
 			return mapper.valueToTree(list);
 		}
@@ -119,9 +119,8 @@ public class JacksonUtil {
 			return jsonNode;
 		}
 
-		@SuppressWarnings("unchecked")
-		public static List<Map<String, Object>> converterJsonStrToList(String jsonArrStr) {
-			List<Map<String, Object>> list = new ArrayList<>();
+		public static List<?> converterJsonStrToList(String jsonArrStr) {
+			List<?> list = new ArrayList<>();
 
 			ObjectMapper mapper = new ObjectMapper();
 			try {
@@ -142,6 +141,18 @@ public class JacksonUtil {
 				logger.error("", e);
 			}
 			return arrayNode;
+		}
+
+		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
+			ObjectMapper mapper = new ObjectMapper();
+
+			try {
+				Object result = mapper.readValue(jsonStr, clazz);
+				return clazz.cast(result);
+			} catch (Exception e) {
+				logger.error("", e);
+			}
+			return null;
 		}
 	}
 
