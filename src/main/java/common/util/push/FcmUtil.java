@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,12 +31,12 @@ import com.google.gson.reflect.TypeToken;
  *     See <a href=
 "https://firebase.google.com/docs/cloud-messaging/http-server-ref?hl=ko">Firebase 클라우드 메시징 HTTP 프로토콜</a>
  * </pre>
- * 
+ *
  * @see Gson
- * 
+ *
  * @since 2019. 3. 11.
  * @author 김대광
- * 
+ *
  * <pre>
  * -----------------------------------
  * 개정이력
@@ -44,8 +45,11 @@ import com.google.gson.reflect.TypeToken;
  * 2021. 8. 05. 김대광	대량 전송 시, 반복문 조건 수정
  * 2021. 8. 13. 김대광	대량 전송 시, 나누는 작업 문제가 있어서 뜯어고침 헝가리안도 구탁다리 개인 스타일 버리고, 현재 개인 스타일로 맞춤
  * 			static class의 요소들에 public 없으면... 외부에서 접근 안될거 같은데... try-with-resources 바꾸기에는... 너무 많이 고쳐야 해서...
+ *
+ * firebase-admin 이용으로 변경되어 사용 불가
  * </pre>
  */
+@Obsolete
 public class FcmUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FcmUtil.class);
@@ -126,7 +130,7 @@ public class FcmUtil {
 
 	/**
 	 * Singleton 인스턴스 생성
-	 * 
+	 *
 	 * @return
 	 */
 	public static FcmUtil getInstance() {
@@ -135,7 +139,7 @@ public class FcmUtil {
 
 	/**
 	 * LazyHolder Singleton 패턴
-	 * 
+	 *
 	 * @return
 	 */
 	private static class LazyHolder {
@@ -176,10 +180,10 @@ public class FcmUtil {
 
 		/** 처리 개수 */
 		public int processCnt;
-		
+
 		/**
-		 * <pre> 
-		 * 처리된 메시지의 상태 : message_id (성공), error (실패) 
+		 * <pre>
+		 * 처리된 메시지의 상태 : message_id (성공), error (실패)
 		 * 	- 요청 payload의 registration_ids와 순서가 동일함
 		 * </pre>
 		 * */
@@ -193,7 +197,7 @@ public class FcmUtil {
 
 	/**
 	 * Gson 을 이용하여 FCM 단일 전송
-	 * 
+	 *
 	 * @param sToken
 	 * @param sJsonNoti
 	 * @param sJsonData
@@ -239,10 +243,10 @@ public class FcmUtil {
 
 		return fcmSendResult;
 	}
-	
+
 	/**
 	 * Gson 을 이용하여 FCM 대량 전송
-	 * 
+	 *
 	 * @param tokenList
 	 * @param sJsonNoti
 	 * @param sJsonData
@@ -265,7 +269,7 @@ public class FcmUtil {
 		int nTotalCnt = tokenList.size();
 		double dTotalIdx = Math.ceil((double) nTotalCnt / FcmHttpConstants.ONE_REQUEST_MULTI_REGIST_TOKEN);
 		int nTotalIdx = (int) dTotalIdx;
-		
+
 		List<String> tokenProcessList = null;
 		int nStartIdx = 0;
 		int nEndIdx = nTotalCnt;
@@ -291,7 +295,7 @@ public class FcmUtil {
 			if ( nEndIdx > tokenList.size() ) {
 				nEndIdx = tokenList.size();
 			}
-			
+
 			for (int j = 0; j < tokenProcessList.size(); j++) {
 				jArray.add(tokenProcessList.get(j));
 				nProcCnt++;
@@ -312,10 +316,10 @@ public class FcmUtil {
 
 				int iSuccess = jResult.get(FcmResponseMessage.SUCCESS).getAsInt();
 				int iFailure = jResult.get(FcmResponseMessage.FAILURE).getAsInt();
-				
+
 				JsonArray results = jResult.getAsJsonArray(FcmResponseMessage.RESULTS);
 				Type listType = new TypeToken<List<Map<String, Object>>>() {}.getType();
-				
+
 				List<Map<String, Object>> resultList = new Gson().fromJson(results, listType);
 
 				fcmMultiSendResult.successCnt += iSuccess;

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,26 +21,33 @@ import common.util.properties.PropertiesUtil;
 
 // XXX - 1000건 이상 발송 확인
 // XXX - iOS 발송 확인
+
+ /**
+  * <pre>
+  *  firebase-admin 이용으로 변경되어 사용 불가
+  * </pre>
+ */
+@Obsolete
 public class FcmPushUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(FcmPushUtil.class);
-	
+
 	private static String SERVER_KEY;
 	private static List<String> regList;
 	private static List<Map<String, Object>> rtnList;
-	
+
 	private FcmPushUtil() {
 		super();
 	}
 
 	private static final String FCM_PROPERTIES_PATH = "fcm/fcm.properties";
 	private static final String FCM_SERVER_KEY_NAME = "FCMserverAPIKey";
-	
+
 	private static final String FCM_URL = "https://fcm.googleapis.com/fcm/send";
 	private static final int MAX_SEND_CNT = 999;	// 1회 최대 전송 가능 수 (1000건까지 가능)
 
 	private static ObjectMapper mapper = new ObjectMapper();
-	
+
 	/**
 	 * Android
 	 */
@@ -48,15 +56,15 @@ public class FcmPushUtil {
 	 * iOS
 	 */
 	public static final int PUSH_TYPE_1 = 1;
-	
+
 	public static List<Map<String, Object>> sendPush(List<String> regIdList, String jsonStr, int pushType) {
 		Properties prop = PropertiesUtil.getPropertiesClasspath(FCM_PROPERTIES_PATH);
-		
+
 		if ( (prop != null) && (prop.containsKey(FCM_SERVER_KEY_NAME)) ) {
 			SERVER_KEY = prop.getProperty(FCM_SERVER_KEY_NAME);
-			
+
 			String sJson = setJson(regIdList, jsonStr, pushType);
-			
+
 			regList = regIdList;
 			beforeSend(sJson);
 		} else {
@@ -119,7 +127,7 @@ public class FcmPushUtil {
 			} else {
 				data.set("notification", node);
 			}
-			
+
 			sMessage = data.toString();
 
 		} catch (Exception e) {
@@ -159,7 +167,7 @@ public class FcmPushUtil {
 		Map<String, Object> header = new HashMap<>();
 		header.put("Authorization", sAuthorization);
 
-		String sRes = HttpClientUtil.RawRequest.json(true, FCM_URL, header, rawPayload); 
+		String sRes = HttpClientUtil.RawRequest.json(true, FCM_URL, header, rawPayload);
 		String sendDate = Jsr310DateUtil.Today.getTodayString("yyyy-MM-dd HH:mm:ss");
 
 		try {
