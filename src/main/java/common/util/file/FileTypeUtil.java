@@ -2,6 +2,7 @@ package common.util.file;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (정규식은 방법이 없는 듯 하구나...)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  * @Description	: 1.6 기반
@@ -60,6 +61,28 @@ public class FileTypeUtil {
 
 		} catch (IOException e) {
 			logger.error("getFileMimeType IOException", e);
+		}
+
+		return mimeType;
+	}
+
+	/**
+	 * <pre>
+	 * 파일 MIME Type 구하기
+	 *   - Apache Tika 사용
+	 * </pre>
+	 * @param is
+	 * @return
+	 */
+	public static String getFileMimeTypeTika(InputStream is) {
+		String mimeType = "";
+		Tika tika = new Tika();
+
+		try {
+			mimeType = tika.detect(is);
+
+		} catch (IOException e) {
+			logger.error("", e);
 		}
 
 		return mimeType;
@@ -112,7 +135,7 @@ public class FileTypeUtil {
 
 		return listExt.contains(sExtension) && listMime.contains(sMimeType);
 	}
-	
+
 	/**
 	 * 실행 파일 체크
 	 * @param sFileName
@@ -120,9 +143,9 @@ public class FileTypeUtil {
 	 */
 	public static boolean isRunableFile(String sFileName) {
 		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
-		
+
 		if(sFileName == null) return false;
-		
+
 		return sFileName.matches(RUNABLE_FILE_EXT);
 	}
 
