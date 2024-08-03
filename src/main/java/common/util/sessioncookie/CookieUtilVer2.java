@@ -5,11 +5,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class CookieUtilVer2 {
-	
+
 	private CookieUtilVer2() {
 		super();
 	}
-	
+
 	/**
 	 * Servlet 3.0 쿠키 설정
 	 * @param response
@@ -24,20 +24,20 @@ public class CookieUtilVer2 {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(expiry);
 		cookie.setPath("/");
-		
+
 		cookie.setSecure(isSecure);
-		
+
 		if (!isUseJs) {
 			cookie.setHttpOnly(true);
 		}
-		
+
 		if ( (domain != null) && (domain.trim().length() > 0) ) {
 			cookie.setDomain(domain);
 		}
-		
+
 		response.addCookie(cookie);
 	}
-	
+
 	/**
 	 * cookieName 인자 값을 가지는 쿠키 가져오기
 	 * @param request
@@ -47,7 +47,7 @@ public class CookieUtilVer2 {
 	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
 		Cookie cookie = null;
 		Cookie[] cookies = request.getCookies();
-		
+
 		if ( cookies != null ) {
 			for (Cookie c : cookies) {
 				if ( cookieName.equals(c.getName()) ) {
@@ -78,12 +78,12 @@ public class CookieUtilVer2 {
 	 */
 	public static void removeCookies(HttpServletRequest request, HttpServletResponse response) {
 		Cookie[] cookies = request.getCookies();
-		
+
 		if (cookies != null && cookies.length > 0) {
 			for (int i=0; i < cookies.length; i++) {
 				cookies[i].setPath("/");
 				cookies[i].setMaxAge(0);
-				
+
 				response.addCookie(cookies[i]);
 			}
 		}
@@ -94,23 +94,28 @@ public class CookieUtilVer2 {
 	 * @param request
 	 * @param response
 	 * @param cookieName
+	 * @param domain
 	 */
-	public static void removeCookie(HttpServletResponse response, String cookieName) {
+	public static void removeCookie(HttpServletResponse response, String cookieName, String domain) {
 		Cookie cookie = new Cookie(cookieName, null);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
-		
+
 		if ( cookie.getSecure() ) {
 			cookie.setSecure(true);
 		}
-		
+
 		if ( cookie.isHttpOnly() ) {
 			cookie.setHttpOnly(true);
 		}
-		
+
+		if ( (domain != null) && (domain.trim().length() > 0) ) {
+			cookie.setDomain(domain);
+		}
+
 		response.addCookie(cookie);
 	}
-	
+
 	/**
 	 * 쿠키 유무 확인
 	 * @param request
@@ -120,7 +125,7 @@ public class CookieUtilVer2 {
 		String cookieValue = getCookieValue(request, cookieName);
 		return !"".equals(cookieValue);
 	}
-	
+
 	/**
 	 * 쿠키 유효기간 가져오기
 	 * @param request
@@ -128,7 +133,7 @@ public class CookieUtilVer2 {
 	 */
 	public static int getCookieMaxAge(HttpServletRequest request, String cookieName) {
 		Cookie cookie = getCookie(request, cookieName);
-		return (cookie != null) ? cookie.getMaxAge() : 0; 
+		return (cookie != null) ? cookie.getMaxAge() : 0;
 	}
 
 }
