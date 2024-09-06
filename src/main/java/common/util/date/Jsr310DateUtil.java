@@ -61,7 +61,7 @@ public class Jsr310DateUtil {
 		public static String getCurrentTime() {
 			return LocalDateTime.now().format(DateTimeFormatter.ofPattern("HHmmss"));
 		}
-		
+
 		/**
 		 * 현재 연도 반환
 		 * @return
@@ -69,7 +69,7 @@ public class Jsr310DateUtil {
 		public static int getYear() {
 			return LocalDateTime.now().getYear();
 		}
-		
+
 		/**
 		 * 현재 월 반환
 		 * @return
@@ -77,7 +77,7 @@ public class Jsr310DateUtil {
 		public static int getMonth() {
 			return LocalDateTime.now().getMonthValue();
 		}
-		
+
 		/**
 		 * 현재 일 반환
 		 * @return
@@ -85,7 +85,7 @@ public class Jsr310DateUtil {
 		public static int getDayOfMonth() {
 			return LocalDateTime.now().getDayOfMonth();
 		}
-		
+
 		/**
 		 * 현재 시간 반환
 		 * @return
@@ -93,7 +93,7 @@ public class Jsr310DateUtil {
 		public static int getHour() {
 			return LocalDateTime.now().getHour();
 		}
-		
+
 		/**
 		 * 현재 분 반환
 		 * @return
@@ -102,7 +102,7 @@ public class Jsr310DateUtil {
 			return LocalDateTime.now().getMinute();
 		}
 	}
-	
+
 	/**
 	 * String 타입 형식의 포맷 변환
 	 */
@@ -190,6 +190,16 @@ public class Jsr310DateUtil {
 		 */
 		public static String getLocalDateTimeToString(LocalDateTime localDateTime, String dateFormat) {
 			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
+		}
+
+		/**
+		 * LocalDate 타입 객체를 해당 포맷의 String 타입으로 반환
+		 * @param localDate
+		 * @param dateFormat
+		 * @return
+		 */
+		public static String getLocalDateToString(LocalDate localDate, String dateFormat) {
+			return localDate.format(DateTimeFormatter.ofPattern(dateFormat));
 		}
 
 	}
@@ -681,7 +691,7 @@ public class Jsr310DateUtil {
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		}
 	}
-	
+
 	/**
 	 * Unix Timestamp
 	 */
