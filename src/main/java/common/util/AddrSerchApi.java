@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * -----------------------------------
  * 2020. 9. 26. 김대광	최초작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (하지만... 가급적 try-with-resources 익숙해지기 위해~)
+ * 2024.10. 21. 김대광	Java 17 이상 deprecated 대응
  * </pre>
  *
  * @apiNote Jackson Databind
