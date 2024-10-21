@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -351,7 +353,19 @@ public class FcmUtil {
 		HttpURLConnection conn = null;
 
 		try {
-			URL url = new URL(FcmHttpConstants.REQUEST_URL);
+//			~ Java 11
+//			URL url = new URL(FcmHttpConstants.REQUEST_URL);
+
+//			Java 17 ~
+			URI uri = null;
+			try {
+				uri = new URI(FcmHttpConstants.REQUEST_URL);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+
+			URL url = null;
+			url = uri.toURL();
 
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setUseCaches(false);

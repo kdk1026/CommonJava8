@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -30,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity 어쩔 수 없고, try-with-resources 로 바꾸기에는 좀 크다...)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
@@ -87,12 +89,28 @@ public class HttpConnectionUtil {
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
+//			~ Java 11
+//			URL url = null;
+//			try {
+//				url = new URL(sUrl);
+//
+//			} catch (MalformedURLException e) {
+//				logger.error("", e);
+//			}
+
+//			Java 17 ~
+			URI uri = null;
+			try {
+				uri = new URI(sUrl);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+
 			URL url = null;
 			try {
-				url = new URL(sUrl);
-
+				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				logger.error("", e);
+				e.printStackTrace();
 			}
 
 			if (url == null) {
@@ -229,12 +247,28 @@ public class HttpConnectionUtil {
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
+//			~ Java 11
+//			URL url = null;
+//			try {
+//				url = new URL(sUrl);
+//
+//			} catch (MalformedURLException e) {
+//				logger.error("", e);
+//			}
+
+//			Java 17 ~
+			URI uri = null;
+			try {
+				uri = new URI(sUrl);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+
 			URL url = null;
 			try {
-				url = new URL(sUrl);
-
+				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				logger.error("", e);
+				e.printStackTrace();
 			}
 
 			if (url == null) {
@@ -367,12 +401,28 @@ public class HttpConnectionUtil {
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
+//			~ Java 11
+//			URL url = null;
+//			try {
+//				url = new URL(sUrl);
+//
+//			} catch (MalformedURLException e) {
+//				logger.error("", e);
+//			}
+
+//			Java 17 ~
+			URI uri = null;
+			try {
+				uri = new URI(sUrl);
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+
 			URL url = null;
 			try {
-				url = new URL(sUrl);
-
+				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				logger.error("", e);
+				e.printStackTrace();
 			}
 
 			if (url == null) {
