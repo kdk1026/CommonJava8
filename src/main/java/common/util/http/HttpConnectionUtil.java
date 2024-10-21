@@ -103,14 +103,14 @@ public class HttpConnectionUtil {
 			try {
 				uri = new URI(sUrl);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			URL url = null;
 			try {
 				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			if (url == null) {
@@ -261,14 +261,14 @@ public class HttpConnectionUtil {
 			try {
 				uri = new URI(sUrl);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			URL url = null;
 			try {
 				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			if (url == null) {
@@ -415,14 +415,14 @@ public class HttpConnectionUtil {
 			try {
 				uri = new URI(sUrl);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			URL url = null;
 			try {
 				url = uri.toURL();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			if (url == null) {

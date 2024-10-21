@@ -361,7 +361,7 @@ public class FcmUtil {
 			try {
 				uri = new URI(FcmHttpConstants.REQUEST_URL);
 			} catch (URISyntaxException e) {
-				e.printStackTrace();
+				logger.error("", e);
 			}
 
 			URL url = null;
