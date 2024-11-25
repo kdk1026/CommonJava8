@@ -6,7 +6,7 @@ package common.util.valid;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (정규식은 어쩔수가 없구나... 님 이런건 넘어가주세요...)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
@@ -15,16 +15,24 @@ public class ValidUtil {
 	private ValidUtil() {
 		super();
 	}
-	
+
+	private static class LazyHolder {
+		private static final ValidUtil INSTANCE = new ValidUtil();
+	}
+
+	public static ValidUtil getInstance() {
+		return LazyHolder.INSTANCE;
+	}
+
 	/**
 	 * Null, 공백 체크
 	 * @param str
 	 * @return
 	 */
-	public static boolean isBlank(String str) {
+	public boolean isBlank(String str) {
 		return (str == null || str.replace("/ /gi", "").equals(""));
 	}
-	
+
 	/**
 	 * 문자열 길이 최소/최대 길이 준수 여부
 	 * @param str
@@ -32,17 +40,17 @@ public class ValidUtil {
 	 * @param max
 	 * @return
 	 */
-	public static boolean isLengthOver(String str, int min, int max) {
+	public boolean isLengthOver(String str, int min, int max) {
 		int strLen = str.length();
 		return (strLen < min) || (strLen > max);
 	}
-	
+
 	/**
 	 * 숫자 체크
 	 * @param str
 	 * @return
 	 */
-	public static boolean isNumber(String str) {
+	public boolean isNumber(String str) {
 		return str.matches("^[0-9]+$");
 	}
 
@@ -51,7 +59,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isEnglish(String str) {
+	public boolean isEnglish(String str) {
 		return str.matches("^[a-zA-Z]+$");
 	}
 
@@ -60,7 +68,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isEngBlank(String str) {
+	public boolean isEngBlank(String str) {
 		return str.matches("^[a-zA-Z\\s]+$");
 	}
 
@@ -69,7 +77,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isEngNum(String str) {
+	public boolean isEngNum(String str) {
 		return str.matches("^[a-zA-Z0-9]+$");
 	}
 
@@ -78,7 +86,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isHangul(String str) {
+	public boolean isHangul(String str) {
 		return str.matches("^[가-힣]+$");
 	}
 
@@ -87,7 +95,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isHanBlank(String str) {
+	public boolean isHanBlank(String str) {
 		return str.matches("^[가-힣\\s]+$");
 	}
 
@@ -96,7 +104,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isHanEng(String str) {
+	public boolean isHanEng(String str) {
 		return str.matches("^[가-힣a-zA-Z]+$");
 	}
 
@@ -105,7 +113,7 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isSpecial(String str) {
+	public boolean isSpecial(String str) {
 		return str.matches("^.*[\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}].*+$");
 	}
 
@@ -114,7 +122,7 @@ public class ValidUtil {
 	 * @param strVal
 	 * @return
 	 */
-	public static boolean isEmail(String str) {
+	public boolean isEmail(String str) {
 		return str.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})+$");
 	}
 
@@ -123,8 +131,8 @@ public class ValidUtil {
 	 * @param strVal
 	 * @return
 	 */
-	public static boolean isPhoneNum(String str) {
-		return str.matches("^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$");
+	public boolean isPhoneNum(String str) {
+		return str.matches("^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\\d{3,4})-?(\\d{4})+$");
 	}
 
 	/**
@@ -132,7 +140,7 @@ public class ValidUtil {
 	 * @param strVal
 	 * @return
 	 */
-	public static boolean isCellPhoneNum(String str) {
+	public boolean isCellPhoneNum(String str) {
 		return str.matches("^(01[016789])-?(\\d{3,4})-?(\\d{4})+$");
 	}
 
@@ -141,7 +149,7 @@ public class ValidUtil {
 	 * @param strVal
 	 * @return
 	 */
-	public static boolean isCompanyRegNum(String str) {
+	public boolean isCompanyRegNum(String str) {
 		return str.matches("^[(\\d{3})-?(\\d{2})-?(\\d{5})+$]");
 	}
 
@@ -150,37 +158,37 @@ public class ValidUtil {
 	 * @param strVal
 	 * @return
 	 */
-	public static boolean isIPv4(String str) {
+	public boolean isIPv4(String str) {
 		return str.matches("^(1[0-9]{2}|2[0-5][0-5]|[0-9]{1,2})(\\.(1[0-9]{2}|2[0-5][0-5]|[0-9]{1,2})){3}+$");
 	}
-	
+
 	/**
 	 * YYYYMMDD 형식 체크
 	 * @param str
 	 * @return
 	 */
-	public static boolean isYYYYMMDD(String str) {
+	public boolean isYYYYMMDD(String str) {
 		return str.matches("^[0-9]{4}(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])+$");
 	}
-	
+
 	/**
 	 * HHmmss 형식 체크
 	 * @param str
 	 * @return
 	 */
-	public static boolean isHHmmss(String str) {
+	public boolean isHHmmss(String str) {
 		return str.matches("^((0[1-9])|1[0-9]|2[0-4])([0-5][0-9])([0-5][0-9])+$");
 	}
-	
+
 	/**
 	 * Y/N 형식 체크
 	 * @param str
 	 * @return
 	 */
-	public static boolean isYN(String str) {
+	public boolean isYN(String str) {
 		return str.matches("^[Y|N]+$");
 	}
-	
+
 	/**
 	 * <pre>
 	 * 아이디 형식 체크
@@ -190,10 +198,10 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isId(String str) {
+	public boolean isId(String str) {
 		return str.matches("^[a-zA-z](?=.*[a-zA-Z])[a-zA-Z0-9]{6,29}$");
 	}
-	
+
 	/**
 	 * <pre>
 	 * 비밀번호 형식 체크
@@ -205,11 +213,11 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isPassword(String str) {
+	public boolean isPassword(String str) {
 		String sPattern1 = "^[a-zA-z](?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}]{9,}$";
 		String sPattern2 = "^[a-zA-z](?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}])[a-zA-Z0-9\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}]{7,}$";
-		
+
 		return str.matches(sPattern1) || str.matches(sPattern2);
 	}
-	
+
 }
