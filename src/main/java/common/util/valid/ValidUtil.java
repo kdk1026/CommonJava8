@@ -132,7 +132,7 @@ public class ValidUtil {
 	 * @return
 	 */
 	public boolean isPhoneNum(String str) {
-		return str.matches("^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|505|507|70))-?(\\d{3,4})-?(\\d{4})+$");
+		return str.matches("^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70|502|503|504|505|506|507))-?(\\d{3,4})-?(\\d{4})+$");
 	}
 
 	/**
@@ -141,7 +141,8 @@ public class ValidUtil {
 	 * @return
 	 */
 	public boolean isCellPhoneNum(String str) {
-		return str.matches("^(01[016789])-?(\\d{3,4})-?(\\d{4})+$");
+		//return str.matches("^(01[016789])-?(\\d{3,4})-?(\\d{4})+$");
+		return str.matches("^(01[0])-?(\\d{4})-?(\\d{4})+$");
 	}
 
 	/**
