@@ -1,5 +1,6 @@
 package common.util.date;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -737,7 +738,39 @@ public class Jsr310DateUtil {
 		public static LocalDateTime timestampToDateTime(long timestamp) {
 			return millsToLocalDateTime(timestamp * 1000);
 		}
-
 	}
+
+	/**
+	 * Check
+	 */
+	public static class Check {
+
+		private Check() {
+			super();
+		}
+
+		/**
+		 * 해당 날짜가 월의 마지막에 속하는지 체크
+		 * @param date
+		 * @return
+		 */
+		public static boolean isLastWeekOfMonth(LocalDate date) {
+			LocalDate lastDayOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
+	        LocalDate startOfLastWeek = lastDayOfMonth.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+	        return !date.isBefore(startOfLastWeek);
+		}
+
+		/**
+		 * 해당 날짜가 월의 첫째주에 속하는지 체크
+		 * @param date
+		 * @return
+		 */
+		public static boolean isFistWeekOfMonth(LocalDate date) {
+			LocalDate firstDayOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
+	        LocalDate endOfFirstWeek = firstDayOfMonth.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+	        return !date.isAfter(endOfFirstWeek);
+		}
+	}
+
 
 }
