@@ -683,6 +683,15 @@ public class Jsr310DateUtil {
 		}
 
 		/**
+		 * 현재 날짜의 마지막 일자를 yyyyMMdd 형식으로 반환
+		 * @return
+		 */
+		public static String getLastDayOfMonthString() {
+			LocalDate localDate = LocalDate.now();
+			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+		}
+
+		/**
 		 * yyyyMMdd 형식의 String 타입에 해당하는 월의 마지막 일자를 반환
 		 * @param strDate
 		 * @return
@@ -690,6 +699,16 @@ public class Jsr310DateUtil {
 		public static int getLastDayOfMonth(String strDate) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+		}
+
+		/**
+		 * yyyyMMdd 형식의 String 타입에 해당하는 월의 마지막 일자를 yyyyMMdd 형식으로 반환
+		 * @param strDate
+		 * @return
+		 */
+		public static String getLastDayOfMonthString(String strDate) {
+			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
+			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		}
 	}
 
@@ -771,6 +790,5 @@ public class Jsr310DateUtil {
 	        return !date.isAfter(endOfFirstWeek);
 		}
 	}
-
 
 }
