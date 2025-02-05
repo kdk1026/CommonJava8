@@ -1,18 +1,14 @@
 package common.util;
 
-import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * <pre>
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2022. 2. 15. kdk	최초작성
+ * 2025. 2. 5. kdk	최초작성
  * </pre>
  *
- * @see <a href="https://develop-sense.tistory.com/62">참고</a>
+ *
  * @author kdk
  */
 public class MaskingUtil {
@@ -21,35 +17,41 @@ public class MaskingUtil {
 		super();
 	}
 
+	private static class LazyHolder {
+		private static final MaskingUtil INSTANCE = new MaskingUtil();
+	}
+
+	public static MaskingUtil getInstance() {
+		return LazyHolder.INSTANCE;
+	}
+
 	/**
-	 * 이름 가운데 글자 마스킹
+	 * <pre>
+	 * 이름 마스킹
+	 *  - 3자리 : 가운데 마스킹
+	 *  - 4자리 : 가운데 2자리 마스킹
+	 * </pre>
+	 *
 	 * @param name
 	 * @return
 	 */
-	public static String nameMasking(String name) {
-		// 한글만 (영어, 숫자 포함 이름은 제외)
-		String regex = "(^[가-힣]+)$";
+	public String maskName(String name) {
+		String regex = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
 
-		Matcher matcher = Pattern.compile(regex).matcher(name);
-		if ( matcher.find() ) {
+		if (name.matches(regex)) {
+			// 한글 이름 마스킹
 			int length = name.length();
-
-			String middleMask = "";
-			if ( length > 2 ) {
-				middleMask = name.substring(1, length -1);
-			} else {
-				middleMask = name.substring(1, length);
+			if (length == 2) {
+	            return name.charAt(0) + "*";
+	        } else if (length == 3) {
+				return name.charAt(0) + "*" + name.charAt(2);
+			} else if (length == 4) {
+				return name.charAt(0) + "**" + name.charAt(3);
 			}
-
-			String dot = "";
-			for ( int i=0; i < middleMask.length(); i++ ) {
-				dot += "*";
-			}
-
-			if ( length > 2 ) {
-				return name.substring(0, 1) + middleMask.replace(middleMask, dot) + name.substring(length -1, length);
-			} else {
-				return name.substring(0, 1) + middleMask.replace(middleMask, dot);
+		} else {
+			// 영문 이름 마스킹
+			if (name.length() > 4) {
+				return name.substring(0, 4) + "*".repeat(name.length() - 4);
 			}
 		}
 
@@ -57,114 +59,260 @@ public class MaskingUtil {
 	}
 
 	/**
-	 * 휴대폰번호 마스킹 (가운데 숫자 4자리 마스킹)
-	 * @param phoneNo
+	 * <pre>
+	 * 주민등록번호 마스킹
+	 *  - 뒷자리 마스킹
+	 * </pre>
+	 *
+	 * @param rrn
+	 * @param isShowGender
 	 * @return
 	 */
-	public static String phoneMasking(String phoneNo) {
-		String regex = "(\\d{2,3})-?(\\d{3,4})-?(\\d{4})$";
-
-		Matcher matcher = Pattern.compile(regex).matcher(phoneNo);
-		if ( matcher.find() ) {
-			String target = matcher.group(2);
-			int length = target.length();
-			char[] c = new char[length];
-			Arrays.fill(c, '*');
-
-			return phoneNo.replace(target, String.valueOf(c));
+	public String maskRRN(String rrn, boolean isShowGender) {
+		if (rrn == null || rrn.length() != 14 || rrn.charAt(6) != '-') {
+			throw new IllegalArgumentException("Invalid Resident Registration Number");
 		}
-		return phoneNo;
+
+		if (isShowGender) {
+			return rrn.substring(0, 8) + "******"; // 성별 숫자까지 표시
+		} else {
+			return rrn.substring(0, 7) + "*******"; // 뒷자리 전체 마스킹
+		}
 	}
 
 	/**
-	 * 이메일 마스킹 (앞3자리 이후 '@' 전까지 마스킹)
+	 * <pre>
+	 * 여권번호 마스킹
+	 *  - 뒤 4자리 마스킹
+	 * </pre>
+	 *
+	 * @param passportNumber
+	 * @return
+	 */
+	public String maskPassportNumber(String passportNumber) {
+		if (passportNumber == null || passportNumber.length() < 5) {
+			throw new IllegalArgumentException("Invalid Passport Number");
+		}
+
+		int length = passportNumber.length();
+		return passportNumber.substring(0, length - 4) + "*".repeat(4);
+	}
+
+	/**
+	 * <pre>
+	 * 연락처 마스킹
+	 *  - 가운데 마스킹
+	 * </pre>
+	 *
+	 * @param phoneNumber
+	 * @return
+	 */
+	public String maskPhoneNumber(String phoneNumber) {
+		if (phoneNumber.contains("-")) {
+			// '-'가 있는 경우 가운데를 마스킹
+			String[] parts = phoneNumber.split("-");
+			if (parts.length == 3) {
+				return parts[0] + "-****-" + parts[2];
+			} else if (parts.length == 2 && parts[0].length() == 2) {
+				return parts[0] + "-***-" + parts[1];
+			}
+		} else {
+			// '-'가 없는 경우 번호 형식에 따라 마스킹
+			if (phoneNumber.startsWith("02") && phoneNumber.length() == 9) {
+				return phoneNumber.substring(0, 2) + "***" + phoneNumber.substring(5);
+			} else if (phoneNumber.startsWith("02") && phoneNumber.length() == 10) {
+				return phoneNumber.substring(0, 2) + "****" + phoneNumber.substring(6);
+			} else if (phoneNumber.startsWith("050") || phoneNumber.startsWith("070")) {
+				return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
+			} else if (phoneNumber.startsWith("031") || phoneNumber.startsWith("032") || phoneNumber.startsWith("033")
+					|| phoneNumber.startsWith("041") || phoneNumber.startsWith("042") || phoneNumber.startsWith("043")
+					|| phoneNumber.startsWith("044") || phoneNumber.startsWith("051") || phoneNumber.startsWith("052")
+					|| phoneNumber.startsWith("053") || phoneNumber.startsWith("054") || phoneNumber.startsWith("055")
+					|| phoneNumber.startsWith("061") || phoneNumber.startsWith("062") || phoneNumber.startsWith("063")
+					|| phoneNumber.startsWith("064")) {
+				if (phoneNumber.length() == 10) {
+					return phoneNumber.substring(0, 3) + "***" + phoneNumber.substring(6);
+				} else if (phoneNumber.length() == 11) {
+					return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
+				}
+			} else if (phoneNumber.startsWith("010") && phoneNumber.length() == 11) {
+				return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
+			} else if (phoneNumber.length() > 7) {
+				return phoneNumber.substring(0, phoneNumber.length() - 4) + "****";
+			}
+		}
+		return phoneNumber;
+	}
+
+	/**
+	 * <pre>
+	 * 이메일 마스킹
+	 *  - ID 4번재 자리부터 마스킹
+	 * </pre>
+	 *
 	 * @param email
 	 * @return
 	 */
-	public static String emailMasking(String email) {
-		return email.replaceAll("(?<=.{3}).(?=.*@)", "*");
+	public String maskEmail(String email) {
+		int atIndex = email.indexOf("@");
+		if (atIndex <= 2) {
+			throw new IllegalArgumentException("Invalid email address");
+		}
+		String idPart = email.substring(0, atIndex);
+		String domainPart = email.substring(atIndex);
+		String maskedIdPart = idPart.substring(0, 3) + "*".repeat(idPart.length() - 2);
+
+		return maskedIdPart + domainPart;
 	}
 
 	/**
-	 * 계좌번호 마스킹 (뒤 5자리)
-	 * @param accountNo 숫자만
+	 * <pre>
+	 * 아이디 마스킹
+	 *  - 4번째 자리부터 마스킹
+	 * </pre>
+	 *
+	 * @param id
 	 * @return
 	 */
-	public static String accountNoMasking(String accountNo) {
-		// 계좌번호는 숫자만 파악하므로
-		String regex = "(^[0-9]+)$";
-
-		Matcher matcher = Pattern.compile(regex).matcher(accountNo);
-		if ( matcher.find() ) {
-			int length = accountNo.length();
-			if ( length > 5 ) {
-				char[] c = new char[5];
-				Arrays.fill(c, '*');
-
-				return accountNo.replace(accountNo, accountNo.substring(0, length-5) + String.valueOf(c));
-			}
+	public String maskId(String id) {
+		if (id.length() <= 3) {
+			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
+		} else {
+			return id.substring(0, 3) + "*".repeat(id.length() - 3); // 앞 3글자만 표시하고 나머지 마스킹
 		}
-
-		return accountNo;
 	}
 
 	/**
-	 * 생년월일 마스킹 (8자리)
-	 * @param birthday
-	 * @return
-	 */
-	public static String birthMasking(String birthday) {
-		String regex = "^((19|20)\\d\\d)?([-/.])?(0[1-9]|1[012])([-/.])?(0[1-9]|[12][0-9]|3[01])$";
-
-		Matcher matcher = Pattern.compile(regex).matcher(birthday);
-		if ( matcher.find() ) {
-			return birthday.replaceAll("[0-9]", "*");
-		}
-
-		return birthday;
-	}
-
-	/**
-	 * 카드번호 가운데 8자리 마스킹
-	 * @param cardNo
-	 * @return
-	 */
-	public static String cardMasking(String cardNo) {
-		// 카드번호 16자리 또는 15자리 상관없음
-		String regex = "(\\d{4})(\\d{4})(\\d{4})(\\d{3,4})$";
-
-		Matcher matcher = Pattern.compile(regex).matcher(cardNo);
-		if ( matcher.find() ) {
-			String target = matcher.group(2) + matcher.group(3);
-			int length = target.length();
-			char[] c = new char[length];
-			Arrays.fill(c, '*');
-
-			return cardNo.replace(target, String.valueOf(c));
-		}
-
-		return cardNo;
-	}
-
-	/**
-	 * 주소 마스킹 (숫자만)
+	 * <pre>
+	 * 주소 마스킹
+	 *  - 도로명 이하의 건물번호 및 상세주소의 숫자
+	 * </pre>
+	 *
 	 * @param address
 	 * @return
 	 */
-	public static String addressMasking(String address) {
-		// 신(구) 주소, 도로명 주소
-		String regex = "(([가-힣]+(\\d{1,5}|\\d{1,5}(,|.)\\d{1,5}|)+(읍|면|동|가|리))(^구|)((\\d{1,5}(~|-)\\d{1,5}|\\d{1,5})(가|리|)|))([ ](산(\\d{1,5}(~|-)\\d{1,5}|\\d{1,5}))|)|";
-		String newRegx = "(([가-힣]|(\\d{1,5}(~|-)\\d{1,5})|\\d{1,5})+(로|길))";
+	public String maskRoadAddress(String address) {
+		return address.replaceAll("\\d", "*");
+	}
 
-		Matcher matcher = Pattern.compile(regex).matcher(address);
-		Matcher newMatcher = Pattern.compile(newRegx).matcher(address);
-		if ( matcher.find() ) {
-			return address.replaceAll("[0-9]", "*");
-		} else if ( newMatcher.find() ) {
-			return address.replaceAll("[0-9]", "*");
+	/**
+	 * <pre>
+	 * 카드번호 마스킹
+	 *  - startIndex 부터 12번째 자리 마스킹
+	 * </pre>
+	 *
+	 * @param cardNumber
+	 * @param startIndex (7 or 9)
+	 * @return
+	 */
+	public String maskCardNumber(String cardNumber, int startIndex) {
+		if (startIndex != 7 && startIndex != 9) {
+			throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
 		}
 
-		return address;
+		// 카드 번호의 모든 숫자를 제거한 문자열을 얻음
+		String plainCardNumber = cardNumber.replace("-", "");
+
+		// 카드번호가 15자리나 16자리가 아닌 경우 예외 발생
+		if (plainCardNumber.length() != 15 && plainCardNumber.length() != 16) {
+			throw new IllegalArgumentException("Invalid card number length. It should be either 15 or 16 digits.");
+		}
+
+		StringBuilder maskedCardNumber = new StringBuilder();
+
+		// startIndex에 따른 분기 처리
+		if (startIndex == 7) {
+			if (cardNumber.contains("-")) {
+				int maskedIndex = 0;
+				for (int i = 0; i < cardNumber.length(); i++) {
+					char ch = cardNumber.charAt(i);
+					if (ch == '-') {
+						maskedCardNumber.append('-');
+					} else {
+						if (maskedIndex >= startIndex - 1 && maskedIndex < startIndex + 4 + 1) {
+							maskedCardNumber.append('*');
+						} else {
+							maskedCardNumber.append(ch);
+						}
+						maskedIndex++;
+					}
+				}
+			} else {
+				if (plainCardNumber.length() == 16) {
+					maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
+					maskedCardNumber.append("****");
+					maskedCardNumber.append(plainCardNumber.substring(startIndex + 4 + 1));
+				} else if (plainCardNumber.length() == 15) {
+					maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
+					maskedCardNumber.append("******");
+					maskedCardNumber.append(plainCardNumber.substring(startIndex + 4 + 1));
+				}
+			}
+		} else if (startIndex == 9) {
+			if (cardNumber.contains("-")) {
+				int maskedIndex = 0;
+				for (int i = 0; i < cardNumber.length(); i++) {
+					char ch = cardNumber.charAt(i);
+					if (ch == '-') {
+						maskedCardNumber.append('-');
+					} else {
+						if (maskedIndex >= startIndex - 1 && maskedIndex < startIndex + 3) {
+							maskedCardNumber.append('*');
+						} else {
+							maskedCardNumber.append(ch);
+						}
+						maskedIndex++;
+					}
+				}
+			} else {
+				maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
+				maskedCardNumber.append("****");
+				maskedCardNumber.append(plainCardNumber.substring(startIndex + 3));
+			}
+		}
+
+		return maskedCardNumber.toString();
+	}
+
+	/**
+	 * <pre>
+	 * 계좌번호 마스킹
+	 *  - 뒤에서부터 5자리 마스킹
+	 * </pre>
+	 * @param accountNumber
+	 * @return
+	 */
+	public String maskAccountNumber(String accountNumber) {
+	    // 계좌번호에서 '-' 제거
+	    String cleanAccountNumber = accountNumber.replace("-", "");
+
+	    // 계좌번호 길이가 5자리 이하일 경우 예외 처리
+	    if (cleanAccountNumber.length() <= 5) {
+	        return "*".repeat(cleanAccountNumber.length());
+	    }
+
+	    // 마스킹할 부분과 남길 부분 분리
+	    String visiblePart = cleanAccountNumber.substring(0, cleanAccountNumber.length() - 5);
+	    String maskedPart = "*".repeat(5);
+
+	    // 원래 계좌번호에 '-'가 있을 경우 다시 추가
+	    String maskedAccountNumber = visiblePart + maskedPart;
+	    if (accountNumber.contains("-")) {
+	        maskedAccountNumber = "";
+	        int visibleIndex = 0;
+	        for (char ch : accountNumber.toCharArray()) {
+	            if (ch == '-') {
+	                maskedAccountNumber += "-";
+	            } else if (visibleIndex < visiblePart.length()) {
+	                maskedAccountNumber += visiblePart.charAt(visibleIndex);
+	                visibleIndex++;
+	            } else {
+	                maskedAccountNumber += "*";
+	            }
+	        }
+	    }
+
+	    return maskedAccountNumber;
 	}
 
 }
