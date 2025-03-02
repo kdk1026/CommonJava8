@@ -69,7 +69,7 @@ public class AesCryptoUtilV2 {
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
 				if ( iv != null ) {
-					IvParameterSpec ivSpec   = new IvParameterSpec(iv.getBytes(CHARSET));
+					IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(CHARSET));
 					cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
 				} else {
 					cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -107,7 +107,7 @@ public class AesCryptoUtilV2 {
 			if ( padding.indexOf("CBC") > -1 ) {
 				// CBC의 경우, IvParameterSpec 생략 가능
 				if ( iv != null ) {
-					IvParameterSpec ivSpec   = new IvParameterSpec(iv.getBytes(CHARSET));
+					IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(CHARSET));
 					cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 				} else {
 					cipher.init(Cipher.DECRYPT_MODE, secretKey);
