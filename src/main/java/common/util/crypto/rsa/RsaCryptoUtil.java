@@ -1,8 +1,6 @@
 package common.util.crypto.rsa;
 
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -14,10 +12,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +54,10 @@ public class RsaCryptoUtil {
 			super();
 		}
 
+		/**
+		 * 공개키, 개인키 가져오기 위한 KeyPair 생성
+		 * @return
+		 */
 		public static KeyPair generateKeyPair() {
 			KeyPairGenerator keyPairGen = null;
 
@@ -149,6 +148,13 @@ public class RsaCryptoUtil {
 	    }
 	}
 
+	/**
+	 * RSA 암호화
+	 * @param plainText
+	 * @param publicKey
+	 * @param padding
+	 * @return
+	 */
 	public static String encrypt(String plainText, PublicKey publicKey, String padding) {
 		String encryptedText = "";
 
@@ -157,22 +163,29 @@ public class RsaCryptoUtil {
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encryptedMessage = cipher.doFinal(plainText.getBytes(CHARSET));
 			encryptedText = Base64.getEncoder().encodeToString(encryptedMessage);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			logger.error("", e);
 		}
 
 		return encryptedText;
 	}
 
-	public static String decrypt(String encryptText, PrivateKey privateKey, String padding) {
+	/**
+	 * RSA 복호화
+	 * @param encryptedText
+	 * @param privateKey
+	 * @param padding
+	 * @return
+	 */
+	public static String decrypt(String encryptedText, PrivateKey privateKey, String padding) {
 		String decryptedText = "";
 
 		try {
 			Cipher cipher = Cipher.getInstance(padding);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
-			byte[] decryptedMessage = cipher.doFinal(Base64.getDecoder().decode(encryptText));
+			byte[] decryptedMessage = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
 			decryptedText = new String(decryptedMessage, CHARSET);
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			logger.error("", e);
 		}
 
