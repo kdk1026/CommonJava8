@@ -1,4 +1,4 @@
-package common.util.crypto;
+package common.util.crypto.rsa;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,13 +52,13 @@ import common.util.file.NioFileUtil;
  *
  * @author 김대광
  */
-public class RsaCryptoUtil {
+public class OldRsaCryptoUtil {
 	
-	private RsaCryptoUtil() {
+	private OldRsaCryptoUtil() {
 		super();
 	}
 	
-	private static final Logger logger = LoggerFactory.getLogger(RsaCryptoUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(OldRsaCryptoUtil.class);
 
 	/**
 	 * @since 1.7
