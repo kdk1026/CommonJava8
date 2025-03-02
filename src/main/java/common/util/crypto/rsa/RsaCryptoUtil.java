@@ -46,13 +46,13 @@ public class RsaCryptoUtil {
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 
 	/** 데이터의 길이가 키 길이와 일치해야 함 */
-	public static final String RSA_ECB_NOPADDING ="RSA/ECB/NoPadding";
+	public static final String RSA_ECB_NOPADDING = "RSA/ECB/NoPadding";
 
 	/** JavaScript 라이브러인 jsencrypt 와 맞출려면 이것을 사용해야 함 (가장 일반적) */
-	public static final String RSA_ECB_PKCS1PADDING ="RSA/ECB/PKCS1Padding";
+	public static final String RSA_ECB_PKCS1PADDING = "RSA/ECB/PKCS1Padding";
 
 	/** 보안성이 가장 높음 */
-	public static final String RSA_ECB_OAEPPADDING ="RSA/ECB/OAEPPadding";
+	public static final String RSA_ECB_OAEPPADDING = "RSA/ECB/OAEPPadding";
 
 	public static class Generate {
 		private Generate() {
