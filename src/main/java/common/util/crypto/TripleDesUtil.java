@@ -48,8 +48,7 @@ public class TripleDesUtil {
 		try {
 			byte[] keyBytes = new byte[24];
 			byte[] mkeyBytes = key.getBytes(CHARSET);
-			System.arraycopy(mkeyBytes, 0, keyBytes, 0, Math.min(mkeyBytes.length,
-			keyBytes.length));
+			System.arraycopy(mkeyBytes, 0, keyBytes, 0, Math.min(mkeyBytes.length, keyBytes.length));
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
@@ -79,8 +78,7 @@ public class TripleDesUtil {
 		try {
 			byte[] keyBytes = new byte[24];
 			byte[] mkeyBytes = key.getBytes(CHARSET);
-			System.arraycopy(mkeyBytes, 0, keyBytes, 0, Math.min(mkeyBytes.length,
-			keyBytes.length));
+			System.arraycopy(mkeyBytes, 0, keyBytes, 0, Math.min(mkeyBytes.length, keyBytes.length));
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
