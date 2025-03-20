@@ -12,6 +12,7 @@ import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 /**
@@ -19,23 +20,24 @@ import com.jcraft.jsch.Session;
  * SFTP 클라이언트 유틸
  *  - Jsch Standard
  * </pre>
- * 
+ *
  * @since 2019. 2. 12.
  * @author 김대광
- * 
- * <pre>
+ *
+ *         <pre>
  * -----------------------------------
  * 개정이력
  * 2019. 2. 12. 김대광	최초작성
- * 2021. 8. 13. 김대광	JavaDoc pre 태그 공백 수정 (그리고... SonarLint 님아... Vector 내가 쓰고 싶어서 쓴게 아니에요...)
- * </pre>
+ * 2021. 8. 13. 김대광	JavaDoc pre 태그 공백 수정
+ * 2025. 3 .20  김대광	정리하면서 누락된 부분 추가
+ *         </pre>
  */
 public class SftpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(SftpClientUtil.class);
 
 	public SftpClientUtil() {
-		super();
+
 	}
 
 	private Session session = null;
@@ -44,14 +46,15 @@ public class SftpClientUtil {
 
 	/**
 	 * SFTP 연결
-	 * 
+	 *
 	 * @param sHost
 	 * @param nPort
 	 * @param sUsername
 	 * @param sPassword
 	 * @return
+	 * @throws JSchException
 	 */
-	public boolean init(String sHost, int nPort, String sUsername, String sPassword) {
+	public boolean init(String sHost, int nPort, String sUsername, String sPassword) throws JSchException {
 		boolean isConnected = false;
 
 		JSch jsch = new JSch();
@@ -82,6 +85,7 @@ public class SftpClientUtil {
 
 		if (isConnected) {
 			channelSftp = (ChannelSftp) channel;
+			channelSftp.connect();
 		}
 
 		return isConnected;
@@ -89,11 +93,11 @@ public class SftpClientUtil {
 
 	/**
 	 * 파일 전송
-	 * 
+	 *
 	 * @param sDestPath
 	 * @param file
 	 */
-	public void upload(String sDestPath, File file) {
+	public void upload(String sDestPath, File file) throws Exception {
 		try (FileInputStream fis = new FileInputStream(file)) {
 			channelSftp.cd(sDestPath);
 			this.delete(sDestPath, file);
@@ -101,16 +105,17 @@ public class SftpClientUtil {
 
 		} catch (Exception e) {
 			logger.error("", e);
+			throw e;
 		}
 	}
 
 	/**
 	 * 파일 삭제
-	 * 
+	 *
 	 * @param sDestPath
 	 * @param file
 	 */
-	public void delete(String sDestPath, File file) {
+	public void delete(String sDestPath, File file) throws Exception {
 		try {
 			@SuppressWarnings("unchecked")
 			Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
@@ -126,45 +131,50 @@ public class SftpClientUtil {
 
 		} catch (Exception e) {
 			logger.error("", e);
+			throw e;
 		}
 	}
-	
+
 	/**
 	 * 해당 경로의 파일, 디렉토리 확인
+	 *
 	 * @param sDestPath
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public Vector<LsEntry> ls(String sDestPath) {
+	public Vector<LsEntry> ls(String sDestPath) throws Exception {
 		Vector<LsEntry> lsVec = null;
-		
+
 		try {
 			lsVec = channelSftp.ls(sDestPath);
-			
+
 		} catch (Exception e) {
 			logger.error("", e);
+			throw e;
 		}
-		
+
 		return lsVec;
 	}
-	
+
 	/**
 	 * 파일/디렉토리 명 변경
+	 *
 	 * @param sOldPath
 	 * @param sNewPath
 	 * @return
 	 */
-	public boolean rename(String sOldPath, String sNewPath) {
+	public boolean rename(String sOldPath, String sNewPath) throws Exception {
 		boolean isSuccess = false;
-		
+
 		try {
 			channelSftp.rename(sOldPath, sNewPath);
 			isSuccess = true;
-			
+
 		} catch (Exception e) {
 			logger.error("", e);
-		}	
-		
+			throw e;
+		}
+
 		return isSuccess;
 	}
 
