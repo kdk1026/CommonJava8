@@ -1,10 +1,7 @@
 package common.util;
 
-import java.net.InetSocketAddress;
-import java.net.Socket;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * <pre>
@@ -18,8 +15,6 @@ import org.slf4j.LoggerFactory;
  * @author 김대광
  */
 public class PortChecker {
-
-	private final Logger logger = LoggerFactory.getLogger(PortChecker.class);
 
 	private PortChecker() {
 		super();
@@ -36,14 +31,11 @@ public class PortChecker {
 	public boolean isConnected(String host, int port) {
 		boolean isConnect = false;
 
-		try {
-			Socket socket = new Socket();
-			socket.connect(new InetSocketAddress(host,port), 5000);
-			socket.close();
+		try ( SSLSocket sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(host, port) ) {
 
 			isConnect = true;
 		} catch (Exception e) {
-			logger.error("", e);
+			e.printStackTrace();
 		}
 
 		return isConnect;
