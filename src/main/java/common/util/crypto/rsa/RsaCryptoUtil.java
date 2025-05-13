@@ -14,6 +14,7 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +91,10 @@ public class RsaCryptoUtil {
 		 * @return
 		 */
 		public static String getBase64PublicKey(KeyPair keyPair) {
+			if ( keyPair == null ) {
+				throw new NullPointerException("keyPair is null");
+			}
+
 	        return Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
 	    }
 
@@ -102,6 +107,10 @@ public class RsaCryptoUtil {
 	     * @return
 	     */
 	    public static String getBase64PrivateKey(KeyPair keyPair) {
+			if ( keyPair == null ) {
+				throw new NullPointerException("keyPair is null");
+			}
+
 	        return Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
 	    }
 
@@ -111,6 +120,10 @@ public class RsaCryptoUtil {
 	     * @return
 	     */
 	    public static PublicKey getPublicKeyFromBase64(String base64PublicKey) {
+			if ( StringUtils.isBlank(base64PublicKey) ) {
+				throw new NullPointerException("base64PublicKey is null");
+			}
+
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
 	        X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
 	        KeyFactory keyFactory = null;
@@ -132,6 +145,10 @@ public class RsaCryptoUtil {
 	     * @return
 	     */
 	    public static PrivateKey getPrivateKeyFromBase64(String base64PrivateKey) {
+			if ( StringUtils.isBlank(base64PrivateKey) ) {
+				throw new NullPointerException("base64PrivateKey is null");
+			}
+
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);
 	        PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
 	        KeyFactory keyFactory = null;
@@ -156,6 +173,18 @@ public class RsaCryptoUtil {
 	 * @return
 	 */
 	public static String encrypt(String plainText, PublicKey publicKey, String padding) {
+		if ( StringUtils.isBlank(plainText) ) {
+			throw new NullPointerException("plainText is null");
+		}
+
+		if ( publicKey == null ) {
+			throw new NullPointerException("publicKey is null");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new NullPointerException("padding is null");
+		}
+
 		String encryptedText = "";
 
 		try {
@@ -178,6 +207,18 @@ public class RsaCryptoUtil {
 	 * @return
 	 */
 	public static String decrypt(String encryptedText, PrivateKey privateKey, String padding) {
+		if ( StringUtils.isBlank(encryptedText) ) {
+			throw new NullPointerException("encryptedText is null");
+		}
+
+		if ( privateKey == null ) {
+			throw new NullPointerException("privateKey is null");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new NullPointerException("padding is null");
+		}
+
 		String decryptedText = "";
 
 		try {

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,14 @@ public class ByteBufferUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ByteBufferUtils.class);
 
 	public static ByteBuffer toByteBufferString(String str, String sEncoding) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		byte[] b = null;
 
 		try {
@@ -35,6 +44,14 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferString(List<String> list, String sEncoding) {
+		if ( list == null || list.isEmpty() ) {
+			throw new IllegalArgumentException("list is null or empty");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nByteLen = 0;
 
 		for (String s : list) {
@@ -60,6 +77,14 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferObject(Object obj, String sEncoding) {
+		if ( obj == null ) {
+			throw new NullPointerException("obj is null");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nByteLen = 0;
 
 		try {
@@ -91,6 +116,14 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferObject(List<Object> list, String sEncoding) {
+		if ( list == null || list.isEmpty() ) {
+			throw new IllegalArgumentException("list is null or empty");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nByteLen = 0;
 		Field[] fields = null;
 
@@ -125,6 +158,14 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferMap(Map<String, Object> map, String sEncoding) {
+		if ( map == null || map.isEmpty() ) {
+			throw new IllegalArgumentException("map is null or empty");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nByteLen = 0;
 		String sKey = "";
 		Iterator<String> it = map.keySet().iterator();
@@ -150,6 +191,14 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferMap(List<Map<String, Object>> list, String sEncoding) {
+		if ( list == null || list.isEmpty() ) {
+			throw new IllegalArgumentException("list is null or empty");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nByteLen = 0;
 		String sKey = "";
 		Iterator<String> it = null;
@@ -179,7 +228,7 @@ public class ByteBufferUtils {
 		buffer.flip();
 		return buffer;
 	}
-	
+
 	public static ByteBuffer getByteBufferFromByteArray(byte[] bytesArray) {
 		return ByteBuffer.wrap(bytesArray);
 	}

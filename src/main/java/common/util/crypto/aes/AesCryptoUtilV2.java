@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,6 +60,22 @@ public class AesCryptoUtilV2 {
 	 * @return
 	 */
 	public static String encrypt(String plainText, String key, String iv, String padding) {
+		if ( StringUtils.isBlank(plainText) ) {
+			throw new NullPointerException("plainText is null");
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
+			throw new IllegalArgumentException("key length is invalid");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new NullPointerException("padding is null");
+		}
+
 		String encryptedText = "";
 
 		try {
@@ -97,6 +114,22 @@ public class AesCryptoUtilV2 {
 	 * @return
 	 */
 	public static String decrypt(String encryptedText, String key, String iv, String padding) {
+		if ( StringUtils.isBlank(encryptedText) ) {
+			throw new NullPointerException("encryptedText is null");
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
+			throw new IllegalArgumentException("key length is invalid");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new NullPointerException("padding is null");
+		}
+
 		String decryptedText = "";
 
 		try {

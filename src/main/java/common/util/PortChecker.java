@@ -3,6 +3,9 @@ package common.util;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <pre>
  * -----------------------------------
@@ -20,6 +23,8 @@ public class PortChecker {
 		super();
 	}
 
+	private static final Logger logger = LoggerFactory.getLogger(PortChecker.class);
+
 	private static class LazyHolder {
 		private static final PortChecker INSTANCE = new PortChecker();
 	}
@@ -35,7 +40,7 @@ public class PortChecker {
 
 			isConnect = true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("", e);
 		}
 
 		return isConnect;

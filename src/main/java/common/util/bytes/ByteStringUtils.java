@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2021. 8. 14. 김대광	SonarLint 지시에 따른 수정 및 주저리 (Complexity 어쩔 수 없다)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
@@ -53,6 +54,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static int getByteLength(String str, String charsetName) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
+		if ( StringUtils.isBlank(charsetName) ) {
+			throw new NullPointerException("sEncoding is null");
+		}
+
 		int nLen = 0;
 
 		try {
@@ -72,6 +81,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static boolean isByteOver(String str, int maxByte) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
+		if ( maxByte < 0 ) {
+			throw new IllegalArgumentException("maxByte is negative");
+		}
+
 		boolean resFlag = false;
 
 		try {
@@ -93,6 +110,18 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static boolean isByteOver(String str, int maxByte, String charsetName) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
+		if ( maxByte < 0 ) {
+			throw new IllegalArgumentException("maxByte is negative");
+		}
+
+		if ( StringUtils.isBlank(charsetName) ) {
+			throw new NullPointerException("charsetName is null");
+		}
+
 		boolean resFlag = false;
 
 		try {
@@ -112,6 +141,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static String eucKrToUtf8String(byte[] bOrgData) {
+		if ( bOrgData == null ) {
+			throw new NullPointerException("bOrgData is null");
+		}
+
+		if ( bOrgData.length == 0 ) {
+			throw new IllegalArgumentException("bOrgData is empty");
+		}
+
 		String sRes = "";
 
 		try {
@@ -132,6 +169,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static String utf8ToEucKrString(byte[] bOrgData) {
+		if ( bOrgData == null ) {
+			throw new NullPointerException("bOrgData is null");
+		}
+
+		if ( bOrgData.length == 0 ) {
+			throw new IllegalArgumentException("bOrgData is empty");
+		}
+
 		String sRes = "";
 
 		try {
@@ -152,6 +197,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static byte[] eucKrToUtf8(byte[] bOrgData) {
+		if ( bOrgData == null ) {
+			throw new NullPointerException("bOrgData is null");
+		}
+
+		if ( bOrgData.length == 0 ) {
+			throw new IllegalArgumentException("bOrgData is empty");
+		}
+
 		byte[] bData = null;
 
 		try {
@@ -171,6 +224,14 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static byte[] utf8ToEucKr(byte[] bOrgData) {
+		if ( bOrgData == null ) {
+			throw new NullPointerException("bOrgData is null");
+		}
+
+		if ( bOrgData.length == 0 ) {
+			throw new IllegalArgumentException("bOrgData is empty");
+		}
+
 		byte[] bData = null;
 
 		try {
@@ -193,6 +254,22 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static String substrString(String str, int offset, int length, String charsetName) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
+		if ( offset < 0 ) {
+			throw new IllegalArgumentException("offset is negative");
+		}
+
+		if ( length < 0 ) {
+			throw new IllegalArgumentException("length is negative");
+		}
+
+		if ( StringUtils.isBlank(charsetName) ) {
+			throw new NullPointerException("charsetName is null");
+		}
+
 		String sRes = "";
 
 		try {

@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +37,8 @@ public class TripleDesUtil {
 
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 
+	public static final String DESede_ECB_PKCS5PADDING ="DESede/ECB/PKCS5Padding";
+
 	/**
 	 * Triple DES 암호화
 	 * @param plainText
@@ -43,6 +46,18 @@ public class TripleDesUtil {
 	 * @return
 	 */
 	public static String encrypt(String plainText, String key) {
+		if ( StringUtils.isBlank(plainText) ) {
+			throw new NullPointerException("plainText is null");
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( key.length() < 24 ) {
+			throw new IllegalArgumentException("key length is less than 24");
+		}
+
 		String encryptedText = "";
 
 		try {
@@ -52,7 +67,7 @@ public class TripleDesUtil {
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
-			Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance(DESede_ECB_PKCS5PADDING);
 
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -73,6 +88,18 @@ public class TripleDesUtil {
 	 * @return
 	 */
 	public static String decrypt(String encryptedText, String key) {
+		if ( StringUtils.isBlank(encryptedText) ) {
+			throw new NullPointerException("encryptedText is null");
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( key.length() < 24 ) {
+			throw new IllegalArgumentException("key length is less than 24");
+		}
+
 		String decryptedText = "";
 
 		try {
@@ -82,7 +109,7 @@ public class TripleDesUtil {
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
-			Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
+			Cipher cipher = Cipher.getInstance(DESede_ECB_PKCS5PADDING);
 
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
 

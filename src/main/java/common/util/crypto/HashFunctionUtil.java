@@ -3,6 +3,7 @@ package common.util.crypto;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,16 +15,16 @@ import org.slf4j.LoggerFactory;
  *  - commons.codec.DigestUtils 사용 권장
  *  	> 소금도 쳐야 하는데, DigestUtils에서 제공하므로 무슨일이 있어도 이딴 유틸대신 DigestUtils 사용할 것!!!!
  *  	> 아파치 재단은 진리인 것이다!!!
- *  
+ *
  *  참고 - {@link common.libTest.commons.UsageCodec#hashing}
  *  </pre>
  */
 public class HashFunctionUtil {
-	
+
 	private HashFunctionUtil() {
 		super();
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(HashFunctionUtil.class);
 
 	/**
@@ -60,6 +61,14 @@ public class HashFunctionUtil {
 	}
 
 	private static String searchHashAlgorithm(String strPlainText, String strAlgorithm) {
+		if ( StringUtils.isBlank(strPlainText) ) {
+			throw new NullPointerException("strPlainText is null");
+		}
+
+		if ( StringUtils.isBlank(strAlgorithm) ) {
+			throw new NullPointerException("strAlgorithm is null");
+		}
+
 		String strEncodedText = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance(strAlgorithm);
