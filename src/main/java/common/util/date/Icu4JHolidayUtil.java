@@ -1,6 +1,9 @@
 package common.util.date;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,6 +26,18 @@ public class Icu4JHolidayUtil {
 
 	private Icu4JHolidayUtil() {
 		super();
+	}
+
+	private static class Valid {
+		private static void isValidFormat(String yyyyMMdd) {
+			try {
+				LocalDate.parse(yyyyMMdd, DateTimeFormatter.ofPattern("yyyyMMdd"));
+			} catch (DateTimeParseException e) {
+				throw new IllegalArgumentException("yyyyMMdd is invalid format");
+			} catch (NullPointerException e) {
+				throw new NullPointerException("yyyyMMdd is null");
+			}
+		}
 	}
 
 	/**
@@ -57,6 +72,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	public static String getHoliday(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		String sHoli1 = "";
 		String sHoli2 = "";
 		String sHoli3 = "";
@@ -92,6 +109,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String getHolidaySola(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		String resStr = "";
 		String sMMdd = yyyyMMdd.substring(4);
 
@@ -112,6 +131,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String getHolidayLunar(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		String resStr = "";
 		String sMMdd = convertSolarToLunar(yyyyMMdd).substring(4);
 
@@ -136,6 +157,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String getNewYearLunar(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		String resStr = "";
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
@@ -180,6 +203,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String convertSolarToLunar(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		StringBuilder sb = new StringBuilder();
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
@@ -230,6 +255,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String convertLunarToSolar(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		StringBuilder sb = new StringBuilder();
 		Calendar cal = Calendar.getInstance();
 		ChineseCalendar chinaCal = new ChineseCalendar();
@@ -280,6 +307,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static int getDayOfWeek(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		int iYY = Integer.parseInt(yyyyMMdd.substring(0, 4));
 		int iMM = Integer.parseInt(yyyyMMdd.substring(4, 6)) -1;
 		int iDD = Integer.parseInt(yyyyMMdd.substring(6));
@@ -297,6 +326,8 @@ public class Icu4JHolidayUtil {
 	 * @return
 	 */
 	private static String getHolidayAlternate(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
 		String resStr = "";
 		int iYY = Integer.parseInt(yyyyMMdd.substring(0, 4));
 

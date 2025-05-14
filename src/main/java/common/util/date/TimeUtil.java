@@ -1,5 +1,7 @@
 package common.util.date;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 /**
@@ -15,6 +17,17 @@ import java.util.Date;
  */
 public class TimeUtil {
 
+	private static class Valid {
+		private static boolean isValidDateRange(Date date) {
+			if (date == null) {
+				throw new NullPointerException("date");
+			}
+
+			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			return localDate.getYear() >= 1900 && localDate.getYear() <= 2100;
+		}
+	}
+
 	private static class TIME_MAXIMUM {
 		public static final int SEC = 60;
 		public static final int MIN = 60;
@@ -24,6 +37,11 @@ public class TimeUtil {
 	}
 
 	public static String calculateTime(Date date) {
+		boolean isValid = Valid.isValidDateRange(date);
+		if ( !isValid ) {
+			throw new IllegalArgumentException("날짜 범위가 유효하지 않습니다. 1900년 ~ 2100년");
+		}
+
 		long curTime = System.currentTimeMillis();
 		long regTime = date.getTime();
 		long diffTime = (curTime - regTime) / 1000;

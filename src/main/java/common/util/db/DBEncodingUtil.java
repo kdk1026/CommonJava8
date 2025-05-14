@@ -6,24 +6,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DBEncodingUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DBEncodingUtil.class);
-	
+
 	private DBEncodingUtil() {
 		super();
 	}
-	
+
 	/**
 	 * @since 1.7
 	 */
 	private static final String ISO_8859_1 = StandardCharsets.ISO_8859_1.toString();
-	
+
 	private static final String MS949 = Charset.forName("ms949").toString();
-	
+
 	/**
 	 * @since 1.7
 	 */
@@ -33,7 +34,7 @@ public class DBEncodingUtil {
 		private US7ASCII() {
 			super();
 		}
-		
+
 		/**
 		 * 해당 key의 값이 null이면 빈 값으로 처리
 		 */
@@ -41,8 +42,12 @@ public class DBEncodingUtil {
 			private ReadColumn() {
 				super();
 			}
-			
+
 			public static String readHangeul(String val) {
+				if ( StringUtils.isBlank(val) ) {
+					throw new NullPointerException("value is null");
+				}
+
 				String sVal = "";
 				try {
 					sVal = new String(val.getBytes(ISO_8859_1), MS949);
@@ -51,14 +56,22 @@ public class DBEncodingUtil {
 				}
 				return sVal;
 			}
-			
+
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
+				if ( map == null || map.isEmpty() ) {
+					throw new NullPointerException("map is null");
+				}
+
+				if ( keys == null || keys.length == 0 ) {
+					throw new NullPointerException("keys is null");
+				}
+
 				String key = "";
 				String val = "";
-				
+
 				for (int i=0; i < keys.length; i++) {
 					key = keys[i];
-					
+
 					if (map.containsKey(key)) {
 						val = readHangeul( String.valueOf(map.get(key)) );
 						map.put(key, val);
@@ -67,14 +80,22 @@ public class DBEncodingUtil {
 					}
 				}
 			}
-			
+
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
+				if ( list == null || list.isEmpty() ) {
+					throw new NullPointerException("list is null");
+				}
+
+				if ( keys == null || keys.length == 0 ) {
+					throw new NullPointerException("keys is null");
+				}
+
 				for (Map<Object, Object> map : list) {
 					readHangeul(map, keys);
 				}
 			}
 		}
-		
+
 		/**
 		 * 해당 key의 값이 null이면 빈 값으로 처리
 		 */
@@ -82,8 +103,12 @@ public class DBEncodingUtil {
 			private ScalaSubQuery() {
 				super();
 			}
-			
+
 			public static String readHangeul(String val) {
+				if ( StringUtils.isBlank(val) ) {
+					throw new NullPointerException("value is null");
+				}
+
 				String sVal = "";
 				try {
 					sVal = new String(val.getBytes(ISO_8859_1), UTF_8);
@@ -92,14 +117,22 @@ public class DBEncodingUtil {
 				}
 				return sVal;
 			}
-			
+
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
+				if ( map == null || map.isEmpty() ) {
+					throw new NullPointerException("map is null");
+				}
+
+				if ( keys == null || keys.length == 0 ) {
+					throw new NullPointerException("keys is null");
+				}
+
 				String key = "";
 				String val = "";
-				
+
 				for (int i=0; i < keys.length; i++) {
 					key = keys[i];
-					
+
 					if (map.containsKey(key)) {
 						val = readHangeul( String.valueOf(map.get(key)) );
 						map.put(key, val);
@@ -108,8 +141,16 @@ public class DBEncodingUtil {
 					}
 				}
 			}
-			
+
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
+				if ( list == null || list.isEmpty() ) {
+					throw new NullPointerException("list is null");
+				}
+
+				if ( keys == null || keys.length == 0 ) {
+					throw new NullPointerException("keys is null");
+				}
+
 				for (Map<Object, Object> map : list) {
 					readHangeul(map, keys);
 				}
@@ -117,19 +158,27 @@ public class DBEncodingUtil {
 		}
 
 		public static void writeHangeul(Map<Object, Object> map, String ... keys) {
+			if ( map == null || map.isEmpty() ) {
+				throw new NullPointerException("map is null");
+			}
+
+			if ( keys == null || keys.length == 0 ) {
+				throw new NullPointerException("keys is null");
+			}
+
 			String key = "";
 			String val1 = "";
 			String val2 = "";
-			
+
 			for (int i=0; i < keys.length; i++) {
 				key = keys[i];
-				
+
 				if (map.containsKey(key)) {
 					val1 = String.valueOf(map.get(key));
-					
+
 					try {
 						val2 = new String(val1.getBytes(MS949), ISO_8859_1);
-						
+
 					} catch (UnsupportedEncodingException e) {
 						logger.error("", e);
 					}
@@ -139,5 +188,5 @@ public class DBEncodingUtil {
 			}
 		}
 	}
-	
+
 }

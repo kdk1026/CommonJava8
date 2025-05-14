@@ -2,8 +2,10 @@ package common.util.date;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,12 +35,36 @@ public class HolidayCalendar {
 	private static final int LD_SATURDAY = 6;
 	private static final int LD_MONDAY = 1;
 
+	private static class Valid {
+		private static void isValidFormat(String yyyyMMdd) {
+			try {
+				LocalDate.parse(yyyyMMdd, DateTimeFormatter.ofPattern("yyyyMMdd"));
+			} catch (DateTimeParseException e) {
+				throw new IllegalArgumentException("yyyyMMdd is invalid format");
+			} catch (NullPointerException e) {
+				throw new NullPointerException("yyyyMMdd is null");
+			}
+		}
+
+		private static void isValidYear(String year) {
+			try {
+				Year.parse(year);
+			} catch (DateTimeParseException e) {
+				throw new IllegalArgumentException("yyyy is invalid format");
+			} catch (NullPointerException e) {
+				throw new NullPointerException("yyyy is null");
+			}
+		}
+	}
+
     /**
      * 음력 날짜를 양력 날짜로 변환
      * @param yyyyMMdd
      * @return
      */
 	public static String Lunar2Solar(String yyyyMMdd) {
+		Valid.isValidFormat(yyyyMMdd);
+
     	ChineseCalendar chinaCal = new ChineseCalendar();
 
     	if (yyyyMMdd == null) return "";
@@ -80,6 +106,8 @@ public class HolidayCalendar {
     }
 
     public static List<String> holidayArray(String yyyy) {
+    	Valid.isValidYear(yyyy);
+
     	Set<String> holidaysSet = new HashSet<>();
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -163,7 +191,7 @@ public class HolidayCalendar {
     		}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException("휴일 계산 오류", e);
 		}
 
     	List<String> holidaysList = new ArrayList<>(holidaysSet);
