@@ -4,7 +4,6 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (안바꿔 이건 Java 6 전용이거든~ Java 7 NIO 알고부터는 버렸거든 그리 알도록)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  * @Description	: 1.6 기반
@@ -57,6 +57,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static boolean isExistsFile(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
         return file.exists();
     }
@@ -67,9 +71,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String getFilename(String filePath) {
-		if (filePath == null) {
-			return null;
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
 		}
+
 		int pos = filePath.lastIndexOf(FOLDER_SEPARATOR);
 		return (pos != -1 ? filePath.substring(pos + 1) : filePath);
 	}
@@ -80,6 +85,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String getFileExtension(String fileName) {
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new NullPointerException("fileName is null");
+		}
+
 		if (fileName.lastIndexOf(EXTENSION_SEPARATOR) == -1) {
 			return null;
 		}
@@ -93,6 +102,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static long getFileSize(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		return file.length();
 	}
@@ -106,6 +119,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String readableFileSize(long fileSize) {
+		if ( fileSize < 0 ) {
+			throw new IllegalArgumentException("fileSize is negative");
+		}
+
 		if (fileSize <= 0) return "0";
 		String[] units = { "B", "KB", "MB", "GB", "TB" };
 
@@ -119,6 +136,10 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String lastModified(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		Date date = new Date(file.lastModified());
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -131,27 +152,23 @@ public class FileUtil {
 	 * @param text
 	 */
 	public static void writeFile(String filePath, String text) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
+		if ( StringUtils.isBlank(text) ) {
+			throw new NullPointerException("text is null");
+		}
+
 		File file = new File(filePath);
-		OutputStream os = null;
-		FileOutputStream fos = null;
 
-		try {
-			fos = new FileOutputStream(file);
-			os = fos;
-
+		try (
+			FileOutputStream fos = new FileOutputStream(file);
+			OutputStream os = fos;
+        ) {
 			os.write(text.getBytes());
-			os.close();
-
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 	}
 
@@ -162,27 +179,27 @@ public class FileUtil {
 	 * @param encoding
 	 */
 	public static void writeFile(String filePath, String text, String encoding) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
+		if ( StringUtils.isBlank(text) ) {
+			throw new NullPointerException("text is null");
+		}
+
+		if ( StringUtils.isBlank(encoding) ) {
+			throw new NullPointerException("encoding is null");
+		}
+
 		File file = new File(filePath);
-		OutputStream os = null;
-		FileOutputStream fos = null;
 
-		try {
-			fos = new FileOutputStream(file);
-			os = fos;
-
+		try (
+			FileOutputStream fos = new FileOutputStream(file);
+			OutputStream os = fos;
+        ) {
 			os.write(text.getBytes(encoding));
-			os.close();
-
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 	}
 
@@ -192,14 +209,17 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String readFile(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		InputStream is = null;
-		FileInputStream fis = null;
 
-		try {
-			fis = new FileInputStream(file);
-			is = new BufferedInputStream(fis);
+		try (
+				FileInputStream fis = new FileInputStream(file);
+				InputStream is = new BufferedInputStream(fis)
+        ) {
 
 			int nRead = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
@@ -209,18 +229,9 @@ public class FileUtil {
 			}
 
 			bos.flush();
-			is.close();
 
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 
 		return bos.toString();
@@ -233,14 +244,21 @@ public class FileUtil {
 	 * @return
 	 */
 	public static String readFile(String filePath, String encoding) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
+		if ( StringUtils.isBlank(encoding) ) {
+			throw new NullPointerException("encoding is null");
+		}
+
 		File file = new File(filePath);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		InputStream is = null;
-		FileInputStream fis = null;
 
-		try {
-			fis = new FileInputStream(file);
-			is = new BufferedInputStream(fis);
+		try (
+				FileInputStream fis = new FileInputStream(file);
+				InputStream is = new BufferedInputStream(fis)
+        ) {
 
 			int nRead = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
@@ -250,18 +268,9 @@ public class FileUtil {
 			}
 
 			bos.flush();
-			is.close();
 
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 
 		String content = "";
@@ -271,6 +280,12 @@ public class FileUtil {
 			content = new String(bData, encoding);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+		} finally {
+			try {
+				bos.close();
+			} catch (IOException e) {
+				logger.error("", e);
+			}
 		}
 
 		return content;
@@ -281,24 +296,28 @@ public class FileUtil {
 	 * @param filePath
 	 */
 	public static boolean deleteFile(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
-		
+
 		if ( file.isDirectory() ) {
 			File[] files = file.listFiles();
-			
+
             for (File f : files) {
                 deleteFile(f.getPath());
                 logger.debug("파일이 삭제되었습니다.");
             }
-            
+
             file.delete();
             logger.debug("폴더가 삭제되었습니다.");
-			
+
 		} else {
 			logger.debug("파일이 삭제되었습니다.");
 			return file.delete();
 		}
-        
+
         return true;
 	}
 
@@ -308,49 +327,31 @@ public class FileUtil {
 	 * @param destFilePath
 	 */
 	public static void copyFile(String srcFilePath, String destFilePath) {
+		if ( StringUtils.isBlank(srcFilePath) ) {
+			throw new NullPointerException("srcFilePath is null");
+		}
+
+		if ( StringUtils.isBlank(destFilePath) ) {
+			throw new NullPointerException("destFilePath is null");
+		}
+
 		File srcFile = new File(srcFilePath);
 		File destFile = new File(destFilePath);
 
-		InputStream is = null;
-		FileInputStream fis = null;
-		OutputStream os = null;
-		FileOutputStream fos = null;
-
-		try {
-			fis = new FileInputStream(srcFile);
-			is = new BufferedInputStream(fis);
-
-			fos = new FileOutputStream(destFile);
-			os = fos;
-
+		try (
+				FileInputStream fis = new FileInputStream(srcFile);
+				InputStream is = new BufferedInputStream(fis);
+				FileOutputStream fos = new FileOutputStream(destFile);
+				OutputStream os = fos;
+        ) {
 			int nRead = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
 
 			while ( (nRead = is.read(buffer)) != -1) {
 				os.write(buffer, 0, nRead);
 			}
-
-			is.close();
-			os.close();
-
 		} catch (Exception e) {
 			logger.error("", e);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
-
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 	}
 
@@ -360,11 +361,15 @@ public class FileUtil {
 	 * @return
 	 */
 	public static List<String> getAllFileList(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		if (file.isDirectory()) {
 			return Arrays.asList(file.list());
 		}
-		return new ArrayList<String>();
+		return new ArrayList<>();
 	}
 
 	/**
@@ -373,7 +378,11 @@ public class FileUtil {
 	 * @return
 	 */
 	public static List<String> getFileList(String filePath) {
-		List<String> listFiles = new ArrayList<String>();
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
+		List<String> listFiles = new ArrayList<>();
 		File file = new File(filePath);
 
 		if (file.isDirectory()) {
@@ -397,7 +406,11 @@ public class FileUtil {
 	 * @return
 	 */
 	public static List<String> getDirectoryList(String filePath) {
-		List<String> listDirectories = new ArrayList<String>();
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
+		List<String> listDirectories = new ArrayList<>();
 		File file = new File(filePath);
 
 		if (file.isDirectory()) {
@@ -419,15 +432,17 @@ public class FileUtil {
 	 * @return
 	 */
 	public static byte[] convertFileToBytes(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		InputStream is = null;
-		FileInputStream fis = null;
 
-		try {
-			fis = new FileInputStream(file);
-			is = new BufferedInputStream(fis);
-
+		try (
+				FileInputStream fis = new FileInputStream(file);
+				InputStream is = new BufferedInputStream(fis);
+		) {
 			int nRead = 0;
 			byte[] buffer = new byte[BUFFER_SIZE];
 
@@ -436,20 +451,9 @@ public class FileUtil {
 			}
 
 			bos.flush();
-			is.close();
 
-		} catch (FileNotFoundException e) {
-			logger.error("", e);
 		} catch (IOException e) {
 			logger.error("", e);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
 		}
 
 		return bos.toByteArray();

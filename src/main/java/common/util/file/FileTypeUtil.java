@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,10 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeType(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		File file = new File(filePath);
 		MimetypesFileTypeMap mimeTypesMap = new MimetypesFileTypeMap();
 
@@ -52,6 +57,10 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		String mimeType = "";
 		File file = new File(filePath);
 		Tika tika = new Tika();
@@ -75,6 +84,10 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(InputStream is) {
+		if ( is == null ) {
+			throw new NullPointerException("is is null");
+		}
+
 		String mimeType = "";
 		Tika tika = new Tika();
 
@@ -95,6 +108,14 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static boolean isDocFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new NullPointerException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new NullPointerException("sMimeType is null");
+		}
+
 		String[] sExtArr = {
 			"txt", "rtf", "pdf",
 			"doc", "docx", "ppt", "pptx", "xls", "xlsx",
@@ -123,6 +144,14 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static boolean isImgFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new NullPointerException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new NullPointerException("sMimeType is null");
+		}
+
 		String[] sExtArr = {
 			"jpg", "jpeg", "gif", "png"
 		};
@@ -142,9 +171,11 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static boolean isRunableFile(String sFileName) {
-		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
+		if ( StringUtils.isBlank(sFileName) ) {
+			throw new NullPointerException("sFileName is null");
+		}
 
-		if(sFileName == null) return false;
+		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
 
 		return sFileName.matches(RUNABLE_FILE_EXT);
 	}

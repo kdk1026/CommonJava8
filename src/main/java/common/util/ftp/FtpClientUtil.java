@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -54,6 +55,14 @@ public class FtpClientUtil {
 	private List<File> fileList = null;
 
 	public boolean upload(String host, int port, String username, String password, String destPath, String sourcePath, String extension) {
+		if ( StringUtils.isBlank(sourcePath) ) {
+			throw new NullPointerException("sourcePath is null");
+		}
+
+		if ( StringUtils.isBlank(extension) ) {
+			throw new NullPointerException("extension is null");
+		}
+
 		this.sourcePath = sourcePath;
 		this.extension = extension;
 
@@ -61,18 +70,46 @@ public class FtpClientUtil {
 	}
 
 	public boolean upload(String host, int port, String username, String password, String destPath, File file) {
+		if ( file == null ) {
+			throw new NullPointerException("file is null");
+		}
+
 		this.file = file;
 
 		return this.upload(host, port, username, password, destPath);
 	}
 
 	public boolean upload(String host, int port, String username, String password, String destPath, List<File> fileList) {
+		if ( fileList == null || fileList.isEmpty() ) {
+			throw new NullPointerException("fileList is null");
+		}
+
 		this.fileList = fileList;
 
 		return this.upload(host, port, username, password, destPath);
 	}
 
 	private boolean upload(String host, int port, String username, String password, String destPath) {
+		if ( StringUtils.isBlank(host) ) {
+			throw new NullPointerException("host is null");
+		}
+
+		if ( port < 0 ) {
+			throw new NullPointerException("port is null");
+		}
+
+		if ( StringUtils.isBlank(username) ) {
+			throw new NullPointerException("username is null");
+		}
+
+		if ( StringUtils.isBlank(password) ) {
+			throw new NullPointerException("password is null");
+		}
+
+		if ( StringUtils.isBlank(destPath) ) {
+			throw new NullPointerException("destPath is null");
+		}
+
 		boolean isSucesss = false;
 
 		FTPClient ftpClient = new FTPClient();
@@ -216,10 +253,34 @@ public class FtpClientUtil {
 	}
 
 	private boolean isBlank(final String str) {
-		return (str == null) || (str.trim().length() == 0);
+		return (str == null) || (str.trim().isEmpty());
 	}
 
 	public boolean downloadAll(String host, int port, String username, String password, String destPath, String downloadPath) {
+		if ( StringUtils.isBlank(host) ) {
+			throw new NullPointerException("host is null");
+		}
+
+		if ( port < 0 ) {
+			throw new NullPointerException("port is null");
+		}
+
+		if ( StringUtils.isBlank(username) ) {
+			throw new NullPointerException("username is null");
+		}
+
+		if ( StringUtils.isBlank(password) ) {
+			throw new NullPointerException("password is null");
+		}
+
+		if ( StringUtils.isBlank(destPath) ) {
+			throw new NullPointerException("destPath is null");
+		}
+
+		if ( StringUtils.isBlank(downloadPath) ) {
+			throw new NullPointerException("downloadPath is null");
+		}
+
 		return this.download(host, port, username, password, destPath, null, downloadPath);
 	}
 

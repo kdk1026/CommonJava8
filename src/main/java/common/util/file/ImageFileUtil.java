@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +43,22 @@ public class ImageFileUtil {
 	 * @param isScale 크키가 큰 폭을 기준으로 동일 비율 처리 여부
 	 */
 	public static void resize(String sSrcPath, String sDestPath, int nWidth, int nHeight, boolean isScale) {
+		if ( StringUtils.isBlank(sSrcPath) ) {
+			throw new NullPointerException("sSrcPath is null");
+		}
+
+		if ( StringUtils.isBlank(sDestPath) ) {
+			throw new NullPointerException("sDestPath is null");
+		}
+
+		if ( nWidth < 1 ) {
+			throw new IllegalArgumentException("nWidth is less than 1");
+		}
+
+		if ( nHeight < 1 ) {
+			throw new IllegalArgumentException("nHeight is less than 1");
+		}
+
 		File srcFile = new File(sSrcPath);
 		File destFile = new File(sDestPath);
 		resize(srcFile, destFile, nWidth, nHeight, isScale);
@@ -56,6 +73,22 @@ public class ImageFileUtil {
 	 * @param isScale
 	 */
 	public static void resize(File srcFile, File destFile, int nWidth, int nHeight, boolean isScale) {
+		if ( srcFile == null ) {
+			throw new NullPointerException("srcFile is null");
+		}
+
+		if ( destFile == null ) {
+			throw new NullPointerException("destFile is null");
+		}
+
+		if ( nWidth < 1 ) {
+			throw new IllegalArgumentException("nWidth is less than 1");
+		}
+
+		if ( nHeight < 1 ) {
+			throw new IllegalArgumentException("nHeight is less than 1");
+		}
+
 		final String sSrcPath = srcFile.getPath();
 		final String sImageFormat = sSrcPath.substring(sSrcPath.lastIndexOf('.')+1);
 
@@ -127,6 +160,18 @@ public class ImageFileUtil {
 	 * @param destFile
 	 */
 	private static void writeImage(Image image, String sImageFormat, File destFile) {
+		if ( image == null ) {
+			throw new NullPointerException("image is null");
+		}
+
+		if ( StringUtils.isBlank(sImageFormat) ) {
+			throw new NullPointerException("sImageFormat is null");
+		}
+
+		if ( destFile == null ) {
+			throw new NullPointerException("destFile is null");
+		}
+
 		BufferedImage bufImg = null;
 
 		try {
@@ -157,6 +202,22 @@ public class ImageFileUtil {
 	 * @return
 	 */
 	private static double getScale(int nResizeWidth, int nResizeHeight, int nOrgWidth, int nOrgHeight) {
+		if ( nResizeWidth < 1 ) {
+			throw new IllegalArgumentException("nResizeWidth is less than 1");
+		}
+
+		if ( nResizeHeight < 1 ) {
+			throw new IllegalArgumentException("nResizeHeight is less than 1");
+		}
+
+		if ( nOrgWidth < 1 ) {
+			throw new IllegalArgumentException("nOrgWidth is less than 1");
+		}
+
+		if ( nOrgHeight < 1 ) {
+			throw new IllegalArgumentException("nOrgHeight is less than 1");
+		}
+
 		double dWidthScale = (double) nResizeWidth / nOrgWidth;
 		double dHeightScale = (double) nResizeHeight / (double) nOrgHeight;
 		if (dWidthScale > dHeightScale) {

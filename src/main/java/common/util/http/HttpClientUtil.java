@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -40,14 +41,14 @@ import org.slf4j.LoggerFactory;
  * 2021. 8.  6. 김대광	Javadoc 작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity 어쩔 수 없고, 주석 갖고 딴지좀 걸지마리)
  * </pre>
- * 
+ *
  * <pre>
  * HttpClient version
  * -----------------------------------
  * 4.4 Standard
  * 4.5.13 까지는 이상 없음 확인
  * -----------------------------------
- * 
+ *
  * MultipartEntityBuilder, FileBody, HttpMultipartMode
  * -----------------------------------
  * HttpClient 대신 httpmime 이 있어야 함
@@ -136,6 +137,10 @@ public class HttpClientUtil {
 		 * @return
 		 */
 		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, Object> header) {
+			if ( StringUtils.isBlank(url) ) {
+				throw new NullPointerException("url is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
@@ -234,6 +239,10 @@ public class HttpClientUtil {
 		 * @return
 		 */
 		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
+			if ( StringUtils.isBlank(url) ) {
+				throw new NullPointerException("url is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
@@ -332,6 +341,14 @@ public class HttpClientUtil {
 		 * @return
 		 */
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload) {
+			if ( StringUtils.isBlank(url) ) {
+				throw new NullPointerException("url is null");
+			}
+
+			if ( StringUtils.isBlank(payload) ) {
+				throw new NullPointerException("payload is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
@@ -418,6 +435,18 @@ public class HttpClientUtil {
 		 */
 		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param
 				, String fileParamKey, File file) {
+			if ( StringUtils.isBlank(url) ) {
+				throw new NullPointerException("url is null");
+			}
+
+			if ( StringUtils.isBlank(fileParamKey) ) {
+				throw new NullPointerException("fileParamKey is null");
+			}
+
+			if ( file == null ) {
+				throw new NullPointerException("file is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 

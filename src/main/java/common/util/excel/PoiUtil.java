@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
@@ -57,6 +58,14 @@ public class PoiUtil {
 	 * @return
 	 */
 	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, boolean isDecimal) {
+		if ( file == null ) {
+			throw new NullPointerException("file is null");
+		}
+
+		if ( cellNames == null ) {
+			throw new NullPointerException("cellNames is null");
+		}
+
 		List<Map<String, Object>> resList = new ArrayList<>();
 
 		String sFileName = file.getName();
@@ -169,6 +178,18 @@ public class PoiUtil {
 	 * @return
 	 */
 	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
+		if ( fileName == null ) {
+			throw new NullPointerException("fileName is null");
+		}
+
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new NullPointerException("contentsList is null");
+		}
+
+		if ( cellTitles == null || cellTitles.length == 0 ) {
+			throw new NullPointerException("cellTitles is null");
+		}
+
 		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
 
 		Workbook workbook = null;
@@ -259,6 +280,10 @@ public class PoiUtil {
 	 * @return
 	 */
 	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
+		if ( StringUtils.isBlank(destFilePath) ) {
+			throw new NullPointerException("destFilePath is null");
+		}
+
 		boolean isSuccess = false;
 
 		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);
@@ -288,6 +313,14 @@ public class PoiUtil {
 	 */
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
 			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
+
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if (response == null) {
+			throw new NullPointerException("response is null");
+		}
 
 		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);
 

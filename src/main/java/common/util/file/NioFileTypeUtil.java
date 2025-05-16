@@ -9,6 +9,7 @@ import java.nio.file.spi.FileTypeDetector;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (정규식은 방법이 없는 듯 하구나...)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  * @Description	: 1.7 기반
@@ -33,26 +34,13 @@ public class NioFileTypeUtil {
 	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
 
 
-	/**
-	 * <pre>
-	 * 파일 MIME Type 구하기
-	 *   - Apache Tika 사용
-	 * </pre>
-	 * @param is
-	 * @return
-	 */
-	public static String getFileMimeTypeTika(InputStream is) {
-		String mimeType = "";
-		Tika tika = new Tika();
+	private static class NioFileTypeDetector extends FileTypeDetector {
+		private final Tika tika = new Tika();
 
-		try {
-			mimeType = tika.detect(is);
-
-		} catch (IOException e) {
-			logger.error("", e);
+		@Override
+		public String probeContentType(Path path) throws IOException {
+			return tika.detect(path);
 		}
-
-		return mimeType;
 	}
 
 	/**
@@ -61,6 +49,10 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeType(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		String mimeType = "";
 		Path path = Paths.get(filePath);
 
@@ -82,6 +74,10 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new NullPointerException("filePath is null");
+		}
+
 		String mimeType = "";
 		Path path = Paths.get(filePath);
 
@@ -94,13 +90,30 @@ public class NioFileTypeUtil {
 		return mimeType;
 	}
 
-	private static class NioFileTypeDetector extends FileTypeDetector {
-		private final Tika tika = new Tika();
-
-		@Override
-		public String probeContentType(Path path) throws IOException {
-			return tika.detect(path);
+	/**
+	 * <pre>
+	 * 파일 MIME Type 구하기
+	 *   - Apache Tika 사용
+	 * </pre>
+	 * @param is
+	 * @return
+	 */
+	public static String getFileMimeTypeTika(InputStream is) {
+		if ( is == null ) {
+			throw new NullPointerException("is is null");
 		}
+
+		String mimeType = "";
+		Tika tika = new Tika();
+
+		try {
+			mimeType = tika.detect(is);
+
+		} catch (IOException e) {
+			logger.error("", e);
+		}
+
+		return mimeType;
 	}
 
 	/**
@@ -110,6 +123,14 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static boolean isDocFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new NullPointerException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new NullPointerException("sMimeType is null");
+		}
+
 		String[] sExtArr = {
 			"txt", "rtf", "pdf",
 			"doc", "docx", "ppt", "pptx", "xls", "xlsx",
@@ -138,6 +159,14 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static boolean isImgFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new NullPointerException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new NullPointerException("sMimeType is null");
+		}
+
 		String[] sExtArr = {
 			"jpg", "jpeg", "gif", "png"
 		};
@@ -150,17 +179,19 @@ public class NioFileTypeUtil {
 
 		return listExt.contains(sExtension) && listMime.contains(sMimeType);
 	}
-	
+
 	/**
 	 * 실행 파일 체크
 	 * @param sFileName
 	 * @return
 	 */
 	public static boolean isRunableFile(String sFileName) {
+		if ( StringUtils.isBlank(sFileName) ) {
+			throw new NullPointerException("sFileName is null");
+		}
+
 		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
-		
-		if(sFileName == null) return false;
-		
+
 		return sFileName.matches(RUNABLE_FILE_EXT);
 	}
 

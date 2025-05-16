@@ -20,6 +20,7 @@ import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +88,10 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		public static Map<String, Object> getMap(boolean isSSL, String sUrl, Map<String, Object> header) {
+			if ( StringUtils.isBlank(sUrl) ) {
+				throw new NullPointerException("sUrl is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
@@ -245,6 +250,10 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		public static Map<String, Object> postMap(boolean isSSL, String sUrl, Map<String, Object> header, Map<String, Object> param, Charset charset) {
+			if ( StringUtils.isBlank(sUrl) ) {
+				throw new NullPointerException("sUrl is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
@@ -399,6 +408,14 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String sUrl, Map<String, Object> header, String payload) {
+			if ( StringUtils.isBlank(sUrl) ) {
+				throw new NullPointerException("sUrl is null");
+			}
+
+			if ( StringUtils.isBlank(payload) ) {
+				throw new NullPointerException("payload is null");
+			}
+
 			Map<String, Object> resMap = new HashMap<>();
 			String sResponse = "";
 
