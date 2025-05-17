@@ -17,43 +17,47 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2018. 9. 3.
  * @author 김대광
- * @Description	: Commons lang, beanutils Standard 
+ * @Description	: Commons lang, beanutils Standard
  * <pre>
  * -----------------------------------
  * 개정이력
  * 2018. 9.  3. 김대광	최초작성
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (제시하는 map.computeIfAbsent 는 Java 8인데... Java 8은 일부만 알고 있구나... 어떻게 써야 할지 모르겠다...)
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리
  * </pre>
  */
 public class MapUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MapUtil.class);
 
 	private MapUtil() {
 		super();
 	}
-	
+
 	/**
 	 * Object를 Map<String, Object> 으로 변환
 	 * @param obj
 	 * @param map
 	 */
 	public static Map<String, Object> objectToMapObject(Object obj) {
+		if ( obj == null ) {
+			throw new NullPointerException("obj is null");
+		}
+
 		Map<String, Object> map = new HashMap<>();
 
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
-			
+
 			for (int i=0; i<fields.length; i++) {
 				fields[i].setAccessible(true);
-				
+
 				if ( Collection.class.isAssignableFrom(fields[i].getType() )) {
 					String sArrKey = fields[i].getName();
 					@SuppressWarnings("unchecked")
 					List<Object> objList = (List<Object>) fields[i].get(obj);
-					
+
 					List<Map<String, Object>> mapList = new ArrayList<>();
-					
+
 					for (Object objArr : objList) {
 						Map<String, Object> objMap = objectToMapObject(objArr);
 						mapList.add(objMap);
@@ -65,11 +69,11 @@ public class MapUtil {
 					map.put(sKey, (value != null) ? value:"");
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("", e);
 		}
-		
+
 		return map;
 	}
 
@@ -88,19 +92,23 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static Map<String, String> objectToMap(Object obj) {
+		if ( obj == null ) {
+			throw new NullPointerException("obj is null");
+		}
+
 		Map<String, String> map = null;
-		
+
 		try {
 			map = BeanUtils.describe(obj);
 			map.remove("class");
-			
+
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			logger.error("", e);
 		}
-		
+
 		return map;
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -116,13 +124,21 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static boolean isBlank(Map<String, Object> map, String key) {
+		if ( map == null ) {
+			throw new NullPointerException("map is null");
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key is null");
+		}
+
 		if ( map.get(key) == null ) {
 			return true;
 		} else {
 			return StringUtils.isBlank( String.valueOf(map.get(key)) );
 		}
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -137,17 +153,25 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void notContainsKeyToBlank(Map<String, Object> map, String ... keys) {
+		if ( map == null ) {
+			throw new NullPointerException("map is null");
+		}
+
+		if ( keys == null || keys.length == 0 ) {
+			throw new NullPointerException("keys is null");
+		}
+
 		String key = "";
-		
+
 		for (int i=0; i < keys.length; i++) {
 			key = keys[i];
-		
+
 			if ( !map.containsKey(key) ) {
 				map.put(key, "");
 			}
 		}
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -163,16 +187,20 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void nullToBlank(Map<String, Object> map) {
+		if ( map == null ) {
+			throw new NullPointerException("map is null");
+		}
+
 		String key = "";
-		
+
 		Iterator<String> it = map.keySet().iterator();
 		while (it.hasNext()) {
 			key = it.next();
-			
+
 			map.computeIfAbsent(key, k -> "");
 		}
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -186,16 +214,20 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void spaceToBlank(Map<String, Object> map) {
+		if ( map == null ) {
+			throw new NullPointerException("map is null");
+		}
+
 		String key = "";
-		
+
 		Iterator<String> it = map.keySet().iterator();
 		while (it.hasNext()) {
 			key = it.next();
-			
+
 			if (" ".equals( String.valueOf(map.get(key)) )) {
 				map.put(key, "");
 			}
 		}
 	}
-	
+
 }

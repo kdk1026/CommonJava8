@@ -5,6 +5,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.configuration2.INIConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
@@ -60,20 +61,23 @@ public class CommonsIni {
 		try {
 			String sPath = "";
 			String webRootPath = "";
+			HttpSession session = null;
 
 			switch (type) {
 			case 0:
 				sPath = CommonsIni.class.getResource(PROP_CLASS_PATH + iniFileName).getPath();
 				break;
 			case 1:
-				webRootPath = request.getSession().getServletContext().getRealPath("/");
+				session = request.getSession();
+				webRootPath = session.getServletContext().getRealPath("/");
 				sPath = webRootPath + PROP_WEB_INF_PATH + iniFileName;
 				break;
 			default:
 				if ( request == null ) {
 					sPath = iniFileName;
 				} else {
-					webRootPath = request.getSession().getServletContext().getRealPath("/");
+					session = request.getSession();
+					webRootPath = session.getServletContext().getRealPath("/");
 					sPath = webRootPath + iniFileName;
 				}
 				break;

@@ -13,7 +13,7 @@ import common.util.ConvertCaseUtil;
  */
 @SuppressWarnings("rawtypes")
 public class ResultSetMap extends ListOrderedMap {
-	
+
 	public ResultSetMap() {
 		super();
 	}
@@ -23,35 +23,75 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object put(Object key, Object value) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( value == null ) {
+			throw new NullPointerException("value is null");
+		}
+
 		return super.put(key.toString().toLowerCase(), value);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Object putCamel(Object key, Object value) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( value == null ) {
+			throw new NullPointerException("value is null");
+		}
+
 		return super.put(ConvertCaseUtil.camelCase(key.toString()), value);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Object putBasic(Object key, Object value) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
+		if ( value == null ) {
+			throw new NullPointerException("value is null");
+		}
+
 		return super.put(key, value);
 	}
 
 	public String getString(Object key) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
 		return super.containsKey(key) ? String.valueOf(super.get(key)) : "";
 	}
 
 	public int getInteger(Object key) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
 		return Integer.parseInt(String.valueOf(super.get(key)));
 	}
-	
+
 	public boolean getBoolean(Object key) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
 		return Boolean.parseBoolean(String.valueOf(super.get(key)));
 	}
-	
+
 	public long getLong(Object key) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
 		return Long.parseLong(String.valueOf(super.get(key)));
 	}
-	
+
 	/**
 	 * <pre>
 	 * DB 타입이 NUMBER 인 경우
@@ -61,11 +101,15 @@ public class ResultSetMap extends ListOrderedMap {
 	 * @return
 	 */
 	public int getNumber(Object key) {
+		if ( key == null ) {
+			throw new NullPointerException("key is null");
+		}
+
 		int nRet = 0;
 		if ( super.containsKey(key) && super.get(key) != null ) {
 			BigDecimal bd = (BigDecimal) super.get(key);
 			nRet = bd.intValue();
-			
+
 		}
 		return nRet;
 	}

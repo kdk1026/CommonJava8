@@ -6,12 +6,12 @@ package common.util.string;
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
  * </pre>
- * 
+ *
  * commons.lang 라이브러리 사용 권장
  * @author 김대광
  */
 public class BasicStringUtils {
-	
+
 	private BasicStringUtils() {
 		super();
 	}
@@ -22,7 +22,7 @@ public class BasicStringUtils {
 	 * @return
 	 */
 	public static boolean isBlank(final String str) {
-		return (str == null) || (str.trim().length() == 0);
+		return (str == null) || (str.trim().isEmpty());
 	}
 
     /**
@@ -42,9 +42,17 @@ public class BasicStringUtils {
 	 * @return
 	 */
 	public static boolean isContins(final String str, final String validChars) {
+		if ( isBlank(str) ) {
+			throw new NullPointerException("str");
+		}
+
+		if ( isBlank(validChars) ) {
+			throw new NullPointerException("validChars");
+		}
+
 		return str.indexOf(validChars) > -1;
 	}
-	
+
 	/**
 	 * 좌측에 자리수 만큼 대체 문자 채우기
 	 * @param str
@@ -53,9 +61,21 @@ public class BasicStringUtils {
 	 * @return
 	 */
 	public static String leftPad(final String str, final int size, char ch) {
+		if ( isBlank(str) ) {
+			throw new NullPointerException("str");
+		}
+
+		if ( size <= 0 ) {
+			throw new IllegalArgumentException("size");
+		}
+
+		if ( ch == 0 ) {
+			throw new IllegalArgumentException("ch");
+		}
+
 		return (size > str.length()) ? leftPad(ch + str, size, ch) : str;
 	}
-	
+
 	/**
 	 * 우측에 자리수 만큼 대체 문자 채우기
 	 * @param str
@@ -64,33 +84,53 @@ public class BasicStringUtils {
 	 * @return
 	 */
 	public static String rightPad(final String str, final int size, char ch) {
+		if ( isBlank(str) ) {
+			throw new NullPointerException("str");
+		}
+
+		if ( size <= 0 ) {
+			throw new IllegalArgumentException("size");
+		}
+
+		if ( ch == 0 ) {
+			throw new IllegalArgumentException("ch");
+		}
+
 		return (size > str.length()) ? rightPad(str + ch, size, ch) : str;
 	}
-	
+
 	/**
 	 * String To Hex
 	 * @param str
 	 * @return
 	 */
 	public static String encodeHex(final String str) {
+		if ( isBlank(str) ) {
+			throw new NullPointerException("str");
+		}
+
 		char[] chars = str.toCharArray();
 		StringBuilder sb = new StringBuilder();
-		
+
 	    for (int i = 0; i < chars.length; i++) {
 	    	sb.append(Integer.toHexString(chars[i]));
 	    }
 	    return sb.toString();
 	}
-	
+
 	/**
 	 * Hex To String
 	 * @param str
 	 * @return
 	 */
 	public static String decodeHex(final String str) {
+		if ( isBlank(str) ) {
+			throw new NullPointerException("str");
+		}
+
 		StringBuilder sb = new StringBuilder();
 		String s = "";
-		
+
 		for (int i = 0; i < str.length(); i++) {
 			s = str.substring(i, i + 2);
 			sb.append((char) Integer.parseInt(s, 16));

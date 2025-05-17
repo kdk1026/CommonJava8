@@ -2,22 +2,24 @@ package common.util.string;
 
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * <pre>
  * 개정이력
  * -----------------------------------
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
 public class StringUtilsSub {
-	
+
 	private StringUtilsSub() {
 		super();
 	}
-	
+
 	/**
 	 * UUID 문자열에서 '-'를 제외한 32자리 문자열 반환
 	 * @return
@@ -33,6 +35,14 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String join(String delim, String... args) {
+		if ( StringUtils.isBlank(delim) ) {
+			throw new NullPointerException("delim is null");
+		}
+
+		if ( args == null || args.length == 0 ) {
+			throw new NullPointerException("args is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 		for(int i=0; i < args.length; i++) {
 			sb.append(args[i]);
@@ -42,15 +52,19 @@ public class StringUtilsSub {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 캐리지 리턴, 라인피드 문자열을 <br/> 태그로 변환
 	 * @param str
 	 * @return
 	 */
 	public static String replaceCRLFToHtmlTag(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		final String sCr = "<br/>";
-		
+
 		return str.replace("\r", sCr).replace("\n", sCr).replace("\r\n", sCr);
 	}
 
@@ -60,9 +74,13 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String replaceHtmlTagToCRLF(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		return str.replace("<br>", "\r\n").replace("<br/>", "\r\n");
 	}
-	
+
 	/**
 	 * StringEscapeUtils.escapeHtml4 권장
 	 * XSS 공격 대상 HTML 특수문자를 아스키 코드로 변환
@@ -70,6 +88,10 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String escapeXss(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		return str.replace("\"", "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "\\'").replace("\"", "\\\"");
 	}
 
@@ -80,9 +102,13 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String unescapeXss(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		return str.replace("&quot;", "\"").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("\\'", "'").replace("\\\"", "\"");
 	}
-	
+
 	/**
 	 * <pre>
 	 * 별점 반환
@@ -93,6 +119,10 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String getStarRating(String strDoubleScore) {
+		if ( StringUtils.isBlank(strDoubleScore) ) {
+			throw new NullPointerException("strDoubleScore is null");
+		}
+
 		String strStarRating = "";
 		double dScore = Double.parseDouble(strDoubleScore);
 		dScore = Math.round(dScore * 10.0) / 10.0;
@@ -117,13 +147,17 @@ public class StringUtilsSub {
 	 * @return
 	 */
 	public static String space(int nSize) {
+		if ( nSize < 0 ) {
+			throw new IllegalArgumentException("nSize is negative");
+		}
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		for (int i=0; i < nSize; i++) {
 			sb.append(" ");
 		}
-		
+
 		return sb.toString();
 	}
-	
+
 }

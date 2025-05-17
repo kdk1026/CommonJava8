@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,25 +22,33 @@ import org.slf4j.LoggerFactory;
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (setAccessible 지워? 테스트 했더니 private 접근 불가라잖니... 음 그래... 해결책은 제시를 안했구나 ㅡㅡ)
  * 		setReqParamToObject, setHttpResponse 는 웹 환경에서... 포함시켜서 실행했더니 JNI 에러 뜨네...
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
 public class BasicObjectUtil {
-	
+
 	private BasicObjectUtil() {
 		super();
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
-	
+
 	/**
-	 * Object의 Field가 Blank인지 체크 
+	 * Object의 Field가 Blank인지 체크
 	 * @param obj
 	 * @param fieldName
 	 * @return
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
+		if ( StringUtils.isBlank(fieldName) ) {
+			throw new NullPointerException("FieldName is null");
+		}
+
 		String str = null;
 		try {
 			Field field = obj.getClass().getDeclaredField(fieldName);
@@ -51,22 +60,26 @@ public class BasicObjectUtil {
 		}
 		return (str == null) || (str.trim().length() == 0);
 	}
-	
+
 	/**
-	 * Object의 Field명 추출 
+	 * Object의 Field명 추출
 	 * @param obj
 	 * @return
 	 * @since 1.7
 	 */
 	public static List<String> getFieldNames(Object obj) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		List<String> list = new ArrayList<>();
-		
+
 		Field[] fields = obj.getClass().getDeclaredFields();
 		for (Field f : fields) {
 			f.setAccessible(true);
 			list.add(f.getName());
 		}
-		
+
 		return list;
 	}
 
@@ -77,6 +90,10 @@ public class BasicObjectUtil {
 	 * @since 1.7
 	 */
 	public static Map<String, Object> convertObjectToMap(Object obj) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		Map<String, Object> commandMap = new HashMap<>();
 
 		try {
@@ -85,7 +102,7 @@ public class BasicObjectUtil {
 				fields[i].setAccessible(true);
 				String key = fields[i].getName();
 				Object value = fields[i].get(obj);
-				
+
 				if ( !key.equals("serialVersionUID") ) {
 					commandMap.put(key, (value != null) ? value:"");
 				}
@@ -95,7 +112,7 @@ public class BasicObjectUtil {
 		}
 		return commandMap;
 	}
-	
+
 	/**
 	 * 요청 파라미터를 해당 Object에 설정
 	 * @param request
@@ -103,6 +120,14 @@ public class BasicObjectUtil {
 	 * @return
 	 */
 	public static Object setReqParamToObject(HttpServletRequest request, Object obj) {
+		if ( request == null ) {
+			throw new NullPointerException("Request is null");
+		}
+
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		String sKey = "";
 		String sMethodStr = "";
 		Enumeration<?> params = request.getParameterNames();
@@ -124,7 +149,7 @@ public class BasicObjectUtil {
 		}
 		return obj;
 	}
-	
+
 	/**
 	 * Object를 Http Response에 설정
 	 * @param obj
@@ -132,6 +157,14 @@ public class BasicObjectUtil {
 	 * @return
 	 */
 	public static void setHttpResponse(Object obj, HttpServletResponse response) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
+		if ( response == null ) {
+			throw new NullPointerException("Response is null");
+		}
+
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
 			for (int i=0; i<fields.length; i++) {

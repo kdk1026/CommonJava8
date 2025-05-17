@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Vector;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import com.jcraft.jsch.ChannelSftp.LsEntry;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 
 /**
  * <pre>
@@ -55,6 +57,22 @@ public class SftpClientUtil {
 	 * @throws JSchException
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) throws JSchException {
+		if ( StringUtils.isBlank(sHost) ) {
+			throw new NullPointerException("sHost is null");
+		}
+
+		if ( nPort <= 0 ) {
+			throw new NullPointerException("nPort is null");
+		}
+
+		if ( StringUtils.isBlank(sUsername) ) {
+			throw new NullPointerException("sUsername is null");
+		}
+
+		if ( StringUtils.isBlank(sPassword) ) {
+			throw new NullPointerException("sPassword is null");
+		}
+
 		boolean isConnected = false;
 
 		JSch jsch = new JSch();
@@ -96,15 +114,24 @@ public class SftpClientUtil {
 	 *
 	 * @param sDestPath
 	 * @param file
+	 * @throws Exception
 	 */
 	public void upload(String sDestPath, File file) throws Exception {
-		try (FileInputStream fis = new FileInputStream(file)) {
+		if ( StringUtils.isBlank(sDestPath) ) {
+			throw new NullPointerException("sDestPath is null");
+		}
+
+		if ( file == null ) {
+			throw new NullPointerException("file is null");
+		}
+
+		try ( FileInputStream fis = new FileInputStream(file) ) {
 			channelSftp.cd(sDestPath);
 			this.delete(sDestPath, file);
 			channelSftp.put(fis, file.getName());
 
 		} catch (Exception e) {
-			logger.error("", e);
+			logger.error("SFTP Upload Error", e);
 			throw e;
 		}
 	}
@@ -114,24 +141,27 @@ public class SftpClientUtil {
 	 *
 	 * @param sDestPath
 	 * @param file
+	 * @throws SftpException
 	 */
-	public void delete(String sDestPath, File file) throws Exception {
-		try {
-			@SuppressWarnings("unchecked")
-			Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
+	public void delete(String sDestPath, File file) throws SftpException {
+		if ( StringUtils.isBlank(sDestPath) ) {
+			throw new NullPointerException("sDestPath is null");
+		}
 
-			String sFileNm = "";
-			for (LsEntry le : lsVec) {
-				sFileNm = le.getFilename();
+		if ( file == null ) {
+			throw new NullPointerException("file is null");
+		}
 
-				if (sFileNm.equals(file.getName())) {
-					channelSftp.rm(file.getAbsolutePath());
-				}
+		@SuppressWarnings("unchecked")
+		Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
+
+		String sFileNm = "";
+		for (LsEntry le : lsVec) {
+			sFileNm = le.getFilename();
+
+			if (sFileNm.equals(file.getName())) {
+				channelSftp.rm(file.getAbsolutePath());
 			}
-
-		} catch (Exception e) {
-			logger.error("", e);
-			throw e;
 		}
 	}
 
@@ -140,19 +170,11 @@ public class SftpClientUtil {
 	 *
 	 * @param sDestPath
 	 * @return
+	 * @throws SftpException
 	 */
-	@SuppressWarnings("unchecked")
-	public Vector<LsEntry> ls(String sDestPath) throws Exception {
-		Vector<LsEntry> lsVec = null;
-
-		try {
-			lsVec = channelSftp.ls(sDestPath);
-
-		} catch (Exception e) {
-			logger.error("", e);
-			throw e;
-		}
-
+	public Vector<LsEntry> ls(String sDestPath) throws SftpException {
+		@SuppressWarnings("unchecked")
+		Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
 		return lsVec;
 	}
 
@@ -163,16 +185,14 @@ public class SftpClientUtil {
 	 * @param sNewPath
 	 * @return
 	 */
-	public boolean rename(String sOldPath, String sNewPath) throws Exception {
+	public boolean rename(String sOldPath, String sNewPath) {
 		boolean isSuccess = false;
 
 		try {
 			channelSftp.rename(sOldPath, sNewPath);
 			isSuccess = true;
-
-		} catch (Exception e) {
+		} catch (SftpException e) {
 			logger.error("", e);
-			throw e;
 		}
 
 		return isSuccess;

@@ -4,6 +4,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class CookieUtilVer2 {
 
 	private CookieUtilVer2() {
@@ -21,6 +23,22 @@ public class CookieUtilVer2 {
 	 * @param domain
 	 */
 	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, boolean isUseJs, String domain) {
+		if ( response == null ) {
+			throw new NullPointerException("response is null");
+		}
+
+		if ( StringUtils.isBlank(name) ) {
+			throw new NullPointerException("name is null");
+		}
+
+		if ( StringUtils.isBlank(value) ) {
+			throw new NullPointerException("value is null");
+		}
+
+		if ( expiry < 0 ) {
+			throw new IllegalArgumentException("expiry is negative");
+		}
+
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(expiry);
 		cookie.setPath("/");
@@ -31,7 +49,7 @@ public class CookieUtilVer2 {
 			cookie.setHttpOnly(true);
 		}
 
-		if ( (domain != null) && (domain.trim().length() > 0) ) {
+		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
 		}
 
@@ -45,6 +63,14 @@ public class CookieUtilVer2 {
 	 * @return
 	 */
 	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if ( StringUtils.isBlank(cookieName) ) {
+			throw new NullPointerException("cookieName is null");
+		}
+
 		Cookie cookie = null;
 		Cookie[] cookies = request.getCookies();
 
@@ -67,6 +93,14 @@ public class CookieUtilVer2 {
 	 * @return
 	 */
 	public static String getCookieValue(HttpServletRequest request, String cookieName) {
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if ( StringUtils.isBlank(cookieName) ) {
+			throw new NullPointerException("cookieName is null");
+		}
+
 		Cookie cookie = getCookie(request, cookieName);
 		return (cookie != null) ? cookie.getValue() : "";
 	}
@@ -77,6 +111,14 @@ public class CookieUtilVer2 {
 	 * @param response
 	 */
 	public static void removeCookies(HttpServletRequest request, HttpServletResponse response) {
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if ( response == null ) {
+			throw new NullPointerException("response is null");
+		}
+
 		Cookie[] cookies = request.getCookies();
 
 		if (cookies != null && cookies.length > 0) {
@@ -97,6 +139,14 @@ public class CookieUtilVer2 {
 	 * @param domain
 	 */
 	public static void removeCookie(HttpServletResponse response, String cookieName, String domain) {
+		if ( response == null ) {
+			throw new NullPointerException("response is null");
+		}
+
+		if ( StringUtils.isBlank(cookieName) ) {
+			throw new NullPointerException("cookieName is null");
+		}
+
 		Cookie cookie = new Cookie(cookieName, null);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
@@ -109,7 +159,7 @@ public class CookieUtilVer2 {
 			cookie.setHttpOnly(true);
 		}
 
-		if ( (domain != null) && (domain.trim().length() > 0) ) {
+		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
 		}
 
@@ -122,6 +172,14 @@ public class CookieUtilVer2 {
 	 * @param cookieName
 	 */
 	public static boolean isExist(HttpServletRequest request, String cookieName) {
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if ( StringUtils.isBlank(cookieName) ) {
+			throw new NullPointerException("cookieName is null");
+		}
+
 		String cookieValue = getCookieValue(request, cookieName);
 		return !"".equals(cookieValue);
 	}
@@ -132,6 +190,14 @@ public class CookieUtilVer2 {
 	 * @param cookieName
 	 */
 	public static int getCookieMaxAge(HttpServletRequest request, String cookieName) {
+		if ( request == null ) {
+			throw new NullPointerException("request is null");
+		}
+
+		if ( StringUtils.isBlank(cookieName) ) {
+			throw new NullPointerException("cookieName is null");
+		}
+
 		Cookie cookie = getCookie(request, cookieName);
 		return (cookie != null) ? cookie.getMaxAge() : 0;
 	}

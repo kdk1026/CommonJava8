@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +24,10 @@ public class JacksonXmlUtil {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml) {
+		if ( StringUtils.isBlank(xml) ) {
+			throw new NullPointerException("xml is null");
+		}
+
 		Map<String, Object> map = new HashMap<>();
 
 		XmlMapper xmlMapper = new XmlMapper();
@@ -37,6 +42,10 @@ public class JacksonXmlUtil {
 	}
 	@SuppressWarnings("unchecked")
 	public static List<Map<String, Object>> converterXmlStrToMapList(String xml) {
+		if ( StringUtils.isBlank(xml) ) {
+			throw new NullPointerException("xml is null");
+		}
+
 		List<Map<String, Object>> list = new ArrayList<>();
 
 		XmlMapper xmlMapper = new XmlMapper();
@@ -51,6 +60,10 @@ public class JacksonXmlUtil {
 	}
 
 	public static String convertMapToXmlStr(Map<String, Object> map) {
+		if ( map == null || map.isEmpty() ) {
+			throw new NullPointerException("map is null");
+		}
+
 		JacksonXmlModule xmlModule = new JacksonXmlModule();
 		xmlModule.setDefaultUseWrapper(false);
 

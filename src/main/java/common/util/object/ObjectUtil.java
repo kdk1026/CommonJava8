@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @since 2018. 9. 3.
  * @author 김대광
- * @Description	: Commons lang, beanutils Standard 
+ * @Description	: Commons lang, beanutils Standard
  * <pre>
  * -----------------------------------
  * 개정이력
@@ -27,17 +27,17 @@ import org.slf4j.LoggerFactory;
  * </pre>
  */
 public class ObjectUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
-	
+
 	private ObjectUtil() {
 		super();
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
-	 * Object의 Field가 Blank인지 체크 
+	 * Object의 Field가 Blank인지 체크
 	 * </pre>
 	 * @param obj
 	 * @param fieldName
@@ -50,23 +50,31 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
+		if ( StringUtils.isBlank(fieldName) ) {
+			throw new NullPointerException("FieldName is null");
+		}
+
 		Field field = FieldUtils.getField(obj.getClass(), fieldName, true);
-		
+
 		String str = "";
 		try {
 			str = String.valueOf(field.get(obj));
-			
+
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
-		
+
 		return StringUtils.isBlank(str);
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
-	 * Object의 Field명 추출 
+	 * Object의 Field명 추출
 	 * </pre>
 	 * @param obj
 	 * @return
@@ -78,13 +86,17 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static List<String> getFieldNames(Object obj) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		List<String> list = new ArrayList<>();
-		
+
 		List<Field> fields = FieldUtils.getAllFieldsList(obj.getClass());
 		for (Field f : fields) {
 			list.add(f.getName());
 		}
-		
+
 		return list;
 	}
 
@@ -95,7 +107,7 @@ public class ObjectUtil {
 	 * </pre>
 	 * @param request
 	 * @param obj
-	 * @since 1.7 
+	 * @since 1.7
 	 * <pre>
 	 * -----------------------------------
 	 * 개정이력
@@ -103,9 +115,17 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void paramToObject(HttpServletRequest request, Object obj) {
+		if ( request == null ) {
+			throw new NullPointerException("Request is null");
+		}
+
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		try {
 			BeanUtils.populate(obj, request.getParameterMap());
-			
+
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("", e);
 		}
@@ -125,14 +145,22 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void mapToObject(Map<String, Object> map, Object obj) {
+		if ( map == null ) {
+			throw new NullPointerException("Map is null");
+		}
+
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		try {
 			BeanUtils.populate(obj, map);
-			
+
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("", e);
 		}
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -147,11 +175,19 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void mapToStruct(Map<String, Object> map, Object obj) {
+		if ( map == null ) {
+			throw new NullPointerException("Map is null");
+		}
+
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
 		String key = "";
 		String name = "";
 		Field[] fields = null;
 		Class<?> cls = null;
-		
+
 		Iterator<String> it = map.keySet().iterator();
 		while ( it.hasNext() ) {
 			key = it.next();
@@ -162,18 +198,18 @@ public class ObjectUtil {
 
 				for (Field f : fields) {
 					name = f.getName();
-					
+
 					if ( key.equals(name) ) {
 						cls.getField(name).set(obj, (map.get(key) != null) ? map.get(key) : "");
 					}
 				}
-				
+
 			} catch (Exception e) {
 				logger.error("", e);
 			}
 		}
 	}
-	
+
 	/**
 	 * @Description
 	 * <pre>
@@ -189,6 +225,14 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static int getByteLength(Object obj, String sEncoding) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("Encoding is null");
+		}
+
 		int nByteLen = 0;
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
@@ -220,6 +264,18 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static int getByteLength(Object obj, String sFieldName, String sEncoding) {
+		if ( obj == null ) {
+			throw new NullPointerException("Object is null");
+		}
+
+		if ( StringUtils.isBlank(sFieldName) ) {
+			throw new NullPointerException("FieldName is null");
+		}
+
+		if ( StringUtils.isBlank(sEncoding) ) {
+			throw new NullPointerException("Encoding is null");
+		}
+
 		int nByteLen = 0;
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
@@ -233,5 +289,5 @@ public class ObjectUtil {
 		}
 		return nByteLen;
 	}
-	
+
 }

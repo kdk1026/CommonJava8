@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,11 +36,13 @@ public class NewPropertiesUtil {
 	}
 
 	public Properties getProperties(String propFileName) {
+		if ( StringUtils.isBlank(propFileName) ) {
+			throw new NullPointerException("propFileName must be required");
+		}
+
 		Properties prop = new Properties();
 
-		InputStream is = PropertiesUtil.class.getClassLoader().getResourceAsStream(propFileName);
-
-		try {
+		try ( InputStream is = PropertiesUtil.class.getClassLoader().getResourceAsStream(propFileName) ) {
 			prop.load(is);
 		} catch (IOException e) {
 			logger.error("", e);
@@ -49,6 +52,10 @@ public class NewPropertiesUtil {
 	}
 
 	public String getProperties(String propFileName, String key) {
+		if ( StringUtils.isBlank(key) ) {
+			throw new NullPointerException("key must be required");
+		}
+
 		Properties prop = this.getProperties(propFileName);
 		return prop.getProperty(key);
 	}

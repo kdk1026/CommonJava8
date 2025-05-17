@@ -4,12 +4,14 @@ import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 /**
@@ -50,6 +52,22 @@ public class SshClientUtil {
 	 * @return
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) {
+		if ( StringUtils.isBlank(sHost) ) {
+			throw new NullPointerException("sHost is null");
+		}
+
+		if ( nPort <= 0 ) {
+			throw new NullPointerException("nPort is null");
+		}
+
+		if ( StringUtils.isBlank(sUsername) ) {
+			throw new NullPointerException("sUsername is null");
+		}
+
+		if ( StringUtils.isBlank(sPassword) ) {
+			throw new NullPointerException("sPassword is null");
+		}
+
 		boolean isConnected = false;
 
 		JSch jsch = new JSch();
@@ -93,6 +111,10 @@ public class SshClientUtil {
 	 * @throws Exception
 	 */
 	public String runExecRet(String sCommand) throws Exception {
+		if ( StringUtils.isBlank(sCommand) ) {
+			throw new NullPointerException("sCommand is null");
+		}
+
 		String sRet = "";
 
 		try {
@@ -123,16 +145,15 @@ public class SshClientUtil {
 	 * 명령어 수행
 	 *
 	 * @param sCommand
+	 * @throws JSchException
 	 */
-	public void runExec(String sCommand) throws Exception {
-		try {
-			channelExec.setCommand(sCommand);
-			channelExec.connect();
-
-		} catch (Exception e) {
-			logger.error("", e);
-			throw e;
+	public void runExec(String sCommand) throws JSchException {
+		if ( StringUtils.isBlank(sCommand) ) {
+			throw new NullPointerException("sCommand is null");
 		}
+
+		channelExec.setCommand(sCommand);
+		channelExec.connect();
 	}
 
 	/**
