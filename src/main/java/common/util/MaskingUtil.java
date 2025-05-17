@@ -338,4 +338,90 @@ public class MaskingUtil {
 	    return maskedAccountNumber;
 	}
 
+	/**
+	 * <pre>
+	 * 생년월일 마스킹
+	 *  - 년도 마스킹
+	 * </pre>
+	 * @param birthdate
+	 * @return
+	 */
+	public String maskBirthdate(String birthdate) {
+		// 입력값에 '-' 포함 여부 확인
+        boolean hasHyphen = birthdate.contains("-");
+
+		// 숫자만 추출
+		String digitsOnly = birthdate.replaceAll("[^0-9]", "");
+
+		// 올바른 형식인지 확인
+        if (digitsOnly.length() == 8) {
+        	String maskedDate = "****" + digitsOnly.substring(4, 6) + digitsOnly.substring(6, 8);
+            return hasHyphen ? maskedDate.substring(0, 4) + "-" + maskedDate.substring(4, 6) + "-" + maskedDate.substring(6, 8) : maskedDate;
+        } else {
+        	return "";
+        }
+    }
+
+	/**
+	 * <pre>
+	 * IP 주소 마스킹
+	 *  - 뒤 3자리 마스킹
+	 * </pre>
+	 * @param ipAddress
+	 * @return
+	 */
+	public static String maskIPAddress(String ipAddress) {
+        // IPv4 형식 확인
+        if (ipAddress.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
+            return ipAddress.replaceAll("(\\d+\\.\\d+\\.\\d+\\.).*", "$1***");
+        } else {
+            return "";
+        }
+    }
+
+	/**
+	 * <pre>
+	 * IPv6 주소 마스킹
+	 *  - 뒤 2개 블록 마스킹
+	 * </pre>
+	 * @param ipv6Address
+	 * @return
+	 */
+	public String maskIPv6Address(String ipv6Address) {
+        // Scope ID 제거
+        String cleanAddress = ipv6Address.split("%")[0];
+
+        // IPv6 정규식 (축약형 포함)
+        String ipv6Regex = "(([0-9a-fA-F]{1,4}:){1,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))";
+
+
+        // IPv6 형식 확인
+        if (cleanAddress.matches(ipv6Regex)) {
+            return cleanAddress.replaceAll("(:[0-9a-fA-F]{1,4}){2}$", ":****:****");
+        } else {
+            return "";
+        }
+    }
+
+	/**
+	 * <pre>
+	 * 학번 마스킹
+	 *  - 입학 연도 외 마스킹
+	 * </pre>
+	 * @param studentID
+	 * @return
+	 */
+	public String maskStudentID(String studentID) {
+        // 숫자만 포함된 학번 (예: 202312345)
+        if (studentID.matches("\\d{8,9}")) {
+            return studentID.substring(0, 4) + "****";
+        }
+        // 문자와 숫자가 섞인 학번 (예: 23AB1234)
+        else if (studentID.matches("\\d{2}[A-Za-z]{2}\\d{4}")) {
+            return studentID.substring(0, 2) + "**" + studentID.substring(4, 8);
+        }
+
+        return "";
+    }
+
 }
