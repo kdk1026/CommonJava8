@@ -3,6 +3,7 @@ package common.util;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +35,22 @@ public class Base64Util {
 	}
 
 	public String encode(String text) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new NullPointerException("text is null");
+		}
+
 		return Base64.getEncoder().encodeToString(text.getBytes());
 	}
 
 	public String encode(String text, String charset) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new NullPointerException("text is null");
+		}
+
+		if ( StringUtils.isBlank(charset) ) {
+			throw new NullPointerException("charset is null");
+		}
+
 		try {
 			return Base64.getEncoder().encodeToString(text.getBytes(charset));
 		} catch (UnsupportedEncodingException e) {
@@ -47,11 +60,23 @@ public class Base64Util {
 	}
 
 	public String decode(String encodedText) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new NullPointerException("encodedText is null");
+		}
+
 		byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes());
 		return new String(textBytes);
 	}
 
 	public String decode(String encodedText, String charset) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new NullPointerException("encodedText is null");
+		}
+
+		if ( StringUtils.isBlank(charset) ) {
+			throw new NullPointerException("charset is null");
+		}
+
 		try {
 			byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes(charset));
 			return new String(textBytes);

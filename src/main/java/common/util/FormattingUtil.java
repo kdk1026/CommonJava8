@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * <pre>
  * 개정이력
@@ -12,7 +14,7 @@ import java.util.regex.Pattern;
  * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : replaceAll -> replace , 정규식 관련은 어쩔 수가 없다...)
  * 			마음같아서는 FormattingUtil, MaskingUtil 분리하고 싶은데... 지금은 너무 귀찮구나...
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
@@ -30,12 +32,16 @@ public class FormattingUtil {
 	 * 전환번호 포맷
 	 *   - 0x(x)-xxx(x)-xxxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makePhoneNumber(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sPattern = "^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$";
 		if (!str.matches(sPattern)) {
 			return null;
@@ -48,12 +54,16 @@ public class FormattingUtil {
 	 * 전환번호 마스킹 포맷
 	 *   - 0x(x)-***(*)-xxxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makePhoneNumberMasking(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		Pattern pattern = Pattern
 				.compile("^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$");
 
@@ -84,12 +94,16 @@ public class FormattingUtil {
 	 * 휴대폰 번호 포맷
 	 *   - 01x-xxx(x)-xxxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeCellPhoneNumber(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sPattern = "^(01[016789])-?(\\d{3,4})-?(\\d{4})$";
 		if (!str.matches(sPattern)) {
 			return null;
@@ -102,12 +116,16 @@ public class FormattingUtil {
 	 * 휴대폰 번호 마스킹 포맷
 	 *   - 01x-***(*)-xxxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeCellPhoneNumberMasking(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		Pattern pattern = Pattern.compile("^(01[016789])-?(\\d{3,4})-?(\\d{4})$");
 
 		Matcher matcher = pattern.matcher(str);
@@ -137,12 +155,16 @@ public class FormattingUtil {
 	 * 사업자 등록번호 포맷
 	 *   - xxx-xx-xxxxx
 	 * </pre>
-	 * 
+	 *
 	 * @param sBusinessRegNum
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeBusinessRegNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sPattern = "^(\\d{3})-?(\\d{2})-?(\\d{5})$";
 		if (!str.matches(sPattern)) {
 			return null;
@@ -155,12 +177,16 @@ public class FormattingUtil {
 	 * 날짜 포맷
 	 *   - YYYY-MM-DD
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeYYYYMMDD(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sPattern = "^([0-9]{4})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$";
 		if (!str.matches(sPattern)) {
 			return null;
@@ -173,13 +199,17 @@ public class FormattingUtil {
 	 * 생년월일 마스킹 포맷
 	 * 	- ****-**-**, YY**-**-**
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isShowHundred
 	 *  @param isHyphen
 	 * @return
 	 */
 	public static String makeBirthdayMasking(String str, boolean isShowHundred, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		Pattern pattern = Pattern
 				.compile("^([0-9]{2})([0-9]{2})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$");
 
@@ -212,7 +242,7 @@ public class FormattingUtil {
 	 * 수치를 금액 표현으로 변환
 	 *   - #,###
 	 * </pre>
-	 * 
+	 *
 	 * @param num
 	 * @return
 	 */
@@ -223,11 +253,15 @@ public class FormattingUtil {
 
 	/**
 	 * 숫자금액 문자열을 한글 금액 표현으로 변환
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String convertMoneyHangul(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sMoney = str.replace(",", "");
 
 		String[] asHanNum1 = { "", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구" };
@@ -265,11 +299,15 @@ public class FormattingUtil {
 	 * 이름 마스킹 포맷
 	 *   - O*, O*O, O**O
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String makeNameMasking(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		int nLen = str.length();
 		String sPattern = "";
 		switch (nLen) {
@@ -323,11 +361,15 @@ public class FormattingUtil {
 	 * IPv4 마스킹 포맷
 	 *   - xxx.xxx.***.xxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String makeIpv4AddrMasking(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		String[] sAddr = str.split("\\.");
@@ -358,11 +400,15 @@ public class FormattingUtil {
 	 * IPv6 마스킹 포맷
 	 *   - xxx::xxx:xxx:***:xxx
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String makeIpv6AddrMasking(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		String[] sAddr = str.split(":");
@@ -394,11 +440,15 @@ public class FormattingUtil {
 
 	/**
 	 * 비밀번호 마스킹
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String passwordMasking(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		char[] c = new char[str.length()];
 		Arrays.fill(c, '*');
 		return String.valueOf(c);
@@ -410,12 +460,16 @@ public class FormattingUtil {
 	 *   - (16자리) ####-####-####-####
 	 *   - (15자리) ####-######-#####
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeCardNo(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sPattern = "";
 		String sFormat = "";
 
@@ -447,20 +501,24 @@ public class FormattingUtil {
 	 *   - (16자리) ####-##**-****-####
 	 *   - (15자리) ####-##****-**###
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 * @param isHyphen
 	 * @return
 	 */
 	public static String makeCardNoMasking(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sCardNo = "";
 		StringBuilder sb = new StringBuilder();
-		
+
 		Pattern pattern = null;
 		Matcher matcher = null;
 		String sMaskingPattern = "";
 		String sFormat = "";
-		
+
 		String sTarget = "";
 		char[] c1 = null;
 		char[] c2 = null;
@@ -468,60 +526,60 @@ public class FormattingUtil {
 		switch (str.length()) {
 		case 16:
 			pattern = Pattern.compile("^(\\d{4})-?(\\d{2})(\\d{2})-?(\\d{4})-?(\\d{4})$");
-			
+
 			matcher = pattern.matcher(str);
 			if (!matcher.find()) {
 				return null;
 			}
-			
+
 			sTarget = matcher.group(3);
 			c1 = new char[sTarget.length()];
 			Arrays.fill(c1, '*');
-			
+
 			sTarget = matcher.group(4);
 			c2 = new char[sTarget.length()];
 			Arrays.fill(c2, '*');
-			
+
 			sb.append(matcher.group(1)).append(matcher.group(2));
 			sb.append(String.valueOf(c1)).append(String.valueOf(c2)).append(matcher.group(5));
-			
+
 			sCardNo = sb.toString();
 			sMaskingPattern = "(\\d{4})-?(\\d{2})([*]{2})-?([*]{4})-?(\\d{4})+$";
-			
+
 			sFormat = (isHyphen) ? "$1-$2$3-$4-$5" : "$1$2$3$4$5";
-			
+
 			break;
 
 		case 15:
 			pattern = Pattern.compile("^(\\d{4})-?(\\d{2})(\\d{4})-?(\\d{2})(\\d{3})$");
-			
+
 			matcher = pattern.matcher(str);
 			if (!matcher.find()) {
 				return null;
 			}
-			
+
 			sTarget = matcher.group(3);
 			c1 = new char[sTarget.length()];
 			Arrays.fill(c1, '*');
-			
+
 			sTarget = matcher.group(4);
 			c2 = new char[sTarget.length()];
 			Arrays.fill(c2, '*');
-			
+
 			sb.append(matcher.group(1)).append(matcher.group(2));
 			sb.append(String.valueOf(c1)).append(String.valueOf(c2)).append(matcher.group(5));
-			
+
 			sCardNo = sb.toString();
 			sMaskingPattern = "(\\d{4})-?(\\d{2})([*]{4})-?([*]{2})(\\d{3})+$";
-			
+
 			sFormat = (isHyphen) ? "$1-$2$3-$4$5" : "$1$2$3$4$5";
-			
+
 			break;
 
 		default:
 			break;
 		}
-		
+
 		if ( !sCardNo.matches(sMaskingPattern) ) {
 			return null;
 		}

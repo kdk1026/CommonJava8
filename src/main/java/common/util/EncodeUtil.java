@@ -5,15 +5,16 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Base64;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EncodeUtil {
-	
+
 	private EncodeUtil() {
 		super();
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
 
 	/**
@@ -23,6 +24,10 @@ public class EncodeUtil {
 	 * @since 1.8
 	 */
 	public static String encodeBase64(byte[] binaryData) {
+		if ( binaryData == null || binaryData.length == 0 ) {
+			throw new NullPointerException("binaryData is null");
+		}
+
 		return Base64.getEncoder().encodeToString(binaryData);
 	}
 
@@ -33,6 +38,10 @@ public class EncodeUtil {
 	 * @since 1.8
 	 */
 	public static byte[] decodeBase64(String base64Data) {
+		if ( StringUtils.isBlank(base64Data) ) {
+			throw new NullPointerException("base64Data is null");
+		}
+
 		return Base64.getDecoder().decode(base64Data);
 	}
 
@@ -47,6 +56,10 @@ public class EncodeUtil {
 	 * @return
 	 */
 	public static String urlEncode(String sPlain) {
+		if ( StringUtils.isBlank(sPlain) ) {
+			throw new NullPointerException("sPlain is null");
+		}
+
 		String sRes = "";
 		try {
 			sRes = URLEncoder.encode(sPlain, "UTF-8");
@@ -67,6 +80,14 @@ public class EncodeUtil {
 	 * @return
 	 */
 	public static String urlEncode(String sPlain, String sCharsetName) {
+		if ( StringUtils.isBlank(sPlain) ) {
+			throw new NullPointerException("sPlain is null");
+		}
+
+		if ( StringUtils.isBlank(sCharsetName) ) {
+			throw new NullPointerException("sCharsetName is null");
+		}
+
 		String sRes = "";
 		try {
 			sRes = URLEncoder.encode(sPlain, sCharsetName);
@@ -87,6 +108,10 @@ public class EncodeUtil {
 	 * @return
 	 */
 	public static String urlDecode(String sEncodedData) {
+		if ( StringUtils.isBlank(sEncodedData) ) {
+			throw new NullPointerException("sEncodedData is null");
+		}
+
 		String sRes = "";
 		try {
 			sRes = URLDecoder.decode(sEncodedData, "UTF-8");
@@ -107,6 +132,14 @@ public class EncodeUtil {
 	 * @return
 	 */
 	public static String urlDecode(String sEncodedData, String sCharsetName) {
+		if ( StringUtils.isBlank(sEncodedData) ) {
+			throw new NullPointerException("sEncodedData is null");
+		}
+
+		if ( StringUtils.isBlank(sCharsetName) ) {
+			throw new NullPointerException("sCharsetName is null");
+		}
+
 		String sRes = "";
 		try {
 			sRes = URLDecoder.decode(sEncodedData, sCharsetName);

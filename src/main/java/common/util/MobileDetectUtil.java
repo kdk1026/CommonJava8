@@ -2,6 +2,8 @@ package common.util;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
 import common.BaseObject;
 
 public class MobileDetectUtil {
@@ -9,17 +11,17 @@ public class MobileDetectUtil {
 	private MobileDetectUtil() {
 		super();
 	}
-	
+
 	private static final String ANDROID = "android";
 	private static final String IOS = "ios";
 	private static final String ETC = "etc";
-	
+
 	private static final String ETC_PATTERN = ".*(blackberry|symbian|webos|bada|tizen|windows phone|ubuntu).*";
-	
-	
+
+
 	public static class DeviceType extends BaseObject {
 		private static final long serialVersionUID = 1L;
-		
+
 		private boolean isTablet;
 		private boolean isMobile;
 		/**
@@ -31,7 +33,7 @@ public class MobileDetectUtil {
 		 * </pre>
 		 */
 		private String devicePlatform;
-		
+
 		private DeviceType(boolean isTablet, boolean isMobile, String devicePlatform) {
 			super();
 			this.isTablet = isTablet;
@@ -51,27 +53,35 @@ public class MobileDetectUtil {
 			return devicePlatform;
 		}
 	}
-	
+
 	public static DeviceType detecteDevice(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new NullPointerException("request");
+		}
+
 		DeviceType deviceType = null;
 		String userAgent = request.getHeader("User-Agent");
-		
+
 		if (userAgent != null) {
 			userAgent = userAgent.toLowerCase();
-			
+
 			deviceType = isTablet(userAgent);
-			
+
 			if (deviceType == null) {
 				deviceType = isMobile(userAgent);
 			}
 		}
-		
+
 		return deviceType;
 	}
-	
+
 	private static DeviceType isTablet(String userAgent) {
+		if ( StringUtils.isBlank(userAgent) ) {
+			throw new NullPointerException("userAgent");
+		}
+
 		DeviceType deviceType = null;
-		
+
 		if ( (userAgent.contains(ANDROID)) && (!userAgent.contains("mobile")) ) {
 			deviceType = new DeviceType(true, false, ANDROID);
 		}
@@ -81,13 +91,17 @@ public class MobileDetectUtil {
 		if ( (userAgent.matches(ETC_PATTERN)) && (!userAgent.contains("mobile")) ) {
 			deviceType = new DeviceType(true, false, ETC);
 		}
-		
+
 		return deviceType;
 	}
-	
+
 	private static DeviceType isMobile(String userAgent) {
+		if ( StringUtils.isBlank(userAgent) ) {
+			throw new NullPointerException("userAgent");
+		}
+
 		DeviceType deviceType = null;
-		
+
 		if ( userAgent.contains(ANDROID) ) {
 			deviceType = new DeviceType(false, true, ANDROID);
 		}
@@ -97,8 +111,8 @@ public class MobileDetectUtil {
 		if ( userAgent.matches(ETC_PATTERN) ) {
 			deviceType = new DeviceType(true, false, ETC);
 		}
-		
+
 		return deviceType;
 	}
-	
+
 }

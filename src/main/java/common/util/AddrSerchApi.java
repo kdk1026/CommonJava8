@@ -14,6 +14,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -40,6 +42,18 @@ public class AddrSerchApi {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getJusoApi(int currentPage, int countPerPage, String keyword) throws IOException {
+		if ( currentPage < 1 ) {
+			throw new IllegalArgumentException("currentPage는 1 이상이어야 합니다.");
+		}
+
+		if ( countPerPage < 1 ) {
+			throw new IllegalArgumentException("countPerPage는 1 이상이어야 합니다.");
+		}
+
+		if ( StringUtils.isBlank(keyword) ) {
+			throw new NullPointerException("keyword는 필수값입니다.");
+		}
+
 		Map<String, Object> resultMap = new HashMap<>();
 
 		String sApiUrl = "http://www.juso.go.kr/addrlink/addrLinkApi.do";

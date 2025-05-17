@@ -19,6 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailAttachment;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
@@ -33,20 +34,20 @@ import common.util.properties.PropertiesUtil;
  * -----------------------------------
  * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정 : 인코딩 관련)
  * </pre>
- * 
+ *
  *
  * @author 김대광
  */
 public class MailSenderUtil {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MailSenderUtil.class);
-	
+
 	private MailSenderUtil() {
 		super();
 	}
-	
+
 	private static final String MAIL_PROP_FILE = "mail.properties";
-	
+
 	/**
 	 * mail.host = smtp.gmail.com
 	 * mail.port = 465
@@ -57,7 +58,7 @@ public class MailSenderUtil {
 	private static Properties getMailProperties() {
 		return PropertiesUtil.getPropertiesClasspath(MAIL_PROP_FILE);
 	}
-	
+
 	private static Properties getProperties() {
 		final Properties mailProps = getMailProperties();
 		Properties props = new Properties();
@@ -73,7 +74,7 @@ public class MailSenderUtil {
 
 		return props;
 	}
-	
+
 	/**
 	 * 첩부 파일 메일 발송
 	 * @param mailTos
@@ -82,62 +83,74 @@ public class MailSenderUtil {
 	 * @param attachFile
 	 */
 	public static boolean sendmail(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
+		if ( mailTos == null || mailTos.length == 0 ) {
+			throw new NullPointerException("mailTos is null");
+		}
+
+		if ( StringUtils.isBlank(mailSubject) ) {
+			throw new NullPointerException("mailSubject is null");
+		}
+
+		if ( StringUtils.isBlank(mailMsg) ) {
+			throw new NullPointerException("mailMsg is null");
+		}
+
 		boolean isSuccess = false;
-		
+
 		final Properties mailProps = getMailProperties();
 		Properties props = getProperties();
-		
+
 		Authenticator auth = new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(
-						mailProps.getProperty("mail.username"), 
+						mailProps.getProperty("mail.username"),
 						mailProps.getProperty("mail.password")
 				);
 			}
 		};
-		
+
 		Session session = Session.getDefaultInstance(props, auth);
 		MimeMessage message = new MimeMessage(session);
-		
+
 		try {
 			message.setFrom(new InternetAddress(mailProps.getProperty("mail.from")));
-			
+
 			for (String s : mailTos) {
-				message.addRecipient(Message.RecipientType.TO, new InternetAddress(s));				
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(s));
 			}
-			
+
 			message.setSubject(mailSubject);
-			
+
 			if (attachFile != null) {
 				MimeBodyPart bodypart = new MimeBodyPart();
 				bodypart.setContent(mailMsg, "text/html; charset=UTF-8");
-				
+
 				// 첨부파일
 				DataSource source = new FileDataSource(attachFile);
 				MimeBodyPart attachPart = new MimeBodyPart();
 				attachPart.setDataHandler(new DataHandler(source));
 				attachPart.setFileName(attachFile.getName());
-				
+
 				Multipart multipart = new MimeMultipart();
 				multipart.addBodyPart(bodypart);
 				multipart.addBodyPart(attachPart);
-				
+
 				message.setContent(multipart);
 			} else {
 				message.setContent(mailMsg, "text/html; charset=UTF-8");
 			}
-			
+
 			Transport.send(message);
 			isSuccess = true;
-			
+
 		} catch (MessagingException e) {
 			logger.error("", e);
 		}
-		
+
 		return isSuccess;
 	}
-	
+
 	/**
 	 * 일반 메일 발송
 	 * @param mailTos
@@ -147,7 +160,7 @@ public class MailSenderUtil {
 	public static boolean sendmail(String[] mailTos, String mailSubject, String mailMsg) {
 		return sendmail(mailTos, mailSubject, mailMsg, null);
 	}
-	
+
 	/**
 	 * 첩부 파일 메일 발송 - Commons Email 사용
 	 * @param mailTos
@@ -156,28 +169,40 @@ public class MailSenderUtil {
 	 * @param attachFile
 	 */
 	public static boolean sendmailCommons(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
+		if ( mailTos == null || mailTos.length == 0 ) {
+			throw new NullPointerException("mailTos is null");
+		}
+
+		if ( StringUtils.isBlank(mailSubject) ) {
+			throw new NullPointerException("mailSubject is null");
+		}
+
+		if ( StringUtils.isBlank(mailMsg) ) {
+			throw new NullPointerException("mailMsg is null");
+		}
+
 		boolean isSuccess = false;
-		
+
 		final Properties mailProps = getMailProperties();
 		Properties props = getProperties();
-		
+
 		HtmlEmail email = new HtmlEmail();
 		email.setHostName(mailProps.getProperty("mail.host"));
 		email.setSmtpPort(Integer.parseInt(mailProps.getProperty("mail.port")));
 		email.setDebug(Boolean.parseBoolean(props.getProperty("mail.debug")));
-		
+
 		email.setAuthentication(mailProps.getProperty("mail.username"), mailProps.getProperty("mail.password"));
-		
+
 		email.setStartTLSEnabled(Boolean.parseBoolean(props.getProperty("mail.smtp.starttls.enable")));
 		email.setSSLOnConnect(Boolean.parseBoolean(props.getProperty("mail.smtp.ssl.enable")));
-		
+
 		try {
 			email.setFrom(mailProps.getProperty("mail.from"));
 			email.addTo(mailTos);
 			email.setSubject(mailSubject);
 			email.setHtmlMsg(mailMsg);
 			email.setCharset(StandardCharsets.UTF_8.toString());
-			
+
 			if (attachFile != null) {
 				// 첨부파일
 				EmailAttachment attachment = new EmailAttachment();
@@ -187,17 +212,17 @@ public class MailSenderUtil {
 
 			    email.attach(attachment);
 			}
-			
+
 			email.send();
 			isSuccess = true;
-			
+
 		} catch (EmailException e) {
 			logger.error("", e);
 		}
-		
+
 		return isSuccess;
 	}
-	
+
 	/**
 	 * 일반 메일 발송 - Commons Email 사용
 	 * @param mailTos
@@ -207,5 +232,5 @@ public class MailSenderUtil {
 	public static boolean sendmailCommons(String[] mailTos, String mailSubject, String mailMsg) {
 		return sendmailCommons(mailTos, mailSubject, mailMsg, null);
 	}
-	
+
 }

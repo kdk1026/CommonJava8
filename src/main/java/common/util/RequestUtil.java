@@ -25,6 +25,10 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getRequestIpAddress(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new NullPointerException("request");
+		}
+
 	    String[] sHeaders = {
 	    		"X-Forwarded-For",
 	    		"Proxy-Client-IP",
@@ -53,6 +57,10 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getRequestDomain(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new NullPointerException("request");
+		}
+
 		String sReqUrl = request.getRequestURL().toString();
 		String sServletPath = request.getServletPath();
 		return sReqUrl.replace(sServletPath, "");

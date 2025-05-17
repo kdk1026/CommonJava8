@@ -1,7 +1,9 @@
 package common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ConvertCaseUtil {
-	
+
 	private ConvertCaseUtil() {
 		super();
 	}
@@ -15,6 +17,10 @@ public class ConvertCaseUtil {
 	 * @return
 	 */
 	public static String camelCase(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		boolean isNext = false;
@@ -50,6 +56,14 @@ public class ConvertCaseUtil {
 	 * @return
 	 */
 	public static String camelCase(char chKey, String str) {
+		if ( chKey == 0 ) {
+			throw new NullPointerException("chKey is null");
+		}
+
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		boolean isUnderScore = (str.indexOf(chKey) < 0);
@@ -89,6 +103,10 @@ public class ConvertCaseUtil {
 	 * @return
 	 */
 	public static String pascalCase(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		StringBuilder sb = new StringBuilder();
 
 		String sCamelCase = camelCase(str);
@@ -99,16 +117,20 @@ public class ConvertCaseUtil {
 
 		return sb.toString();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param str
 	 * @return
 	 */
 	public static String camelCaseToUnderScroe(String str) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new NullPointerException("str is null");
+		}
+
 		String sRegEx = "([a-z])([A-Z]+)";
 		String sReplacement = "$1_$2";
-		
+
 		return str.replaceAll(sRegEx, sReplacement);
 	}
 

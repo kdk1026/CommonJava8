@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,21 +13,25 @@ import org.slf4j.LoggerFactory;
  * 만나이, 한국식 나이, 보험 나이 등을 계산하는 기능 제공
  */
 public class AgeUtil {
-	
+
 	private AgeUtil() {
 		super();
 	}
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AgeUtil.class);
-	
+
 	private static final String YYYYMMDD = "yyyyMMdd";
-	
+
 	/**
 	 * 현재일을 기준으로 만나이 계산
 	 * @param birthDay
 	 * @return
 	 */
 	public static int getAge(String birthDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
 		Calendar birth = Calendar.getInstance();
 		Calendar now = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
@@ -52,6 +57,14 @@ public class AgeUtil {
 	 * @return
 	 */
 	public static int getAge(String birthDay, String fixDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
+		if ( StringUtils.isBlank(fixDay) ) {
+			throw new NullPointerException("fixDay is null");
+		}
+
 		int age = 0;
 		Calendar birth = Calendar.getInstance();
 		Calendar fix = Calendar.getInstance();
@@ -77,6 +90,10 @@ public class AgeUtil {
 	 * @return
 	 */
 	public static int getKoreanAge(String birthDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
 		int age = 0;
 		Calendar birth = Calendar.getInstance();
 		Calendar now = Calendar.getInstance();
@@ -99,6 +116,14 @@ public class AgeUtil {
 	 * @return
 	 */
 	public static int getKoreanAge(String birthDay, String fixDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
+		if ( StringUtils.isBlank(fixDay) ) {
+			throw new NullPointerException("fixDay is null");
+		}
+
 		int age = 0;
 		Calendar birth = Calendar.getInstance();
 		Calendar fix = Calendar.getInstance();
@@ -122,12 +147,16 @@ public class AgeUtil {
 	 * @return
 	 */
 	public static int getInsurAge(String birthDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
 		int age = 0;
 		Calendar birth = Calendar.getInstance();
 		Calendar now = Calendar.getInstance();
 		Calendar target = Calendar.getInstance();
 		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
-		
+
 		try {
 			birth.setTime(formatter.parse(birthDay));
 		} catch (ParseException e) {
@@ -160,6 +189,14 @@ public class AgeUtil {
 	 * @return
 	 */
 	public static int getInsurAge(String birthDay, String fixDay) {
+		if ( StringUtils.isBlank(birthDay) ) {
+			throw new NullPointerException("birthDay is null");
+		}
+
+		if ( StringUtils.isBlank(fixDay) ) {
+			throw new NullPointerException("fixDay is null");
+		}
+
 		int age = 0;
 		Calendar birth = Calendar.getInstance();
 		Calendar fix = Calendar.getInstance();

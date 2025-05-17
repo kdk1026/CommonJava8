@@ -1,5 +1,7 @@
 package common.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * <pre>
  * -----------------------------------
@@ -55,7 +57,7 @@ public class MaskingUtil {
 			}
 		}
 
-		return name;
+		return "";
 	}
 
 	/**
@@ -141,7 +143,8 @@ public class MaskingUtil {
 				return phoneNumber.substring(0, phoneNumber.length() - 4) + "****";
 			}
 		}
-		return phoneNumber;
+
+		return "";
 	}
 
 	/**
@@ -154,6 +157,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public String maskEmail(String email) {
+		if ( StringUtils.isBlank(email) ) {
+			return "";
+		}
+
 		int atIndex = email.indexOf("@");
 		if (atIndex <= 2) {
 			throw new IllegalArgumentException("Invalid email address");
@@ -175,6 +182,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public String maskId(String id) {
+		if ( StringUtils.isBlank(id) ) {
+			return "";
+		}
+
 		if (id.length() <= 3) {
 			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
 		} else {
@@ -192,6 +203,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public String maskRoadAddress(String address) {
+		if ( StringUtils.isBlank(address) ) {
+			return "";
+		}
+
 		return address.replaceAll("\\d", "*");
 	}
 
@@ -206,6 +221,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public String maskCardNumber(String cardNumber, int startIndex) {
+		if ( StringUtils.isBlank(cardNumber) ) {
+			return "";
+		}
+
 		if (startIndex != 7 && startIndex != 9) {
 			throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
 		}
@@ -283,6 +302,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public String maskAccountNumber(String accountNumber) {
+		if ( StringUtils.isBlank(accountNumber) ) {
+			return "";
+		}
+
 	    // 계좌번호에서 '-' 제거
 	    String cleanAccountNumber = accountNumber.replace("-", "");
 

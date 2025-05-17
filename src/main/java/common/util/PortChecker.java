@@ -3,6 +3,7 @@ package common.util;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,14 @@ public class PortChecker {
 	}
 
 	public boolean isConnected(String host, int port) {
+		if ( StringUtils.isBlank(host) ) {
+			throw new NullPointerException("host is null");
+		}
+
+		if ( port < 0 || port > 65535 ) {
+			throw new IllegalArgumentException("port is invalid");
+		}
+
 		boolean isConnect = false;
 
 		try ( SSLSocket sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(host, port) ) {
