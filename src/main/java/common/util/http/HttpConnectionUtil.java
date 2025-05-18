@@ -89,7 +89,7 @@ public class HttpConnectionUtil {
 		 */
 		public static Map<String, Object> getMap(boolean isSSL, String sUrl, Map<String, Object> header) {
 			if ( StringUtils.isBlank(sUrl) ) {
-				throw new NullPointerException("sUrl is null");
+				throw new IllegalArgumentException("sUrl is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -251,7 +251,7 @@ public class HttpConnectionUtil {
 		 */
 		public static Map<String, Object> postMap(boolean isSSL, String sUrl, Map<String, Object> header, Map<String, Object> param, Charset charset) {
 			if ( StringUtils.isBlank(sUrl) ) {
-				throw new NullPointerException("sUrl is null");
+				throw new IllegalArgumentException("sUrl is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -409,11 +409,11 @@ public class HttpConnectionUtil {
 		 */
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String sUrl, Map<String, Object> header, String payload) {
 			if ( StringUtils.isBlank(sUrl) ) {
-				throw new NullPointerException("sUrl is null");
+				throw new IllegalArgumentException("sUrl is null");
 			}
 
 			if ( StringUtils.isBlank(payload) ) {
-				throw new NullPointerException("payload is null");
+				throw new IllegalArgumentException("payload is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();

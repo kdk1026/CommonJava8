@@ -21,7 +21,7 @@ public class ClobUtil {
 
 	public static String toString(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("obj is null");
+			throw new IllegalArgumentException("obj is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -49,7 +49,7 @@ public class ClobUtil {
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -73,11 +73,11 @@ public class ClobUtil {
 
 	public static void write(Clob clob, String text) {
 		if ( clob == null ) {
-			throw new NullPointerException("clob is null");
+			throw new IllegalArgumentException("clob is null");
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new NullPointerException("text is null");
+			throw new IllegalArgumentException("text is null");
 		}
 
 		try {

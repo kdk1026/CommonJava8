@@ -36,7 +36,7 @@ public class Base64Util {
 
 	public String encode(String text) {
 		if ( StringUtils.isBlank(text) ) {
-			throw new NullPointerException("text is null");
+			throw new IllegalArgumentException("text is null");
 		}
 
 		return Base64.getEncoder().encodeToString(text.getBytes());
@@ -44,11 +44,11 @@ public class Base64Util {
 
 	public String encode(String text, String charset) {
 		if ( StringUtils.isBlank(text) ) {
-			throw new NullPointerException("text is null");
+			throw new IllegalArgumentException("text is null");
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new NullPointerException("charset is null");
+			throw new IllegalArgumentException("charset is null");
 		}
 
 		try {
@@ -61,7 +61,7 @@ public class Base64Util {
 
 	public String decode(String encodedText) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new NullPointerException("encodedText is null");
+			throw new IllegalArgumentException("encodedText is null");
 		}
 
 		byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes());
@@ -70,11 +70,11 @@ public class Base64Util {
 
 	public String decode(String encodedText, String charset) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new NullPointerException("encodedText is null");
+			throw new IllegalArgumentException("encodedText is null");
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new NullPointerException("charset is null");
+			throw new IllegalArgumentException("charset is null");
 		}
 
 		try {

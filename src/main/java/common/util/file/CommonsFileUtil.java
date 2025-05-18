@@ -58,7 +58,7 @@ public class CommonsFileUtil {
 	 */
 	public static boolean isExistsFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		Path path = Paths.get(filePath);
@@ -72,7 +72,7 @@ public class CommonsFileUtil {
 	 */
 	public static String getFilename(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		return FilenameUtils.getBaseName(filePath);
@@ -85,7 +85,7 @@ public class CommonsFileUtil {
 	 */
 	public static String getFileExtension(String fileName) {
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new NullPointerException("fileName is null");
+			throw new IllegalArgumentException("fileName is null");
 		}
 
 		return FilenameUtils.getExtension(fileName);
@@ -98,7 +98,7 @@ public class CommonsFileUtil {
 	 */
 	public static long getFileSize(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -128,7 +128,7 @@ public class CommonsFileUtil {
 	 */
 	public static String lastModified(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -144,11 +144,11 @@ public class CommonsFileUtil {
 	 */
 	public static void writeFile(String filePath, String text) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new NullPointerException("text is null");
+			throw new IllegalArgumentException("text is null");
 		}
 
 		try {
@@ -168,15 +168,15 @@ public class CommonsFileUtil {
 	 */
 	public static void writeFile(String filePath, String text, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new NullPointerException("text is null");
+			throw new IllegalArgumentException("text is null");
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new NullPointerException("encoding is null");
+			throw new IllegalArgumentException("encoding is null");
 		}
 
 		try {
@@ -195,7 +195,7 @@ public class CommonsFileUtil {
 	 */
 	public static String readFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		String content = "";
@@ -219,11 +219,11 @@ public class CommonsFileUtil {
 	 */
 	public static String readFile(String filePath, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new NullPointerException("encoding is null");
+			throw new IllegalArgumentException("encoding is null");
 		}
 
 		String content = "";
@@ -245,7 +245,7 @@ public class CommonsFileUtil {
 	 */
 	public static boolean deleteFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -259,11 +259,11 @@ public class CommonsFileUtil {
 	 */
 	public static void copyFile(String srcFilePath, String destFilePath) {
 		if ( StringUtils.isBlank(srcFilePath) ) {
-			throw new NullPointerException("srcFilePath is null");
+			throw new IllegalArgumentException("srcFilePath is null");
 		}
 
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new NullPointerException("destFilePath is null");
+			throw new IllegalArgumentException("destFilePath is null");
 		}
 
 		File srcFile = FileUtils.getFile(srcFilePath);
@@ -284,7 +284,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getAllFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -305,7 +305,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -328,7 +328,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getDirectoryList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -351,7 +351,7 @@ public class CommonsFileUtil {
 	 */
 	public static byte[] convertFileToBytes(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		byte[] bData = null;

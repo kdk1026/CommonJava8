@@ -43,11 +43,11 @@ public class BasicStringUtils {
 	 */
 	public static boolean isContins(final String str, final String validChars) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		if ( isBlank(validChars) ) {
-			throw new NullPointerException("validChars");
+			throw new IllegalArgumentException("validChars");
 		}
 
 		return str.indexOf(validChars) > -1;
@@ -62,7 +62,7 @@ public class BasicStringUtils {
 	 */
 	public static String leftPad(final String str, final int size, char ch) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		if ( size <= 0 ) {
@@ -85,7 +85,7 @@ public class BasicStringUtils {
 	 */
 	public static String rightPad(final String str, final int size, char ch) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		if ( size <= 0 ) {
@@ -106,7 +106,7 @@ public class BasicStringUtils {
 	 */
 	public static String encodeHex(final String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		char[] chars = str.toCharArray();
@@ -125,7 +125,7 @@ public class BasicStringUtils {
 	 */
 	public static String decodeHex(final String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		StringBuilder sb = new StringBuilder();

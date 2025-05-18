@@ -36,11 +36,11 @@ public class StringUtilsSub {
 	 */
 	public static String join(String delim, String... args) {
 		if ( StringUtils.isBlank(delim) ) {
-			throw new NullPointerException("delim is null");
+			throw new IllegalArgumentException("delim is null");
 		}
 
 		if ( args == null || args.length == 0 ) {
-			throw new NullPointerException("args is null");
+			throw new IllegalArgumentException("args is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -60,7 +60,7 @@ public class StringUtilsSub {
 	 */
 	public static String replaceCRLFToHtmlTag(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		final String sCr = "<br/>";
@@ -75,7 +75,7 @@ public class StringUtilsSub {
 	 */
 	public static String replaceHtmlTagToCRLF(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		return str.replace("<br>", "\r\n").replace("<br/>", "\r\n");
@@ -89,7 +89,7 @@ public class StringUtilsSub {
 	 */
 	public static String escapeXss(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		return str.replace("\"", "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "\\'").replace("\"", "\\\"");
@@ -103,7 +103,7 @@ public class StringUtilsSub {
 	 */
 	public static String unescapeXss(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		return str.replace("&quot;", "\"").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("\\'", "'").replace("\\\"", "\"");
@@ -120,7 +120,7 @@ public class StringUtilsSub {
 	 */
 	public static String getStarRating(String strDoubleScore) {
 		if ( StringUtils.isBlank(strDoubleScore) ) {
-			throw new NullPointerException("strDoubleScore is null");
+			throw new IllegalArgumentException("strDoubleScore is null");
 		}
 
 		String strStarRating = "";

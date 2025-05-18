@@ -55,11 +55,11 @@ public class ByteStringUtils {
 	 */
 	public static int getByteLength(String str, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nLen = 0;
@@ -82,7 +82,7 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		if ( maxByte < 0 ) {
@@ -111,7 +111,7 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		if ( maxByte < 0 ) {
@@ -119,7 +119,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new NullPointerException("charsetName is null");
+			throw new IllegalArgumentException("charsetName is null");
 		}
 
 		boolean resFlag = false;
@@ -142,7 +142,7 @@ public class ByteStringUtils {
 	 */
 	public static String eucKrToUtf8String(byte[] bOrgData) {
 		if ( bOrgData == null ) {
-			throw new NullPointerException("bOrgData is null");
+			throw new IllegalArgumentException("bOrgData is null");
 		}
 
 		if ( bOrgData.length == 0 ) {
@@ -170,7 +170,7 @@ public class ByteStringUtils {
 	 */
 	public static String utf8ToEucKrString(byte[] bOrgData) {
 		if ( bOrgData == null ) {
-			throw new NullPointerException("bOrgData is null");
+			throw new IllegalArgumentException("bOrgData is null");
 		}
 
 		if ( bOrgData.length == 0 ) {
@@ -198,7 +198,7 @@ public class ByteStringUtils {
 	 */
 	public static byte[] eucKrToUtf8(byte[] bOrgData) {
 		if ( bOrgData == null ) {
-			throw new NullPointerException("bOrgData is null");
+			throw new IllegalArgumentException("bOrgData is null");
 		}
 
 		if ( bOrgData.length == 0 ) {
@@ -225,7 +225,7 @@ public class ByteStringUtils {
 	 */
 	public static byte[] utf8ToEucKr(byte[] bOrgData) {
 		if ( bOrgData == null ) {
-			throw new NullPointerException("bOrgData is null");
+			throw new IllegalArgumentException("bOrgData is null");
 		}
 
 		if ( bOrgData.length == 0 ) {
@@ -255,7 +255,7 @@ public class ByteStringUtils {
 	 */
 	public static String substrString(String str, int offset, int length, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		if ( offset < 0 ) {
@@ -267,7 +267,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new NullPointerException("charsetName is null");
+			throw new IllegalArgumentException("charsetName is null");
 		}
 
 		String sRes = "";

@@ -18,7 +18,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String camelCase(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -57,11 +57,11 @@ public class ConvertCaseUtil {
 	 */
 	public static String camelCase(char chKey, String str) {
 		if ( chKey == 0 ) {
-			throw new NullPointerException("chKey is null");
+			throw new IllegalArgumentException("chKey is null");
 		}
 
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -104,7 +104,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String pascalCase(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -125,7 +125,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String camelCaseToUnderScroe(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		String sRegEx = "([a-z])([A-Z]+)";

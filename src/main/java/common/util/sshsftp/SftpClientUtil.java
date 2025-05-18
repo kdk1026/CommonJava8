@@ -58,19 +58,19 @@ public class SftpClientUtil {
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) throws JSchException {
 		if ( StringUtils.isBlank(sHost) ) {
-			throw new NullPointerException("sHost is null");
+			throw new IllegalArgumentException("sHost is null");
 		}
 
 		if ( nPort <= 0 ) {
-			throw new NullPointerException("nPort is null");
+			throw new IllegalArgumentException("nPort is null");
 		}
 
 		if ( StringUtils.isBlank(sUsername) ) {
-			throw new NullPointerException("sUsername is null");
+			throw new IllegalArgumentException("sUsername is null");
 		}
 
 		if ( StringUtils.isBlank(sPassword) ) {
-			throw new NullPointerException("sPassword is null");
+			throw new IllegalArgumentException("sPassword is null");
 		}
 
 		boolean isConnected = false;
@@ -118,11 +118,11 @@ public class SftpClientUtil {
 	 */
 	public void upload(String sDestPath, File file) throws Exception {
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new NullPointerException("sDestPath is null");
+			throw new IllegalArgumentException("sDestPath is null");
 		}
 
 		if ( file == null ) {
-			throw new NullPointerException("file is null");
+			throw new IllegalArgumentException("file is null");
 		}
 
 		try ( FileInputStream fis = new FileInputStream(file) ) {
@@ -145,11 +145,11 @@ public class SftpClientUtil {
 	 */
 	public void delete(String sDestPath, File file) throws SftpException {
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new NullPointerException("sDestPath is null");
+			throw new IllegalArgumentException("sDestPath is null");
 		}
 
 		if ( file == null ) {
-			throw new NullPointerException("file is null");
+			throw new IllegalArgumentException("file is null");
 		}
 
 		@SuppressWarnings("unchecked")

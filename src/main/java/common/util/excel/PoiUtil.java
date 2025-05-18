@@ -59,11 +59,11 @@ public class PoiUtil {
 	 */
 	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, boolean isDecimal) {
 		if ( file == null ) {
-			throw new NullPointerException("file is null");
+			throw new IllegalArgumentException("file is null");
 		}
 
 		if ( cellNames == null ) {
-			throw new NullPointerException("cellNames is null");
+			throw new IllegalArgumentException("cellNames is null");
 		}
 
 		List<Map<String, Object>> resList = new ArrayList<>();
@@ -179,15 +179,15 @@ public class PoiUtil {
 	 */
 	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		if ( fileName == null ) {
-			throw new NullPointerException("fileName is null");
+			throw new IllegalArgumentException("fileName is null");
 		}
 
 		if ( contentsList == null || contentsList.isEmpty() ) {
-			throw new NullPointerException("contentsList is null");
+			throw new IllegalArgumentException("contentsList is null");
 		}
 
 		if ( cellTitles == null || cellTitles.length == 0 ) {
-			throw new NullPointerException("cellTitles is null");
+			throw new IllegalArgumentException("cellTitles is null");
 		}
 
 		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -281,7 +281,7 @@ public class PoiUtil {
 	 */
 	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new NullPointerException("destFilePath is null");
+			throw new IllegalArgumentException("destFilePath is null");
 		}
 
 		boolean isSuccess = false;
@@ -315,11 +315,11 @@ public class PoiUtil {
 			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if (response == null) {
-			throw new NullPointerException("response is null");
+			throw new IllegalArgumentException("response is null");
 		}
 
 		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);

@@ -49,7 +49,7 @@ public class PropertiesUtil {
 	 */
 	public static Properties getProperties(HttpServletRequest request, String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propFileName must be required");
+			throw new IllegalArgumentException("propFileName must be required");
 		}
 
 		Properties prop = new Properties();
@@ -99,7 +99,7 @@ public class PropertiesUtil {
 	 */
 	public static Properties getPropertiesClasspath(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propFileName must be required");
+			throw new IllegalArgumentException("propFileName must be required");
 		}
 
 		Properties prop = new Properties();
@@ -131,11 +131,11 @@ public class PropertiesUtil {
 	 */
 	public static Properties getPropertiesWebInf(HttpServletRequest request, String propFileName) {
 		if ( request == null ) {
-			throw new NullPointerException("request must be required");
+			throw new IllegalArgumentException("request must be required");
 		}
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propFileName must be required");
+			throw new IllegalArgumentException("propFileName must be required");
 		}
 
 		Properties prop = new Properties();
@@ -178,11 +178,11 @@ public class PropertiesUtil {
 		}
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propFileName must be required");
+			throw new IllegalArgumentException("propFileName must be required");
 		}
 
 		if ( prop == null || prop.isEmpty() ) {
-			throw new NullPointerException("prop must be required");
+			throw new IllegalArgumentException("prop must be required");
 		}
 
 		String fileNmae = "";

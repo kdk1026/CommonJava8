@@ -54,11 +54,11 @@ public class ApnsPushUtil {
 
 	public static List<Map<String, Object>> sendPush(List<String> regIdList, String jsonStr) {
 		if ( regIdList == null || regIdList.isEmpty() ) {
-			throw new NullPointerException("regIdList is null or empty");
+			throw new IllegalArgumentException("regIdList is null or empty");
 		}
 
 		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new NullPointerException("jsonStr is null or empty");
+			throw new IllegalArgumentException("jsonStr is null or empty");
 		}
 
 		try {
@@ -90,7 +90,7 @@ public class ApnsPushUtil {
 
 	private static void setMessage(String jsonStr) {
 		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new NullPointerException("jsonStr is null or empty");
+			throw new IllegalArgumentException("jsonStr is null or empty");
 		}
 
 		payload = PushNotificationPayload.complex();

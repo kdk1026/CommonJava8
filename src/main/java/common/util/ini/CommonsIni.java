@@ -53,7 +53,7 @@ public class CommonsIni {
 		}
 
 		if ( StringUtils.isBlank(iniFileName) ) {
-			throw new NullPointerException("iniFileName must be not null.");
+			throw new IllegalArgumentException("iniFileName must be not null.");
 		}
 
 		Configurations configs = new Configurations();
@@ -97,11 +97,11 @@ public class CommonsIni {
 
 	public Object getProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new NullPointerException("section must be not null.");
+			throw new IllegalArgumentException("section must be not null.");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be not null.");
+			throw new IllegalArgumentException("key must be not null.");
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);
@@ -122,7 +122,7 @@ public class CommonsIni {
 
 	public Properties getProperties(String section) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new NullPointerException("section must be not null.");
+			throw new IllegalArgumentException("section must be not null.");
 		}
 
 		Properties prop = new Properties();
@@ -140,15 +140,15 @@ public class CommonsIni {
 
 	public void addProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new NullPointerException("section must be not null.");
+			throw new IllegalArgumentException("section must be not null.");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be not null.");
+			throw new IllegalArgumentException("key must be not null.");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value must be not null.");
+			throw new IllegalArgumentException("value must be not null.");
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);
@@ -157,15 +157,15 @@ public class CommonsIni {
 
 	public void setProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new NullPointerException("section must be not null.");
+			throw new IllegalArgumentException("section must be not null.");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be not null.");
+			throw new IllegalArgumentException("key must be not null.");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value must be not null.");
+			throw new IllegalArgumentException("value must be not null.");
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);
@@ -174,11 +174,11 @@ public class CommonsIni {
 
 	public void clearProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new NullPointerException("section must be not null.");
+			throw new IllegalArgumentException("section must be not null.");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be not null.");
+			throw new IllegalArgumentException("key must be not null.");
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);

@@ -12,11 +12,11 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public Object putCamelCase(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(ConvertCaseUtil.camelCase(key), value);
@@ -24,11 +24,11 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public Object putPascalCase(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(ConvertCaseUtil.pascalCase(key), value);
@@ -36,11 +36,11 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public Object putLowerCase(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(key.toLowerCase(), value);
@@ -48,7 +48,7 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public String getString(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return super.containsKey(key) ? String.valueOf(super.get(key)) : "";
@@ -56,7 +56,7 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public int getInteger(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Integer.parseInt(String.valueOf(super.get(key)));
@@ -64,7 +64,7 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public double getDouble(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Double.parseDouble(String.valueOf(super.get(key)));
@@ -72,7 +72,7 @@ public class ParamMap extends HashMap<String, Object> {
 
 	public boolean getBoolean(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Boolean.parseBoolean(String.valueOf(super.get(key)));

@@ -50,7 +50,7 @@ public class NioFileTypeUtil {
 	 */
 	public static String getFileMimeType(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		String mimeType = "";
@@ -75,7 +75,7 @@ public class NioFileTypeUtil {
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new NullPointerException("filePath is null");
+			throw new IllegalArgumentException("filePath is null");
 		}
 
 		String mimeType = "";
@@ -100,7 +100,7 @@ public class NioFileTypeUtil {
 	 */
 	public static String getFileMimeTypeTika(InputStream is) {
 		if ( is == null ) {
-			throw new NullPointerException("is is null");
+			throw new IllegalArgumentException("is is null");
 		}
 
 		String mimeType = "";
@@ -124,11 +124,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isDocFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new NullPointerException("sExtension is null");
+			throw new IllegalArgumentException("sExtension is null");
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new NullPointerException("sMimeType is null");
+			throw new IllegalArgumentException("sMimeType is null");
 		}
 
 		String[] sExtArr = {
@@ -160,11 +160,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isImgFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new NullPointerException("sExtension is null");
+			throw new IllegalArgumentException("sExtension is null");
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new NullPointerException("sMimeType is null");
+			throw new IllegalArgumentException("sMimeType is null");
 		}
 
 		String[] sExtArr = {
@@ -187,7 +187,7 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isRunableFile(String sFileName) {
 		if ( StringUtils.isBlank(sFileName) ) {
-			throw new NullPointerException("sFileName is null");
+			throw new IllegalArgumentException("sFileName is null");
 		}
 
 		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";

@@ -48,11 +48,11 @@ public class SymbolicLinkUtil {
 	 */
 	public boolean makeSymbolicLink(String srcPathStr, String symLinkPathStr) {
 		if ( StringUtils.isBlank(srcPathStr) ) {
-			throw new NullPointerException("srcPathStr");
+			throw new IllegalArgumentException("srcPathStr");
 		}
 
 		if ( StringUtils.isBlank(symLinkPathStr) ) {
-			throw new NullPointerException("symLinkPathStr");
+			throw new IllegalArgumentException("symLinkPathStr");
 		}
 
 		boolean isSuccess = false;

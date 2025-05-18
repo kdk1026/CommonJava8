@@ -62,11 +62,11 @@ public class HashFunctionUtil {
 
 	private static String searchHashAlgorithm(String strPlainText, String strAlgorithm) {
 		if ( StringUtils.isBlank(strPlainText) ) {
-			throw new NullPointerException("strPlainText is null");
+			throw new IllegalArgumentException("strPlainText is null");
 		}
 
 		if ( StringUtils.isBlank(strAlgorithm) ) {
-			throw new NullPointerException("strAlgorithm is null");
+			throw new IllegalArgumentException("strAlgorithm is null");
 		}
 
 		String strEncodedText = "";

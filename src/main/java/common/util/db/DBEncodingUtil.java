@@ -45,7 +45,7 @@ public class DBEncodingUtil {
 
 			public static String readHangeul(String val) {
 				if ( StringUtils.isBlank(val) ) {
-					throw new NullPointerException("value is null");
+					throw new IllegalArgumentException("value is null");
 				}
 
 				String sVal = "";
@@ -59,11 +59,11 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
 				if ( map == null || map.isEmpty() ) {
-					throw new NullPointerException("map is null");
+					throw new IllegalArgumentException("map is null");
 				}
 
 				if ( keys == null || keys.length == 0 ) {
-					throw new NullPointerException("keys is null");
+					throw new IllegalArgumentException("keys is null");
 				}
 
 				String key = "";
@@ -83,11 +83,11 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
 				if ( list == null || list.isEmpty() ) {
-					throw new NullPointerException("list is null");
+					throw new IllegalArgumentException("list is null");
 				}
 
 				if ( keys == null || keys.length == 0 ) {
-					throw new NullPointerException("keys is null");
+					throw new IllegalArgumentException("keys is null");
 				}
 
 				for (Map<Object, Object> map : list) {
@@ -106,7 +106,7 @@ public class DBEncodingUtil {
 
 			public static String readHangeul(String val) {
 				if ( StringUtils.isBlank(val) ) {
-					throw new NullPointerException("value is null");
+					throw new IllegalArgumentException("value is null");
 				}
 
 				String sVal = "";
@@ -120,11 +120,11 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
 				if ( map == null || map.isEmpty() ) {
-					throw new NullPointerException("map is null");
+					throw new IllegalArgumentException("map is null");
 				}
 
 				if ( keys == null || keys.length == 0 ) {
-					throw new NullPointerException("keys is null");
+					throw new IllegalArgumentException("keys is null");
 				}
 
 				String key = "";
@@ -144,11 +144,11 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
 				if ( list == null || list.isEmpty() ) {
-					throw new NullPointerException("list is null");
+					throw new IllegalArgumentException("list is null");
 				}
 
 				if ( keys == null || keys.length == 0 ) {
-					throw new NullPointerException("keys is null");
+					throw new IllegalArgumentException("keys is null");
 				}
 
 				for (Map<Object, Object> map : list) {
@@ -159,11 +159,11 @@ public class DBEncodingUtil {
 
 		public static void writeHangeul(Map<Object, Object> map, String ... keys) {
 			if ( map == null || map.isEmpty() ) {
-				throw new NullPointerException("map is null");
+				throw new IllegalArgumentException("map is null");
 			}
 
 			if ( keys == null || keys.length == 0 ) {
-				throw new NullPointerException("keys is null");
+				throw new IllegalArgumentException("keys is null");
 			}
 
 			String key = "";

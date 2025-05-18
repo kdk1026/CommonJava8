@@ -53,19 +53,19 @@ public class SshClientUtil {
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) {
 		if ( StringUtils.isBlank(sHost) ) {
-			throw new NullPointerException("sHost is null");
+			throw new IllegalArgumentException("sHost is null");
 		}
 
 		if ( nPort <= 0 ) {
-			throw new NullPointerException("nPort is null");
+			throw new IllegalArgumentException("nPort is null");
 		}
 
 		if ( StringUtils.isBlank(sUsername) ) {
-			throw new NullPointerException("sUsername is null");
+			throw new IllegalArgumentException("sUsername is null");
 		}
 
 		if ( StringUtils.isBlank(sPassword) ) {
-			throw new NullPointerException("sPassword is null");
+			throw new IllegalArgumentException("sPassword is null");
 		}
 
 		boolean isConnected = false;
@@ -112,7 +112,7 @@ public class SshClientUtil {
 	 */
 	public String runExecRet(String sCommand) throws Exception {
 		if ( StringUtils.isBlank(sCommand) ) {
-			throw new NullPointerException("sCommand is null");
+			throw new IllegalArgumentException("sCommand is null");
 		}
 
 		String sRet = "";
@@ -149,7 +149,7 @@ public class SshClientUtil {
 	 */
 	public void runExec(String sCommand) throws JSchException {
 		if ( StringUtils.isBlank(sCommand) ) {
-			throw new NullPointerException("sCommand is null");
+			throw new IllegalArgumentException("sCommand is null");
 		}
 
 		channelExec.setCommand(sCommand);

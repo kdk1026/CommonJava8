@@ -79,7 +79,7 @@ public class PagingUtil {
 		}
 
 		if ( StringUtils.isBlank(currentPage) ) {
-			throw new NullPointerException("currentPage must not be null");
+			throw new IllegalArgumentException("currentPage must not be null");
 		}
 
 		this.pagePerRow = pagePerRow;

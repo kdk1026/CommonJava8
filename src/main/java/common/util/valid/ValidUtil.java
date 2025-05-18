@@ -42,7 +42,7 @@ public class ValidUtil {
 	 */
 	public boolean isLengthOver(String str, int min, int max) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		if ( min < 0 || max < 0 ) {
@@ -60,7 +60,7 @@ public class ValidUtil {
 	 */
 	public boolean isNumber(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[0-9]+$");
@@ -73,7 +73,7 @@ public class ValidUtil {
 	 */
 	public boolean isEnglish(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[a-zA-Z]+$");
@@ -86,7 +86,7 @@ public class ValidUtil {
 	 */
 	public boolean isEngBlank(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[a-zA-Z\\s]+$");
@@ -99,7 +99,7 @@ public class ValidUtil {
 	 */
 	public boolean isEngNum(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[a-zA-Z0-9]+$");
@@ -112,7 +112,7 @@ public class ValidUtil {
 	 */
 	public boolean isHangul(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[가-힣]+$");
@@ -125,7 +125,7 @@ public class ValidUtil {
 	 */
 	public boolean isHanBlank(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[가-힣\\s]+$");
@@ -138,7 +138,7 @@ public class ValidUtil {
 	 */
 	public boolean isHanEng(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[가-힣a-zA-Z]+$");
@@ -151,7 +151,7 @@ public class ValidUtil {
 	 */
 	public boolean isSpecial(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^.*[\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}].*+$");
@@ -164,7 +164,7 @@ public class ValidUtil {
 	 */
 	public boolean isEmail(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})+$");
@@ -177,7 +177,7 @@ public class ValidUtil {
 	 */
 	public boolean isPhoneNum(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70|502|503|504|505|506|507))-?(\\d{3,4})-?(\\d{4})+$");
@@ -190,7 +190,7 @@ public class ValidUtil {
 	 */
 	public boolean isCellPhoneNum(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		//return str.matches("^(01[016789])-?(\\d{3,4})-?(\\d{4})+$");
@@ -204,7 +204,7 @@ public class ValidUtil {
 	 */
 	public boolean isCompanyRegNum(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[(\\d{3})-?(\\d{2})-?(\\d{5})+$]");
@@ -217,7 +217,7 @@ public class ValidUtil {
 	 */
 	public boolean isIPv4(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^(1[0-9]{2}|2[0-5][0-5]|[0-9]{1,2})(\\.(1[0-9]{2}|2[0-5][0-5]|[0-9]{1,2})){3}+$");
@@ -230,7 +230,7 @@ public class ValidUtil {
 	 */
 	public boolean isYYYYMMDD(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[0-9]{4}(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])+$");
@@ -243,7 +243,7 @@ public class ValidUtil {
 	 */
 	public boolean isHHmmss(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^((0[1-9])|1[0-9]|2[0-4])([0-5][0-9])([0-5][0-9])+$");
@@ -256,7 +256,7 @@ public class ValidUtil {
 	 */
 	public boolean isYN(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[Y|N]+$");
@@ -273,7 +273,7 @@ public class ValidUtil {
 	 */
 	public boolean isId(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		return str.matches("^[a-zA-z](?=.*[a-zA-Z])[a-zA-Z0-9]{6,29}$");
@@ -292,7 +292,7 @@ public class ValidUtil {
 	 */
 	public boolean isPassword(String str) {
 		if ( isBlank(str) ) {
-			throw new NullPointerException("String is null or blank.");
+			throw new IllegalArgumentException("String is null or blank.");
 		}
 
 		String sPattern1 = "^[a-zA-z](?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9\\W|~!@#[$]%^&*\\(\\)-[_]+[|]<>?:\\{\\}]{9,}$";

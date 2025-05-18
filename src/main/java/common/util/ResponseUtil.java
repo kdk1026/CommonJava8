@@ -45,11 +45,11 @@ public class ResponseUtil {
 	 */
 	public static String contentDisposition(HttpServletRequest request, String str) {
 		if ( request == null ) {
-			throw new NullPointerException("request");
+			throw new IllegalArgumentException("request");
 		}
 
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str");
+			throw new IllegalArgumentException("str");
 		}
 
 		String sRes = "";
@@ -71,15 +71,15 @@ public class ResponseUtil {
 
 	public static void downloadReportFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
 		if ( request == null ) {
-			throw new NullPointerException("request");
+			throw new IllegalArgumentException("request");
 		}
 
 		if ( response == null ) {
-			throw new NullPointerException("response");
+			throw new IllegalArgumentException("response");
 		}
 
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new NullPointerException("fileName");
+			throw new IllegalArgumentException("fileName");
 		}
 
 		String reportFileName = contentDisposition(request, fileName);
@@ -90,11 +90,11 @@ public class ResponseUtil {
 
 	public static void setJsonResponse(HttpServletResponse response, String message) throws IOException {
 		if ( response == null ) {
-			throw new NullPointerException("response");
+			throw new IllegalArgumentException("response");
 		}
 
 		if ( StringUtils.isBlank(message) ) {
-			throw new NullPointerException("message");
+			throw new IllegalArgumentException("message");
 		}
 
 		response.setContentType("application/json");

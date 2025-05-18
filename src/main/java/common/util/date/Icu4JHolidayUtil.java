@@ -34,8 +34,8 @@ public class Icu4JHolidayUtil {
 				LocalDate.parse(yyyyMMdd, DateTimeFormatter.ofPattern("yyyyMMdd"));
 			} catch (DateTimeParseException e) {
 				throw new IllegalArgumentException("yyyyMMdd is invalid format");
-			} catch (NullPointerException e) {
-				throw new NullPointerException("yyyyMMdd is null");
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("yyyyMMdd is null");
 			}
 		}
 	}

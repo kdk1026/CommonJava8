@@ -48,7 +48,7 @@ public class UserAgentUtil {
 	 */
 	public boolean isMobile(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
@@ -69,7 +69,7 @@ public class UserAgentUtil {
 	 */
 	public String isMobileOs(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
@@ -95,11 +95,11 @@ public class UserAgentUtil {
 	 */
 	public boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( StringUtils.isBlank(chkStr) ) {
-			throw new NullPointerException("chkStr is null");
+			throw new IllegalArgumentException("chkStr is null");
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);

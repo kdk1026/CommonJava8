@@ -43,11 +43,11 @@ public class SeedEcbUtil {
 	 */
 	public static String seedEnc(String sPlainData, String sKey) {
 		if ( StringUtils.isBlank(sPlainData) ) {
-			throw new NullPointerException("sPlainData is null");
+			throw new IllegalArgumentException("sPlainData is null");
 		}
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new NullPointerException("sKey is null");
+			throw new IllegalArgumentException("sKey is null");
 		}
 
 		if ( sKey.length() < 16 ) {
@@ -80,11 +80,11 @@ public class SeedEcbUtil {
 	 */
 	public static String seedUrlEnc(String sPlainData, String sKey) {
 		if ( StringUtils.isBlank(sPlainData) ) {
-			throw new NullPointerException("sPlainData is null");
+			throw new IllegalArgumentException("sPlainData is null");
 		}
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new NullPointerException("sKey is null");
+			throw new IllegalArgumentException("sKey is null");
 		}
 
 		if ( sKey.length() < 16 ) {
@@ -120,11 +120,11 @@ public class SeedEcbUtil {
 	 */
 	public static String seedDec(String sEncData, String sKey) {
 		if ( StringUtils.isBlank(sEncData) ) {
-			throw new NullPointerException("sEncData is null");
+			throw new IllegalArgumentException("sEncData is null");
 		}
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new NullPointerException("sKey is null");
+			throw new IllegalArgumentException("sKey is null");
 		}
 
 		if ( sKey.length() < 16 ) {
@@ -161,11 +161,11 @@ public class SeedEcbUtil {
 	 */
 	public static String seedUrlDec(String sEncData, String sKey) {
 		if ( StringUtils.isBlank(sEncData) ) {
-			throw new NullPointerException("sEncData is null");
+			throw new IllegalArgumentException("sEncData is null");
 		}
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new NullPointerException("sKey is null");
+			throw new IllegalArgumentException("sKey is null");
 		}
 
 		if ( sKey.length() < 16 ) {

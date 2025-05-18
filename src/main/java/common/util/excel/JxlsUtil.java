@@ -51,11 +51,11 @@ public class JxlsUtil {
 	 */
 	private static Workbook createWorkbookTemplateFile(Map<String, Object> bean, String templateFileFullPath) {
 		if ( bean == null || bean.isEmpty() ) {
-			throw new NullPointerException("bean is null or empty");
+			throw new IllegalArgumentException("bean is null or empty");
 		}
 
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
-			throw new NullPointerException("templateFileFullPath is null");
+			throw new IllegalArgumentException("templateFileFullPath is null");
 		}
 
 		Workbook workbook = null;
@@ -82,11 +82,11 @@ public class JxlsUtil {
 	 */
 	public static boolean writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> bean) {
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new NullPointerException("destFilePath is null");
+			throw new IllegalArgumentException("destFilePath is null");
 		}
 
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new NullPointerException("fileName is null");
+			throw new IllegalArgumentException("fileName is null");
 		}
 
 		boolean isSuccess = false;
@@ -124,15 +124,15 @@ public class JxlsUtil {
 			, Map<String, Object> bean, String templateFileFullPath, String filename) {
 
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if (response == null) {
-			throw new NullPointerException("response is null");
+			throw new IllegalArgumentException("response is null");
 		}
 
 		if ( StringUtils.isBlank(filename) ) {
-			throw new NullPointerException("filename is null");
+			throw new IllegalArgumentException("filename is null");
 		}
 
 		try {

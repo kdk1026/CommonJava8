@@ -23,7 +23,7 @@ public class DBUtil {
 
 	public static Connection getConnection(Properties prop) {
 		if ( prop == null ) {
-			throw new NullPointerException("Properties is null");
+			throw new IllegalArgumentException("Properties is null");
 		}
 
 		Connection conn = null;
@@ -45,15 +45,15 @@ public class DBUtil {
 
 	public static PreparedStatement getPreparedStatement(Connection conn, String sQuery, List<String> params) {
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new NullPointerException("Query is null");
+			throw new IllegalArgumentException("Query is null");
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new NullPointerException("Params is null");
+			throw new IllegalArgumentException("Params is null");
 		}
 
 		PreparedStatement pstmt = null;
@@ -75,7 +75,7 @@ public class DBUtil {
 
 	public static ResultSet getResultSet(PreparedStatement pstmt) {
 		if ( pstmt == null ) {
-			throw new NullPointerException("PreparedStatement is null");
+			throw new IllegalArgumentException("PreparedStatement is null");
 		}
 
 		ResultSet rs = null;
@@ -92,11 +92,11 @@ public class DBUtil {
 
 	public static void runQuery(Connection conn, String sQuery) {
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new NullPointerException("Query is null");
+			throw new IllegalArgumentException("Query is null");
 		}
 
 		try ( PreparedStatement pstmt = conn.prepareStatement(sQuery) ) {
@@ -109,15 +109,15 @@ public class DBUtil {
 
 	public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
 		if ( rs == null ) {
-			throw new NullPointerException("ResultSet is null");
+			throw new IllegalArgumentException("ResultSet is null");
 		}
 
 		if ( pstmt == null ) {
-			throw new NullPointerException("PreparedStatement is null");
+			throw new IllegalArgumentException("PreparedStatement is null");
 		}
 
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		try {
@@ -131,11 +131,11 @@ public class DBUtil {
 
 	public static void close(ResultSet rs, PreparedStatement pstmt) {
 		if ( rs == null ) {
-			throw new NullPointerException("ResultSet is null");
+			throw new IllegalArgumentException("ResultSet is null");
 		}
 
 		if ( pstmt == null ) {
-			throw new NullPointerException("PreparedStatement is null");
+			throw new IllegalArgumentException("PreparedStatement is null");
 		}
 
 		try {
@@ -158,15 +158,15 @@ public class DBUtil {
 
 	public static CallableStatement getCallableStatement(Connection conn, String sQuery, List<String> params) {
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new NullPointerException("Query is null");
+			throw new IllegalArgumentException("Query is null");
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new NullPointerException("Params is null");
+			throw new IllegalArgumentException("Params is null");
 		}
 
 		CallableStatement cstmt = null;
@@ -190,19 +190,19 @@ public class DBUtil {
 
 	public static ResultSet getCallableResultSet(Connection conn, String sQuery, List<String> params, int nCursorIdx) {
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new NullPointerException("Query is null");
+			throw new IllegalArgumentException("Query is null");
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new NullPointerException("Params is null");
+			throw new IllegalArgumentException("Params is null");
 		}
 
 		if ( nCursorIdx < 1 ) {
-			throw new NullPointerException("Cursor Index is null");
+			throw new IllegalArgumentException("Cursor Index is null");
 		}
 
 		ResultSet rs = null;
@@ -231,15 +231,15 @@ public class DBUtil {
 
 	public static void close(ResultSet rs, CallableStatement cstmt, Connection conn) {
 		if ( rs == null ) {
-			throw new NullPointerException("ResultSet is null");
+			throw new IllegalArgumentException("ResultSet is null");
 		}
 
 		if ( cstmt == null ) {
-			throw new NullPointerException("CallableStatement is null");
+			throw new IllegalArgumentException("CallableStatement is null");
 		}
 
 		if ( conn == null ) {
-			throw new NullPointerException("Connection is null");
+			throw new IllegalArgumentException("Connection is null");
 		}
 
 		try {
@@ -253,11 +253,11 @@ public class DBUtil {
 
 	public static void close(ResultSet rs, CallableStatement cstmt) {
 		if ( rs == null ) {
-			throw new NullPointerException("ResultSet is null");
+			throw new IllegalArgumentException("ResultSet is null");
 		}
 
 		if ( cstmt == null ) {
-			throw new NullPointerException("CallableStatement is null");
+			throw new IllegalArgumentException("CallableStatement is null");
 		}
 
 		try {

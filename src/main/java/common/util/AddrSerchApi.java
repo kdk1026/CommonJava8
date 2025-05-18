@@ -51,7 +51,7 @@ public class AddrSerchApi {
 		}
 
 		if ( StringUtils.isBlank(keyword) ) {
-			throw new NullPointerException("keyword는 필수값입니다.");
+			throw new IllegalArgumentException("keyword는 필수값입니다.");
 		}
 
 		Map<String, Object> resultMap = new HashMap<>();

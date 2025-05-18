@@ -25,11 +25,11 @@ public class XstreamXmlUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml, String root) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new NullPointerException("xml is null");
+			throw new IllegalArgumentException("xml is null");
 		}
 
 		if ( StringUtils.isBlank(root) ) {
-			throw new NullPointerException("root is null");
+			throw new IllegalArgumentException("root is null");
 		}
 
 		Map<String, Object> map = null;
@@ -46,11 +46,11 @@ public class XstreamXmlUtil {
 
 	public static String convertMapToXmlStr(Map<String, Object> map, String root) {
 		if ( map == null || map.isEmpty() ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		if ( StringUtils.isBlank(root) ) {
-			throw new NullPointerException("root is null");
+			throw new IllegalArgumentException("root is null");
 		}
 
 		XStream xStream = new XStream();

@@ -49,7 +49,7 @@ public class CommonsProperties {
 		}
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propFileName must be required");
+			throw new IllegalArgumentException("propFileName must be required");
 		}
 
 		Configurations configs = new Configurations();
@@ -86,7 +86,7 @@ public class CommonsProperties {
 
 	public Object getProperty(String key) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be required");
+			throw new IllegalArgumentException("key must be required");
 		}
 
 		return config.getProperty(key);
@@ -107,11 +107,11 @@ public class CommonsProperties {
 
 	public void addProperty(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be required");
+			throw new IllegalArgumentException("key must be required");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value must be required");
+			throw new IllegalArgumentException("value must be required");
 		}
 
 		config.addProperty(key, value);
@@ -120,11 +120,11 @@ public class CommonsProperties {
 
 	public void setProperty(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be required");
+			throw new IllegalArgumentException("key must be required");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value must be required");
+			throw new IllegalArgumentException("value must be required");
 		}
 
 		config.setProperty(key, value);
@@ -133,7 +133,7 @@ public class CommonsProperties {
 
 	public void clearProperty(String key) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key must be required");
+			throw new IllegalArgumentException("key must be required");
 		}
 
 		config.clearProperty(key);

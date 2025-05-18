@@ -20,7 +20,7 @@ public class TimeUtil {
 	private static class Valid {
 		private static boolean isValidDateRange(Date date) {
 			if (date == null) {
-				throw new NullPointerException("date");
+				throw new IllegalArgumentException("date");
 			}
 
 			LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();

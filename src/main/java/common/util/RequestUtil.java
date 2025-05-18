@@ -26,7 +26,7 @@ public class RequestUtil {
 	 */
 	public static String getRequestIpAddress(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new NullPointerException("request");
+			throw new IllegalArgumentException("request");
 		}
 
 	    String[] sHeaders = {
@@ -58,7 +58,7 @@ public class RequestUtil {
 	 */
 	public static String getRequestDomain(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new NullPointerException("request");
+			throw new IllegalArgumentException("request");
 		}
 
 		String sReqUrl = request.getRequestURL().toString();

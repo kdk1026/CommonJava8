@@ -20,7 +20,7 @@ public class MessageUtil {
 
 	private static Properties getMessagePropertiesClasspath(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new NullPointerException("propertiesFileName is null");
+			throw new IllegalArgumentException("propertiesFileName is null");
 		}
 
 		String sFileName = PROP_CLASS_PATH + propFileName;
@@ -37,7 +37,7 @@ public class MessageUtil {
 
 	public static String getMessage(String propertiesFileName, Object ... arguments) {
 		if ( arguments == null || arguments.length == 0 ) {
-			throw new NullPointerException("arguments is null");
+			throw new IllegalArgumentException("arguments is null");
 		}
 
 		Properties prop = getMessagePropertiesClasspath(propertiesFileName);

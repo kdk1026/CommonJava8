@@ -21,11 +21,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferString(String str, String sEncoding) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new NullPointerException("str is null");
+			throw new IllegalArgumentException("str is null");
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		byte[] b = null;
@@ -49,7 +49,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nByteLen = 0;
@@ -78,11 +78,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferObject(Object obj, String sEncoding) {
 		if ( obj == null ) {
-			throw new NullPointerException("obj is null");
+			throw new IllegalArgumentException("obj is null");
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nByteLen = 0;
@@ -121,7 +121,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nByteLen = 0;
@@ -163,7 +163,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nByteLen = 0;
@@ -196,7 +196,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("sEncoding is null");
+			throw new IllegalArgumentException("sEncoding is null");
 		}
 
 		int nByteLen = 0;

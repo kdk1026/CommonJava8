@@ -47,11 +47,11 @@ public class TripleDesUtil {
 	 */
 	public static String encrypt(String plainText, String key) {
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new NullPointerException("plainText is null");
+			throw new IllegalArgumentException("plainText is null");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( key.length() < 24 ) {
@@ -89,11 +89,11 @@ public class TripleDesUtil {
 	 */
 	public static String decrypt(String encryptedText, String key) {
 		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new NullPointerException("encryptedText is null");
+			throw new IllegalArgumentException("encryptedText is null");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( key.length() < 24 ) {

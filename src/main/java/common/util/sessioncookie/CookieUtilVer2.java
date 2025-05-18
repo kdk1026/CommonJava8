@@ -24,15 +24,15 @@ public class CookieUtilVer2 {
 	 */
 	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, boolean isUseJs, String domain) {
 		if ( response == null ) {
-			throw new NullPointerException("response is null");
+			throw new IllegalArgumentException("response is null");
 		}
 
 		if ( StringUtils.isBlank(name) ) {
-			throw new NullPointerException("name is null");
+			throw new IllegalArgumentException("name is null");
 		}
 
 		if ( StringUtils.isBlank(value) ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		if ( expiry < 0 ) {
@@ -64,11 +64,11 @@ public class CookieUtilVer2 {
 	 */
 	public static Cookie getCookie(HttpServletRequest request, String cookieName) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( StringUtils.isBlank(cookieName) ) {
-			throw new NullPointerException("cookieName is null");
+			throw new IllegalArgumentException("cookieName is null");
 		}
 
 		Cookie cookie = null;
@@ -94,11 +94,11 @@ public class CookieUtilVer2 {
 	 */
 	public static String getCookieValue(HttpServletRequest request, String cookieName) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( StringUtils.isBlank(cookieName) ) {
-			throw new NullPointerException("cookieName is null");
+			throw new IllegalArgumentException("cookieName is null");
 		}
 
 		Cookie cookie = getCookie(request, cookieName);
@@ -112,11 +112,11 @@ public class CookieUtilVer2 {
 	 */
 	public static void removeCookies(HttpServletRequest request, HttpServletResponse response) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( response == null ) {
-			throw new NullPointerException("response is null");
+			throw new IllegalArgumentException("response is null");
 		}
 
 		Cookie[] cookies = request.getCookies();
@@ -140,11 +140,11 @@ public class CookieUtilVer2 {
 	 */
 	public static void removeCookie(HttpServletResponse response, String cookieName, String domain) {
 		if ( response == null ) {
-			throw new NullPointerException("response is null");
+			throw new IllegalArgumentException("response is null");
 		}
 
 		if ( StringUtils.isBlank(cookieName) ) {
-			throw new NullPointerException("cookieName is null");
+			throw new IllegalArgumentException("cookieName is null");
 		}
 
 		Cookie cookie = new Cookie(cookieName, null);
@@ -173,11 +173,11 @@ public class CookieUtilVer2 {
 	 */
 	public static boolean isExist(HttpServletRequest request, String cookieName) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( StringUtils.isBlank(cookieName) ) {
-			throw new NullPointerException("cookieName is null");
+			throw new IllegalArgumentException("cookieName is null");
 		}
 
 		String cookieValue = getCookieValue(request, cookieName);
@@ -191,11 +191,11 @@ public class CookieUtilVer2 {
 	 */
 	public static int getCookieMaxAge(HttpServletRequest request, String cookieName) {
 		if ( request == null ) {
-			throw new NullPointerException("request is null");
+			throw new IllegalArgumentException("request is null");
 		}
 
 		if ( StringUtils.isBlank(cookieName) ) {
-			throw new NullPointerException("cookieName is null");
+			throw new IllegalArgumentException("cookieName is null");
 		}
 
 		Cookie cookie = getCookie(request, cookieName);

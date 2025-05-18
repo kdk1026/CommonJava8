@@ -44,11 +44,11 @@ public class ImageFileUtil {
 	 */
 	public static void resize(String sSrcPath, String sDestPath, int nWidth, int nHeight, boolean isScale) {
 		if ( StringUtils.isBlank(sSrcPath) ) {
-			throw new NullPointerException("sSrcPath is null");
+			throw new IllegalArgumentException("sSrcPath is null");
 		}
 
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new NullPointerException("sDestPath is null");
+			throw new IllegalArgumentException("sDestPath is null");
 		}
 
 		if ( nWidth < 1 ) {
@@ -74,11 +74,11 @@ public class ImageFileUtil {
 	 */
 	public static void resize(File srcFile, File destFile, int nWidth, int nHeight, boolean isScale) {
 		if ( srcFile == null ) {
-			throw new NullPointerException("srcFile is null");
+			throw new IllegalArgumentException("srcFile is null");
 		}
 
 		if ( destFile == null ) {
-			throw new NullPointerException("destFile is null");
+			throw new IllegalArgumentException("destFile is null");
 		}
 
 		if ( nWidth < 1 ) {
@@ -161,15 +161,15 @@ public class ImageFileUtil {
 	 */
 	private static void writeImage(Image image, String sImageFormat, File destFile) {
 		if ( image == null ) {
-			throw new NullPointerException("image is null");
+			throw new IllegalArgumentException("image is null");
 		}
 
 		if ( StringUtils.isBlank(sImageFormat) ) {
-			throw new NullPointerException("sImageFormat is null");
+			throw new IllegalArgumentException("sImageFormat is null");
 		}
 
 		if ( destFile == null ) {
-			throw new NullPointerException("destFile is null");
+			throw new IllegalArgumentException("destFile is null");
 		}
 
 		BufferedImage bufImg = null;

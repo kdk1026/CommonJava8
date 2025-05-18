@@ -42,11 +42,11 @@ public class BasicObjectUtil {
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if ( StringUtils.isBlank(fieldName) ) {
-			throw new NullPointerException("FieldName is null");
+			throw new IllegalArgumentException("FieldName is null");
 		}
 
 		String str = null;
@@ -69,7 +69,7 @@ public class BasicObjectUtil {
 	 */
 	public static List<String> getFieldNames(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		List<String> list = new ArrayList<>();
@@ -91,7 +91,7 @@ public class BasicObjectUtil {
 	 */
 	public static Map<String, Object> convertObjectToMap(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		Map<String, Object> commandMap = new HashMap<>();
@@ -121,11 +121,11 @@ public class BasicObjectUtil {
 	 */
 	public static Object setReqParamToObject(HttpServletRequest request, Object obj) {
 		if ( request == null ) {
-			throw new NullPointerException("Request is null");
+			throw new IllegalArgumentException("Request is null");
 		}
 
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		String sKey = "";
@@ -158,11 +158,11 @@ public class BasicObjectUtil {
 	 */
 	public static void setHttpResponse(Object obj, HttpServletResponse response) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if ( response == null ) {
-			throw new NullPointerException("Response is null");
+			throw new IllegalArgumentException("Response is null");
 		}
 
 		try {

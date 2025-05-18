@@ -51,11 +51,11 @@ public class ObjectUtil {
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if ( StringUtils.isBlank(fieldName) ) {
-			throw new NullPointerException("FieldName is null");
+			throw new IllegalArgumentException("FieldName is null");
 		}
 
 		Field field = FieldUtils.getField(obj.getClass(), fieldName, true);
@@ -87,7 +87,7 @@ public class ObjectUtil {
 	 */
 	public static List<String> getFieldNames(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		List<String> list = new ArrayList<>();
@@ -116,11 +116,11 @@ public class ObjectUtil {
 	 */
 	public static void paramToObject(HttpServletRequest request, Object obj) {
 		if ( request == null ) {
-			throw new NullPointerException("Request is null");
+			throw new IllegalArgumentException("Request is null");
 		}
 
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		try {
@@ -146,11 +146,11 @@ public class ObjectUtil {
 	 */
 	public static void mapToObject(Map<String, Object> map, Object obj) {
 		if ( map == null ) {
-			throw new NullPointerException("Map is null");
+			throw new IllegalArgumentException("Map is null");
 		}
 
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		try {
@@ -176,11 +176,11 @@ public class ObjectUtil {
 	 */
 	public static void mapToStruct(Map<String, Object> map, Object obj) {
 		if ( map == null ) {
-			throw new NullPointerException("Map is null");
+			throw new IllegalArgumentException("Map is null");
 		}
 
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		String key = "";
@@ -226,11 +226,11 @@ public class ObjectUtil {
 	 */
 	public static int getByteLength(Object obj, String sEncoding) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("Encoding is null");
+			throw new IllegalArgumentException("Encoding is null");
 		}
 
 		int nByteLen = 0;
@@ -265,15 +265,15 @@ public class ObjectUtil {
 	 */
 	public static int getByteLength(Object obj, String sFieldName, String sEncoding) {
 		if ( obj == null ) {
-			throw new NullPointerException("Object is null");
+			throw new IllegalArgumentException("Object is null");
 		}
 
 		if ( StringUtils.isBlank(sFieldName) ) {
-			throw new NullPointerException("FieldName is null");
+			throw new IllegalArgumentException("FieldName is null");
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new NullPointerException("Encoding is null");
+			throw new IllegalArgumentException("Encoding is null");
 		}
 
 		int nByteLen = 0;

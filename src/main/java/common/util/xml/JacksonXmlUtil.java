@@ -25,7 +25,7 @@ public class JacksonXmlUtil {
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new NullPointerException("xml is null");
+			throw new IllegalArgumentException("xml is null");
 		}
 
 		Map<String, Object> map = new HashMap<>();
@@ -43,7 +43,7 @@ public class JacksonXmlUtil {
 	@SuppressWarnings("unchecked")
 	public static List<Map<String, Object>> converterXmlStrToMapList(String xml) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new NullPointerException("xml is null");
+			throw new IllegalArgumentException("xml is null");
 		}
 
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -61,7 +61,7 @@ public class JacksonXmlUtil {
 
 	public static String convertMapToXmlStr(Map<String, Object> map) {
 		if ( map == null || map.isEmpty() ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		JacksonXmlModule xmlModule = new JacksonXmlModule();

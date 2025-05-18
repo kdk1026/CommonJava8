@@ -102,7 +102,7 @@ public class AesCryptoHexUtil {
      */
     public String encrypt(String src) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(src) ) {
-    		throw new NullPointerException("src is null");
+    		throw new IllegalArgumentException("src is null");
     	}
 
         Cipher cipher = getCipher(Cipher.ENCRYPT_MODE);
@@ -124,7 +124,7 @@ public class AesCryptoHexUtil {
      */
     public String decrypt(String hex) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(hex) ) {
-    		throw new NullPointerException("hex is null");
+    		throw new IllegalArgumentException("hex is null");
     	}
 
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE);

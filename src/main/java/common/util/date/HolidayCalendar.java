@@ -41,8 +41,8 @@ public class HolidayCalendar {
 				LocalDate.parse(yyyyMMdd, DateTimeFormatter.ofPattern("yyyyMMdd"));
 			} catch (DateTimeParseException e) {
 				throw new IllegalArgumentException("yyyyMMdd is invalid format");
-			} catch (NullPointerException e) {
-				throw new NullPointerException("yyyyMMdd is null");
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("yyyyMMdd is null");
 			}
 		}
 
@@ -51,8 +51,8 @@ public class HolidayCalendar {
 				Year.parse(year);
 			} catch (DateTimeParseException e) {
 				throw new IllegalArgumentException("yyyy is invalid format");
-			} catch (NullPointerException e) {
-				throw new NullPointerException("yyyy is null");
+			} catch (IllegalArgumentException e) {
+				throw new IllegalArgumentException("yyyy is null");
 			}
 		}
 	}

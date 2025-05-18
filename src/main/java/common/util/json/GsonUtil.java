@@ -36,7 +36,7 @@ public class GsonUtil {
 
 	public static String prettyPrintString(String jsonStr) {
 		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new NullPointerException("jsonStr is null");
+			throw new IllegalArgumentException("jsonStr is null");
 		}
 
 		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -51,7 +51,7 @@ public class GsonUtil {
 
 		public static String converterObjToJsonStr(Object obj) {
 			if ( obj == null ) {
-				throw new NullPointerException("obj is null");
+				throw new IllegalArgumentException("obj is null");
 			}
 
 			String sJson = "";
@@ -69,7 +69,7 @@ public class GsonUtil {
 
 		public static String converterMapToJsonStr(Map<String, Object> map) {
 			if ( map == null || map.isEmpty() ) {
-				throw new NullPointerException("map is null");
+				throw new IllegalArgumentException("map is null");
 			}
 
 			return converterObjToJsonStr(map);
@@ -77,7 +77,7 @@ public class GsonUtil {
 
 		public static String converterListToJsonStr(List<?> list) {
 			if ( list == null || list.isEmpty() ) {
-				throw new NullPointerException("list is null");
+				throw new IllegalArgumentException("list is null");
 			}
 
 			return converterObjToJsonStr(list);
@@ -93,7 +93,7 @@ public class GsonUtil {
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String sJson) {
 			if ( StringUtils.isBlank(sJson) ) {
-				throw new NullPointerException("sJson is null");
+				throw new IllegalArgumentException("sJson is null");
 			}
 
 			Map<String, Object> map = new HashMap<>();
@@ -111,7 +111,7 @@ public class GsonUtil {
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
 			if ( StringUtils.isBlank(sJson) ) {
-				throw new NullPointerException("sJson is null");
+				throw new IllegalArgumentException("sJson is null");
 			}
 
 			JsonObject jsonObj = null;
@@ -129,7 +129,7 @@ public class GsonUtil {
 
 		public static List<?> converterJsonStrToList(String sJsonArr) {
 			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new NullPointerException("sJsonArr is null");
+				throw new IllegalArgumentException("sJsonArr is null");
 			}
 
 			List<?> list = new ArrayList<>();
@@ -147,7 +147,7 @@ public class GsonUtil {
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
 			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new NullPointerException("sJsonArr is null");
+				throw new IllegalArgumentException("sJsonArr is null");
 			}
 
 			JsonArray jsonArray = null;
@@ -165,11 +165,11 @@ public class GsonUtil {
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new NullPointerException("jsonStr is null");
+				throw new IllegalArgumentException("jsonStr is null");
 			}
 
 			if ( clazz == null ) {
-				throw new NullPointerException("clazz is null");
+				throw new IllegalArgumentException("clazz is null");
 			}
 
 			Gson gson = getInstance();
@@ -192,11 +192,11 @@ public class GsonUtil {
 
 		public static Object readJsonFileObject(String sfileName, Type type) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new NullPointerException("sfileName is null");
+				throw new IllegalArgumentException("sfileName is null");
 			}
 
 			if ( type == null ) {
-				throw new NullPointerException("type is null");
+				throw new IllegalArgumentException("type is null");
 			}
 
 			Object obj = null;
@@ -215,11 +215,11 @@ public class GsonUtil {
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> readJsonFileArray(String sfileName, Type type) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new NullPointerException("sfileName is null");
+				throw new IllegalArgumentException("sfileName is null");
 			}
 
 			if ( type == null ) {
-				throw new NullPointerException("type is null");
+				throw new IllegalArgumentException("type is null");
 			}
 
 			Object obj = null;

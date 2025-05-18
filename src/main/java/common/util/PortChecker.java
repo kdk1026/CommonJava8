@@ -36,7 +36,7 @@ public class PortChecker {
 
 	public boolean isConnected(String host, int port) {
 		if ( StringUtils.isBlank(host) ) {
-			throw new NullPointerException("host is null");
+			throw new IllegalArgumentException("host is null");
 		}
 
 		if ( port < 0 || port > 65535 ) {

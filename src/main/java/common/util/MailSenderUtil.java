@@ -84,15 +84,15 @@ public class MailSenderUtil {
 	 */
 	public static boolean sendmail(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
 		if ( mailTos == null || mailTos.length == 0 ) {
-			throw new NullPointerException("mailTos is null");
+			throw new IllegalArgumentException("mailTos is null");
 		}
 
 		if ( StringUtils.isBlank(mailSubject) ) {
-			throw new NullPointerException("mailSubject is null");
+			throw new IllegalArgumentException("mailSubject is null");
 		}
 
 		if ( StringUtils.isBlank(mailMsg) ) {
-			throw new NullPointerException("mailMsg is null");
+			throw new IllegalArgumentException("mailMsg is null");
 		}
 
 		boolean isSuccess = false;
@@ -170,15 +170,15 @@ public class MailSenderUtil {
 	 */
 	public static boolean sendmailCommons(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
 		if ( mailTos == null || mailTos.length == 0 ) {
-			throw new NullPointerException("mailTos is null");
+			throw new IllegalArgumentException("mailTos is null");
 		}
 
 		if ( StringUtils.isBlank(mailSubject) ) {
-			throw new NullPointerException("mailSubject is null");
+			throw new IllegalArgumentException("mailSubject is null");
 		}
 
 		if ( StringUtils.isBlank(mailMsg) ) {
-			throw new NullPointerException("mailMsg is null");
+			throw new IllegalArgumentException("mailMsg is null");
 		}
 
 		boolean isSuccess = false;

@@ -56,7 +56,7 @@ public class MobileDetectUtil {
 
 	public static DeviceType detecteDevice(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new NullPointerException("request");
+			throw new IllegalArgumentException("request");
 		}
 
 		DeviceType deviceType = null;
@@ -77,7 +77,7 @@ public class MobileDetectUtil {
 
 	private static DeviceType isTablet(String userAgent) {
 		if ( StringUtils.isBlank(userAgent) ) {
-			throw new NullPointerException("userAgent");
+			throw new IllegalArgumentException("userAgent");
 		}
 
 		DeviceType deviceType = null;
@@ -97,7 +97,7 @@ public class MobileDetectUtil {
 
 	private static DeviceType isMobile(String userAgent) {
 		if ( StringUtils.isBlank(userAgent) ) {
-			throw new NullPointerException("userAgent");
+			throw new IllegalArgumentException("userAgent");
 		}
 
 		DeviceType deviceType = null;

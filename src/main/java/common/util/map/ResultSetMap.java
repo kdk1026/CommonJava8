@@ -24,11 +24,11 @@ public class ResultSetMap extends ListOrderedMap {
 	@Override
 	public Object put(Object key, Object value) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(key.toString().toLowerCase(), value);
@@ -37,11 +37,11 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	public Object putCamel(Object key, Object value) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(ConvertCaseUtil.camelCase(key.toString()), value);
@@ -50,11 +50,11 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	public Object putBasic(Object key, Object value) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( value == null ) {
-			throw new NullPointerException("value is null");
+			throw new IllegalArgumentException("value is null");
 		}
 
 		return super.put(key, value);
@@ -62,7 +62,7 @@ public class ResultSetMap extends ListOrderedMap {
 
 	public String getString(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return super.containsKey(key) ? String.valueOf(super.get(key)) : "";
@@ -70,7 +70,7 @@ public class ResultSetMap extends ListOrderedMap {
 
 	public int getInteger(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Integer.parseInt(String.valueOf(super.get(key)));
@@ -78,7 +78,7 @@ public class ResultSetMap extends ListOrderedMap {
 
 	public boolean getBoolean(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Boolean.parseBoolean(String.valueOf(super.get(key)));
@@ -86,7 +86,7 @@ public class ResultSetMap extends ListOrderedMap {
 
 	public long getLong(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		return Long.parseLong(String.valueOf(super.get(key)));
@@ -102,7 +102,7 @@ public class ResultSetMap extends ListOrderedMap {
 	 */
 	public int getNumber(Object key) {
 		if ( key == null ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		int nRet = 0;

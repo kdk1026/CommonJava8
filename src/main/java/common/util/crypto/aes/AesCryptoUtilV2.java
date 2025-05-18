@@ -61,11 +61,11 @@ public class AesCryptoUtilV2 {
 	 */
 	public static String encrypt(String plainText, String key, String iv, String padding) {
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new NullPointerException("plainText is null");
+			throw new IllegalArgumentException("plainText is null");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
@@ -73,7 +73,7 @@ public class AesCryptoUtilV2 {
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new NullPointerException("padding is null");
+			throw new IllegalArgumentException("padding is null");
 		}
 
 		String encryptedText = "";
@@ -115,11 +115,11 @@ public class AesCryptoUtilV2 {
 	 */
 	public static String decrypt(String encryptedText, String key, String iv, String padding) {
 		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new NullPointerException("encryptedText is null");
+			throw new IllegalArgumentException("encryptedText is null");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
@@ -127,7 +127,7 @@ public class AesCryptoUtilV2 {
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new NullPointerException("padding is null");
+			throw new IllegalArgumentException("padding is null");
 		}
 
 		String decryptedText = "";

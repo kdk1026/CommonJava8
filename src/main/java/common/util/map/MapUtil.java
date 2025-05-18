@@ -40,7 +40,7 @@ public class MapUtil {
 	 */
 	public static Map<String, Object> objectToMapObject(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("obj is null");
+			throw new IllegalArgumentException("obj is null");
 		}
 
 		Map<String, Object> map = new HashMap<>();
@@ -93,7 +93,7 @@ public class MapUtil {
 	 */
 	public static Map<String, String> objectToMap(Object obj) {
 		if ( obj == null ) {
-			throw new NullPointerException("obj is null");
+			throw new IllegalArgumentException("obj is null");
 		}
 
 		Map<String, String> map = null;
@@ -125,11 +125,11 @@ public class MapUtil {
 	 */
 	public static boolean isBlank(Map<String, Object> map, String key) {
 		if ( map == null ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new NullPointerException("key is null");
+			throw new IllegalArgumentException("key is null");
 		}
 
 		if ( map.get(key) == null ) {
@@ -154,11 +154,11 @@ public class MapUtil {
 	 */
 	public static void notContainsKeyToBlank(Map<String, Object> map, String ... keys) {
 		if ( map == null ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		if ( keys == null || keys.length == 0 ) {
-			throw new NullPointerException("keys is null");
+			throw new IllegalArgumentException("keys is null");
 		}
 
 		String key = "";
@@ -188,7 +188,7 @@ public class MapUtil {
 	 */
 	public static void nullToBlank(Map<String, Object> map) {
 		if ( map == null ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		String key = "";
@@ -215,7 +215,7 @@ public class MapUtil {
 	 */
 	public static void spaceToBlank(Map<String, Object> map) {
 		if ( map == null ) {
-			throw new NullPointerException("map is null");
+			throw new IllegalArgumentException("map is null");
 		}
 
 		String key = "";

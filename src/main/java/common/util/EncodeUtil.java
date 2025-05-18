@@ -25,7 +25,7 @@ public class EncodeUtil {
 	 */
 	public static String encodeBase64(byte[] binaryData) {
 		if ( binaryData == null || binaryData.length == 0 ) {
-			throw new NullPointerException("binaryData is null");
+			throw new IllegalArgumentException("binaryData is null");
 		}
 
 		return Base64.getEncoder().encodeToString(binaryData);
@@ -39,7 +39,7 @@ public class EncodeUtil {
 	 */
 	public static byte[] decodeBase64(String base64Data) {
 		if ( StringUtils.isBlank(base64Data) ) {
-			throw new NullPointerException("base64Data is null");
+			throw new IllegalArgumentException("base64Data is null");
 		}
 
 		return Base64.getDecoder().decode(base64Data);
@@ -57,7 +57,7 @@ public class EncodeUtil {
 	 */
 	public static String urlEncode(String sPlain) {
 		if ( StringUtils.isBlank(sPlain) ) {
-			throw new NullPointerException("sPlain is null");
+			throw new IllegalArgumentException("sPlain is null");
 		}
 
 		String sRes = "";
@@ -81,11 +81,11 @@ public class EncodeUtil {
 	 */
 	public static String urlEncode(String sPlain, String sCharsetName) {
 		if ( StringUtils.isBlank(sPlain) ) {
-			throw new NullPointerException("sPlain is null");
+			throw new IllegalArgumentException("sPlain is null");
 		}
 
 		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new NullPointerException("sCharsetName is null");
+			throw new IllegalArgumentException("sCharsetName is null");
 		}
 
 		String sRes = "";
@@ -109,7 +109,7 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String sEncodedData) {
 		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new NullPointerException("sEncodedData is null");
+			throw new IllegalArgumentException("sEncodedData is null");
 		}
 
 		String sRes = "";
@@ -133,11 +133,11 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String sEncodedData, String sCharsetName) {
 		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new NullPointerException("sEncodedData is null");
+			throw new IllegalArgumentException("sEncodedData is null");
 		}
 
 		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new NullPointerException("sCharsetName is null");
+			throw new IllegalArgumentException("sCharsetName is null");
 		}
 
 		String sRes = "";

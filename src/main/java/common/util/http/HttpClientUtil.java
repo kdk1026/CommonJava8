@@ -138,7 +138,7 @@ public class HttpClientUtil {
 		 */
 		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, Object> header) {
 			if ( StringUtils.isBlank(url) ) {
-				throw new NullPointerException("url is null");
+				throw new IllegalArgumentException("url is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -240,7 +240,7 @@ public class HttpClientUtil {
 		 */
 		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
 			if ( StringUtils.isBlank(url) ) {
-				throw new NullPointerException("url is null");
+				throw new IllegalArgumentException("url is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -342,11 +342,11 @@ public class HttpClientUtil {
 		 */
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload) {
 			if ( StringUtils.isBlank(url) ) {
-				throw new NullPointerException("url is null");
+				throw new IllegalArgumentException("url is null");
 			}
 
 			if ( StringUtils.isBlank(payload) ) {
-				throw new NullPointerException("payload is null");
+				throw new IllegalArgumentException("payload is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -436,15 +436,15 @@ public class HttpClientUtil {
 		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param
 				, String fileParamKey, File file) {
 			if ( StringUtils.isBlank(url) ) {
-				throw new NullPointerException("url is null");
+				throw new IllegalArgumentException("url is null");
 			}
 
 			if ( StringUtils.isBlank(fileParamKey) ) {
-				throw new NullPointerException("fileParamKey is null");
+				throw new IllegalArgumentException("fileParamKey is null");
 			}
 
 			if ( file == null ) {
-				throw new NullPointerException("file is null");
+				throw new IllegalArgumentException("file is null");
 			}
 
 			Map<String, Object> resMap = new HashMap<>();

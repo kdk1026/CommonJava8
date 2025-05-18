@@ -29,7 +29,7 @@ public class AgeUtil {
 	 */
 	public static int getAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		Calendar birth = Calendar.getInstance();
@@ -58,11 +58,11 @@ public class AgeUtil {
 	 */
 	public static int getAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new NullPointerException("fixDay is null");
+			throw new IllegalArgumentException("fixDay is null");
 		}
 
 		int age = 0;
@@ -91,7 +91,7 @@ public class AgeUtil {
 	 */
 	public static int getKoreanAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		int age = 0;
@@ -117,11 +117,11 @@ public class AgeUtil {
 	 */
 	public static int getKoreanAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new NullPointerException("fixDay is null");
+			throw new IllegalArgumentException("fixDay is null");
 		}
 
 		int age = 0;
@@ -148,7 +148,7 @@ public class AgeUtil {
 	 */
 	public static int getInsurAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		int age = 0;
@@ -190,11 +190,11 @@ public class AgeUtil {
 	 */
 	public static int getInsurAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new NullPointerException("birthDay is null");
+			throw new IllegalArgumentException("birthDay is null");
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new NullPointerException("fixDay is null");
+			throw new IllegalArgumentException("fixDay is null");
 		}
 
 		int age = 0;
