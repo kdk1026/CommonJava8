@@ -22,7 +22,8 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 7.  7. 김대광	최초작성
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (그냥 기본 Exception 이나 RuntimeException 쓰자... 만들려면 또 exception 패키지 만들어서 어! 상속도 받고 어!... 힘들어...)
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  * @Description	Apache Commons Net 기반
@@ -32,6 +33,8 @@ public class FtpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FtpClientUtil.class);
 
+	private static FtpClientUtil instance;
+
 	/*
 	 * 외부에서 객체 인스턴스화 불가
 	 */
@@ -39,12 +42,12 @@ public class FtpClientUtil {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final FtpClientUtil INSTANCE = new FtpClientUtil();
-	}
+	public static synchronized FtpClientUtil getInstance() {
+		if (instance == null) {
+			instance = new FtpClientUtil();
+		}
 
-	public static FtpClientUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	private final String ENCODING = StandardCharsets.UTF_8.toString();

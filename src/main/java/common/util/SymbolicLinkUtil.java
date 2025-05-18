@@ -25,6 +25,8 @@ public class SymbolicLinkUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(SymbolicLinkUtil.class);
 
+	private static SymbolicLinkUtil instance;
+
 	/**
 	 * 외부에서 객체 인스턴스화 불가
 	 */
@@ -32,12 +34,12 @@ public class SymbolicLinkUtil {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final SymbolicLinkUtil INSTANCE = new SymbolicLinkUtil();
-	}
+	public static synchronized SymbolicLinkUtil getInstance() {
+		if (instance == null) {
+			instance = new SymbolicLinkUtil();
+		}
 
-	public static SymbolicLinkUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	/**

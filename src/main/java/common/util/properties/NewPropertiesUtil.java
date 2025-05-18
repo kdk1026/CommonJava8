@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2024. 8. 2. 김대광	최초작성
+ * 2024. 8. 2.  김대광	최초작성
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
@@ -23,16 +24,18 @@ public class NewPropertiesUtil {
 
 	private final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
 
+	private static NewPropertiesUtil instance;
+
 	private NewPropertiesUtil() {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final NewPropertiesUtil INSTANCE = new NewPropertiesUtil();
-	}
+	public static synchronized NewPropertiesUtil getInstance() {
+		if ( instance == null ) {
+			instance = new NewPropertiesUtil();
+		}
 
-	public static NewPropertiesUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	public Properties getProperties(String propFileName) {

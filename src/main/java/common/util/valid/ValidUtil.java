@@ -4,7 +4,8 @@ package common.util.valid;
  * <pre>
  * 개정이력
  * -----------------------------------
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (정규식은 어쩔수가 없구나... 님 이런건 넘어가주세요...)
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (정규식은 어쩔수가 없구나...)
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
@@ -12,16 +13,18 @@ package common.util.valid;
  */
 public class ValidUtil {
 
+	private static ValidUtil instance;
+
 	private ValidUtil() {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final ValidUtil INSTANCE = new ValidUtil();
-	}
+	public static synchronized ValidUtil getInstance() {
+		if (instance == null) {
+			instance = new ValidUtil();
+		}
 
-	public static ValidUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	/**

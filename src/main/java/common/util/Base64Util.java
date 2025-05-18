@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2024. 8. 13. 김대광	최초작성
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
@@ -22,16 +23,18 @@ public class Base64Util {
 
 	private final Logger logger = LoggerFactory.getLogger(Base64Util.class);
 
+	private static Base64Util instance;
+
 	private Base64Util() {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final Base64Util INSTANCE = new Base64Util();
-	}
+	public static synchronized Base64Util getInstance() {
+		if (instance == null) {
+			instance = new Base64Util();
+		}
 
-	public static Base64Util getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	public String encode(String text) {

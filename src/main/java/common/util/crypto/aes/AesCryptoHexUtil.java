@@ -20,6 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (그냥 복사해 왔지... throw new 해놓고, 메소드에 throws 왜 걸었지???)
  * 			Cipher.getInstance 패딩 권장이긴 하지만... node.js 랑 맞춰진거니 별 수 있나 뭐...
  * 2021. 8. 15. 김대광	LazyHolder Singleton 패턴으로 변경 및 파일명 변경
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  * <pre>
@@ -39,6 +40,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class AesCryptoHexUtil {
 
+	private static AesCryptoHexUtil instance;
+
 	/** 외부에서 객체 인스턴스화 불가 */
 	private AesCryptoHexUtil() {
 		super();
@@ -49,17 +52,12 @@ public class AesCryptoHexUtil {
 	 *
 	 * @return
 	 */
-	public static AesCryptoHexUtil getInstance() {
-		return LazyHolder.INSTANCE;
-	}
+	public static synchronized AesCryptoHexUtil getInstance() {
+		if (instance == null) {
+			instance = new AesCryptoHexUtil();
+		}
 
-	/**
-	 * LazyHolder Singleton 패턴
-	 *
-	 * @return
-	 */
-	private static class LazyHolder {
-		private static final AesCryptoHexUtil INSTANCE = new AesCryptoHexUtil();
+		return instance;
 	}
 
 	private String cipherKey;

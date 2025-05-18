@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2024. 9. 6. 김대광	최초작성
+ * 2024. 9. 6.  김대광	최초작성
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
@@ -20,18 +21,20 @@ import org.slf4j.LoggerFactory;
  */
 public class PortChecker {
 
+	private static final Logger logger = LoggerFactory.getLogger(PortChecker.class);
+
+	private static PortChecker instance;
+
 	private PortChecker() {
 		super();
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(PortChecker.class);
+	public static synchronized PortChecker getInstance() {
+		if (instance == null) {
+			instance = new PortChecker();
+		}
 
-	private static class LazyHolder {
-		private static final PortChecker INSTANCE = new PortChecker();
-	}
-
-	public static PortChecker getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	public boolean isConnected(String host, int port) {

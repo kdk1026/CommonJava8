@@ -9,12 +9,15 @@ import org.apache.commons.lang3.StringUtils;
  * 개정이력
  * -----------------------------------
  * 2021. 8. 10. 김대광	최초작성
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
  * @author 김대광
  */
 public class UserAgentUtil {
+
+	private static UserAgentUtil instance;
 
 	private static final String USER_AGENT = "User-Agent";
 
@@ -28,17 +31,12 @@ public class UserAgentUtil {
 	 *
 	 * @return
 	 */
-	public static UserAgentUtil getInstance() {
-		return LazyHolder.INSTANCE;
-	}
+	public static synchronized UserAgentUtil getInstance() {
+		if (instance == null) {
+			instance = new UserAgentUtil();
+		}
 
-	/**
-	 * LazyHolder Singleton 패턴
-	 *
-	 * @return
-	 */
-	private static class LazyHolder {
-		private static final UserAgentUtil INSTANCE = new UserAgentUtil();
+		return instance;
 	}
 
 	/**

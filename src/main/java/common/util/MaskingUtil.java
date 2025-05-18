@@ -7,7 +7,8 @@ import org.apache.commons.lang3.StringUtils;
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2025. 2. 5. kdk	최초작성
+ * 2025. 2. 5.  kdk		최초작성
+ * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
  * </pre>
  *
  *
@@ -15,16 +16,18 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MaskingUtil {
 
+	private static MaskingUtil instance;
+
 	private MaskingUtil() {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final MaskingUtil INSTANCE = new MaskingUtil();
-	}
+	public static synchronized MaskingUtil getInstance() {
+		if (instance == null) {
+			instance = new MaskingUtil();
+		}
 
-	public static MaskingUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	/**
