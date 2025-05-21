@@ -52,6 +52,12 @@ public class GsonUtil {
 			} else {
 				instance.gson = new GsonBuilder().disableHtmlEscaping().create();
 			}
+        } else {
+			if (isPretty) {
+				instance.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+			} else {
+				instance.gson = new GsonBuilder().disableHtmlEscaping().create();
+			}
         }
 
         return instance;
