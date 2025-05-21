@@ -25,72 +25,75 @@ public class JacksonUtil {
 		super();
 	}
 
+	private static JacksonUtil instance;
+    private ObjectMapper mapper;
+
 	private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
 
-	public static String prettyPrintString(String jsonStr) {
-		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new IllegalArgumentException("jsonStr is null");
-		}
+	private static synchronized JacksonUtil getInstance() {
+        if (instance == null) {
+			instance = new JacksonUtil();
+			instance.mapper = new ObjectMapper();
+        }
 
-		ObjectMapper mapper = new ObjectMapper();
-		String sortJson = "";
-		try {
-			Object json = mapper.readValue(jsonStr, Object.class);
-			sortJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		return sortJson;
-	}
+        return instance;
+    }
 
 	public static class ToJson {
-
-		protected ToJson() {
-			super();
-		}
-
-		public static String converterObjToJsonStr(Object obj) {
+		public static String converterObjToJsonStr(Object obj, boolean isPretty) {
 			if ( obj == null ) {
 				throw new IllegalArgumentException("obj is null");
 			}
 
 			String jsonStr = "";
 
-			ObjectMapper mapper = new ObjectMapper();
 			try {
-				jsonStr = mapper.writeValueAsString(obj);
+				getInstance();
+				if (!isPretty) {
+					jsonStr = instance.mapper.writeValueAsString(obj);
+				} else {
+					jsonStr = instance.mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
+				}
 			} catch (Exception e) {
 				logger.error("", e);
 			}
 			return jsonStr;
 		}
 
-		public static String converterMapToJsonStr(Map<String, Object> map) {
+		public static String converterMapToJsonStr(Map<String, Object> map, boolean isPretty) {
 			if ( map == null || map.isEmpty() ) {
 				throw new IllegalArgumentException("map is null");
 			}
 
 			String jsonStr = "";
 
-			ObjectMapper mapper = new ObjectMapper();
 			try {
-				jsonStr = mapper.writeValueAsString(map);
+				getInstance();
+				if (!isPretty) {
+					jsonStr = instance.mapper.writeValueAsString(map);
+				} else {
+					jsonStr = instance.mapper.writerWithDefaultPrettyPrinter().writeValueAsString(map);
+				}
 			} catch (Exception e) {
 				logger.error("", e);
 			}
 			return jsonStr;
 		}
 
-		public static String converterListToJsonStr(List<?> list) {
+		public static String converterListToJsonStr(List<?> list, boolean isPretty) {
 			if ( list == null || list.isEmpty() ) {
 				throw new IllegalArgumentException("list is null");
 			}
 
 			String jsonStr = "";
 
-			ObjectMapper mapper = new ObjectMapper();
 			try {
-				jsonStr = mapper.writeValueAsString(list);
+				getInstance();
+				if (!isPretty) {
+					jsonStr = instance.mapper.writeValueAsString(list);
+				} else {
+					jsonStr = instance.mapper.writerWithDefaultPrettyPrinter().writeValueAsString(list);
+				}
 			} catch (Exception e) {
 				logger.error("", e);
 			}
@@ -102,8 +105,8 @@ public class JacksonUtil {
 				throw new IllegalArgumentException("map is null");
 			}
 
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.valueToTree(map);
+			getInstance();
+			return instance.mapper.valueToTree(map);
 		}
 
 		public static JsonNode converterListToJsonNode(List<?> list) {
@@ -111,17 +114,12 @@ public class JacksonUtil {
 				throw new IllegalArgumentException("list is null");
 			}
 
-			ObjectMapper mapper = new ObjectMapper();
-			return mapper.valueToTree(list);
+			getInstance();
+			return instance.mapper.valueToTree(list);
 		}
 	}
 
 	public static class FromJson {
-
-		protected FromJson() {
-			super();
-		}
-
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String jsonStr) {
 			if ( StringUtils.isBlank(jsonStr) ) {
@@ -130,9 +128,9 @@ public class JacksonUtil {
 
 			Map<String, Object> map = new HashMap<>();
 
-			ObjectMapper mapper = new ObjectMapper();
 			try {
-				map = mapper.readValue(jsonStr, Map.class);
+				getInstance();
+				map = instance.mapper.readValue(jsonStr, Map.class);
 			} catch (Exception e) {
 				logger.error("", e);
 			}
@@ -145,10 +143,10 @@ public class JacksonUtil {
 			}
 
 			JsonNode jsonNode = null;
-			ObjectMapper mapper = new ObjectMapper();
 
 			try {
-				jsonNode = mapper.readTree(jsonStr);
+				getInstance();
+				jsonNode = instance.mapper.readTree(jsonStr);
 			} catch (Exception e) {
 				logger.error("", e);
 			}
@@ -162,9 +160,9 @@ public class JacksonUtil {
 
 			List<?> list = new ArrayList<>();
 
-			ObjectMapper mapper = new ObjectMapper();
 			try {
-				list = mapper.readValue(jsonArrStr, List.class);
+				getInstance();
+				list = instance.mapper.readValue(jsonArrStr, List.class);
 			} catch (Exception e) {
 				logger.error("", e);
 			}
@@ -177,10 +175,10 @@ public class JacksonUtil {
 			}
 
 			ArrayNode arrayNode = null;
-			ObjectMapper mapper = new ObjectMapper();
 
 			try {
-				arrayNode = (ArrayNode) mapper.readTree(jsonArrStr);
+				getInstance();
+				arrayNode = (ArrayNode) instance.mapper.readTree(jsonArrStr);
 			} catch (Exception e) {
 				logger.error("", e);
 			}
@@ -196,10 +194,9 @@ public class JacksonUtil {
 				throw new IllegalArgumentException("clazz is null");
 			}
 
-			ObjectMapper mapper = new ObjectMapper();
-
 			try {
-				Object result = mapper.readValue(jsonStr, clazz);
+				getInstance();
+				Object result = instance.mapper.readValue(jsonStr, clazz);
 				return clazz.cast(result);
 			} catch (Exception e) {
 				logger.error("", e);
@@ -209,11 +206,6 @@ public class JacksonUtil {
 	}
 
 	public static class ReadJsonFile {
-
-		protected ReadJsonFile() {
-			super();
-		}
-
 		public static Object readJsonFileObject(String sfileName, TypeReference<?> typeReference) {
 			if ( StringUtils.isBlank(sfileName) ) {
 				throw new IllegalArgumentException("sfileName is null");
@@ -224,10 +216,10 @@ public class JacksonUtil {
 		    }
 
 		    Object obj = null;
-		    ObjectMapper objectMapper = new ObjectMapper();
 
 		    try {
-		        obj = objectMapper.readValue(new File(sfileName), typeReference);
+		    	getInstance();
+		        obj = instance.mapper.readValue(new File(sfileName), typeReference);
 		    } catch (IOException e) {
 		        logger.error("Error reading JSON file", e);
 		    }
@@ -245,10 +237,10 @@ public class JacksonUtil {
 		    }
 
 		    List<T> obj = null;
-		    ObjectMapper objectMapper = new ObjectMapper();
 
 		    try {
-		        obj = objectMapper.readValue(new File(sfileName), typeReference);
+		    	getInstance();
+		        obj = instance.mapper.readValue(new File(sfileName), typeReference);
 		    } catch (IOException e) {
 		        logger.error("Error reading JSON file", e);
 		    }

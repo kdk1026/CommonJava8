@@ -1,6 +1,12 @@
 package common.util;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre>
@@ -14,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author 김대광
  */
 public class RequestUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
 
 	private RequestUtil() {
 		super();
@@ -43,7 +51,7 @@ public class RequestUtil {
 	    for ( String header : sHeaders ) {
 	    	String sIp = request.getHeader(header);
 
-	    	if ( sIp != null && sIp.length() != 0 && !"unknown".equalsIgnoreCase(sIp) ) {
+	    	if ( sIp != null && !sIp.isEmpty() && !"unknown".equalsIgnoreCase(sIp) ) {
 	    		return sIp;
 	    	}
 	    }
@@ -64,6 +72,28 @@ public class RequestUtil {
 		String sReqUrl = request.getRequestURL().toString();
 		String sServletPath = request.getServletPath();
 		return sReqUrl.replace(sServletPath, "");
+	}
+
+	/**
+	 * 기본 도메인 가져오기 (포트 미포함)
+	 * @param request
+	 * @return
+	 */
+	public static String getBaseDomain(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new IllegalArgumentException("request");
+		}
+
+		String reqUrl = request.getRequestURL().toString();
+		URI uri;
+
+		try {
+			uri = new URI(reqUrl);
+			return uri.getScheme() + "://" + uri.getAuthority();
+		} catch (URISyntaxException e) {
+			logger.error("", e);
+			return null;
+		}
 	}
 
 }
