@@ -19,8 +19,17 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
 /**
- * 작은 파일에 유리
- */
+* <pre>
+* -----------------------------------
+* 개정이력
+* -----------------------------------
+* 2025. 5. 21. kdk	정리
+* </pre>
+*
+* 작은 파일 파싱에 유리
+*
+* @author kdk
+*/
 public class GsonUtil {
 
 	private GsonUtil() {

@@ -16,8 +16,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-/**
+ /**
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * -----------------------------------
+ * 2025. 5. 21. kdk	정리
+ * </pre>
+ *
  * 큰 파일 파싱에 유리
+ *
+ * @author kdk
  */
 public class JacksonUtil {
 
