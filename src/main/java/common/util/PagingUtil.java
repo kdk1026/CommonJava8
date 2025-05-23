@@ -82,6 +82,11 @@ public class PagingUtil {
 			throw new IllegalArgumentException("currentPage must not be null");
 		}
 
+		boolean isNumeric = currentPage.matches("\\d+");
+		if ( !isNumeric ) {
+			throw new IllegalArgumentException("currentPage not number");
+		}
+
 		this.pagePerRow = pagePerRow;
 		this.pagePerScreen = pagePerScreen;
 		this.totalCnt = totalCnt;
