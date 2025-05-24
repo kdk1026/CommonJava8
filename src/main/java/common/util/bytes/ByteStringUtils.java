@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
+
 /**
  * <pre>
  * 개정이력
@@ -55,11 +57,11 @@ public class ByteStringUtils {
 	 */
 	public static int getByteLength(String str, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
 		}
 
 		int nLen = 0;
@@ -82,11 +84,11 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( maxByte < 0 ) {
-			throw new IllegalArgumentException("maxByte is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("maxByte"));
 		}
 
 		boolean resFlag = false;
@@ -111,15 +113,15 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( maxByte < 0 ) {
-			throw new IllegalArgumentException("maxByte is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("maxByte"));
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException("charsetName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
 		}
 
 		boolean resFlag = false;
@@ -141,12 +143,8 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static String eucKrToUtf8String(byte[] bOrgData) {
-		if ( bOrgData == null ) {
-			throw new IllegalArgumentException("bOrgData is null");
-		}
-
-		if ( bOrgData.length == 0 ) {
-			throw new IllegalArgumentException("bOrgData is empty");
+		if ( bOrgData == null || bOrgData.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
 		}
 
 		String sRes = "";
@@ -169,12 +167,8 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static String utf8ToEucKrString(byte[] bOrgData) {
-		if ( bOrgData == null ) {
-			throw new IllegalArgumentException("bOrgData is null");
-		}
-
-		if ( bOrgData.length == 0 ) {
-			throw new IllegalArgumentException("bOrgData is empty");
+		if ( bOrgData == null || bOrgData.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
 		}
 
 		String sRes = "";
@@ -197,12 +191,8 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static byte[] eucKrToUtf8(byte[] bOrgData) {
-		if ( bOrgData == null ) {
-			throw new IllegalArgumentException("bOrgData is null");
-		}
-
-		if ( bOrgData.length == 0 ) {
-			throw new IllegalArgumentException("bOrgData is empty");
+		if ( bOrgData == null || bOrgData.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
 		}
 
 		byte[] bData = null;
@@ -224,12 +214,8 @@ public class ByteStringUtils {
 	 * @return
 	 */
 	public static byte[] utf8ToEucKr(byte[] bOrgData) {
-		if ( bOrgData == null ) {
-			throw new IllegalArgumentException("bOrgData is null");
-		}
-
-		if ( bOrgData.length == 0 ) {
-			throw new IllegalArgumentException("bOrgData is empty");
+		if ( bOrgData == null || bOrgData.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
 		}
 
 		byte[] bData = null;
@@ -255,19 +241,19 @@ public class ByteStringUtils {
 	 */
 	public static String substrString(String str, int offset, int length, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( offset < 0 ) {
-			throw new IllegalArgumentException("offset is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("offset"));
 		}
 
 		if ( length < 0 ) {
-			throw new IllegalArgumentException("length is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("length"));
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException("charsetName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
 		}
 
 		String sRes = "";

@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
 import common.util.date.Jsr310DateUtil;
 import common.util.file.NioFileUtil;
 import common.util.properties.PropertiesUtil;
@@ -49,16 +50,16 @@ public class ApnsPushUtil {
 	private static final String APNS_CERTIFICATE_NAME = "APNSsslCertificateName";
 	private static final String APNS_CERTIFICATE_PWD_NAME = "APNSsslCertificatePwd";
 
-	public static PushNotificationManager pushManager;
-	public static PushNotificationPayload payload;
+	private static PushNotificationManager pushManager;
+	private static PushNotificationPayload payload;
 
 	public static List<Map<String, Object>> sendPush(List<String> regIdList, String jsonStr) {
 		if ( regIdList == null || regIdList.isEmpty() ) {
-			throw new IllegalArgumentException("regIdList is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("regIdList"));
 		}
 
 		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new IllegalArgumentException("jsonStr is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("jsonStr"));
 		}
 
 		try {
@@ -90,7 +91,7 @@ public class ApnsPushUtil {
 
 	private static void setMessage(String jsonStr) {
 		if ( StringUtils.isBlank(jsonStr) ) {
-			throw new IllegalArgumentException("jsonStr is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("jsonStr"));
 		}
 
 		payload = PushNotificationPayload.complex();

@@ -15,6 +15,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
+
 /**
  * <pre>
  * 개정이력
@@ -42,11 +44,11 @@ public class BasicObjectUtil {
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
 		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		if ( StringUtils.isBlank(fieldName) ) {
-			throw new IllegalArgumentException("FieldName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("fieldName"));
 		}
 
 		String str = null;
@@ -58,7 +60,7 @@ public class BasicObjectUtil {
 		} catch (Exception e) {
 			logger.error("", e);
 		}
-		return (str == null) || (str.trim().length() == 0);
+		return (str == null) || (str.trim().isEmpty());
 	}
 
 	/**
@@ -69,7 +71,7 @@ public class BasicObjectUtil {
 	 */
 	public static List<String> getFieldNames(Object obj) {
 		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		List<String> list = new ArrayList<>();
@@ -91,7 +93,7 @@ public class BasicObjectUtil {
 	 */
 	public static Map<String, Object> convertObjectToMap(Object obj) {
 		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		Map<String, Object> commandMap = new HashMap<>();
@@ -121,11 +123,11 @@ public class BasicObjectUtil {
 	 */
 	public static Object setReqParamToObject(HttpServletRequest request, Object obj) {
 		if ( request == null ) {
-			throw new IllegalArgumentException("Request is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("request"));
 		}
 
 		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		String sKey = "";
@@ -158,11 +160,11 @@ public class BasicObjectUtil {
 	 */
 	public static void setHttpResponse(Object obj, HttpServletResponse response) {
 		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		if ( response == null ) {
-			throw new IllegalArgumentException("Response is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("response"));
 		}
 
 		try {

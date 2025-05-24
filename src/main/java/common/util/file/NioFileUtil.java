@@ -73,9 +73,6 @@ public class NioFileUtil {
 			throw new IllegalArgumentException("filePath is null");
 		}
 
-		if (filePath == null) {
-			return null;
-		}
 		int pos = filePath.lastIndexOf(FOLDER_SEPARATOR);
 		return (pos != -1 ? filePath.substring(pos + 1) : filePath);
 	}

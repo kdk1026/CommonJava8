@@ -223,12 +223,11 @@ public class PoiUtil {
 		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		cellStyle.setFont(font);
 
-		Map<String, Object> dataMap = null;
+		Map<String, Object> dataMap = contentsList.get(0);
 		int nCellCnt = 0;
 
 		// 타이틀
 		row = sheet.createRow(0);
-		dataMap = contentsList.get(0);
 
 		for ( String sCellTitle : cellTitles ) {
 			Cell rowCell = row.createCell(nCellCnt);

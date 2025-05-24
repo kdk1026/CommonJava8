@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
+
 /**
  * <pre>
  * -----------------------------------
@@ -61,19 +63,19 @@ public class AesCryptoUtilV2 {
 	 */
 	public static String encrypt(String plainText, String key, String iv, String padding) {
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException("plainText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("plainText"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
-			throw new IllegalArgumentException("key length is invalid");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		String encryptedText = "";
@@ -115,19 +117,19 @@ public class AesCryptoUtilV2 {
 	 */
 	public static String decrypt(String encryptedText, String key, String iv, String padding) {
 		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new IllegalArgumentException("encryptedText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("encryptedText"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
-			throw new IllegalArgumentException("key length is invalid");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		String decryptedText = "";

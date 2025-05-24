@@ -194,9 +194,11 @@ public class PropertiesUtil {
 			fileNmae = PropertiesUtil.class.getClassLoader().getResource(PROP_CLASS_PATH + propFileName).getPath();
 			break;
 		case 1:
-			session = request.getSession();
-			webRootPath = session.getServletContext().getRealPath("/");
-			fileNmae = webRootPath + PROP_WEB_INF_PATH + propFileName;
+			if ( request != null ) {
+				session = request.getSession();
+				webRootPath = session.getServletContext().getRealPath("/");
+				fileNmae = webRootPath + PROP_WEB_INF_PATH + propFileName;
+			}
 			break;
 		case 2:
 			if (request == null) {

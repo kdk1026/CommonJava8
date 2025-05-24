@@ -2,6 +2,8 @@ package common.util.sshsftp;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -38,7 +40,7 @@ public class SftpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(SftpClientUtil.class);
 
-	public SftpClientUtil() {
+	private SftpClientUtil() {
 
 	}
 
@@ -114,9 +116,12 @@ public class SftpClientUtil {
 	 *
 	 * @param sDestPath
 	 * @param file
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 * @throws SftpException
 	 * @throws Exception
 	 */
-	public void upload(String sDestPath, File file) throws Exception {
+	public void upload(String sDestPath, File file) throws IOException, SftpException {
 		if ( StringUtils.isBlank(sDestPath) ) {
 			throw new IllegalArgumentException("sDestPath is null");
 		}
@@ -130,9 +135,6 @@ public class SftpClientUtil {
 			this.delete(sDestPath, file);
 			channelSftp.put(fis, file.getName());
 
-		} catch (Exception e) {
-			logger.error("SFTP Upload Error", e);
-			throw e;
 		}
 	}
 

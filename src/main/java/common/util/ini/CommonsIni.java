@@ -68,9 +68,11 @@ public class CommonsIni {
 				sPath = CommonsIni.class.getResource(PROP_CLASS_PATH + iniFileName).getPath();
 				break;
 			case 1:
-				session = request.getSession();
-				webRootPath = session.getServletContext().getRealPath("/");
-				sPath = webRootPath + PROP_WEB_INF_PATH + iniFileName;
+				if ( request != null ) {
+					session = request.getSession();
+					webRootPath = session.getServletContext().getRealPath("/");
+					sPath = webRootPath + PROP_WEB_INF_PATH + iniFileName;
+				}
 				break;
 			default:
 				if ( request == null ) {

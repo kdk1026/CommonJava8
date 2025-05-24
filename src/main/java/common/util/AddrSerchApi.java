@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,6 +37,8 @@ public class AddrSerchApi {
 	private AddrSerchApi() {
 		super();
 	}
+
+	private static final Logger logger = LoggerFactory.getLogger(AddrSerchApi.class);
 
 	// API라 상관없을거 같기는 하지만... 클래스에 키가 있다는건 시큐어 코딩 상 무진상 큰일이다.....
 	private static final String CONFM_KEY = "U01TX0FVVEgyMDE4MTAxNzEzMTcwMDEwODI0MDM=";
@@ -68,11 +72,11 @@ public class AddrSerchApi {
 
 //		Java 17 ~
 		URI uri = null;
-
 		try {
 			uri = new URI(sApiUrl);
 		} catch (URISyntaxException e) {
-			e.printStackTrace();
+			logger.error("", e);
+			throw new IllegalArgumentException(ExceptionMessage.inValid(sApiUrl));
 		}
 
 		URL url = uri.toURL();

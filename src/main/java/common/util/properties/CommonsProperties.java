@@ -63,8 +63,10 @@ public class CommonsProperties {
 				sPath = CommonsProperties.class.getResource(PROP_CLASS_PATH + propFileName).getPath();
 				break;
 			case 1:
-				webRootPath = request.getSession().getServletContext().getRealPath("/");
-				sPath = webRootPath + PROP_WEB_INF_PATH + propFileName;
+				if ( request != null ) {
+					webRootPath = request.getSession().getServletContext().getRealPath("/");
+					sPath = webRootPath + PROP_WEB_INF_PATH + propFileName;
+				}
 				break;
 			default:
 				if ( request == null ) {

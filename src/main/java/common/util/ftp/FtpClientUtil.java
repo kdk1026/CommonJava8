@@ -124,7 +124,7 @@ public class FtpClientUtil {
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
 				ftpClient.disconnect();
-				throw new Exception(host + " FTP 서버 연결 실패");
+				throw new IllegalArgumentException(host + " FTP 서버 연결 실패");
 			}
 
 			ftpClient.login(username, password);
@@ -147,7 +147,7 @@ public class FtpClientUtil {
 	private void showServerReply(FTPClient ftpClient) {
 		String[] replies = ftpClient.getReplyStrings();
 
-		if (replies != null & replies.length > 0) {
+		if (replies != null && replies.length > 0) {
 			for (String aReply : replies) {
 				logger.debug("SERVER : {}", aReply);
 			}
@@ -299,7 +299,7 @@ public class FtpClientUtil {
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
 				ftpClient.disconnect();
-				throw new Exception(host + " FTP 서버 연결 실패");
+				throw new IllegalArgumentException(host + " FTP 서버 연결 실패");
 			}
 
 			ftpClient.login(username, password);

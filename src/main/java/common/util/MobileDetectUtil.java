@@ -52,6 +52,21 @@ public class MobileDetectUtil {
 		public String getDevicePlatform() {
 			return devicePlatform;
 		}
+
+		@Override
+		public boolean equals(Object obj) {
+			return super.equals(obj);
+		}
+
+		@Override
+		public String toString() {
+			return super.toString();
+		}
+
+		@Override
+		public int hashCode() {
+			return super.hashCode();
+		}
 	}
 
 	public static DeviceType detecteDevice(HttpServletRequest request) {

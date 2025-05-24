@@ -18,6 +18,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
+
 /**
  * <pre>
  * -----------------------------------
@@ -92,7 +94,7 @@ public class RsaCryptoUtil {
 		 */
 		public static String getBase64PublicKey(KeyPair keyPair) {
 			if ( keyPair == null ) {
-				throw new IllegalArgumentException("keyPair is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("keyPair"));
 			}
 
 	        return Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
@@ -108,7 +110,7 @@ public class RsaCryptoUtil {
 	     */
 	    public static String getBase64PrivateKey(KeyPair keyPair) {
 			if ( keyPair == null ) {
-				throw new IllegalArgumentException("keyPair is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("keyPair"));
 			}
 
 	        return Base64.getEncoder().encodeToString(keyPair.getPrivate().getEncoded());
@@ -121,7 +123,7 @@ public class RsaCryptoUtil {
 	     */
 	    public static PublicKey getPublicKeyFromBase64(String base64PublicKey) {
 			if ( StringUtils.isBlank(base64PublicKey) ) {
-				throw new IllegalArgumentException("base64PublicKey is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PublicKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
@@ -146,7 +148,7 @@ public class RsaCryptoUtil {
 	     */
 	    public static PrivateKey getPrivateKeyFromBase64(String base64PrivateKey) {
 			if ( StringUtils.isBlank(base64PrivateKey) ) {
-				throw new IllegalArgumentException("base64PrivateKey is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PrivateKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);
@@ -174,15 +176,15 @@ public class RsaCryptoUtil {
 	 */
 	public static String encrypt(String plainText, PublicKey publicKey, String padding) {
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException("plainText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("plainText"));
 		}
 
 		if ( publicKey == null ) {
-			throw new IllegalArgumentException("publicKey is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("publicKey"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		String encryptedText = "";
@@ -208,15 +210,15 @@ public class RsaCryptoUtil {
 	 */
 	public static String decrypt(String encryptedText, PrivateKey privateKey, String padding) {
 		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new IllegalArgumentException("encryptedText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("encryptedText"));
 		}
 
 		if ( privateKey == null ) {
-			throw new IllegalArgumentException("privateKey is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("privateKey"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		String decryptedText = "";

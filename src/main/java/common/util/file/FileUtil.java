@@ -310,8 +310,9 @@ public class FileUtil {
                 logger.debug("파일이 삭제되었습니다.");
             }
 
-            file.delete();
-            logger.debug("폴더가 삭제되었습니다.");
+            if ( file.delete() ) {
+            	logger.debug("폴더가 삭제되었습니다.");
+            }
 
 		} else {
 			logger.debug("파일이 삭제되었습니다.");

@@ -191,7 +191,7 @@ public class HolidayCalendar {
     		}
 
 		} catch (Exception e) {
-			throw new RuntimeException("휴일 계산 오류", e);
+			throw new IllegalArgumentException("휴일 계산 오류", e);
 		}
 
     	List<String> holidaysList = new ArrayList<>(holidaysSet);

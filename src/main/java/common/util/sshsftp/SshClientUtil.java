@@ -1,6 +1,7 @@
 package common.util.sshsftp;
 
 import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -108,37 +109,29 @@ public class SshClientUtil {
 	 *
 	 * @param sCommand
 	 * @return
+	 * @throws JSchException
+	 * @throws IOException
 	 * @throws Exception
 	 */
-	public String runExecRet(String sCommand) throws Exception {
+	public String runExecRet(String sCommand) throws JSchException, IOException {
 		if ( StringUtils.isBlank(sCommand) ) {
 			throw new IllegalArgumentException("sCommand is null");
 		}
 
-		String sRet = "";
+		channelExec.setCommand(sCommand);
+		channelExec.connect();
 
-		try {
-			channelExec.setCommand(sCommand);
-			channelExec.connect();
+		InputStream is = channel.getInputStream();
+		BufferedInputStream bis = new BufferedInputStream(is);
+		byte[] buffer = new byte[4096];
 
-			InputStream is = channel.getInputStream();
-			BufferedInputStream bis = new BufferedInputStream(is);
-			byte[] buffer = new byte[4096];
-
-			StringBuilder sb = new StringBuilder();
-			int nRead = bis.read(buffer, 0, buffer.length);
-			if (nRead > 0) {
-				sb.append(new String(buffer, 0, nRead));
-			}
-
-			sRet = sb.toString();
-
-		} catch (Exception e) {
-			logger.error("", e);
-			throw e;
+		StringBuilder sb = new StringBuilder();
+		int nRead = bis.read(buffer, 0, buffer.length);
+		if (nRead > 0) {
+			sb.append(new String(buffer, 0, nRead));
 		}
 
-		return sRet;
+		return sb.toString();
 	}
 
 	/**

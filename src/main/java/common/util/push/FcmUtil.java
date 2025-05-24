@@ -366,7 +366,9 @@ public class FcmUtil {
 			}
 
 			URL url = null;
-			url = uri.toURL();
+			if ( uri != null ) {
+				url = uri.toURL();
+			}
 
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setUseCaches(false);

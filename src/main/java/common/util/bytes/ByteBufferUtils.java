@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import common.util.ExceptionMessage;
+
 public class ByteBufferUtils {
 
 	private ByteBufferUtils() {
@@ -21,11 +23,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferString(String str, String sEncoding) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		byte[] b = null;
@@ -45,11 +47,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferString(List<String> list, String sEncoding) {
 		if ( list == null || list.isEmpty() ) {
-			throw new IllegalArgumentException("list is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		int nByteLen = 0;
@@ -78,11 +80,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferObject(Object obj, String sEncoding) {
 		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		int nByteLen = 0;
@@ -117,11 +119,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferObject(List<Object> list, String sEncoding) {
 		if ( list == null || list.isEmpty() ) {
-			throw new IllegalArgumentException("list is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		int nByteLen = 0;
@@ -159,11 +161,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferMap(Map<String, Object> map, String sEncoding) {
 		if ( map == null || map.isEmpty() ) {
-			throw new IllegalArgumentException("map is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		int nByteLen = 0;
@@ -192,11 +194,11 @@ public class ByteBufferUtils {
 
 	public static ByteBuffer toByteBufferMap(List<Map<String, Object>> list, String sEncoding) {
 		if ( list == null || list.isEmpty() ) {
-			throw new IllegalArgumentException("list is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("sEncoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
 		}
 
 		int nByteLen = 0;

@@ -12,6 +12,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 
+import common.util.ExceptionMessage;
+
 /**
  * <pre>
  * 개정이력
@@ -81,6 +83,7 @@ public class AesCryptoHexUtil {
      */
     private Cipher getCipher(int mode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
         Key key = new SecretKeySpec(toBytes(cipherKey, 16), "AES");
+        // TODO https://github.com/kdk1026/node_utils/blob/main/libs/aescrypto_hex.js 함께 수정해서 결과를 봐야 할 듯
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(mode, key);
 
@@ -100,7 +103,7 @@ public class AesCryptoHexUtil {
      */
     public String encrypt(String src) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(src) ) {
-    		throw new IllegalArgumentException("src is null");
+    		throw new IllegalArgumentException(ExceptionMessage.isNull("src"));
     	}
 
         Cipher cipher = getCipher(Cipher.ENCRYPT_MODE);
@@ -122,7 +125,7 @@ public class AesCryptoHexUtil {
      */
     public String decrypt(String hex) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(hex) ) {
-    		throw new IllegalArgumentException("hex is null");
+    		throw new IllegalArgumentException(ExceptionMessage.isNull("hex"));
     	}
 
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE);

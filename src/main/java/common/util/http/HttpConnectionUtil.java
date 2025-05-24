@@ -114,7 +114,9 @@ public class HttpConnectionUtil {
 
 			URL url = null;
 			try {
-				url = uri.toURL();
+				if ( uri != null ) {
+					url = uri.toURL();
+				}
 			} catch (MalformedURLException e) {
 				logger.error("", e);
 			}
@@ -438,7 +440,9 @@ public class HttpConnectionUtil {
 
 			URL url = null;
 			try {
-				url = uri.toURL();
+				if ( uri != null ) {
+					url = uri.toURL();
+				}
 			} catch (MalformedURLException e) {
 				logger.error("", e);
 			}
