@@ -18,6 +18,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
 
+import common.util.ExceptionMessage;
+
 /**
 * <pre>
 * -----------------------------------
@@ -66,7 +68,7 @@ public class GsonUtil {
 	public static class ToJson {
 		public static String converterObjToJsonStr(Object obj, boolean isPretty) {
 			if ( obj == null ) {
-				throw new IllegalArgumentException("obj is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 			}
 
 			String sJson = "";
@@ -83,7 +85,7 @@ public class GsonUtil {
 
 		public static String converterMapToJsonStr(Map<String, Object> map, boolean isPretty) {
 			if ( map == null || map.isEmpty() ) {
-				throw new IllegalArgumentException("map is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 			}
 
 			return converterObjToJsonStr(map, isPretty);
@@ -91,7 +93,7 @@ public class GsonUtil {
 
 		public static String converterListToJsonStr(List<?> list, boolean isPretty) {
 			if ( list == null || list.isEmpty() ) {
-				throw new IllegalArgumentException("list is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 			}
 
 			return converterObjToJsonStr(list, isPretty);
@@ -102,7 +104,7 @@ public class GsonUtil {
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String sJson) {
 			if ( StringUtils.isBlank(sJson) ) {
-				throw new IllegalArgumentException("sJson is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
 			Map<String, Object> map = new HashMap<>();
@@ -119,7 +121,7 @@ public class GsonUtil {
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
 			if ( StringUtils.isBlank(sJson) ) {
-				throw new IllegalArgumentException("sJson is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
 			JsonObject jsonObj = null;
@@ -134,12 +136,13 @@ public class GsonUtil {
 			return jsonObj;
 		}
 
-		public static List<?> converterJsonStrToList(String sJsonArr) {
+		@SuppressWarnings("unchecked")
+		public static <T> List<T> converterJsonStrToList(String sJsonArr) {
 			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new IllegalArgumentException("sJsonArr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
-			List<?> list = new ArrayList<>();
+			List<T> list = new ArrayList<>();
 
 			try {
 				getInstance(false);
@@ -153,7 +156,7 @@ public class GsonUtil {
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
 			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new IllegalArgumentException("sJsonArr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
 			JsonArray jsonArray = null;
@@ -170,11 +173,11 @@ public class GsonUtil {
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException("jsonStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
 			}
 
 			if ( clazz == null ) {
-				throw new IllegalArgumentException("clazz is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("clazz"));
 			}
 
 			try {
@@ -191,11 +194,11 @@ public class GsonUtil {
 	public static class ReadJsonFile {
 		public static Object readJsonFileObject(String sfileName, Type type) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException("sfileName is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
 			}
 
 			if ( type == null ) {
-				throw new IllegalArgumentException("type is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("type"));
 			}
 
 			Object obj = null;
@@ -214,11 +217,11 @@ public class GsonUtil {
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> readJsonFileArray(String sfileName, Type type) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException("sfileName is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
 			}
 
 			if ( type == null ) {
-				throw new IllegalArgumentException("type is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("type"));
 			}
 
 			Object obj = null;

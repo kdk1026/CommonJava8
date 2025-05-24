@@ -16,6 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
+import common.util.ExceptionMessage;
+
  /**
  * <pre>
  * -----------------------------------
@@ -51,7 +53,7 @@ public class JacksonUtil {
 	public static class ToJson {
 		public static String converterObjToJsonStr(Object obj, boolean isPretty) {
 			if ( obj == null ) {
-				throw new IllegalArgumentException("obj is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 			}
 
 			String jsonStr = "";
@@ -71,7 +73,7 @@ public class JacksonUtil {
 
 		public static String converterMapToJsonStr(Map<String, Object> map, boolean isPretty) {
 			if ( map == null || map.isEmpty() ) {
-				throw new IllegalArgumentException("map is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 			}
 
 			String jsonStr = "";
@@ -91,7 +93,7 @@ public class JacksonUtil {
 
 		public static String converterListToJsonStr(List<?> list, boolean isPretty) {
 			if ( list == null || list.isEmpty() ) {
-				throw new IllegalArgumentException("list is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 			}
 
 			String jsonStr = "";
@@ -111,7 +113,7 @@ public class JacksonUtil {
 
 		public static JsonNode converterMapToJsonNode(Map<String, Object> map) {
 			if ( map == null || map.isEmpty() ) {
-				throw new IllegalArgumentException("map is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 			}
 
 			getInstance();
@@ -120,7 +122,7 @@ public class JacksonUtil {
 
 		public static JsonNode converterListToJsonNode(List<?> list) {
 			if ( list == null || list.isEmpty() ) {
-				throw new IllegalArgumentException("list is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 			}
 
 			getInstance();
@@ -132,7 +134,7 @@ public class JacksonUtil {
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String jsonStr) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException("jsonStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
 			}
 
 			Map<String, Object> map = new HashMap<>();
@@ -148,7 +150,7 @@ public class JacksonUtil {
 
 		public static JsonNode converterJsonStrToJsonNode(String jsonStr) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException("jsonStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
 			}
 
 			JsonNode jsonNode = null;
@@ -162,12 +164,13 @@ public class JacksonUtil {
 			return jsonNode;
 		}
 
-		public static List<?> converterJsonStrToList(String jsonArrStr) {
+		@SuppressWarnings("unchecked")
+		public static <T> List<T> converterJsonStrToList(String jsonArrStr) {
 			if ( StringUtils.isBlank(jsonArrStr) ) {
-				throw new IllegalArgumentException("jsonArrStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonArrStr"));
 			}
 
-			List<?> list = new ArrayList<>();
+			List<T> list = new ArrayList<>();
 
 			try {
 				getInstance();
@@ -180,7 +183,7 @@ public class JacksonUtil {
 
 		public static ArrayNode converterJsonStrToArayNode(String jsonArrStr) {
 			if ( StringUtils.isBlank(jsonArrStr) ) {
-				throw new IllegalArgumentException("jsonArrStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonArrStr"));
 			}
 
 			ArrayNode arrayNode = null;
@@ -196,11 +199,11 @@ public class JacksonUtil {
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException("jsonStr is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
 			}
 
 			if ( clazz == null ) {
-				throw new IllegalArgumentException("clazz is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("clazz"));
 			}
 
 			try {
@@ -217,11 +220,11 @@ public class JacksonUtil {
 	public static class ReadJsonFile {
 		public static Object readJsonFileObject(String sfileName, TypeReference<?> typeReference) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException("sfileName is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
 			}
 
 		    if (typeReference == null) {
-		        throw new IllegalArgumentException("typeReference is null");
+		    	throw new IllegalArgumentException(ExceptionMessage.isNull("typeReference"));
 		    }
 
 		    Object obj = null;
@@ -238,11 +241,11 @@ public class JacksonUtil {
 
 		public static <T> List<T> readJsonFileArray(String sfileName, TypeReference<List<T>> typeReference) {
 			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException("sfileName is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
 			}
 
 		    if (typeReference == null) {
-		        throw new IllegalArgumentException("typeReference is null");
+		    	throw new IllegalArgumentException(ExceptionMessage.isNull("typeReference"));
 		    }
 
 		    List<T> obj = null;
