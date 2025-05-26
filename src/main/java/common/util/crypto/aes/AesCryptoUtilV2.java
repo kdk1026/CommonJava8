@@ -1,9 +1,16 @@
 package common.util.crypto.aes;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -100,9 +107,11 @@ public class AesCryptoUtilV2 {
 
 			byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(CHARSET));
 			encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException |
+                UnsupportedEncodingException | IllegalArgumentException e) {
+        	logger.error("", e);
+        }
 
 		return encryptedText;
 	}
@@ -155,9 +164,11 @@ public class AesCryptoUtilV2 {
 
 			byte[] decryptedBytes = Base64.getDecoder().decode(encryptedText);
 			decryptedText = new String(cipher.doFinal(decryptedBytes), CHARSET);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException |
+                UnsupportedEncodingException | IllegalArgumentException e) {
+        	logger.error("", e);
+        }
 
 		return decryptedText;
 	}

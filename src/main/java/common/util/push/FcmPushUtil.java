@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +26,7 @@ import common.util.properties.PropertiesUtil;
   *  firebase-admin 이용으로 변경되어 사용 불가
   * </pre>
  */
-@Obsolete
+@Deprecated
 public class FcmPushUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FcmPushUtil.class);

@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -99,7 +102,7 @@ public class HttpClientUtil {
 				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
 				httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
 
-			} catch (Exception e) {
+			} catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
 				logger.error("", e);
 			}
 

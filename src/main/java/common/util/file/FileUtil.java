@@ -167,7 +167,7 @@ public class FileUtil {
 			OutputStream os = fos;
         ) {
 			os.write(text.getBytes());
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}
@@ -198,7 +198,7 @@ public class FileUtil {
 			OutputStream os = fos;
         ) {
 			os.write(text.getBytes(encoding));
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}
@@ -230,7 +230,7 @@ public class FileUtil {
 
 			bos.flush();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 
@@ -269,7 +269,7 @@ public class FileUtil {
 
 			bos.flush();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 
@@ -351,7 +351,7 @@ public class FileUtil {
 			while ( (nRead = is.read(buffer)) != -1) {
 				os.write(buffer, 0, nRead);
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}

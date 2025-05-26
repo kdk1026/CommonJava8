@@ -36,7 +36,7 @@ public class DBUtil {
 			Class.forName(sDriver);
 			conn = DriverManager.getConnection(sUrl, sUsername, sPassword);
 
-		} catch (Exception e) {
+		} catch (ClassNotFoundException | SQLException e) {
 			logger.error("getConnection Exception", e);
 		}
 

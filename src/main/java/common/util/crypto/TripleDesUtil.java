@@ -1,9 +1,15 @@
 package common.util.crypto;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -74,10 +80,11 @@ public class TripleDesUtil {
 			byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(CHARSET));
 
 			encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException |
+                IllegalArgumentException e) {
+        	logger.error("", e);
+        }
 		return encryptedText;
 	}
 
@@ -115,10 +122,11 @@ public class TripleDesUtil {
 
 			byte[] decryptedBytes = Base64.getDecoder().decode(encryptedText);
 			decryptedText = new String(cipher.doFinal(decryptedBytes), CHARSET);
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
+                IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException |
+                IllegalArgumentException e) {
+        	logger.error("", e);
+        }
 		return decryptedText;
 	}
 

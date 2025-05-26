@@ -164,7 +164,7 @@ public class PoiUtil {
 				resList.add(map);
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 		return resList;
@@ -295,7 +295,7 @@ public class PoiUtil {
 			os.close();
 			isSuccess = true;
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 
@@ -354,7 +354,7 @@ public class PoiUtil {
 				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 

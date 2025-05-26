@@ -144,7 +144,7 @@ public class Icu4JHolidayUtil {
 			}
 		}
 
-		if ( (resStr == null) || (resStr.trim().length() == 0) ) {
+		if ( (resStr == null) || (resStr.trim().isEmpty()) ) {
 			resStr = getNewYearLunar(yyyyMMdd);
 		}
 		return resStr;

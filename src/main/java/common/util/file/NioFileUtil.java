@@ -185,7 +185,7 @@ public class NioFileUtil {
 
 			Files.copy(is, path);
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}
@@ -216,7 +216,7 @@ public class NioFileUtil {
 
 			Files.copy(is, targetFile);
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}

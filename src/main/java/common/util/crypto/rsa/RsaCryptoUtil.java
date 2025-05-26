@@ -1,6 +1,8 @@
 package common.util.crypto.rsa;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -12,7 +14,10 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -194,7 +199,7 @@ public class RsaCryptoUtil {
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encryptedMessage = cipher.doFinal(plainText.getBytes(CHARSET));
 			encryptedText = Base64.getEncoder().encodeToString(encryptedMessage);
-		} catch (Exception e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 
@@ -228,7 +233,7 @@ public class RsaCryptoUtil {
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			byte[] decryptedMessage = cipher.doFinal(Base64.getDecoder().decode(encryptedText));
 			decryptedText = new String(decryptedMessage, CHARSET);
-		} catch (Exception e) {
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 

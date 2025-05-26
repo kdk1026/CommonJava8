@@ -96,7 +96,7 @@ public class SftpClientUtil {
 			isConnected = true;
 			logger.info("SFTP Connected");
 
-		} catch (Exception e) {
+		} catch (JSchException e) {
 			isConnected = false;
 
 			logger.info("SFTP Not Connected");

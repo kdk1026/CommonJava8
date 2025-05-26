@@ -50,7 +50,7 @@ public class FtpClientUtil {
 		return instance;
 	}
 
-	private final String ENCODING = StandardCharsets.UTF_8.toString();
+	private final String encoding = StandardCharsets.UTF_8.toString();
 
 	private String sourcePath = "";
 	private String extension = "";
@@ -119,7 +119,7 @@ public class FtpClientUtil {
 
 		try {
 			ftpClient.connect(host, port);
-			ftpClient.setControlEncoding(this.ENCODING);
+			ftpClient.setControlEncoding(this.encoding);
 			int nReply = ftpClient.getReplyCode();
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
@@ -137,7 +137,7 @@ public class FtpClientUtil {
 			ftpClient.logout();
 			ftpClient.disconnect();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 
@@ -294,7 +294,7 @@ public class FtpClientUtil {
 
 		try {
 			ftpClient.connect(host, port);
-			ftpClient.setControlEncoding(this.ENCODING);
+			ftpClient.setControlEncoding(this.encoding);
 			int nReply = ftpClient.getReplyCode();
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
@@ -313,7 +313,7 @@ public class FtpClientUtil {
 			ftpClient.logout();
 			ftpClient.disconnect();
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 

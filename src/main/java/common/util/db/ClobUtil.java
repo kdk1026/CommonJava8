@@ -1,8 +1,10 @@
 package common.util.db;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +38,7 @@ public class ClobUtil {
 			while ( (nChars = reader.read(buff)) > 0 ) {
 				sb.append(buff, 0, nChars);
 			}
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			logger.error("toString Exception", e);
 		}
 
@@ -64,7 +66,7 @@ public class ClobUtil {
 			while ( (nChars = reader.read(buff)) > 0 ) {
 				sb.append(buff, 0, nChars);
 			}
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			logger.error("toString Exception", e);
 		}
 
@@ -85,7 +87,7 @@ public class ClobUtil {
 			out.write(text);
 			out.flush();
 			out.close();
-		} catch (Exception e) {
+		} catch (SQLException | IOException e) {
 			logger.error("write Exception", e);
 		}
 	}

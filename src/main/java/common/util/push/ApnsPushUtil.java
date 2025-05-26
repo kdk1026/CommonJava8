@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,6 +16,8 @@ import common.util.ExceptionMessage;
 import common.util.date.Jsr310DateUtil;
 import common.util.file.NioFileUtil;
 import common.util.properties.PropertiesUtil;
+import javapns.communication.exceptions.CommunicationException;
+import javapns.communication.exceptions.KeystoreException;
 import javapns.devices.Device;
 import javapns.devices.implementations.basic.BasicDevice;
 import javapns.notification.AppleNotificationServer;
@@ -82,7 +85,7 @@ public class ApnsPushUtil {
 				rtnList = new ArrayList<>();
 			}
 
-		} catch (Exception e) {
+		} catch (KeystoreException | CommunicationException e) {
 			logger.error("", e);
 		}
 
@@ -100,7 +103,7 @@ public class ApnsPushUtil {
 			payload.addAlert(jsonStr);
 			payload.addBadge(1);
 
-		} catch (Exception e) {
+		} catch (JSONException e) {
 			logger.error("", e);
 		}
 	}
@@ -147,7 +150,7 @@ public class ApnsPushUtil {
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (CommunicationException | KeystoreException e) {
 			logger.error("", e);
 		}
 	}

@@ -97,15 +97,12 @@ public class JxlsUtil {
 			return isSuccess;
 		}
 
-		try {
-			File outFile = new File(destFilePath + File.separator + fileName);
-			OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile));
+		File outFile = new File(destFilePath + File.separator + fileName);
+
+		try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile)) ) {
 			workbook.write(os);
-
-			os.close();
 			isSuccess = true;
-
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 
@@ -164,7 +161,7 @@ public class JxlsUtil {
 				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 

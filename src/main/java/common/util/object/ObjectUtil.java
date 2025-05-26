@@ -1,5 +1,6 @@
 package common.util.object;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -241,7 +242,7 @@ public class ObjectUtil {
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
 			}
-		} catch (Exception e) {
+		} catch (IllegalArgumentException | IllegalAccessException | UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 		return nByteLen;
@@ -284,7 +285,7 @@ public class ObjectUtil {
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
 			}
-		} catch (Exception e) {
+		} catch (IllegalArgumentException | IllegalAccessException | UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 		return nByteLen;

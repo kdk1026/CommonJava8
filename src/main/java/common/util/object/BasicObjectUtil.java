@@ -1,6 +1,7 @@
 package common.util.object;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -57,7 +58,7 @@ public class BasicObjectUtil {
 			field.setAccessible(true);
 			Object value = field.get(obj);
 			str = (String) value;
-		} catch (Exception e) {
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 		return (str == null) || (str.trim().isEmpty());
@@ -109,7 +110,7 @@ public class BasicObjectUtil {
 					commandMap.put(key, (value != null) ? value:"");
 				}
 			}
-		} catch (Exception e) {
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 		return commandMap;
@@ -145,7 +146,7 @@ public class BasicObjectUtil {
 						methods[i].invoke(obj, request.getParameter(sKey));
 					}
 				}
-			} catch (Exception e) {
+			} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
 				logger.error("", e);
 			}
 		}
@@ -178,7 +179,7 @@ public class BasicObjectUtil {
 					response.setHeader(key, String.valueOf(value) );
 				}
 			}
-		} catch (Exception e) {
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 	}

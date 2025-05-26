@@ -88,28 +88,27 @@ public class ByteBufferUtils {
 		}
 
 		int nByteLen = 0;
+		Field[] fields = obj.getClass().getDeclaredFields();
 
 		try {
-			Field[] fields = obj.getClass().getDeclaredFields();
 			for (Field f : fields) {
 				f.setAccessible(true);
 				nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 			}
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 
 		ByteBuffer buffer = ByteBuffer.allocate(nByteLen);
 
 		try {
-			Field[] fields = obj.getClass().getDeclaredFields();
 			for (Field f : fields) {
 				f.setAccessible(true);
 				buffer.put(f.get(obj).toString().getBytes(sEncoding));
 			}
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 
@@ -136,7 +135,7 @@ public class ByteBufferUtils {
 					f.setAccessible(true);
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
-			} catch (Exception e) {
+			} catch (UnsupportedEncodingException | IllegalArgumentException | IllegalAccessException e) {
 				logger.error("", e);
 			}
 		}

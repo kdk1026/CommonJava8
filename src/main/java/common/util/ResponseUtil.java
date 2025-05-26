@@ -1,6 +1,7 @@
 package common.util;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -62,7 +63,7 @@ public class ResponseUtil {
 				sRes = new String(str.getBytes(UTF8), StandardCharsets.ISO_8859_1);
 			}
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 

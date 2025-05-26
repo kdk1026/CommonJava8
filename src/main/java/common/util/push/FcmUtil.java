@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.http.annotation.Obsolete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,7 @@ import com.google.gson.reflect.TypeToken;
  * ★★★ firebase-admin 이용으로 변경되어 사용 불가 ★★★
  * </pre>
  */
-@Obsolete
+@Deprecated
 public class FcmUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FcmUtil.class);

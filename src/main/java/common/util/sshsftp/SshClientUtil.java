@@ -90,7 +90,7 @@ public class SshClientUtil {
 			isConnected = true;
 			logger.info("SSH Connected");
 
-		} catch (Exception e) {
+		} catch (JSchException e) {
 			isConnected = false;
 
 			logger.info("SSH Not Connected");

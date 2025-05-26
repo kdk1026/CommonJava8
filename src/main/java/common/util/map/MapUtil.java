@@ -70,7 +70,7 @@ public class MapUtil {
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 

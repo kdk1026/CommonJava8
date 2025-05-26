@@ -62,7 +62,7 @@ public class HolidayCalendar {
      * @param yyyyMMdd
      * @return
      */
-	public static String Lunar2Solar(String yyyyMMdd) {
+	public static String lunar2Solar(String yyyyMMdd) {
 		Valid.isValidFormat(yyyyMMdd);
 
     	ChineseCalendar chinaCal = new ChineseCalendar();
@@ -101,8 +101,8 @@ public class HolidayCalendar {
 		return sb.toString();
     }
 
-    private static String SolarDays(String yyyy, String date) {
-    	return Lunar2Solar(yyyy + date).substring(4);
+    private static String solarDays(String yyyy, String date) {
+    	return lunar2Solar(yyyy + date).substring(4);
     }
 
     public static List<String> holidayArray(String yyyy) {
@@ -122,14 +122,14 @@ public class HolidayCalendar {
     	holidaysSet.add(yyyy + "1225");	// 성탄절
 
     	// 음력 휴일
-    	String prevSeol = LocalDate.parse(Lunar2Solar(yyyy + "0101"), formatter).minusDays(1).toString().replace("-","");
+    	String prevSeol = LocalDate.parse(lunar2Solar(yyyy + "0101"), formatter).minusDays(1).toString().replace("-","");
     	holidaysSet.add(yyyy + prevSeol.substring(4));		// ""
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0101"));  	// 설날
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0102"));  	// ""
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0408"));  	// 석가탄신일
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0814"));  	// ""
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0815"));  	// 추석
-    	holidaysSet.add(yyyy + SolarDays(yyyy, "0816"));  	// ""
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0101"));  	// 설날
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0102"));  	// ""
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0408"));  	// 석가탄신일
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0814"));  	// ""
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0815"));  	// 추석
+    	holidaysSet.add(yyyy + solarDays(yyyy, "0816"));  	// ""
 
     	try {
 			// 어린이날 대체공휴일 검사
@@ -142,42 +142,42 @@ public class HolidayCalendar {
     		}
 
     		// 설날 대체공휴일 검사
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0101"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0103"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0101"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0103"));
     		}
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0101"), formatter).getDayOfWeek().getValue() == LD_MONDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0103"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0101"), formatter).getDayOfWeek().getValue() == LD_MONDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0103"));
     		}
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0102"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0103"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0102"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0103"));
     		}
 
     		// 광복절 대체공휴일 검사
-    		int LiberationDayChk = LocalDate.parse(yyyy + "0815", formatter).getDayOfWeek().getValue();
-    		if (LiberationDayChk == LD_SUNDAY) {
+    		int liberationDayChk = LocalDate.parse(yyyy + "0815", formatter).getDayOfWeek().getValue();
+    		if (liberationDayChk == LD_SUNDAY) {
     			holidaysSet.add(yyyy + "0816");
     		}
-    		if (LiberationDayChk == LD_SATURDAY) {
+    		if (liberationDayChk == LD_SATURDAY) {
     			holidaysSet.add(yyyy + "0817");
     		}
 
     		// 추석 대체공휴일 검사
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0814"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0817"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0814"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0817"));
     		}
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0815"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0817"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0815"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0817"));
     		}
-    		if (LocalDate.parse(Lunar2Solar(yyyy + "0816"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
-    			holidaysSet.add(Lunar2Solar(yyyy + "0817"));
+    		if (LocalDate.parse(lunar2Solar(yyyy + "0816"), formatter).getDayOfWeek().getValue() == LD_SUNDAY) {
+    			holidaysSet.add(lunar2Solar(yyyy + "0817"));
     		}
 
     		// 개전철 대체공휴일 검사
-    		int NationalFoundationDayChk = LocalDate.parse(yyyy + "1003", formatter).getDayOfWeek().getValue();
-    		if (NationalFoundationDayChk == LD_SUNDAY) {
+    		int nationalFoundationDayChk = LocalDate.parse(yyyy + "1003", formatter).getDayOfWeek().getValue();
+    		if (nationalFoundationDayChk == LD_SUNDAY) {
     			holidaysSet.add(yyyy + "1004");
     		}
-    		if (NationalFoundationDayChk == LD_SATURDAY) {
+    		if (nationalFoundationDayChk == LD_SATURDAY) {
     			holidaysSet.add(yyyy + "1005");
     		}
 

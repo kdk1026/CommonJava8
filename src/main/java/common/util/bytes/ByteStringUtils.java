@@ -97,7 +97,7 @@ public class ByteStringUtils {
 			byte strByte = (byte) str.getBytes(UTF_8).length;
 			resFlag = strByte > maxByte;
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 
@@ -130,7 +130,7 @@ public class ByteStringUtils {
 			byte strByte = (byte) str.getBytes(charsetName).length;
 			resFlag = strByte > maxByte;
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 

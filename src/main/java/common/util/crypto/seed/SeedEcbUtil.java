@@ -1,6 +1,7 @@
 package common.util.crypto.seed;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -54,21 +55,15 @@ public class SeedEcbUtil {
 			throw new IllegalArgumentException("sKey length is less than 16");
 		}
 
-		String sEncData = "";
-		try {
-			byte[] bKey	= sKey.getBytes();
-			byte[] bCipher = null;
-			byte[] bData = sPlainData.getBytes();
+		byte[] bKey	= sKey.getBytes();
+		byte[] bCipher = null;
+		byte[] bData = sPlainData.getBytes();
 
-			bKey = setPadding(bKey, 16);
-			int nDataLen = bData.length;
-			bCipher = KISA_SEED_ECB.SEED_ECB_Encrypt(bKey, bData, 0, nDataLen);
+		bKey = setPadding(bKey, 16);
+		int nDataLen = bData.length;
+		bCipher = KISA_SEED_ECB.SEED_ECB_Encrypt(bKey, bData, 0, nDataLen);
 
-			sEncData = new String(Base64.getEncoder().encode(bCipher));
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		return sEncData;
+		return new String(Base64.getEncoder().encode(bCipher));
 	}
 
 	/**
@@ -104,8 +99,7 @@ public class SeedEcbUtil {
 			sEncData = new String(Base64.getEncoder().encode(bCipher));
 
 			sEncData = URLEncoder.encode(sEncData, UTF_8);
-
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 		return sEncData;
@@ -131,25 +125,18 @@ public class SeedEcbUtil {
 			throw new IllegalArgumentException("sKey length is less than 16");
 		}
 
-		String sPlainData = "";
-		try {
-			byte[] bKey	= sKey.getBytes();
-			byte[] bCipher = null;
-			byte[] bPlain = null;
+		byte[] bKey	= sKey.getBytes();
+		byte[] bCipher = null;
+		byte[] bPlain = null;
 
-			bCipher = Base64.getDecoder().decode(sEncData);
+		bCipher = Base64.getDecoder().decode(sEncData);
 
-			bKey = setPadding(bKey, 16);
-			byte[] bData = bCipher;
-			int nDataLen = bData.length;
+		bKey = setPadding(bKey, 16);
+		byte[] bData = bCipher;
+		int nDataLen = bData.length;
 
-			bPlain = KISA_SEED_ECB.SEED_ECB_Decrypt(bKey, bCipher, 0, nDataLen);
-			sPlainData = new String(bPlain);
-
-		} catch (Exception e) {
-			logger.error("", e);
-		}
-		return sPlainData;
+		bPlain = KISA_SEED_ECB.SEED_ECB_Decrypt(bKey, bCipher, 0, nDataLen);
+		return new String(bPlain);
 	}
 
 	/**
@@ -189,7 +176,7 @@ public class SeedEcbUtil {
 			bPlain = KISA_SEED_ECB.SEED_ECB_Decrypt(bKey, bCipher, 0, nDataLen);
 			sPlainData = new String(bPlain);
 
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 		return sPlainData;

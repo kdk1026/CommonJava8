@@ -1,5 +1,6 @@
 package common.util.bytes;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ public class ByteUtils {
 					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
 				}
 			}
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException | IllegalAccessException e) {
 			logger.error("", e);
 		}
 		return nByteLen;
@@ -68,7 +69,7 @@ public class ByteUtils {
 				key = it.next();
 				nByteLen += (String.valueOf(map.get(key))).getBytes(sEncoding).length;
 			}
-		} catch (Exception e) {
+		} catch (UnsupportedEncodingException | IllegalArgumentException e) {
 			logger.error("", e);
 		}
 		return nByteLen;

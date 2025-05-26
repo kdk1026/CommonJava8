@@ -3,8 +3,6 @@ package common.util.json;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,21 +64,17 @@ public class GsonUtil {
     }
 
 	public static class ToJson {
+		private ToJson() {
+			super();
+		}
+
 		public static String converterObjToJsonStr(Object obj, boolean isPretty) {
 			if ( obj == null ) {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 			}
 
-			String sJson = "";
-
-			try {
-				getInstance(isPretty);
-				sJson = instance.gson.toJson(obj);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-
-			return sJson;
+			getInstance(isPretty);
+			return instance.gson.toJson(obj);
 		}
 
 		public static String converterMapToJsonStr(Map<String, Object> map, boolean isPretty) {
@@ -101,22 +95,18 @@ public class GsonUtil {
 	}
 
 	public static class FromJson {
+		private FromJson() {
+			super();
+		}
+
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String sJson) {
 			if ( StringUtils.isBlank(sJson) ) {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
-			Map<String, Object> map = new HashMap<>();
-
-			try {
-				getInstance(false);
-				map = instance.gson.fromJson(sJson, Map.class);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-
-			return map;
+			getInstance(false);
+			return instance.gson.fromJson(sJson, Map.class);
 		}
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
@@ -124,16 +114,8 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
-			JsonObject jsonObj = null;
-
-			try {
-				getInstance(false);
-				jsonObj = instance.gson.fromJson(sJson, JsonObject.class);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-
-			return jsonObj;
+			getInstance(false);
+			return instance.gson.fromJson(sJson, JsonObject.class);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -142,16 +124,8 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
-			List<T> list = new ArrayList<>();
-
-			try {
-				getInstance(false);
-				list = instance.gson.fromJson(sJsonArr, List.class);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-
-			return list;
+			getInstance(false);
+			return instance.gson.fromJson(sJsonArr, List.class);
 		}
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
@@ -159,16 +133,8 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
-			JsonArray jsonArray = null;
-
-			try {
-				getInstance(false);
-				jsonArray = instance.gson.fromJson(sJsonArr, JsonArray.class);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-
-			return jsonArray;
+			getInstance(false);
+			return instance.gson.fromJson(sJsonArr, JsonArray.class);
 		}
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
@@ -180,18 +146,16 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("clazz"));
 			}
 
-			try {
-				getInstance(false);
-				Object result = instance.gson.fromJson(jsonStr, clazz);
-				return clazz.cast(result);
-			} catch (Exception e) {
-				logger.error("", e);
-			}
-			return null;
+			getInstance(false);
+			return instance.gson.fromJson(jsonStr, clazz);
 		}
 	}
 
 	public static class ReadJsonFile {
+		private ReadJsonFile() {
+			super();
+		}
+
 		public static Object readJsonFileObject(String sfileName, Type type) {
 			if ( StringUtils.isBlank(sfileName) ) {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
