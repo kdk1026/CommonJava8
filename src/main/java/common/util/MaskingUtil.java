@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
  * -----------------------------------
  * 2025. 2. 5.  kdk		최초작성
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영, 제미나이에 의한 일부 코드 개선
  * </pre>
  *
  *
@@ -16,18 +17,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class MaskingUtil {
 
-	private static MaskingUtil instance;
-
 	private MaskingUtil() {
 		super();
-	}
-
-	public static synchronized MaskingUtil getInstance() {
-		if (instance == null) {
-			instance = new MaskingUtil();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -40,7 +31,7 @@ public class MaskingUtil {
 	 * @param name
 	 * @return
 	 */
-	public String maskName(String name) {
+	public static String maskName(String name) {
 		String regex = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
 
 		if (name.matches(regex)) {
@@ -73,7 +64,7 @@ public class MaskingUtil {
 	 * @param isShowGender
 	 * @return
 	 */
-	public String maskRRN(String rrn, boolean isShowGender) {
+	public static String maskRRN(String rrn, boolean isShowGender) {
 		if (rrn == null || rrn.length() != 14 || rrn.charAt(6) != '-') {
 			throw new IllegalArgumentException("Invalid Resident Registration Number");
 		}
@@ -94,7 +85,7 @@ public class MaskingUtil {
 	 * @param passportNumber
 	 * @return
 	 */
-	public String maskPassportNumber(String passportNumber) {
+	public static String maskPassportNumber(String passportNumber) {
 		if (passportNumber == null || passportNumber.length() < 5) {
 			throw new IllegalArgumentException("Invalid Passport Number");
 		}
@@ -112,43 +103,100 @@ public class MaskingUtil {
 	 * @param phoneNumber
 	 * @return
 	 */
-	public String maskPhoneNumber(String phoneNumber) {
-		if (phoneNumber.contains("-")) {
-			// '-'가 있는 경우 가운데를 마스킹
-			String[] parts = phoneNumber.split("-");
-			if (parts.length == 3) {
-				return parts[0] + "-****-" + parts[2];
-			} else if (parts.length == 2 && parts[0].length() == 2) {
-				return parts[0] + "-***-" + parts[1];
-			}
-		} else {
-			// '-'가 없는 경우 번호 형식에 따라 마스킹
-			if (phoneNumber.startsWith("02") && phoneNumber.length() == 9) {
-				return phoneNumber.substring(0, 2) + "***" + phoneNumber.substring(5);
-			} else if (phoneNumber.startsWith("02") && phoneNumber.length() == 10) {
-				return phoneNumber.substring(0, 2) + "****" + phoneNumber.substring(6);
-			} else if (phoneNumber.startsWith("050") || phoneNumber.startsWith("070")) {
-				return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
-			} else if (phoneNumber.startsWith("031") || phoneNumber.startsWith("032") || phoneNumber.startsWith("033")
-					|| phoneNumber.startsWith("041") || phoneNumber.startsWith("042") || phoneNumber.startsWith("043")
-					|| phoneNumber.startsWith("044") || phoneNumber.startsWith("051") || phoneNumber.startsWith("052")
-					|| phoneNumber.startsWith("053") || phoneNumber.startsWith("054") || phoneNumber.startsWith("055")
-					|| phoneNumber.startsWith("061") || phoneNumber.startsWith("062") || phoneNumber.startsWith("063")
-					|| phoneNumber.startsWith("064")) {
-				if (phoneNumber.length() == 10) {
-					return phoneNumber.substring(0, 3) + "***" + phoneNumber.substring(6);
-				} else if (phoneNumber.length() == 11) {
-					return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
-				}
-			} else if (phoneNumber.startsWith("010") && phoneNumber.length() == 11) {
-				return phoneNumber.substring(0, 3) + "****" + phoneNumber.substring(7);
-			} else if (phoneNumber.length() > 7) {
-				return phoneNumber.substring(0, phoneNumber.length() - 4) + "****";
-			}
-		}
+    /**
+     * <pre>
+     * 연락처 마스킹 (가운데 부분 마스킹)
+     * 다양한 전화번호 형식 (유/무선, 지역번호 포함/제외)을 처리하여 가운데 번호를 마스킹합니다.
+     * </pre>
+     *
+     * @param phoneNumber 마스킹할 전화번호
+     * @return 마스킹된 전화번호. 유효하지 않은 형식의 경우 빈 문자열 반환.
+     */
+    public static String maskPhoneNumber(String phoneNumber) {
+        if (StringUtils.isBlank(phoneNumber)) {
+            return "";
+        }
 
-		return "";
-	}
+        // 1. 모든 하이픈 제거 (정규화)
+        String digitsOnly = phoneNumber.replaceAll("[^\\d]", ""); // 숫자만 추출
+
+        // 2. 다양한 전화번호 형식에 맞는 정규 표현식으로 마스킹 로직 적용
+        // 번호 길이에 따라 마스킹 규칙을 적용합니다.
+        // 마스킹 규칙은 앞부분 + 마스크 + 뒷부분
+        // 예시: 010-1234-5678 -> 010-****-5678
+        //       02-1234-5678 -> 02-****-5678
+        //       02-123-4567  -> 02-***-4567
+
+        String maskedDigits = "";
+
+        // 휴대전화 (10~11자리): 0XX-ABCD-EFGH 또는 0XX-ABC-EFGH
+        // 010, 011, 016, 017, 018, 019로 시작하는 10자리 또는 11자리
+        if (digitsOnly.matches("^01[016789]\\d{7,8}$")) {
+            // 11자리 (010-ABCD-EFGH) -> 010-****-EFGH
+            if (digitsOnly.length() == 11) {
+                maskedDigits = digitsOnly.substring(0, 3) + "****" + digitsOnly.substring(7);
+            }
+            // 10자리 (01X-ABC-DEFG) -> 01X-***-DEFG (옛날 번호)
+            else if (digitsOnly.length() == 10) {
+                 maskedDigits = digitsOnly.substring(0, 3) + "***" + digitsOnly.substring(6);
+            }
+        }
+        // 서울 지역번호 (02)
+        // 9자리: 02-ABC-DEFG -> 02-***-DEFG
+        // 10자리: 02-ABCD-EFGH -> 02-****-EFGH
+        else if (digitsOnly.startsWith("02") && (digitsOnly.length() == 9 || digitsOnly.length() == 10)) {
+            if (digitsOnly.length() == 9) {
+                maskedDigits = digitsOnly.substring(0, 2) + "***" + digitsOnly.substring(5);
+            } else { // length == 10
+                maskedDigits = digitsOnly.substring(0, 2) + "****" + digitsOnly.substring(6);
+            }
+        }
+        // 그 외 지역번호 (0XX) (10~11자리)
+        // 03X, 04X, 05X, 06X 로 시작
+        else if (digitsOnly.matches("^0[3-6]\\d{8,9}$")) { // 03x~06x로 시작하고 총 10~11자리
+            // 10자리 (0XX-ABC-DEFG) -> 0XX-***-DEFG
+            if (digitsOnly.length() == 10) {
+                maskedDigits = digitsOnly.substring(0, 3) + "***" + digitsOnly.substring(6);
+            }
+            // 11자리 (0XX-ABCD-EFGH) -> 0XX-****-EFGH
+            else if (digitsOnly.length() == 11) {
+                maskedDigits = digitsOnly.substring(0, 3) + "****" + digitsOnly.substring(7);
+            }
+        }
+        // 050, 070 (인터넷 전화 등) (11자리)
+        else if (digitsOnly.startsWith("050") || digitsOnly.startsWith("070") && digitsOnly.length() == 11) {
+             maskedDigits = digitsOnly.substring(0, 3) + "****" + digitsOnly.substring(7);
+        }
+        // 일반 전화 (7~8자리) (지역번호 없는 번호, 국번+번호)
+        else if (digitsOnly.length() >= 7 && digitsOnly.length() <= 8) {
+            // 마지막 4자리를 마스킹
+            maskedDigits = digitsOnly.substring(0, digitsOnly.length() - 4) + "****";
+        }
+        // 그 외 알려진 형식에 해당하지 않는 경우 (유효하지 않은 번호로 간주)
+        else {
+            return "";
+        }
+
+        // 3. 원래 하이픈 위치에 맞춰 하이픈 재삽입
+        StringBuilder finalMaskedPhoneNumber = new StringBuilder();
+        int digitIndex = 0; // 숫자만 있는 문자열의 인덱스
+
+        for (char originalChar : phoneNumber.toCharArray()) {
+            if (originalChar == '-') {
+                finalMaskedPhoneNumber.append('-');
+            } else if (digitIndex < maskedDigits.length()){
+                finalMaskedPhoneNumber.append(maskedDigits.charAt(digitIndex));
+                digitIndex++;
+            } else {
+                // 원본에 하이픈은 있는데, 숫자가 더이상 없어서 마스킹된 숫자 문자열을 벗어나는 경우
+                // (이런 경우는 거의 없겠지만 안전장치)
+                finalMaskedPhoneNumber.append(originalChar);
+                digitIndex++;
+            }
+        }
+
+        return finalMaskedPhoneNumber.toString();
+    }
 
 	/**
 	 * <pre>
@@ -159,7 +207,7 @@ public class MaskingUtil {
 	 * @param email
 	 * @return
 	 */
-	public String maskEmail(String email) {
+	public static String maskEmail(String email) {
 		if ( StringUtils.isBlank(email) ) {
 			return "";
 		}
@@ -184,7 +232,7 @@ public class MaskingUtil {
 	 * @param id
 	 * @return
 	 */
-	public String maskId(String id) {
+	public static String maskId(String id) {
 		if ( StringUtils.isBlank(id) ) {
 			return "";
 		}
@@ -205,7 +253,7 @@ public class MaskingUtil {
 	 * @param address
 	 * @return
 	 */
-	public String maskRoadAddress(String address) {
+	public static String maskRoadAddress(String address) {
 		if ( StringUtils.isBlank(address) ) {
 			return "";
 		}
@@ -213,88 +261,73 @@ public class MaskingUtil {
 		return address.replaceAll("\\d", "*");
 	}
 
-	/**
-	 * <pre>
-	 * 카드번호 마스킹
-	 *  - startIndex 부터 12번째 자리 마스킹
-	 * </pre>
-	 *
-	 * @param cardNumber
-	 * @param startIndex (7 or 9)
-	 * @return
-	 */
-	public String maskCardNumber(String cardNumber, int startIndex) {
-		if ( StringUtils.isBlank(cardNumber) ) {
-			return "";
-		}
+    /**
+     * <pre>
+     * 카드번호 마스킹
+     * - startIndex 부터 지정된 길이만큼 마스킹
+     * - 일반적으로 16자리 중 7번째부터 12번째 숫자 (혹은 9번째부터 12번째 숫자)를
+     * </pre>
+     *
+     * @param cardNumber 마스킹할 카드번호
+     * @param startIndex 마스킹 시작 인덱스 (1부터 시작, 카드 번호의 실제 숫자 위치 기준). 7 또는 9.
+     * @return 마스킹된 카드번호
+     * @throws IllegalArgumentException 유효하지 않은 startIndex 또는 카드 번호 길이
+     */
+    public static String maskCardNumber(String cardNumber, int startIndex) {
+        if (StringUtils.isBlank(cardNumber)) {
+            return "";
+        }
 
-		if (startIndex != 7 && startIndex != 9) {
-			throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
-		}
+        // 입력된 startIndex가 유효한지 검증 (1부터 시작하는 인덱스로 가정)
+        if (startIndex != 7 && startIndex != 9) {
+            throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
+        }
 
-		// 카드 번호의 모든 숫자를 제거한 문자열을 얻음
-		String plainCardNumber = cardNumber.replace("-", "");
+        // 1. 카드 번호에서 모든 하이픈 제거
+        String plainCardNumber = cardNumber.replace("-", "");
 
-		// 카드번호가 15자리나 16자리가 아닌 경우 예외 발생
-		if (plainCardNumber.length() != 15 && plainCardNumber.length() != 16) {
-			throw new IllegalArgumentException("Invalid card number length. It should be either 15 or 16 digits.");
-		}
+        // 2. 카드번호 길이 검증
+        if (plainCardNumber.length() != 15 && plainCardNumber.length() != 16) {
+            throw new IllegalArgumentException("Invalid card number length. It should be either 15 or 16 digits.");
+        }
 
-		StringBuilder maskedCardNumber = new StringBuilder();
+        // 3. 마스킹할 길이 결정 (startIndex에 따라 마스킹할 '*'의 개수가 다름)
+        int maskLength;
+        if (startIndex == 7) {
+            // 16자리 카드: 7번째부터 4자리 마스킹 (xxxx-xx**-****-xxxx)
+            // 15자리 카드: 7번째부터 6자리 마스킹 (xxxx-xx**-*****-xxx)
+            // 실제 구현에서는 plainCardNumber의 길이에 따라 달라짐
+            maskLength = (plainCardNumber.length() == 16) ? 4 : 6;
+        } else { // startIndex == 9
+            // 9번째부터 4자리 마스킹 (xxxxxxxx-****-xxxx)
+            maskLength = 4;
+        }
 
-		// startIndex에 따른 분기 처리
-		if (startIndex == 7) {
-			if (cardNumber.contains("-")) {
-				int maskedIndex = 0;
-				for (int i = 0; i < cardNumber.length(); i++) {
-					char ch = cardNumber.charAt(i);
-					if (ch == '-') {
-						maskedCardNumber.append('-');
-					} else {
-						if (maskedIndex >= startIndex - 1 && maskedIndex < startIndex + 4 + 1) {
-							maskedCardNumber.append('*');
-						} else {
-							maskedCardNumber.append(ch);
-						}
-						maskedIndex++;
-					}
-				}
-			} else {
-				if (plainCardNumber.length() == 16) {
-					maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
-					maskedCardNumber.append("****");
-					maskedCardNumber.append(plainCardNumber.substring(startIndex + 4 + 1));
-				} else if (plainCardNumber.length() == 15) {
-					maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
-					maskedCardNumber.append("******");
-					maskedCardNumber.append(plainCardNumber.substring(startIndex + 4 + 1));
-				}
-			}
-		} else if (startIndex == 9) {
-			if (cardNumber.contains("-")) {
-				int maskedIndex = 0;
-				for (int i = 0; i < cardNumber.length(); i++) {
-					char ch = cardNumber.charAt(i);
-					if (ch == '-') {
-						maskedCardNumber.append('-');
-					} else {
-						if (maskedIndex >= startIndex - 1 && maskedIndex < startIndex + 3) {
-							maskedCardNumber.append('*');
-						} else {
-							maskedCardNumber.append(ch);
-						}
-						maskedIndex++;
-					}
-				}
-			} else {
-				maskedCardNumber.append(plainCardNumber.substring(0, startIndex - 1));
-				maskedCardNumber.append("****");
-				maskedCardNumber.append(plainCardNumber.substring(startIndex + 3));
-			}
-		}
+        // 4. 순수 숫자 문자열에 마스킹 적용
+        StringBuilder maskedPlainBuilder = new StringBuilder(plainCardNumber);
+        // startIndex는 1부터 시작하는 실제 카드번호의 위치이므로, 배열 인덱스로는 startIndex - 1
+        for (int i = 0; i < maskLength; i++) {
+            // 마스킹 시작 인덱스부터 maskLength만큼 '*'로 대체
+            maskedPlainBuilder.setCharAt(startIndex - 1 + i, '*');
+        }
+        String maskedPlainNumber = maskedPlainBuilder.toString();
 
-		return maskedCardNumber.toString();
-	}
+        // 5. 원래 카드 번호의 하이픈 위치를 기준으로 마스킹된 번호에 하이픈 재삽입
+        StringBuilder finalMaskedCardNumber = new StringBuilder();
+        int plainIndex = 0; // plainCardNumber의 현재 인덱스
+
+        for (char originalChar : cardNumber.toCharArray()) {
+            if (originalChar == '-') {
+                finalMaskedCardNumber.append('-'); // 원래 하이픈 위치에 하이픈 추가
+            } else {
+                // 하이픈이 아닌 경우, 마스킹된 순수 숫자 문자열에서 해당 숫자/마스크 문자를 가져옴
+                finalMaskedCardNumber.append(maskedPlainNumber.charAt(plainIndex));
+                plainIndex++;
+            }
+        }
+
+        return finalMaskedCardNumber.toString();
+    }
 
 	/**
 	 * <pre>
@@ -304,7 +337,7 @@ public class MaskingUtil {
 	 * @param accountNumber
 	 * @return
 	 */
-	public String maskAccountNumber(String accountNumber) {
+	public static String maskAccountNumber(String accountNumber) {
 		if ( StringUtils.isBlank(accountNumber) ) {
 			return "";
 		}
@@ -322,23 +355,25 @@ public class MaskingUtil {
 	    String maskedPart = "*".repeat(5);
 
 	    // 원래 계좌번호에 '-'가 있을 경우 다시 추가
-	    String maskedAccountNumber = visiblePart + maskedPart;
 	    if (accountNumber.contains("-")) {
-	        maskedAccountNumber = "";
-	        int visibleIndex = 0;
+	    	StringBuilder maskedBuilder = new StringBuilder();
+	    	int cleanIndex = 0;
 	        for (char ch : accountNumber.toCharArray()) {
 	            if (ch == '-') {
-	                maskedAccountNumber += "-";
-	            } else if (visibleIndex < visiblePart.length()) {
-	                maskedAccountNumber += visiblePart.charAt(visibleIndex);
-	                visibleIndex++;
+	            	maskedBuilder.append('-');
 	            } else {
-	                maskedAccountNumber += "*";
+	            	if (cleanIndex < visiblePart.length()) {
+	            		maskedBuilder.append(visiblePart.charAt(cleanIndex));
+	            	} else {
+	            		maskedBuilder.append('*');
+	            	}
+	            	cleanIndex++;
 	            }
 	        }
+	        return maskedBuilder.toString();
+	    } else  {
+	    	return visiblePart + maskedPart;
 	    }
-
-	    return maskedAccountNumber;
 	}
 
 	/**
@@ -349,12 +384,12 @@ public class MaskingUtil {
 	 * @param birthdate
 	 * @return
 	 */
-	public String maskBirthdate(String birthdate) {
+	public static String maskBirthdate(String birthdate) {
 		// 입력값에 '-' 포함 여부 확인
         boolean hasHyphen = birthdate.contains("-");
 
 		// 숫자만 추출
-		String digitsOnly = birthdate.replaceAll("[^0-9]", "");
+		String digitsOnly = birthdate.replaceAll("[^\\d]", "");
 
 		// 올바른 형식인지 확인
         if (digitsOnly.length() == 8) {
@@ -390,13 +425,12 @@ public class MaskingUtil {
 	 * @param ipv6Address
 	 * @return
 	 */
-	public String maskIPv6Address(String ipv6Address) {
+	public static String maskIPv6Address(String ipv6Address) {
         // Scope ID 제거
         String cleanAddress = ipv6Address.split("%")[0];
 
         // IPv6 정규식 (축약형 포함)
         String ipv6Regex = "(([0-9a-fA-F]{1,4}:){1,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))";
-
 
         // IPv6 형식 확인
         if (cleanAddress.matches(ipv6Regex)) {
@@ -414,7 +448,7 @@ public class MaskingUtil {
 	 * @param studentID
 	 * @return
 	 */
-	public String maskStudentID(String studentID) {
+	public static String maskStudentID(String studentID) {
         // 숫자만 포함된 학번 (예: 202312345)
         if (studentID.matches("\\d{8,9}")) {
             return studentID.substring(0, 4) + "****";

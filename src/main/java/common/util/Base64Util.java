@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2024. 8. 13. 김대광	최초작성
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
  *
@@ -21,23 +22,13 @@ import org.slf4j.LoggerFactory;
  */
 public class Base64Util {
 
-	private final Logger logger = LoggerFactory.getLogger(Base64Util.class);
-
-	private static Base64Util instance;
+	private static final Logger logger = LoggerFactory.getLogger(Base64Util.class);
 
 	private Base64Util() {
 		super();
 	}
 
-	public static synchronized Base64Util getInstance() {
-		if (instance == null) {
-			instance = new Base64Util();
-		}
-
-		return instance;
-	}
-
-	public String encode(String text) {
+	public static String encode(String text) {
 		if ( StringUtils.isBlank(text) ) {
 			throw new IllegalArgumentException("text is null");
 		}
@@ -45,7 +36,7 @@ public class Base64Util {
 		return Base64.getEncoder().encodeToString(text.getBytes());
 	}
 
-	public String encode(String text, String charset) {
+	public static String encode(String text, String charset) {
 		if ( StringUtils.isBlank(text) ) {
 			throw new IllegalArgumentException("text is null");
 		}
@@ -62,7 +53,7 @@ public class Base64Util {
 		}
 	}
 
-	public String decode(String encodedText) {
+	public static String decode(String encodedText) {
 		if ( StringUtils.isBlank(encodedText) ) {
 			throw new IllegalArgumentException("encodedText is null");
 		}
@@ -71,7 +62,7 @@ public class Base64Util {
 		return new String(textBytes);
 	}
 
-	public String decode(String encodedText, String charset) {
+	public static String decode(String encodedText, String charset) {
 		if ( StringUtils.isBlank(encodedText) ) {
 			throw new IllegalArgumentException("encodedText is null");
 		}

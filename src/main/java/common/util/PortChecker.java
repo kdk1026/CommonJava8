@@ -1,5 +1,7 @@
 package common.util;
 
+import java.io.IOException;
+
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -14,6 +16,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2024. 9. 6.  김대광	최초작성
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
  *
@@ -23,21 +26,11 @@ public class PortChecker {
 
 	private static final Logger logger = LoggerFactory.getLogger(PortChecker.class);
 
-	private static PortChecker instance;
-
 	private PortChecker() {
 		super();
 	}
 
-	public static synchronized PortChecker getInstance() {
-		if (instance == null) {
-			instance = new PortChecker();
-		}
-
-		return instance;
-	}
-
-	public boolean isConnected(String host, int port) {
+	public static boolean isConnected(String host, int port) {
 		if ( StringUtils.isBlank(host) ) {
 			throw new IllegalArgumentException("host is null");
 		}
@@ -51,7 +44,7 @@ public class PortChecker {
 		try ( SSLSocket sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(host, port) ) {
 
 			isConnect = true;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 

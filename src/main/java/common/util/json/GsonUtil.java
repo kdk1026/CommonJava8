@@ -2,6 +2,7 @@ package common.util.json;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import common.util.ExceptionMessage;
 * 개정이력
 * -----------------------------------
 * 2025. 5. 21. kdk	정리
+* 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영, 제미나이에 의한 일부 코드 개선
 * </pre>
 *
 * 작은 파일 파싱에 유리
@@ -32,36 +34,14 @@ import common.util.ExceptionMessage;
 */
 public class GsonUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(GsonUtil.class);
+
 	private GsonUtil() {
 		super();
 	}
 
-	private static GsonUtil instance;
-	private Gson gson;
-
-	private static final Logger logger = LoggerFactory.getLogger(GsonUtil.class);
-
-	private static synchronized GsonUtil getInstance(boolean isPretty) {
-        if (instance == null) {
-			instance = new GsonUtil();
-			// 유니코드 지원안함
-//			instance.gson = new Gson();
-
-			if (isPretty) {
-				instance.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-			} else {
-				instance.gson = new GsonBuilder().disableHtmlEscaping().create();
-			}
-        } else {
-			if (isPretty) {
-				instance.gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-			} else {
-				instance.gson = new GsonBuilder().disableHtmlEscaping().create();
-			}
-        }
-
-        return instance;
-    }
+	private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+	private static final Gson NORMAL_GSON = new GsonBuilder().disableHtmlEscaping().create();
 
 	public static class ToJson {
 		private ToJson() {
@@ -73,8 +53,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
 			}
 
-			getInstance(isPretty);
-			return instance.gson.toJson(obj);
+			return isPretty ? PRETTY_GSON.toJson(obj) : NORMAL_GSON.toJson(obj);
 		}
 
 		public static String converterMapToJsonStr(Map<String, Object> map, boolean isPretty) {
@@ -105,8 +84,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
-			getInstance(false);
-			return instance.gson.fromJson(sJson, Map.class);
+			return NORMAL_GSON.fromJson(sJson, Map.class);
 		}
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
@@ -114,8 +92,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
 			}
 
-			getInstance(false);
-			return instance.gson.fromJson(sJson, JsonObject.class);
+			return NORMAL_GSON.fromJson(sJson, JsonObject.class);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -124,8 +101,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
-			getInstance(false);
-			return instance.gson.fromJson(sJsonArr, List.class);
+			return NORMAL_GSON.fromJson(sJsonArr, List.class);
 		}
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
@@ -133,8 +109,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
 			}
 
-			getInstance(false);
-			return instance.gson.fromJson(sJsonArr, JsonArray.class);
+			return NORMAL_GSON.fromJson(sJsonArr, JsonArray.class);
 		}
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
@@ -146,8 +121,7 @@ public class GsonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNull("clazz"));
 			}
 
-			getInstance(false);
-			return instance.gson.fromJson(jsonStr, clazz);
+			return NORMAL_GSON.fromJson(jsonStr, clazz);
 		}
 	}
 
@@ -167,13 +141,13 @@ public class GsonUtil {
 
 			Object obj = null;
 
-			try {
-				getInstance(false);
-				JsonReader reader = new JsonReader(new FileReader(sfileName));
-				obj = instance.gson.fromJson(reader, type);
-			} catch (FileNotFoundException e) {
-				logger.error("", e);
-			}
+			try (JsonReader reader = new JsonReader(new FileReader(sfileName))) {
+                obj = NORMAL_GSON.fromJson(reader, type);
+            } catch (FileNotFoundException e) {
+                logger.error("JSON 파일을 찾을 수 없습니다: {}", sfileName, e);
+            } catch (IOException e) {
+                logger.error("JSON 파일 읽기 중 오류 발생: {}", sfileName, e);
+            }
 
 			return obj;
 		}
@@ -190,15 +164,14 @@ public class GsonUtil {
 
 			Object obj = null;
 
-			try {
-				getInstance(false);
-				JsonReader reader = new JsonReader(new FileReader(sfileName));
-				obj = instance.gson.fromJson(reader, type);
-			} catch (FileNotFoundException e) {
-				logger.error("", e);
-			}
-
-			return (List<T>) obj;
+            try (JsonReader reader = new JsonReader(new FileReader(sfileName))) {
+                obj = NORMAL_GSON.fromJson(reader, type);
+            } catch (FileNotFoundException e) {
+                logger.error("JSON 파일을 찾을 수 없습니다: {}", sfileName, e);
+            } catch (IOException e) {
+                logger.error("JSON 파일 읽기 중 오류 발생: {}", sfileName, e);
+            }
+            return (List<T>) obj;
 		}
 	}
 

@@ -34,9 +34,11 @@ import javapns.notification.PushedNotifications;
  * 2021. 8. 14. 김대광	SonarLint 지시에 따른 주저리 주저리 (Minor 라 넘어가지만... 문법상 권장은 아니더라도 방법이 없읉텐데... 클래스는 final 붙여도 될까??)
  * </pre>
  *
+ * 자바 1.6 시절 방식
  *
  * @author 김대광
  */
+@Deprecated
 public class ApnsPushUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApnsPushUtil.class);

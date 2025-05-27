@@ -15,7 +15,8 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 7. 8. kdk	최초작성
- * 2021. 8. 13. kdk	SonarLint 지시에 따른 수정 (symLinkPath.toFile().delete(); -> Files.delete(symLinkPath);)
+ * 2021. 8. 13. kdk		SonarLint 지시에 따른 수정 (symLinkPath.toFile().delete(); -> Files.delete(symLinkPath);)
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
  * @Description	: 1.7 기반
@@ -25,21 +26,8 @@ public class SymbolicLinkUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(SymbolicLinkUtil.class);
 
-	private static SymbolicLinkUtil instance;
-
-	/**
-	 * 외부에서 객체 인스턴스화 불가
-	 */
 	private SymbolicLinkUtil() {
 		super();
-	}
-
-	public static synchronized SymbolicLinkUtil getInstance() {
-		if (instance == null) {
-			instance = new SymbolicLinkUtil();
-		}
-
-		return instance;
 	}
 
 	/**
@@ -48,7 +36,7 @@ public class SymbolicLinkUtil {
 	 * @param symLinkPathStr
 	 * @return
 	 */
-	public boolean makeSymbolicLink(String srcPathStr, String symLinkPathStr) {
+	public static boolean makeSymbolicLink(String srcPathStr, String symLinkPathStr) {
 		if ( StringUtils.isBlank(srcPathStr) ) {
 			throw new IllegalArgumentException("srcPathStr");
 		}

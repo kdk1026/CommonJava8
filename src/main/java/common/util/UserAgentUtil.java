@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
  * -----------------------------------
  * 2021. 8. 10. 김대광	최초작성
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
  *
@@ -17,47 +18,25 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class UserAgentUtil {
 
-	private static UserAgentUtil instance;
-
-	private static final String USER_AGENT = "User-Agent";
-
-	/** 외부에서 객체 인스턴스화 불가 */
 	private UserAgentUtil() {
 		super();
 	}
 
-	/**
-	 * Singleton 인스턴스 생성
-	 *
-	 * @return
-	 */
-	public static synchronized UserAgentUtil getInstance() {
-		if (instance == null) {
-			instance = new UserAgentUtil();
-		}
-
-		return instance;
-	}
+	private static final String USER_AGENT = "User-Agent";
 
 	/**
 	 * 모바일 브라우저 여부 체크
 	 * @param request
 	 * @return
 	 */
-	public boolean isMobile(HttpServletRequest request) {
+	public static boolean isMobile(HttpServletRequest request) {
 		if ( request == null ) {
 			throw new IllegalArgumentException("request is null");
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
 
-		boolean isMobile = false;
-
-		if ( sUserAgent.indexOf("Mobi") > -1 ) {
-			isMobile = true;
-		}
-
-		return isMobile;
+		return sUserAgent != null && sUserAgent.indexOf("Mobi") > -1;
 	}
 
 	/**
@@ -65,24 +44,26 @@ public class UserAgentUtil {
 	 * @param request
 	 * @return
 	 */
-	public String isMobileOs(HttpServletRequest request) {
+	public static String isMobileOs(HttpServletRequest request) {
 		if ( request == null ) {
 			throw new IllegalArgumentException("request is null");
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
 
-		String sPlatForm = "";
+		if ( sUserAgent == null ) {
+            return "";
+        }
 
 		if ( sUserAgent.contains("Android") ) {
-			sPlatForm = "Android";
+			return "Android";
 		}
 
 		if ( sUserAgent.contains("iPhone") || sUserAgent.contains("iPad") || sUserAgent.contains("iPod") ) {
-			sPlatForm = "iOS";
+			return "iOS";
 		}
 
-		return sPlatForm;
+		return "";
 	}
 
 	/**
@@ -91,7 +72,7 @@ public class UserAgentUtil {
 	 * @param chkStr
 	 * @return
 	 */
-	public boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
+	public static boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
 		if ( request == null ) {
 			throw new IllegalArgumentException("request is null");
 		}
@@ -102,7 +83,7 @@ public class UserAgentUtil {
 
 		String sUserAgent = request.getHeader(USER_AGENT);
 
-		return sUserAgent.indexOf(chkStr) > -1;
+		return sUserAgent != null && sUserAgent.indexOf(chkStr) > -1;
 	}
 
 }

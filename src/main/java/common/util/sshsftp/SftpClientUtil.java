@@ -28,13 +28,14 @@ import com.jcraft.jsch.SftpException;
  * @since 2019. 2. 12.
  * @author 김대광
  *
- *         <pre>
+ * <pre>
  * -----------------------------------
  * 개정이력
  * 2019. 2. 12. 김대광	최초작성
  * 2021. 8. 13. 김대광	JavaDoc pre 태그 공백 수정
  * 2025. 3 .20  김대광	정리하면서 누락된 부분 추가
- *         </pre>
+ * 2025. 5. 27  김대광    제미나이에 의한 코드 개선
+ * </pre>
  */
 public class SftpClientUtil {
 
@@ -154,15 +155,23 @@ public class SftpClientUtil {
 			throw new IllegalArgumentException("file is null");
 		}
 
-		@SuppressWarnings("unchecked")
-		Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
+		String fileName = file.getName();
 
-		String sFileNm = "";
-		for (LsEntry le : lsVec) {
-			sFileNm = le.getFilename();
+		// 원격 서버의 파일 경로를 올바르게 구성
+		String remoteFilePath = sDestPath;
+		if (!remoteFilePath.endsWith("/")) {
+	        remoteFilePath += "/";
+	    }
+		remoteFilePath += fileName;
 
-			if (sFileNm.equals(file.getName())) {
-				channelSftp.rm(file.getAbsolutePath());
+		try {
+			channelSftp.rm(remoteFilePath);
+		} catch (SftpException e) {
+			if (e.id == ChannelSftp.SSH_FX_NO_SUCH_FILE) {
+				logger.warn("File to delete not found on SFTP server: {}", remoteFilePath);
+			} else {
+				logger.error("Failed to delete file {}: {}", remoteFilePath, e.getMessage());
+				throw e;
 			}
 		}
 	}

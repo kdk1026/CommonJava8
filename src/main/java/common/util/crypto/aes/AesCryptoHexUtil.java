@@ -3,6 +3,7 @@ package common.util.crypto.aes;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -23,6 +24,7 @@ import common.util.ExceptionMessage;
  * 			Cipher.getInstance 패딩 권장이긴 하지만... node.js 랑 맞춰진거니 별 수 있나 뭐...
  * 2021. 8. 15. 김대광	LazyHolder Singleton 패턴으로 변경 및 파일명 변경
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영, 제미나이에 의한 일부 코드 개선
  * </pre>
  *
  * <pre>
@@ -30,58 +32,28 @@ import common.util.ExceptionMessage;
  * node.js 알고리즘 : aes-128-ecb
  * </pre>
  *
- * <pre>
- * [사용 방법]
- * 	AesCryptoHexUtil.getInstance().setCipherKey("012345678901234567890123456789ab");
- * 	String en = AesCryptoHexUtil.getInstance().encrypt("apple");
- * 	String de = AesCryptoHexUtil.getInstance().decrypt(en);
- * </pre>
- *
  * {@link} <a href="https://www.steemcoinpan.com/hive-101145/@wonsama/aes-128-ecb-java-nodejs">Ref</a>
  * @author 김대광
  */
 public class AesCryptoHexUtil {
 
-	private static AesCryptoHexUtil instance;
-
-	/** 외부에서 객체 인스턴스화 불가 */
 	private AesCryptoHexUtil() {
 		super();
 	}
 
 	/**
-	 * Singleton 인스턴스 생성
-	 *
-	 * @return
-	 */
-	public static synchronized AesCryptoHexUtil getInstance() {
-		if (instance == null) {
-			instance = new AesCryptoHexUtil();
-		}
-
-		return instance;
-	}
-
-	private String cipherKey;
-
-    /**
-     * 키의 길이는 32바이트
-     * @param cipherKey
-     */
-    public void setCipherKey(String cipherKey) {
-		this.cipherKey = cipherKey;
-	}
-
-    /**
      * 모드에 따른 암복호화 처리기
      * @param mode Cipher.ENCRYPT_MODE / Cipher.DECRYPT_MODE
+     * @param cipherKey 키의 길이는 32바이트
      * @return Cipher
      * @throws NoSuchPaddingException
      * @throws NoSuchAlgorithmException
      * @throws InvalidKeyException
      * @since 2021.02.24
      */
-    private Cipher getCipher(int mode) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+    private static Cipher getCipher(int mode, String cipherKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+    	Objects.requireNonNull(cipherKey, ExceptionMessage.isNull("cipherKey"));
+
         Key key = new SecretKeySpec(toBytes(cipherKey, 16), "AES");
         // TODO https://github.com/kdk1026/node_utils/blob/main/libs/aescrypto_hex.js 함께 수정해서 결과를 봐야 할 듯
         Cipher cipher = Cipher.getInstance("AES");
@@ -93,6 +65,7 @@ public class AesCryptoHexUtil {
     /**
      * AES(aes-128-ecb)암호화
      * @param src 평문
+     * @param cipherKey 키의 길이는 32바이트
      * @return 암호화 된 HEX문자열
      * @throws NoSuchPaddingException
      * @throws NoSuchAlgorithmException
@@ -101,12 +74,14 @@ public class AesCryptoHexUtil {
      * @throws IllegalBlockSizeException
      * @since 2021.02.24
      */
-    public String encrypt(String src) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public static String encrypt(String src, String cipherKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(src) ) {
     		throw new IllegalArgumentException(ExceptionMessage.isNull("src"));
     	}
 
-        Cipher cipher = getCipher(Cipher.ENCRYPT_MODE);
+    	Objects.requireNonNull(cipherKey, ExceptionMessage.isNull("cipherKey"));
+
+        Cipher cipher = getCipher(Cipher.ENCRYPT_MODE, cipherKey);
         byte[] plain = src.getBytes();
         byte[] encrypt = cipher.doFinal(plain);
         return toHexString(encrypt);
@@ -115,6 +90,7 @@ public class AesCryptoHexUtil {
     /**
      * AES(aes-128-ecb)복호화
      * @param hex 암호화 된 HEX문자열
+     * @param cipherKey 키의 길이는 32바이트
      * @return 복호화 된 평문
      * @throws NoSuchPaddingException
      * @throws NoSuchAlgorithmException
@@ -123,12 +99,12 @@ public class AesCryptoHexUtil {
      * @throws IllegalBlockSizeException
      * @since 2021.02.24
      */
-    public String decrypt(String hex) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+    public static String decrypt(String hex, String cipherKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
     	if ( StringUtils.isBlank(hex) ) {
     		throw new IllegalArgumentException(ExceptionMessage.isNull("hex"));
     	}
 
-        Cipher cipher = getCipher(Cipher.DECRYPT_MODE);
+        Cipher cipher = getCipher(Cipher.DECRYPT_MODE, cipherKey);
         byte[] encrypt = toBytesFromHexString(hex);
         byte[] decrypt = cipher.doFinal(encrypt);
         return new String(decrypt);
@@ -141,7 +117,7 @@ public class AesCryptoHexUtil {
      * @param radix 진수 (8,10,16만 가능)
      * @return byte[]
      */
-    private byte[] toBytes(String digits, int radix) {
+    private static byte[] toBytes(String digits, int radix) {
        	if ( StringUtils.isBlank(digits) ) {
             return new byte[0];
         }
@@ -172,7 +148,7 @@ public class AesCryptoHexUtil {
      * @param digits 입력 문자열
      * @return byte[]
      */
-    private byte[] toBytesFromHexString(String digits) {
+    private static byte[] toBytesFromHexString(String digits) {
     	if ( StringUtils.isBlank(digits) ) {
             return new byte[0];
         }
@@ -198,7 +174,7 @@ public class AesCryptoHexUtil {
      * @param bytes 배열
      * @return 16진수 문자열
      */
-    private String toHexString(byte[] bytes) {
+    private static String toHexString(byte[] bytes) {
         if ( bytes == null || bytes.length == 0 ) {
             return null;
         }

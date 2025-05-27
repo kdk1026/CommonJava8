@@ -201,11 +201,12 @@ public class ObjectUtil {
 					name = f.getName();
 
 					if ( key.equals(name) ) {
-						cls.getField(name).set(obj, (map.get(key) != null) ? map.get(key) : "");
+						Object value = (map.get(key) != null) ? map.get(key) : "";
+						cls.getField(name).set(obj, value);
 					}
 				}
 
-			} catch (Exception e) {
+			} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
 				logger.error("", e);
 			}
 		}

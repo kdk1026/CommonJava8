@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * -----------------------------------
  * 2024. 8. 2.  김대광	최초작성
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
  *
@@ -22,23 +23,13 @@ import org.slf4j.LoggerFactory;
  */
 public class NewPropertiesUtil {
 
-	private final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
-
-	private static NewPropertiesUtil instance;
+	private static final Logger logger = LoggerFactory.getLogger(NewPropertiesUtil.class);
 
 	private NewPropertiesUtil() {
 		super();
 	}
 
-	public static synchronized NewPropertiesUtil getInstance() {
-		if ( instance == null ) {
-			instance = new NewPropertiesUtil();
-		}
-
-		return instance;
-	}
-
-	public Properties getProperties(String propFileName) {
+	public static Properties getProperties(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
 			throw new IllegalArgumentException("propFileName must be required");
 		}
@@ -54,12 +45,12 @@ public class NewPropertiesUtil {
 		return prop;
 	}
 
-	public String getProperties(String propFileName, String key) {
+	public static String getProperties(String propFileName, String key) {
 		if ( StringUtils.isBlank(key) ) {
 			throw new IllegalArgumentException("key must be required");
 		}
 
-		Properties prop = this.getProperties(propFileName);
+		Properties prop = getProperties(propFileName);
 		return prop.getProperty(key);
 	}
 
