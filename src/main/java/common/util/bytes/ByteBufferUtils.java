@@ -1,5 +1,6 @@
 package common.util.bytes;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
@@ -149,7 +150,7 @@ public class ByteBufferUtils {
 					f.setAccessible(true);
 					buffer.put(f.get(obj).toString().getBytes(sEncoding));
 				}
-			} catch (Exception e) {
+			} catch (IOException | IllegalArgumentException | IllegalAccessException e) {
 				logger.error("", e);
 			}
 		}

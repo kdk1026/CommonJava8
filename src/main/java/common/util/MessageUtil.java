@@ -1,5 +1,6 @@
 package common.util;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -29,7 +30,7 @@ public class MessageUtil {
 
 		try ( InputStream is = MessageUtil.class.getClassLoader().getResourceAsStream(sFileName) ) {
 			prop.load(is);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 		return prop;
