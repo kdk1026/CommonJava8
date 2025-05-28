@@ -61,7 +61,6 @@ public class CookieUtilVer2 {
 	 * @param response
 	 * @param name
 	 * @param value
-	 * @param expiry
 	 * @param isUseJs
 	 * @param isSecure
 	 * @param domain
