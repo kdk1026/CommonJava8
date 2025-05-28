@@ -68,6 +68,16 @@ public class SocketClientThread {
             public void run() {
                 try {
                     if (useSsl) {
+                    	/*
+                    	 * 서버가 공인된 CA의 인증서를 사용하고 그 CA가 Java의 기본 TrustStore에 포함되어 있을 때는 별도의 인증서 로드 없이 동작
+                    	 *
+                    	 * 레거시 서버나 특정 사내 환경에서 자체 인증서를 사용하는 경우라면,
+                    	 * 해당 인증서가 기본 TrustStore에 없으므로 명시적인 TrustStore 로드 및 설정이 필요할 가능성이 매우 높습니다.
+                    	 * 이 경우, System.setProperty를 통해 TrustStore를 지정하거나, SSLContext를 직접 설정하는 방법을 고려
+                    	 *
+                    	 * System.setProperty("javax.net.ssl.trustStore", "path/to/your/truststore.jks");
+						 * System.setProperty("javax.net.ssl.trustStorePassword", "your_truststore_password");
+                    	 */
                         SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
                         mSocket = sslSocketFactory.createSocket();
                     } else {
@@ -159,8 +169,8 @@ public class SocketClientThread {
 
 		StringBuilder sb = new StringBuilder();
 		try (
-				InputStream is = mSocket.getInputStream();
-				BufferedInputStream bis = new BufferedInputStream(is)
+			InputStream is = mSocket.getInputStream();
+			BufferedInputStream bis = new BufferedInputStream(is)
 		) {
 
             byte[] buffer = new byte[4096];
