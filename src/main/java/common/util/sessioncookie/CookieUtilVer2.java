@@ -57,6 +57,45 @@ public class CookieUtilVer2 {
 	}
 
 	/**
+	 * Servlet 3.0 세션 쿠키 설정
+	 * @param response
+	 * @param name
+	 * @param value
+	 * @param expiry
+	 * @param isUseJs
+	 * @param isSecure
+	 * @param domain
+	 */
+	public static void addSessionCookie(HttpServletResponse response, String name, String value, boolean isSecure, boolean isUseJs, String domain) {
+		if ( response == null ) {
+			throw new IllegalArgumentException("response is null");
+		}
+
+		if ( StringUtils.isBlank(name) ) {
+			throw new IllegalArgumentException("name is null");
+		}
+
+		if ( StringUtils.isBlank(value) ) {
+			throw new IllegalArgumentException("value is null");
+		}
+
+		Cookie cookie = new Cookie(name, value);
+		cookie.setPath("/");
+
+		cookie.setSecure(isSecure);
+
+		if (!isUseJs) {
+			cookie.setHttpOnly(true);
+		}
+
+		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
+			cookie.setDomain(domain);
+		}
+
+		response.addCookie(cookie);
+	}
+
+	/**
 	 * cookieName 인자 값을 가지는 쿠키 가져오기
 	 * @param request
 	 * @param cookieName
