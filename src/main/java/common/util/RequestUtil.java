@@ -96,4 +96,18 @@ public class RequestUtil {
 		}
 	}
 
+	/**
+	 * 브라우저 User-Agent 가져오기
+	 * @param request
+	 * @return
+	 */
+	public static String getBrowserInfo(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new IllegalArgumentException("request");
+		}
+
+		String userAgent = request.getHeader("User-Agent");
+        return userAgent != null ? userAgent : "User-Agent 정보 없음";
+	}
+
 }
