@@ -44,6 +44,7 @@ public class NioSocketClientThread {
 	private SocketChannel mSocketChannel;
     private NioSocketClientListener mListener; // 데이터 수신 콜백 리스너
     private boolean mUseSsl;
+    private volatile boolean running = true;
 
     private String sRecvData;
 
@@ -105,6 +106,14 @@ public class NioSocketClientThread {
                     if (mListener != null) {
                         mListener.onError(e);
                     }
+				} finally {
+					if ( socket != null && !socket.isClosed() ) {
+						try {
+							socket.close();
+						} catch (IOException e) {
+							logger.error("소켓 종료 중 오류 발생", e);
+						}
+					}
 				}
 			}
 		};
@@ -169,7 +178,7 @@ public class NioSocketClientThread {
         Thread receiveThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while ( mSocketChannel != null && mSocketChannel.isConnected() ) {
+                while ( running && mSocketChannel != null && mSocketChannel.isConnected() ) {
                     try {
                         ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
                         int nByteCnt = mSocketChannel.read(byteBuffer);
@@ -178,47 +187,47 @@ public class NioSocketClientThread {
                             // 스트림의 끝 (상대방이 연결을 끊음)
                             logger.warn("상대방이 연결을 끊었습니다.");
                             throw new IOException("스트림의 끝 도달");
-                        }
-                        if (nByteCnt == 0) {
+                        } else if (nByteCnt == 0) {
                             // 읽을 데이터가 없음 (블로킹 모드가 아니거나, 일시적으로 데이터 없음)
                             // 바쁜 대기를 피하기 위해 잠시 대기
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                Thread.currentThread().interrupt(); // 인터럽트 상태 복원
-                                logger.warn("수신 스레드 대기 중 인터럽트 발생", e);
-                                break; // 스레드 종료
+
+                        	// 안전하게 대기하는 메서드 호출
+                            boolean wasInterrupted = sleepSafely(100);
+                            if (wasInterrupted) {
+                            	running = false;
                             }
-                            continue;
+                        } else {
+                        	byteBuffer.flip(); // 쓰기 모드에서 읽기 모드로 전환
+
+                        	// mCharsetName이 유효한지 확인하고 기본 Charset 대신 사용
+                        	Charset charset = (charsetName != null && !charsetName.isEmpty()) ?
+                        			Charset.forName(charsetName) : Charset.defaultCharset();
+                        	sRecvData = charset.decode(byteBuffer).toString();
+
+                        	logger.info("[받기 완료: {}]", sRecvData);
+
+                        	if (mListener != null) {
+                        		mListener.onDataReceived(sRecvData);
+                        	}
                         }
-
-                        byteBuffer.flip(); // 쓰기 모드에서 읽기 모드로 전환
-
-                        // mCharsetName이 유효한지 확인하고 기본 Charset 대신 사용
-                        Charset charset = (charsetName != null && !charsetName.isEmpty()) ?
-                                Charset.forName(charsetName) : Charset.defaultCharset();
-                        sRecvData = charset.decode(byteBuffer).toString();
-
-                        logger.info("[받기 완료: {}]", sRecvData);
-
-                        if (mListener != null) {
-                            mListener.onDataReceived(sRecvData);
-                        }
-
                     } catch (IOException e) {
                         logger.error("데이터 수신 중 IO 오류 발생", e);
                         stopClient();
                         if (mListener != null) {
                             mListener.onError(e);
                         }
-                        break; // IO 오류 발생 시 수신 루프 종료
+                        running = false;
                     } catch (Exception e) {
                         logger.error("데이터 수신 중 예상치 못한 오류 발생", e);
                         stopClient();
                         if (mListener != null) {
                             mListener.onError(e);
                         }
-                        break; // 기타 오류 발생 시 수신 루프 종료
+                        running = false;
+                    }
+
+                    if (!running) {
+                        break;
                     }
                 }
                 logger.info("데이터 수신 스레드 종료.");
@@ -226,6 +235,26 @@ public class NioSocketClientThread {
         });
         receiveThread.setName("NioSocketClient-ReceiveThread");
         receiveThread.start();
+    }
+
+    /**
+     * 주어진 시간만큼 스레드를 안전하게 대기시킵니다.
+     * 인터럽트 발생 시 현재 스레드의 인터럽트 상태를 복원하고 경고를 로깅합니다.
+     *
+     * @param millis 대기할 시간 (밀리초)
+     * @return 대기 중 인터럽트가 발생했으면 true, 아니면 false
+     */
+    private boolean sleepSafely(long millis) {
+        try {
+            Thread.sleep(millis);
+            return false; // 인터럽트 없이 정상적으로 대기 완료
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // 인터럽트 상태 복원
+            logger.warn("수신 스레드 대기 중 인터럽트 발생", e);
+            // running = false; // 만약 running 변수가 이 메서드 외부의 루프를 제어한다면
+                              // 여기서 바로 변경하기보다는, 반환 값을 통해 호출자에게 알리는 것이 좋습니다.
+            return true; // 인터럽트 발생
+        }
     }
 
     public String receive() {

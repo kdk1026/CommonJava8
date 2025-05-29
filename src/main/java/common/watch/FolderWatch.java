@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
  * 2021. 7.  8. 김대광	최초작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정 (Complexity 는 언제나 그렇듯 어쩔 수가 없단다....)
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5  29. 김대광	static으로 변경
  * </pre>
  *
  * 실행 가능한 JAR 프로젝트에 생성하여 nohup java -jar JAR파일 형태로 백그라운드로 실행
@@ -28,26 +29,13 @@ import org.slf4j.LoggerFactory;
  */
 public class FolderWatch {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(FolderWatch.class);
 
-	private static FolderWatch instance;
-
-	/**
-	 * 외부에서 객체 인스턴스화 불가
-	 */
 	private FolderWatch() {
 		super();
 	}
 
-	public static FolderWatch getInstance() {
-		if (instance == null) {
-			instance = new FolderWatch();
-		}
-
-		return instance;
-	}
-
-	public void startWatch(String destPath, boolean isAdditionalWork) {
+	public static void startWatch(String destPath, boolean isAdditionalWork) {
 		WatchService service;
 		try {
 			service = FileSystems.getDefault().newWatchService();

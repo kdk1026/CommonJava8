@@ -76,7 +76,7 @@ public class NioNonBlockingServerThread {
         }
 
     	Objects.requireNonNull(sCharsetName, "문자셋 이름은 null일 수 없습니다.");
-    	
+
     	this.mKeyStorePath = keyStorePath;
     	this.mKeyStorePassword = keyStorePassword.toCharArray();
     	this.mPort = nPort;
@@ -105,51 +105,34 @@ public class NioNonBlockingServerThread {
                 logger.info("[서버 시작]");
 
                 while ( !Thread.currentThread().isInterrupted() ) { // 스레드 인터럽트 여부 확인
+                	boolean terminateOuterLoop = true;
+
                     try {
                         int nKeyCnt = mSelector.select();
 
-                        if (nKeyCnt == 0) {
-                            continue;
+                        if (nKeyCnt > 0) {
+                        	Set<SelectionKey> selectedKeys = mSelector.selectedKeys();
+                        	Iterator<SelectionKey> it = selectedKeys.iterator();
+
+                        	while (it.hasNext()) {
+                        		SelectionKey selectionKey = it.next();
+                        		it.remove(); // 처리된 키는 즉시 제거
+
+                        		boolean isSuccess = processSelectionKey(selectionKey);
+                        		if (!isSuccess) {
+                        			break;
+                        		}
+                        	}
                         }
 
-                        Set<SelectionKey> selectedKeys = mSelector.selectedKeys();
-                        Iterator<SelectionKey> it = selectedKeys.iterator();
-
-                        while (it.hasNext()) {
-                            SelectionKey selectionKey = it.next();
-                            it.remove(); // 처리된 키는 즉시 제거
-
-                            try {
-                                if ( selectionKey.isAcceptable() ) {
-                                    accept(selectionKey);
-                                } else if (selectionKey.isReadable()) {
-                                    Client client = (Client) selectionKey.attachment();
-                                    client.receive(selectionKey);
-                                } else if (selectionKey.isWritable()) {
-                                    Client client = (Client) selectionKey.attachment();
-                                    client.send(selectionKey);
-                                }
-							} catch (Exception e) {
-								logger.error("클라이언트 처리 중 오류 발생: {}", e.getMessage(), e);
-								if ( selectionKey.isValid() ) {
-									selectionKey.cancel(); // 유효한 키만 취소
-								}
-
-                            	if ( selectionKey.attachment() instanceof Client ) {
-                                    Client client = (Client) selectionKey.attachment();
-                                    client.closeClient(); // 클라이언트 자원 정리 (내부에서 mConnections.remove 처리)
-                                } else if ( selectionKey.isAcceptable() ) {
-                                	// accept 실패 시 서버 전체 종료를 고려 (예: 포트 충돌 등)
-                                    logger.error("연결 수락 중 치명적인 오류 발생. 서버 종료를 시도합니다.", e);
-                                    stopServer();
-                                    break; // 루프 종료
-                                }
-							}
-                        }
                     } catch (IOException e) {
                         logger.error("셀렉터 작업 중 오류 발생: {}", e.getMessage(), e);
                         stopServer();
-                        break;
+                        terminateOuterLoop = false;
+                    }
+
+                    if (!terminateOuterLoop) {
+                    	break;
                     }
                 }
                 logger.info("[서버 루프 종료]");
@@ -161,17 +144,45 @@ public class NioNonBlockingServerThread {
 		serverThread.start();
 	}
 
+	private boolean processSelectionKey(SelectionKey selectionKey) {
+        try {
+            if (selectionKey.isAcceptable()) {
+                accept(selectionKey);
+            } else if (selectionKey.isReadable()) {
+                Client client = (Client) selectionKey.attachment();
+                client.receive(selectionKey);
+            } else if (selectionKey.isWritable()) {
+                Client client = (Client) selectionKey.attachment();
+                client.send(selectionKey);
+            }
+
+        } catch (Exception e) {
+            logger.error("클라이언트 처리 중 오류 발생: {}", e.getMessage(), e);
+            if (selectionKey.isValid()) {
+                selectionKey.cancel(); // 유효한 키만 취소
+            }
+
+            if (selectionKey.attachment() instanceof Client) {
+                Client client = (Client) selectionKey.attachment();
+                client.closeClient(); // 클라이언트 자원 정리 (내부에서 mConnections.remove 처리)
+            } else if (selectionKey.isAcceptable()) {
+                // accept 실패 시 서버 전체 종료를 고려 (예: 포트 충돌 등)
+                logger.error("연결 수락 중 치명적인 오류 발생. 서버 종료를 시도합니다.", e);
+                stopServer();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 	public void stopServer() {
 		logger.info("[서버 종료 시도]");
 
 		try {
 	        // 모든 연결된 클라이언트 종료
 	        for (Client client : mConnections) { // for-each 루프 사용
-	            try {
-	                client.closeClient(); // Client 내부에서 mConnections.remove(this) 처리
-	            } catch (Exception e) {
-	                logger.error("클라이언트 {} 종료 중 오류 발생: {}", client.getsRemoteAddr(), e.getMessage(), e);
-	            }
+	        	closeClientSafely(client);
 	        }
             mConnections.clear();	// 혹시 남아있을 수 있는 요소 정리
 
@@ -188,16 +199,7 @@ public class NioNonBlockingServerThread {
 			}
 
 	        if (handshakeTaskExecutor != null) {
-	            handshakeTaskExecutor.shutdown(); // 스레드 풀 종료 요청
-	            try {
-	                // 스레드 풀이 종료될 때까지 최대 5초 대기
-	                if (!handshakeTaskExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-	                    handshakeTaskExecutor.shutdownNow(); // 5초 내에 종료되지 않으면 강제 종료
-	                }
-	            } catch (InterruptedException ie) {
-	                handshakeTaskExecutor.shutdownNow();
-	                Thread.currentThread().interrupt(); // 현재 스레드의 인터럽트 상태 복원
-	            }
+	        	shutdownAndAwaitTermination(handshakeTaskExecutor, 5, TimeUnit.SECONDS);
 	        }
 
 	        mKeyStorePath = null;
@@ -208,6 +210,45 @@ public class NioNonBlockingServerThread {
 			logger.error("서버 종료 중 오류 발생: {}", e.getMessage(), e);
 		}
 	}
+
+    /**
+     * handshakeTaskExecutor를 안전하게 종료하는 메서드
+     *
+     * @param executor 종료할 ExecutorService
+     * @param timeout  종료 대기 시간
+     * @param unit     시간 단위
+     */
+    private void shutdownAndAwaitTermination(ExecutorService executor, long timeout, TimeUnit unit) {
+        // ExecutorService에 새로운 작업이 제출되는 것을 막고, 현재 실행 중인 작업을 완료시킵니다.
+        executor.shutdown();
+        try {
+            // 스레드 풀의 모든 작업이 종료될 때까지 지정된 시간만큼 대기합니다.
+            if (!executor.awaitTermination(timeout, unit)) {
+                // 대기 시간 내에 종료되지 않으면, 모든 실행 중인 작업을 강제 종료합니다.
+                executor.shutdownNow();
+                String unitStr = unit.toString().toLowerCase();
+                logger.warn("ExecutorService가 {} {} 내에 종료되지 않아 강제 종료합니다.", timeout, unitStr);
+            } else {
+                logger.info("ExecutorService가 성공적으로 종료되었습니다.");
+            }
+        } catch (InterruptedException ie) {
+            // 현재 스레드가 대기 중에 인터럽트되면, 즉시 강제 종료합니다.
+            executor.shutdownNow();
+            // 현재 스레드의 인터럽트 상태를 복원하여, 호출자에게 인터럽트가 발생했음을 알립니다.
+            Thread.currentThread().interrupt();
+            logger.warn("ExecutorService 종료 대기 중 스레드가 인터럽트되었습니다. 강제 종료합니다.", ie);
+        }
+    }
+
+	// 단일 클라이언트를 안전하게 닫는 로직을 처리
+	private void closeClientSafely(Client client) {
+        try {
+            client.closeClient(); // Client 내부에서 mConnections.remove(this) 처리
+        } catch (Exception e) {
+        	String clientAddr = client.getsRemoteAddr();
+            logger.error("클라이언트 {} 종료 중 오류 발생: {}", clientAddr, e.getMessage(), e);
+        }
+    }
 
 	private SSLContext createSSLContext() throws IOException, KeyStoreException, NoSuchAlgorithmException,
 		CertificateException, UnrecoverableKeyException, KeyManagementException {

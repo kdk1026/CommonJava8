@@ -207,31 +207,10 @@ public class SocketServerRunnable {
                 logger.info("[SSL 핸드쉐이크 완료: {}]", mmSremoteAddr);
 
                 while ( isRunning && !mmSocket.isClosed() ) {
-                	try {
-                		String receivedData = receive();
-                		if ( receivedData == null || receivedData.isEmpty() ) {
-                			logger.info("[클라이언트 {} 연결 종료 감지]", mmSremoteAddr);
-                			break;
-                		}
-
-                		logger.info("[요청 처리: {}]", mmSremoteAddr);
-                        logger.info("[요청 데이터: {}]", receivedData);
-
-                        String responseMsg = receivedData;
-                        logger.info("[응답 데이터: {}]", responseMsg);
-
-                        send(responseMsg.getBytes(Charset.forName(mCharsetName)));
-
-                	} catch (SocketException se) {
-                        logger.info("[클라이언트 {} 연결 강제 종료됨: {}]", mmSremoteAddr, se.getMessage());
-                        break;
-                    } catch (IOException e) {
-                        logger.error("[클라이언트 {} 통신 오류 발생]", mmSremoteAddr, e);
-                        break;
-                    } catch (Exception e) {
-                        logger.error("[클라이언트 {} 처리 중 예상치 못한 오류 발생]", mmSremoteAddr, e);
-                        break;
-                    }
+                	boolean isSuccess = processClientRequest(mmSremoteAddr, mCharsetName);
+					if (!isSuccess) {
+						break;
+					}
                 }
 			} catch (IOException e) {
 				logger.error("[클라이언트 {} 핸들러 오류 발생]", mmSremoteAddr, e);
@@ -243,6 +222,43 @@ public class SocketServerRunnable {
                 logger.info("[클라이언트 핸들러 종료: {}]", mmSremoteAddr);
 			}
 		}
+
+	    /**
+	     * 클라이언트로부터 데이터를 수신하고 처리하며, 통신 오류 발생 시 false를 반환합니다.
+	     * @param remoteAddress 클라이언트의 원격 주소
+	     * @param charsetName 사용할 문자셋 이름
+	     * @return 요청 처리가 성공했으면 true, 통신 오류나 연결 종료 감지 시 false
+	     */
+	    private boolean processClientRequest(String remoteAddress, String charsetName) {
+	        String receivedData = null;
+
+	        try {
+	            receivedData = receive();
+
+	            if ( receivedData == null || receivedData.isEmpty() ) {
+	                logger.info("[클라이언트 {} 연결 종료 감지]", remoteAddress);
+	                return false; // 연결 종료 감지 시 false 반환
+	            } else {
+	                logger.info("[요청 처리: {}]", remoteAddress);
+	                logger.info("[요청 데이터: {}]", receivedData);
+
+	                String responseMsg = receivedData;
+	                logger.info("[응답 데이터: {}]", responseMsg);
+
+	                send(responseMsg.getBytes(Charset.forName(charsetName))); // send() 메소드는 현재 클래스에 있다고 가정
+	                return true; // 성공적으로 처리 완료 시 true 반환
+	            }
+	        } catch (SocketException se) {
+	            logger.info("[클라이언트 {} 연결 강제 종료됨: {}]", remoteAddress, se.getMessage());
+	            return false; // 예외 발생 시 false 반환
+	        } catch (IOException e) {
+	            logger.error("[클라이언트 {} 통신 오류 발생]", remoteAddress, e);
+	            return false; // 예외 발생 시 false 반환
+	        } catch (Exception e) {
+	            logger.error("[클라이언트 {} 처리 중 예상치 못한 오류 발생]", remoteAddress, e);
+	            return false; // 예외 발생 시 false 반환
+	        }
+	    }
 
         private String receive() throws IOException {
             StringBuilder sb = new StringBuilder();
