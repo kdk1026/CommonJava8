@@ -3,6 +3,7 @@ package common.test;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import common.util.crypto.aes.AesCryptoUtilV2;
+import common.util.crypto.aes.AesCryptoUtilV2.EncryptResult;
 
 /**
  * <pre>
@@ -19,15 +20,16 @@ public class TestAesCrypto {
 
 	public static void main(String[] args) {
 		String key = RandomStringUtils.randomAlphanumeric(32);
-		String iv = RandomStringUtils.randomAlphanumeric(16);
 
 		key = "hEUEFcfoo7HxwDfIHmO2cYG9H0t1COCs";
-		iv = "HxGvsFbYXagRxRUn";
 
-		String encryptedText = AesCryptoUtilV2.encrypt("안녕", key, iv, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
+		EncryptResult encryptResult = AesCryptoUtilV2.encrypt("안녕", key, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
+
+		String encryptedText = encryptResult.getEncryptedText();
 		System.out.println(encryptedText);
+		String iv = encryptResult.getIv();
 
-		String decryptedText = AesCryptoUtilV2.decrypt("oBYzw4pH/RMRas+E1QdVVw==", key, iv, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
+		String decryptedText = AesCryptoUtilV2.decrypt(encryptedText, key, iv, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
 		System.out.println(decryptedText);
 	}
 
