@@ -5,7 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.Objects;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,7 +17,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,28 +65,20 @@ public class AesCryptoUtilV2 {
 	 * AES 암호화
 	 * @param plainText
 	 * @param key
-	 * @param iv
 	 * @param padding
 	 * @return
 	 */
-	public static String encrypt(String plainText, String key, String iv, String padding) {
-		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("plainText"));
-		}
-
-		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
-		}
+	public static EncryptResult encrypt(String plainText, String key, String padding) {
+		Objects.requireNonNull(plainText, "plainText must not be null");
+		Objects.requireNonNull(key, "key must not be null");
+		Objects.requireNonNull(padding, "padding must not be null");
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
-		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
-		}
-
 		String encryptedText = "";
+		String generatedIvString = null;
 
 		try {
 			SecretKey secretKey = new SecretKeySpec(key.getBytes(CHARSET), "AES");
@@ -93,13 +86,15 @@ public class AesCryptoUtilV2 {
 			Cipher cipher = Cipher.getInstance(padding);
 
 			if ( padding.indexOf("CBC") > -1 ) {
+				SecureRandom secureRandom = new SecureRandom();
+                byte[] ivBytes = new byte[16];
+                secureRandom.nextBytes(ivBytes);
+
 				// CBC의 경우, IvParameterSpec 생략 가능
-				if ( iv != null ) {
-					IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(CHARSET));
-					cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
-				} else {
-					cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-				}
+                IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+				cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivSpec);
+
+				generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
 			} else {
 				// ECB의 경우, IvParameterSpec 사용 불가
 				cipher.init(Cipher.ENCRYPT_MODE, secretKey);
@@ -113,7 +108,7 @@ public class AesCryptoUtilV2 {
         	logger.error("", e);
         }
 
-		return encryptedText;
+		return new EncryptResult(encryptedText, generatedIvString);
 	}
 
 	/**
@@ -125,20 +120,13 @@ public class AesCryptoUtilV2 {
 	 * @return
 	 */
 	public static String decrypt(String encryptedText, String key, String iv, String padding) {
-		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("encryptedText"));
-		}
-
-		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
-		}
+		Objects.requireNonNull(encryptedText, "encryptedText must not be null");
+		Objects.requireNonNull(key, "key must not be null");
+		Objects.requireNonNull(iv, "iv must not be null for CBC mode");
+		Objects.requireNonNull(padding, "padding must not be null");
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
-		}
-
-		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		String decryptedText = "";
@@ -149,14 +137,12 @@ public class AesCryptoUtilV2 {
 			Cipher cipher = Cipher.getInstance(padding);
 
 			if ( padding.indexOf("CBC") > -1 ) {
-				// CBC의 경우, IvParameterSpec 생략 가능
-				if ( iv != null ) {
-					IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes(CHARSET));
-					cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
-				} else {
-					cipher.init(Cipher.DECRYPT_MODE, secretKey);
-				}
+				Objects.requireNonNull(iv, "iv for CBC mode");
 
+				byte[] ivBytes = Base64.getDecoder().decode(iv);
+
+				IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
+				cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);
 			} else {
 				// ECB의 경우, IvParameterSpec 사용 불가
 				cipher.init(Cipher.DECRYPT_MODE, secretKey);
@@ -172,5 +158,23 @@ public class AesCryptoUtilV2 {
 
 		return decryptedText;
 	}
+
+	public static class EncryptResult {
+        private String encryptedText;
+        private String iv; // Base64 인코딩된 IV 문자열
+
+        public EncryptResult(String encryptedText, String iv) {
+            this.encryptedText = encryptedText;
+            this.iv = iv;
+        }
+
+        public String getEncryptedText() {
+            return encryptedText;
+        }
+
+        public String getIv() {
+            return iv;
+        }
+    }
 
 }

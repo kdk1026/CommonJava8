@@ -67,10 +67,6 @@ public class AddrSerchApi {
 		sApiUrl += "&confmKey=" + CONFM_KEY;
 		sApiUrl += "&resultType=" + RESULT_TYPE;
 
-//		~ Java 11
-//		URL url = new URL(sApiUrl);
-
-//		Java 17 ~
 		URI uri = null;
 		try {
 			uri = new URI(sApiUrl);

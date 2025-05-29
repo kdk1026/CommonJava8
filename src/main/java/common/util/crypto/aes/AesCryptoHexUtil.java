@@ -52,8 +52,6 @@ public class AesCryptoHexUtil {
      * @since 2021.02.24
      */
     private static Cipher getCipher(int mode, String cipherKey) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
-    	Objects.requireNonNull(cipherKey, ExceptionMessage.isNull("cipherKey"));
-
         Key key = new SecretKeySpec(toBytes(cipherKey, 16), "AES");
         // TODO https://github.com/kdk1026/node_utils/blob/main/libs/aescrypto_hex.js 함께 수정해서 결과를 봐야 할 듯
         Cipher cipher = Cipher.getInstance("AES");
@@ -75,10 +73,7 @@ public class AesCryptoHexUtil {
      * @since 2021.02.24
      */
     public static String encrypt(String src, String cipherKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-    	if ( StringUtils.isBlank(src) ) {
-    		throw new IllegalArgumentException(ExceptionMessage.isNull("src"));
-    	}
-
+    	Objects.requireNonNull(src, ExceptionMessage.isNull("src"));
     	Objects.requireNonNull(cipherKey, ExceptionMessage.isNull("cipherKey"));
 
         Cipher cipher = getCipher(Cipher.ENCRYPT_MODE, cipherKey);
@@ -100,9 +95,8 @@ public class AesCryptoHexUtil {
      * @since 2021.02.24
      */
     public static String decrypt(String hex, String cipherKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-    	if ( StringUtils.isBlank(hex) ) {
-    		throw new IllegalArgumentException(ExceptionMessage.isNull("hex"));
-    	}
+    	Objects.requireNonNull(hex, ExceptionMessage.isNull("hex"));
+    	Objects.requireNonNull(cipherKey, ExceptionMessage.isNull("cipherKey"));
 
         Cipher cipher = getCipher(Cipher.DECRYPT_MODE, cipherKey);
         byte[] encrypt = toBytesFromHexString(hex);
