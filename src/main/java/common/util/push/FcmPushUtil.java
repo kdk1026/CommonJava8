@@ -22,8 +22,10 @@ import common.util.properties.PropertiesUtil;
 // XXX - iOS 발송 확인
 
  /**
+  * @deprecated
   * <pre>
   *  firebase-admin 이용으로 변경되어 사용 불가
+  *  https://github.com/kdk1026/CommonJava8v2/blob/main/src/main/java/common/util/push/FcmSenderUtil.java 로 대체
   * </pre>
  */
 @Deprecated
@@ -31,7 +33,7 @@ public class FcmPushUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FcmPushUtil.class);
 
-	private static String SERVER_KEY;
+	private static String serverKey;
 	private static List<String> regList;
 	private static List<Map<String, Object>> rtnList;
 
@@ -60,7 +62,7 @@ public class FcmPushUtil {
 		Properties prop = PropertiesUtil.getPropertiesClasspath(FCM_PROPERTIES_PATH);
 
 		if ( (prop != null) && (prop.containsKey(FCM_SERVER_KEY_NAME)) ) {
-			SERVER_KEY = prop.getProperty(FCM_SERVER_KEY_NAME);
+			serverKey = prop.getProperty(FCM_SERVER_KEY_NAME);
 
 			String sJson = setJson(regIdList, jsonStr, pushType);
 
@@ -162,7 +164,7 @@ public class FcmPushUtil {
 		rtnList = new ArrayList<>();
 		Map<String, Object> rtnMap = null;
 
-		String sAuthorization = "key=" + SERVER_KEY;
+		String sAuthorization = "key=" + serverKey;
 		Map<String, Object> header = new HashMap<>();
 		header.put("Authorization", sAuthorization);
 

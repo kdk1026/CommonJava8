@@ -37,6 +37,7 @@ import javapns.notification.PushedNotifications;
  * 자바 1.6 시절 방식
  *
  * @author 김대광
+ * @deprecated "https://github.com/kdk1026/CommonJava8v2/blob/main/src/main/java/common/util/push/apns/ApnsSenderUtil.java" 로 대체
  */
 @Deprecated
 public class ApnsPushUtil {

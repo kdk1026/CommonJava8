@@ -34,6 +34,9 @@ public class ByteStringUtils {
 	public static final String UTF_8 = StandardCharsets.UTF_8.toString();
 	public static final String EUC_KR = Charset.forName("EUC-KR").toString();
 
+	private static final String ORE_DATA = "bOrgData";
+	private static final String CHARSET_NAME = "charsetName";
+
 	/**
 	 * <pre>
 	 * 문자열의 Bytes 길이 구하기
@@ -61,7 +64,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
 		}
 
 		int nLen = 0;
@@ -121,7 +124,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
 		}
 
 		boolean resFlag = false;
@@ -144,7 +147,7 @@ public class ByteStringUtils {
 	 */
 	public static String eucKrToUtf8String(byte[] bOrgData) {
 		if ( bOrgData == null || bOrgData.length == 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ORE_DATA));
 		}
 
 		String sRes = "";
@@ -168,7 +171,7 @@ public class ByteStringUtils {
 	 */
 	public static String utf8ToEucKrString(byte[] bOrgData) {
 		if ( bOrgData == null || bOrgData.length == 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ORE_DATA));
 		}
 
 		String sRes = "";
@@ -192,7 +195,7 @@ public class ByteStringUtils {
 	 */
 	public static byte[] eucKrToUtf8(byte[] bOrgData) {
 		if ( bOrgData == null || bOrgData.length == 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ORE_DATA));
 		}
 
 		byte[] bData = null;
@@ -215,7 +218,7 @@ public class ByteStringUtils {
 	 */
 	public static byte[] utf8ToEucKr(byte[] bOrgData) {
 		if ( bOrgData == null || bOrgData.length == 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bOrgData"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ORE_DATA));
 		}
 
 		byte[] bData = null;
@@ -253,7 +256,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("charsetName"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
 		}
 
 		String sRes = "";

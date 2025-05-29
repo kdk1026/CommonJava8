@@ -187,11 +187,24 @@ public class FormattingUtil {
 			throw new IllegalArgumentException("str is null");
 		}
 
-		String sPattern = "^([0-9]{4})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$";
-		if (!str.matches(sPattern)) {
-			return null;
-		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		final String datePattern = "^(\\d{4})[- / .]?(\\d{2})[- / .]?(\\d{2})$";
+
+		Pattern pattern = Pattern.compile(datePattern);
+        Matcher matcher = pattern.matcher(str);
+
+        if ( !matcher.matches() ) {
+        	return null;
+        }
+
+        String year = matcher.group(1);
+        String month = matcher.group(2);
+        String day = matcher.group(3);
+
+        if (isHyphen) {
+            return String.format("%s-%s-%s", year, month, day);
+        } else {
+            return String.format("%s%s%s", year, month, day);
+        }
 	}
 
 	/**

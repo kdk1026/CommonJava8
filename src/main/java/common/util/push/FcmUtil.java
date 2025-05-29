@@ -48,7 +48,9 @@ import com.google.gson.reflect.TypeToken;
  * 			static class의 요소들에 public 없으면... 외부에서 접근 안될거 같은데... try-with-resources 바꾸기에는... 너무 많이 고쳐야 해서...
  * 2024.10. 21. 김대광	Java 17 이상 deprecated 대응
  *
+ * @deprecated
  * ★★★ firebase-admin 이용으로 변경되어 사용 불가 ★★★
+ * https://github.com/kdk1026/CommonJava8v2/blob/main/src/main/java/common/util/push/FcmSenderUtil.java 로 대체
  * </pre>
  */
 @Deprecated
@@ -353,10 +355,6 @@ public class FcmUtil {
 		HttpURLConnection conn = null;
 
 		try {
-//			~ Java 11
-//			URL url = new URL(FcmHttpConstants.REQUEST_URL);
-
-//			Java 17 ~
 			URI uri = null;
 			try {
 				uri = new URI(FcmHttpConstants.REQUEST_URL);
@@ -367,6 +365,11 @@ public class FcmUtil {
 			URL url = null;
 			if ( uri != null ) {
 				url = uri.toURL();
+			}
+
+			if (url == null) {
+				logger.error("URL is null");
+				return sResult;
 			}
 
 			conn = (HttpURLConnection) url.openConnection();

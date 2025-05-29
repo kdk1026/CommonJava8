@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -294,13 +296,15 @@ public class FileUtil {
 	/**
 	 * 파일 삭제
 	 * @param filePath
+	 * @throws IOException
 	 */
-	public static boolean deleteFile(String filePath) {
+	public static boolean deleteFile(String filePath) throws IOException {
 		if ( StringUtils.isBlank(filePath) ) {
 			throw new IllegalArgumentException("filePath is null");
 		}
 
 		File file = new File(filePath);
+		Path path = file.toPath();
 
 		if ( file.isDirectory() ) {
 			File[] files = file.listFiles();
@@ -310,13 +314,13 @@ public class FileUtil {
                 logger.debug("파일이 삭제되었습니다.");
             }
 
-            if ( file.delete() ) {
+            if ( Files.deleteIfExists(path) ) {
             	logger.debug("폴더가 삭제되었습니다.");
             }
 
 		} else {
 			logger.debug("파일이 삭제되었습니다.");
-			return file.delete();
+			return Files.deleteIfExists(path);
 		}
 
         return true;

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
  * 2021. 7.  7. 김대광	최초작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리
  * 2025. 5. 18. 김대광	AI가 추천한 Singleton 패턴으로 변경
+ * 2025. 5. 29  김대광	static 으로 변경
  * </pre>
  *
  * @Description	Apache Commons Net 기반
@@ -33,31 +34,18 @@ public class FtpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FtpClientUtil.class);
 
-	private static FtpClientUtil instance;
-
-	/*
-	 * 외부에서 객체 인스턴스화 불가
-	 */
 	private FtpClientUtil() {
 		super();
 	}
 
-	public static synchronized FtpClientUtil getInstance() {
-		if (instance == null) {
-			instance = new FtpClientUtil();
-		}
+	private static final String ENCODING = StandardCharsets.UTF_8.toString();
 
-		return instance;
-	}
+	private static String sourcePath = "";
+	private static String extension = "";
+	private static File file = null;
+	private static List<File> fileList = null;
 
-	private final String encoding = StandardCharsets.UTF_8.toString();
-
-	private String sourcePath = "";
-	private String extension = "";
-	private File file = null;
-	private List<File> fileList = null;
-
-	public boolean upload(String host, int port, String username, String password, String destPath, String sourcePath, String extension) {
+	public static boolean upload(String host, int port, String username, String password, String destPath, String sourcePath, String extension) {
 		if ( StringUtils.isBlank(sourcePath) ) {
 			throw new IllegalArgumentException("sourcePath is null");
 		}
@@ -66,33 +54,33 @@ public class FtpClientUtil {
 			throw new IllegalArgumentException("extension is null");
 		}
 
-		this.sourcePath = sourcePath;
-		this.extension = extension;
+		FtpClientUtil.sourcePath = sourcePath;
+		FtpClientUtil.extension = extension;
 
-		return this.upload(host, port, username, password, destPath);
+		return upload(host, port, username, password, destPath);
 	}
 
-	public boolean upload(String host, int port, String username, String password, String destPath, File file) {
+	public static boolean upload(String host, int port, String username, String password, String destPath, File file) {
 		if ( file == null ) {
 			throw new IllegalArgumentException("file is null");
 		}
 
-		this.file = file;
+		FtpClientUtil.file = file;
 
-		return this.upload(host, port, username, password, destPath);
+		return upload(host, port, username, password, destPath);
 	}
 
-	public boolean upload(String host, int port, String username, String password, String destPath, List<File> fileList) {
+	public static boolean upload(String host, int port, String username, String password, String destPath, List<File> fileList) {
 		if ( fileList == null || fileList.isEmpty() ) {
 			throw new IllegalArgumentException("fileList is null");
 		}
 
-		this.fileList = fileList;
+		FtpClientUtil.fileList = fileList;
 
-		return this.upload(host, port, username, password, destPath);
+		return upload(host, port, username, password, destPath);
 	}
 
-	private boolean upload(String host, int port, String username, String password, String destPath) {
+	private static boolean upload(String host, int port, String username, String password, String destPath) {
 		if ( StringUtils.isBlank(host) ) {
 			throw new IllegalArgumentException("host is null");
 		}
@@ -119,7 +107,7 @@ public class FtpClientUtil {
 
 		try {
 			ftpClient.connect(host, port);
-			ftpClient.setControlEncoding(this.encoding);
+			ftpClient.setControlEncoding(ENCODING);
 			int nReply = ftpClient.getReplyCode();
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
@@ -131,8 +119,8 @@ public class FtpClientUtil {
 
 			ftpClient.enterLocalPassiveMode();
 
-			this.procDestPath(ftpClient, destPath);
-			isSucesss = this.procFile(ftpClient, destPath);
+			procDestPath(ftpClient, destPath);
+			isSucesss = procFile(ftpClient, destPath);
 
 			ftpClient.logout();
 			ftpClient.disconnect();
@@ -144,7 +132,7 @@ public class FtpClientUtil {
 		return isSucesss;
 	}
 
-	private void showServerReply(FTPClient ftpClient) {
+	private static void showServerReply(FTPClient ftpClient) {
 		String[] replies = ftpClient.getReplyStrings();
 
 		if (replies != null && replies.length > 0) {
@@ -154,7 +142,7 @@ public class FtpClientUtil {
 		}
 	}
 
-	private void procDestPath(FTPClient ftpClient, String destPath) throws IOException {
+	private static void procDestPath(FTPClient ftpClient, String destPath) throws IOException {
 		String[] pathElements = destPath.split("/");
 		if ( pathElements != null && pathElements.length > 0 ) {
 			boolean isExist;
@@ -174,27 +162,27 @@ public class FtpClientUtil {
 		} else {
 			ftpClient.makeDirectory(destPath);
 
-			this.showServerReply(ftpClient);
+			showServerReply(ftpClient);
 		}
 	}
 
 	@SuppressWarnings("resource")
-	private boolean procFile(FTPClient ftpClient, String destPath) throws IOException {
+	private static boolean procFile(FTPClient ftpClient, String destPath) throws IOException {
 		boolean isSucesss = false;
 
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 
 		FileInputStream fis = null;
 
-		if ( !this.isBlank(this.sourcePath) ) {
-			File dir = new File(this.sourcePath);
+		if ( !FtpClientUtil.isBlank(FtpClientUtil.sourcePath) ) {
+			File dir = new File(FtpClientUtil.sourcePath);
 
 			File[] fileNames = null;
 
-			if ( this.isBlank(this.extension) ) {
+			if ( FtpClientUtil.isBlank(FtpClientUtil.extension) ) {
 				fileNames = dir.listFiles();
 			} else {
-				String sExtension = this.extension.replace(".", "");
+				String sExtension = FtpClientUtil.extension.replace(".", "");
 
 				fileNames = dir.listFiles(new FilenameFilter() {
 
@@ -205,7 +193,7 @@ public class FtpClientUtil {
 				});
 			}
 
-			this.removeFile(ftpClient, destPath);
+			FtpClientUtil.removeFile(ftpClient, destPath);
 
 			// XXX : 디렉토리는 따로 지정해서 업로드, 명령어를 통한 방법도 동일함
 			for (File file : fileNames) {
@@ -213,7 +201,7 @@ public class FtpClientUtil {
 					fis = new FileInputStream(file);
 					ftpClient.storeFile(file.getName(), fis);
 
-					this.showServerReply(ftpClient);
+					FtpClientUtil.showServerReply(ftpClient);
 				}
 			}
 
@@ -224,7 +212,7 @@ public class FtpClientUtil {
 			fis = new FileInputStream(file);
 			isSucesss = ftpClient.storeFile(file.getName(), fis);
 
-			this.showServerReply(ftpClient);
+			showServerReply(ftpClient);
 		}
 
 		if ( fileList != null ) {
@@ -233,7 +221,7 @@ public class FtpClientUtil {
 				fis = new FileInputStream(file);
 				ftpClient.storeFile(file.getName(), fis);
 
-				this.showServerReply(ftpClient);
+				showServerReply(ftpClient);
 			}
 		}
 
@@ -244,22 +232,22 @@ public class FtpClientUtil {
 		return isSucesss;
 	}
 
-	private void removeFile(FTPClient ftpClient, String destPath) throws IOException {
+	private static void removeFile(FTPClient ftpClient, String destPath) throws IOException {
 		ftpClient.changeWorkingDirectory(destPath);
 
 		FTPFile[] ftpFiles = ftpClient.listFiles();
 		for (FTPFile ftpFile : ftpFiles) {
 			ftpClient.deleteFile(ftpFile.getName());
 
-			this.showServerReply(ftpClient);
+			showServerReply(ftpClient);
 		}
 	}
 
-	private boolean isBlank(final String str) {
+	private static boolean isBlank(final String str) {
 		return (str == null) || (str.trim().isEmpty());
 	}
 
-	public boolean downloadAll(String host, int port, String username, String password, String destPath, String downloadPath) {
+	public static boolean downloadAll(String host, int port, String username, String password, String destPath, String downloadPath) {
 		if ( StringUtils.isBlank(host) ) {
 			throw new IllegalArgumentException("host is null");
 		}
@@ -284,17 +272,17 @@ public class FtpClientUtil {
 			throw new IllegalArgumentException("downloadPath is null");
 		}
 
-		return this.download(host, port, username, password, destPath, null, downloadPath);
+		return download(host, port, username, password, destPath, null, downloadPath);
 	}
 
-	public boolean download(String host, int port, String username, String password, String destPath, String fileName, String downloadPath) {
+	public static boolean download(String host, int port, String username, String password, String destPath, String fileName, String downloadPath) {
 		boolean isSucesss = false;
 
 		FTPClient ftpClient = new FTPClient();
 
 		try {
 			ftpClient.connect(host, port);
-			ftpClient.setControlEncoding(this.encoding);
+			ftpClient.setControlEncoding(ENCODING);
 			int nReply = ftpClient.getReplyCode();
 
 			if ( !FTPReply.isPositiveCompletion(nReply) ) {
@@ -306,9 +294,9 @@ public class FtpClientUtil {
 
 			ftpClient.enterLocalPassiveMode();
 
-			this.procDownloadDestPath(ftpClient, destPath);
+			procDownloadDestPath(ftpClient, destPath);
 
-			isSucesss = this.procDownloadFile(ftpClient, destPath, fileName, downloadPath);
+			isSucesss = procDownloadFile(ftpClient, destPath, fileName, downloadPath);
 
 			ftpClient.logout();
 			ftpClient.disconnect();
@@ -320,7 +308,7 @@ public class FtpClientUtil {
 		return isSucesss;
 	}
 
-	private void procDownloadDestPath(FTPClient ftpClient, String destPath) throws IOException {
+	private static void procDownloadDestPath(FTPClient ftpClient, String destPath) throws IOException {
 		String[] pathElements = destPath.split("/");
 		if ( pathElements != null && pathElements.length > 0 ) {
 
@@ -331,7 +319,7 @@ public class FtpClientUtil {
 		}
 	}
 
-	private boolean procDownloadFile(FTPClient ftpClient, String destPath, String fileName, String downloadPath) throws IOException {
+	private static boolean procDownloadFile(FTPClient ftpClient, String destPath, String fileName, String downloadPath) throws IOException {
 		boolean isSucesss = false;
 
 		ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
@@ -341,7 +329,7 @@ public class FtpClientUtil {
 		File fDir = null;
 		File f = null;
 
-		if ( !this.isBlank(fileName) ) {
+		if ( !FtpClientUtil.isBlank(fileName) ) {
 			fPath = new File(downloadPath);
 			fDir = fPath;
 			fDir.mkdirs();
@@ -351,7 +339,7 @@ public class FtpClientUtil {
 			bos = new BufferedOutputStream(new FileOutputStream(f));
 			isSucesss = ftpClient.retrieveFile(fileName, bos);
 
-			this.showServerReply(ftpClient);
+			showServerReply(ftpClient);
 
 		} else {
 			FTPFile[] ftpFiles = ftpClient.listFiles(destPath);
@@ -367,7 +355,7 @@ public class FtpClientUtil {
 					bos = new BufferedOutputStream(new FileOutputStream(f));
 					ftpClient.retrieveFile(ftpFile.getName(), bos);
 
-					this.showServerReply(ftpClient);
+					showServerReply(ftpClient);
 				}
 			}
 

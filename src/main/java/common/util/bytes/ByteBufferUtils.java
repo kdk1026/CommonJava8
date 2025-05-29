@@ -22,13 +22,15 @@ public class ByteBufferUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ByteBufferUtils.class);
 
+	private static final String ENCODING = "sEncoding";
+
 	public static ByteBuffer toByteBufferString(String str, String sEncoding) {
 		if ( StringUtils.isBlank(str) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		byte[] b = null;
@@ -52,7 +54,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		int nByteLen = 0;
@@ -85,7 +87,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		int nByteLen = 0;
@@ -123,7 +125,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		int nByteLen = 0;
@@ -165,7 +167,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		int nByteLen = 0;
@@ -198,7 +200,7 @@ public class ByteBufferUtils {
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("sEncoding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
 		}
 
 		int nByteLen = 0;
