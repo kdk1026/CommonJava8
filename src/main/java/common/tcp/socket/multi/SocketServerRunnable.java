@@ -16,9 +16,11 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -41,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * 2018. 12. 23. 김대광	최초작성
  * 2021.  8. 14. 김대광	SonarLint 지시에 따른 주저리 주저리
- * 2025.  5. 28. 김대광	제미나이에 의한 코드 대폭 개선 (SSL 의무화에 따른 소켓 서버는 SSLServerSocket 으로만 처리)
+ * 2025.  5. 28. 김대광	제미나이에 의한 코드 대폭 개선 (SSL 의무화에 따라 SSLServerSocket 으로만 처리)
  * </pre>
  */
 public class SocketServerRunnable {
@@ -52,26 +54,37 @@ public class SocketServerRunnable {
 	private SSLServerSocket mServerSocket;
 	private final Set<ClientHandler> mConnections = Collections.synchronizedSet(new HashSet<>()); // 동기화된 Set 사용
 
+	private int mPort;
 	private String mCharsetName;
 	private String mKeyStorePath;
     private char[] mKeyStorePassword;
 
-    public SocketServerRunnable(String keyStorePath, String keyStorePassword) {
+    public SocketServerRunnable(String keyStorePath, String keyStorePassword, int nPort, String sCharsetName) {
+    	Objects.requireNonNull(keyStorePath, "키 저장소 경로를 지정해야 합니다.");
+    	Objects.requireNonNull(keyStorePassword, "키 저장소 비밀번호를 지정해야 합니다.");
+
+    	if (nPort <= 0 || nPort > 65535) {
+    		throw new IllegalArgumentException("유효하지 않은 포트 번호: " + nPort + ". 포트 번호는 1에서 65535 사이여야 합니다.");
+        }
+
+    	Objects.requireNonNull(sCharsetName, "문자셋 이름은 null일 수 없습니다.");
+
     	this.mKeyStorePath = keyStorePath;
     	this.mKeyStorePassword = keyStorePassword.toCharArray();
+    	this.mPort = nPort;
+    	this.mCharsetName = sCharsetName;
     }
 
-	public void startServer(int nPort, String sCharsetName) {
+	public void startServer() {
 		// 스레드 풀 생성
 		mExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		mCharsetName = sCharsetName;
 
 		try {
 			SSLContext sslContext = createSSLContext();
             SSLServerSocketFactory ssf = sslContext.getServerSocketFactory();
-            mServerSocket = (SSLServerSocket) ssf.createServerSocket(nPort);
+            mServerSocket = (SSLServerSocket) ssf.createServerSocket(this.mPort);
 
-            logger.info("[서버 시작] 포트: {}", nPort);
+            logger.info("[서버 시작] 포트: {}", this.mPort);
 
             // 람다 대신 익명 클래스 사용
             mExecutorService.submit(new Runnable() {
@@ -106,15 +119,16 @@ public class SocketServerRunnable {
                 }
             });
 
-        } catch (Exception e) {
-            logger.error("서버 시작 중 치명적인 오류 발생", e);
+        } catch (IOException | KeyStoreException | NoSuchAlgorithmException |
+        		CertificateException | UnrecoverableKeyException | KeyManagementException e) {
+        	logger.error("서버 시작 중 치명적인 오류 발생: {}", e.getMessage(), e);
             stopServer();
         }
 	}
 
 	public void stopServer() {
 		logger.info("[서버 종료 중]");
-		mConnections.forEach(new java.util.function.Consumer<ClientHandler>() {
+		mConnections.forEach(new Consumer<ClientHandler>() {
             @Override
             public void accept(ClientHandler clientHandler) {
                 clientHandler.close();
@@ -126,6 +140,9 @@ public class SocketServerRunnable {
             if ( mServerSocket != null && !mServerSocket.isClosed() ) {
                 mServerSocket.close();
             }
+
+            mKeyStorePath = null;
+            mKeyStorePassword = null;
         } catch (IOException e) {
             logger.error("서버 소켓 닫는 중 오류 발생", e);
         } finally {
@@ -140,7 +157,7 @@ public class SocketServerRunnable {
 		CertificateException, UnrecoverableKeyException, KeyManagementException {
 
         KeyStore keyStore = KeyStore.getInstance("JKS");
-        try (InputStream ksIs = new FileInputStream(mKeyStorePath)) {
+        try ( InputStream ksIs = new FileInputStream(mKeyStorePath) ) {
             keyStore.load(ksIs, mKeyStorePassword);
         }
 

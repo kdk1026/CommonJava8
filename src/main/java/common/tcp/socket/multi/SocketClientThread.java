@@ -46,7 +46,7 @@ public class SocketClientThread {
     private Socket mSocket;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // 비동기 작업을 위한 스레드 풀
 
-    public SocketClientThread(String serverIp, int port, String charsetName, boolean useSsl) {
+    public SocketClientThread(final String serverIp, final int port, final String charsetName, final boolean useSsl) {
     	this.serverIp = Objects.requireNonNull(serverIp, "서버 IP는 null일 수 없습니다.");
 
     	if (port <= 0 || port > 65535) {
@@ -93,8 +93,9 @@ public class SocketClientThread {
 
                 } catch (IOException e) {
                     logger.error("클라이언트 연결 중 오류 발생", e);
+
                     // 연결 실패 시 소켓이 열려있다면 닫음
-                    if (mSocket != null && mSocket.isConnected()) {
+                    if ( mSocket != null && mSocket.isConnected() ) {
                         stopClient();
                     }
                 }

@@ -16,11 +16,8 @@ import common.tcp.socketchannel.multi.NioNonBlockingServerThread;
 public class ThreadServerTest {
 
 	public static void main(String[] args) {
-//		SocketServerRunnable server = new SocketServerRunnable();
-//		NioBlockingServerRunnable server = new NioBlockingServerRunnable();
-		NioNonBlockingServerThread server = new NioNonBlockingServerThread();
-		
-		server.startServer(9797, Charset.forName("euc-kr").name());
+		NioNonBlockingServerThread server = new NioNonBlockingServerThread(null, null, 9797, Charset.forName("euc-kr").name());
+		server.startServer();
 	}
-	
+
 }

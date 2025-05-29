@@ -20,55 +20,55 @@ import common.tcp.socketchannel.multi.NioSocketClientThread;
  * </pre>
  */
 public class ThreadClientTest {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ThreadClientTest.class);
 
 	public static void main(String[] args) {
 		String sCharsetName = Charset.forName("euc-kr").name();
-		
+
 		JsonObject obj = null;
 		byte[] bSendData = null;
 		String sRecvData = null;
-		
+
 //		SocketClientThread client = new SocketClientThread();
-		NioSocketClientThread client = new NioSocketClientThread();
-		
-		client.startClient("127.0.0.1", 9797, sCharsetName);
-		
+		NioSocketClientThread client = new NioSocketClientThread("127.0.0.1", 9797, sCharsetName, false);
+
+		client.startClient();
+
 		try {
 			obj = new JsonObject();
 			obj.addProperty("aa", "가나1");
 			obj.addProperty("bb", "다라1");
 			obj.addProperty("cc", "마바1");
-			
+
 			bSendData = obj.toString().getBytes(sCharsetName);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		client.send(bSendData);
 		sRecvData = client.receive();
-		
+
 		logger.debug("========== {}", sRecvData);
-		
-		
+
+
 		try {
 			obj = new JsonObject();
 			obj.addProperty("aa", "가나1");
 			obj.addProperty("bb", "다라1");
 			obj.addProperty("cc", "마바1");
-			
+
 			bSendData = obj.toString().getBytes(sCharsetName);
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		client.send(bSendData);
 		sRecvData = client.receive();
-		
+
 		logger.debug("========== {}", sRecvData);
-		
+
 		client.stopClient();
 	}
-	
+
 }

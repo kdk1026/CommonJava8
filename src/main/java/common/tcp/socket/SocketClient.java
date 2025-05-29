@@ -14,8 +14,8 @@ import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Objects;
 
 import javax.net.ssl.SSLContext;
@@ -23,7 +23,6 @@ import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,7 @@ public class SocketClient {
 	 */
 	public void start(String sServerIp, int nPort, byte[] bSendData, String sCharsetName,
 			boolean isSsl, boolean isTrust, SslSocketTrustStoreVo sslSocketTrustStoreVo)
-			throws IOException, NoSuchAlgorithmException, KeyManagementException, KeyStoreException, CertificateException {
+					throws IOException, NoSuchAlgorithmException, KeyManagementException, KeyStoreException, CertificateException {
 
 		Objects.requireNonNull(sServerIp, "서버 IP는 null일 수 없습니다.");
 
@@ -95,19 +94,7 @@ public class SocketClient {
 		if (isSsl) {
 			TrustManager[] trustManagers = null;
 
-			if ( !isTrust ) {
-				// **경고**: 이 TrustManager는 인증서 유효성 검사를 건너뜁니다.
-	            // 프로덕션 환경에서는 반드시 신뢰할 수 있는 인증서를 로드해야 합니다.
-	            trustManagers = new TrustManager[]{
-	                new X509TrustManager() {
-	                    public X509Certificate[] getAcceptedIssuers() {
-	                        return null;
-	                    }
-	                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-	                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
-	                }
-	            };
-			} else {
+			if (isTrust) {
 				Objects.requireNonNull(sslSocketTrustStoreVo, "신뢰할 수 있는 저장소 정보는 null일 수 없습니다.");
 				Objects.requireNonNull(sslSocketTrustStoreVo.getTrustStorePath(), "신뢰할 수 있는 저장소 경로는 null일 수 없습니다.");
 				Objects.requireNonNull(sslSocketTrustStoreVo.getTrustStorePassword(), "신뢰할 수 있는 저장소 비밀번호는 null일 수 없습니다.");
@@ -120,10 +107,15 @@ public class SocketClient {
 				TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 				tmf.init(trustStore);
 				trustManagers = tmf.getTrustManagers();
+			} else {
+				// 명시적으로 TrustManager를 설정하지 않으면 JVM의 기본 TrustManager가 사용됩니다.
+				// 이 기본 TrustManager는 JDK의 'cacerts' 파일에 있는 신뢰할 수 있는 CA 인증서를 기반으로 서버 인증서를 검증합니다.
+				// 이는 일반적으로 안전하고 권장되는 방법입니다.
+				trustManagers = null;
 			}
 
             sslContext = SSLContext.getInstance("TLS");	// 또는 "TLSv1.2", "TLSv1.3"
-            sslContext.init(null, trustManagers, new java.security.SecureRandom());
+            sslContext.init(null, trustManagers, new SecureRandom());
             sslSocketFactory = sslContext.getSocketFactory();
 		}
 
