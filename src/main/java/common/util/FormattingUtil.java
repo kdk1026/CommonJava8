@@ -42,7 +42,7 @@ public class FormattingUtil {
 			throw new IllegalArgumentException("str is null");
 		}
 
-		String sPattern = "^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$";
+		String sPattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
@@ -65,7 +65,7 @@ public class FormattingUtil {
 		}
 
 		Pattern pattern = Pattern
-				.compile("^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?(\\d{3,4})-?(\\d{4})+$");
+				.compile("^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$");
 
 		Matcher matcher = pattern.matcher(str);
 		if (!matcher.find()) {
@@ -80,7 +80,7 @@ public class FormattingUtil {
 		sb.append(matcher.group(1)).append(String.valueOf(c)).append(matcher.group(3));
 
 		String sPhoneNum = sb.toString();
-		String sMaskingPattern = "^(0[2|3[1|2|3]|4[1|2|3|4]|5[1|2|3|4|5]|6[1|2|3|4]])-?([*]{3,4})-?(\\d{4})+$";
+		String sMaskingPattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])\\-?([*]{3,4})\\-?(\\d{4})+$";
 
 		if (!sPhoneNum.matches(sMaskingPattern)) {
 			return null;
@@ -187,7 +187,7 @@ public class FormattingUtil {
 			throw new IllegalArgumentException("str is null");
 		}
 
-		final String datePattern = "^(\\d{4})[- / .]?(\\d{2})[- / .]?(\\d{2})$";
+		final String datePattern = "^(\\d{4})[\\-/. ]?(\\d{2})[\\-/. ]?(\\d{2})$";
 
 		Pattern pattern = Pattern.compile(datePattern);
         Matcher matcher = pattern.matcher(str);
@@ -224,7 +224,7 @@ public class FormattingUtil {
 		}
 
 		Pattern pattern = Pattern
-				.compile("^([0-9]{2})([0-9]{2})[- / .]?(0[1-9]|1[012])[- / .]?(0[1-9]|1[0-9]|2[0-9]|3[01])+$");
+			    .compile("^(\\d{2})(\\d{2})[\\-/. ]?(0[1-9]|1[012])[\\-/. ]?(0[1-9]|1\\d|2\\d|3[01])$");
 
 		Matcher matcher = pattern.matcher(str);
 		if (!matcher.find()) {

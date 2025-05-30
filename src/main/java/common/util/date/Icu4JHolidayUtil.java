@@ -185,11 +185,11 @@ public class Icu4JHolidayUtil {
 
         chinaCal.setTimeInMillis(cal.getTimeInMillis());
 
-        int chinaCalMM = chinaCal.get(ChineseCalendar.MONTH) + 1;
-        int chinaCalDD = chinaCal.get(ChineseCalendar.DAY_OF_MONTH);
+        int chinaCalMM = chinaCal.get(com.ibm.icu.util.Calendar.MONTH) + 1;
+        int chinaCalDD = chinaCal.get(com.ibm.icu.util.Calendar.DAY_OF_MONTH);
 
         if (chinaCalMM == 12) {
-            int lastDD = chinaCal.getActualMaximum(ChineseCalendar.DAY_OF_MONTH);
+            int lastDD = chinaCal.getActualMaximum(com.ibm.icu.util.Calendar.DAY_OF_MONTH);
             if (chinaCalDD == lastDD) {
             	resStr = "설날 연휴";
             }
@@ -231,9 +231,9 @@ public class Icu4JHolidayUtil {
 
 		chinaCal.setTimeInMillis(cal.getTimeInMillis());
 
-		int chinaCalYY = chinaCal.get(ChineseCalendar.EXTENDED_YEAR) - 2637;
-        int chinaCalMM = chinaCal.get(ChineseCalendar.MONTH) + 1;
-        int chinaCalDD = chinaCal.get(ChineseCalendar.DAY_OF_MONTH);
+		int chinaCalYY = chinaCal.get(com.ibm.icu.util.Calendar.EXTENDED_YEAR) - 2637;
+        int chinaCalMM = chinaCal.get(com.ibm.icu.util.Calendar.MONTH) + 1;
+        int chinaCalDD = chinaCal.get(com.ibm.icu.util.Calendar.DAY_OF_MONTH);
 
         if (chinaCalYY < 1000) sb.append("0");
         else if (chinaCalYY < 100) sb.append("00");
@@ -277,9 +277,9 @@ public class Icu4JHolidayUtil {
 			}
 		}
 
-		chinaCal.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(date.substring(0, 4)) + 2637);
-		chinaCal.set(ChineseCalendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
-		chinaCal.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
+		chinaCal.set(com.ibm.icu.util.Calendar.EXTENDED_YEAR, Integer.parseInt(date.substring(0, 4)) + 2637);
+		chinaCal.set(com.ibm.icu.util.Calendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
+		chinaCal.set(com.ibm.icu.util.Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
 
 		cal.setTimeInMillis(chinaCal.getTimeInMillis());
 
@@ -347,7 +347,7 @@ public class Icu4JHolidayUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
 		// 해당 년도의 대체휴일 목록
-		List<String> substituteHolidayList = new ArrayList<String>();
+		List<String> substituteHolidayList = new ArrayList<>();
 		Calendar cal;
 		int iSyy = 0;
 		int iSmm = 0;

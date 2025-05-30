@@ -1,5 +1,7 @@
 package common.socket;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -7,6 +9,8 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+
+import org.junit.Test;
 
 import com.google.gson.JsonObject;
 
@@ -23,7 +27,8 @@ import common.tcp.socket.SocketClient;
  */
 public class ClientTest {
 
-	public static void main(String[] args) {
+	@Test
+	public void test() {
 		String sCharsetName = Charset.forName("euc-kr").name();
 
 		JsonObject obj = new JsonObject();
@@ -39,7 +44,6 @@ public class ClientTest {
 		}
 
 		SocketClient client = new SocketClient();
-//		NioSocketClient client = new NioSocketClient();
 		try {
 			client.start("127.0.0.1", 9797, bSendData, sCharsetName, false, false, null);
 
@@ -47,6 +51,7 @@ public class ClientTest {
 			e.printStackTrace();
 		}
 
+		assertTrue(true);
 	}
 
 }

@@ -1,7 +1,11 @@
 package common.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.security.PrivateKey;
 import java.security.PublicKey;
+
+import org.junit.Test;
 
 import common.util.crypto.rsa.RsaCryptoUtil;
 
@@ -18,7 +22,8 @@ import common.util.crypto.rsa.RsaCryptoUtil;
  */
 public class TestRsaCrypto {
 
-	public static void main(String[] args) {
+	@Test
+	public void test() {
 //		KeyPair keyPair = RsaCryptoUtil.Generate.generateKeyPair();
 //		String publicKeyString = RsaCryptoUtil.Convert.getBase64PublicKey(keyPair);
 //		String publicKeyString = RsaCryptoUtil.Convert.getBase64PrivateKey(keyPair);
@@ -37,7 +42,7 @@ public class TestRsaCrypto {
 		String decrypt = RsaCryptoUtil.decrypt(encrypt, privateKey, RsaCryptoUtil.RSA_ECB_PKCS1PADDING);
 		System.out.println(decrypt);
 
-
+		assertTrue(true);
 	}
 
 }

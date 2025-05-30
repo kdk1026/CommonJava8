@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
 /**
@@ -83,9 +84,9 @@ public class HolidayCalendar {
 			}
 		}
 
-		chinaCal.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(date.substring(0, 4)) + 2637);
-		chinaCal.set(ChineseCalendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
-		chinaCal.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
+		chinaCal.set(Calendar.EXTENDED_YEAR, Integer.parseInt(date.substring(0, 4)) + 2637);
+		chinaCal.set(Calendar.MONTH, Integer.parseInt(date.substring(4, 6)) - 1);
+		chinaCal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(date.substring(6)));
 
 		LocalDate solar = Instant.ofEpochMilli(chinaCal.getTimeInMillis()).atZone(ZoneId.of("UTC")).toLocalDate();
 

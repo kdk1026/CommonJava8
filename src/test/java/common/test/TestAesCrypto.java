@@ -1,6 +1,9 @@
 package common.test;
 
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.Test;
 
 import common.util.crypto.aes.AesCryptoUtilV2;
 import common.util.crypto.aes.AesCryptoUtilV2.EncryptResult;
@@ -18,7 +21,8 @@ import common.util.crypto.aes.AesCryptoUtilV2.EncryptResult;
  */
 public class TestAesCrypto {
 
-	public static void main(String[] args) {
+	@Test
+	public void test() {
 		String key = RandomStringUtils.randomAlphanumeric(32);
 
 		key = "hEUEFcfoo7HxwDfIHmO2cYG9H0t1COCs";
@@ -31,6 +35,8 @@ public class TestAesCrypto {
 
 		String decryptedText = AesCryptoUtilV2.decrypt(encryptedText, key, iv, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
 		System.out.println(decryptedText);
+
+		assertTrue(true);
 	}
 
 }

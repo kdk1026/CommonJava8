@@ -140,10 +140,12 @@ public class JacksonUtil {
 			super();
 		}
 
+		private static final String JSON_STR = "jsonStr";
+
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String jsonStr) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
+				throw new IllegalArgumentException(ExceptionMessage.isNull(JSON_STR));
 			}
 
 			Map<String, Object> map = new HashMap<>();
@@ -159,7 +161,7 @@ public class JacksonUtil {
 
 		public static JsonNode converterJsonStrToJsonNode(String jsonStr) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
+				throw new IllegalArgumentException(ExceptionMessage.isNull(JSON_STR));
 			}
 
 			JsonNode jsonNode = null;
@@ -208,7 +210,7 @@ public class JacksonUtil {
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
 			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
+				throw new IllegalArgumentException(ExceptionMessage.isNull(JSON_STR));
 			}
 
 			if ( clazz == null ) {

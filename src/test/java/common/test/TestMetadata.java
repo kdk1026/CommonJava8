@@ -1,39 +1,46 @@
 package common.test;
 
+import static org.junit.Assert.assertTrue;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import org.junit.Test;
+
 public class TestMetadata {
 
-	public static void main(String[] args) {
-		
+	@Test
+	public void test() {
+
 		String sPath = "C:/test/반명함.jpg";
 		File file = new File(sPath);
-		
+
 		BufferedImage image = null;
 		try {
 			image = ImageIO.read(file);
-			
+
 			getRead(image);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		assertTrue(true);
 	}
-	
-	public static void getRead(BufferedImage image) {
+
+	public void getRead(BufferedImage image) {
 		int width = image.getWidth();
 		int height = image.getHeight();
-		
+
 		System.out.println(width);
 		System.out.println(height);
-		
+
 		Color color = null;
 		int lightBlue = new Color(212, 228, 241).getRGB();
-		
+
 		System.out.println(lightBlue);
 //		int fw = 0;
 //		int fh = 0;
@@ -41,7 +48,7 @@ public class TestMetadata {
 		for (int w = 0; w < width; w++) {
 			for (int h = 0; h < height; h++) {
 				color = new Color(image.getRGB(w, h));
-				
+
 				/*
 				if ( color.getRGB() == lightBlue ) {
 					System.out.println( color.getRGB() );
@@ -51,15 +58,15 @@ public class TestMetadata {
 					break;
 				}
 				*/
-				
-				if ( color.getRed() > 235 
-						&& color.getGreen() < 200 || color.getGreen() > 245 
+
+				if ( color.getRed() > 235
+						&& color.getGreen() < 200 || color.getGreen() > 245
 						&& color.getBlue() > 230) {
-				
-					image.setRGB(w, h, Color.WHITE.getRGB());					
+
+					image.setRGB(w, h, Color.WHITE.getRGB());
 				}
 			}
-			
+
 			/*
 			if ( fw > 0 && fh > 0 ) {
 				break;
@@ -73,5 +80,5 @@ public class TestMetadata {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

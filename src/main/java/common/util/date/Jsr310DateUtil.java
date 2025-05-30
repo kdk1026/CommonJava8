@@ -688,7 +688,7 @@ public class Jsr310DateUtil {
 		 */
 		public static String getLastDayOfMonthString() {
 			LocalDate localDate = LocalDate.now();
-			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 		}
 
 		/**
@@ -707,8 +707,8 @@ public class Jsr310DateUtil {
 		 * @return
 		 */
 		public static String getLastDayOfMonthString(String strDate) {
-			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern("yyyyMMdd"));
-			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
+			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 		}
 	}
 

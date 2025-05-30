@@ -165,7 +165,7 @@ public class FcmPushUtil {
 		Map<String, Object> rtnMap = null;
 
 		String sAuthorization = "key=" + serverKey;
-		Map<String, Object> header = new HashMap<>();
+		Map<String, String> header = new HashMap<>();
 		header.put("Authorization", sAuthorization);
 
 		String sRes = HttpClientUtil.RawRequest.json(true, FCM_URL, header, rawPayload);

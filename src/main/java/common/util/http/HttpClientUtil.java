@@ -12,13 +12,15 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -30,6 +32,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -42,7 +45,8 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2021. 8.  6. 김대광	Javadoc 작성
- * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리 (Complexity 어쩔 수 없고, 주석 갖고 딴지좀 걸지마리)
+ * 2021. 8. 13. 김대광	SonarLint 지시에 따른 주저리 주저리
+ * 2025. 5. 30. 김대광	제미나이에 의한 코드 개선
  * </pre>
  *
  * <pre>
@@ -65,9 +69,6 @@ public class HttpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
-	private static HttpClient httpClient;
-	private static HttpResponse response;
-
 	private HttpClientUtil() {
 		super();
 	}
@@ -75,54 +76,86 @@ public class HttpClientUtil {
 	/**
 	 * @since 1.7
 	 */
-	private static final String DEFAULT_CHARSET = StandardCharsets.UTF_8.toString();
+	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
 	public static final String STATUS_KEY = "status";
 	public static final String BODY_KEY = "body";
 	public static final String HEADERS_KEY = "headers";
 
-	//private static final int TIMEOUT = 5;
+	private static final int DEFAULT_TIMEOUT_MS = 5000;
+
+	public static final String URL_NOT_BE_NULL = "url must not be null";
+	public static final String TIMEOUT_NOT_BE_NULL = "timeoutMs must not be null";
 
 	/**
-	 * <pre>
-	 * SSL의 경우, 제한된 네트워크 환경에서는 불가
-	 *  - Java KeyStore에 SSL 인증서 등록 후 사용
-	 *  - Apache HttpClient에서 인증서 import 방법은 따로 알아봐야함
-	 * </pre>
-	 * @param isSSL
-	 * @return
-	 */
-	private static HttpClient getHttpClient(boolean isSSL) {
-		httpClient = null;
+     * CloseableHttpClient 인스턴스를 생성하여 반환
+     *
+     * @param isSSL SSL 지원 HttpClient가 필요한 경우 true
+     * @return CloseableHttpClient SSL 컨텍스트 생성 실패 시 null
+     */
+    private static CloseableHttpClient getHttpClient(boolean isSSL) {
+        if (isSSL) {
+            try {
+                SSLContextBuilder builder = new SSLContextBuilder();
+                // 자체 서명된 인증서 신뢰. 프로덕션 환경에서는 특정 TrustStore 사용을 고려해야 합니다.
+                builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+                SSLContext sslContext = builder.build();
+                SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext);
+                return HttpClients.custom().setSSLSocketFactory(sslsf).build();
+            } catch (NoSuchAlgorithmException | KeyManagementException | KeyStoreException e) {
+                logger.error("SSL HttpClient 생성 실패", e);
+                return null;
+            }
+        } else {
+            return HttpClients.createDefault();
+        }
+    }
 
-		if (isSSL) {
-			SSLContextBuilder builder = new SSLContextBuilder();
-			try {
-				builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
-				httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-
-			} catch (KeyStoreException | NoSuchAlgorithmException | KeyManagementException e) {
-				logger.error("", e);
-			}
-
-		} else {
-			httpClient = HttpClients.createDefault();
-		}
-
-		return httpClient;
-	}
-
-	// XXX : 설정 시, 시간을 늘려도 timeout 발생하는 경우 있음
-	/*
-	private static RequestConfig getConfigWithTimeout(int timeoutInMilliseconds) {
-		return RequestConfig.custom()
+    /**
+     * 지정된 타임아웃으로 RequestConfig를 생성
+     *
+     * @param timeoutInMilliseconds
+     * @return
+     */
+    private static RequestConfig getConfigWithTimeout(int timeoutInMilliseconds) {
+        return RequestConfig.custom()
                 .setSocketTimeout(timeoutInMilliseconds)
                 .setConnectTimeout(timeoutInMilliseconds)
                 .setConnectionRequestTimeout(timeoutInMilliseconds)
                 .build();
-	}
-	*/
+    }
+
+    /**
+     * HttpResponse에서 응답 데이터를 Map으로 추출
+     *
+     * @param response HttpResponse 객체
+     * @param charset 엔티티 변환에 사용할 문자셋
+     * @return 상태, 본문, 헤더를 포함하는 Map
+     * @throws IOException 엔티티 변환 중 I/O 오류 발생 시
+     */
+    private static Map<String, Object> extractResponseData(HttpResponse response, Charset charset) throws IOException {
+        Map<String, Object> resMap = new HashMap<>();
+        int nStatus = response.getStatusLine().getStatusCode();
+        String sResponse = "";
+
+        HttpEntity entity = response.getEntity();
+        if (entity != null) {
+            sResponse = EntityUtils.toString(entity, charset != null ? charset : DEFAULT_CHARSET);
+            // 연결 리소스를 해제하기 위해 엔티티를 완전히 소비합니다.
+            EntityUtils.consume(entity);
+        }
+
+        Map<String, Object> resHeader = new HashMap<>();
+        for (Header h : response.getAllHeaders()) {
+            resHeader.put(h.getName(), h.getValue());
+        }
+
+        resMap.put(STATUS_KEY, nStatus);
+        resMap.put(BODY_KEY, sResponse);
+        resMap.put(HEADERS_KEY, resHeader);
+
+        return resMap;
+    }
 
 	public static class GetRequest {
 		private GetRequest() {
@@ -137,95 +170,86 @@ public class HttpClientUtil {
 		 * @param isSSL
 		 * @param url
 		 * @param header
+		 * @param timeoutMs 요청 타임아웃 (밀리초)
 		 * @return
 		 */
-		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, Object> header) {
-			if ( StringUtils.isBlank(url) ) {
-				throw new IllegalArgumentException("url is null");
-			}
+		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, String> header, int timeoutMs) {
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
 
-			httpClient = getHttpClient(isSSL);
-			if (httpClient == null) {
-				return resMap;
+			try ( CloseableHttpClient httpClient = getHttpClient(isSSL) ) {
+				if (httpClient == null) {
+					return resMap;
+				}
 
-			} else {
 				HttpGet httpGet = new HttpGet(url);
-				//httpGet.setConfig(getConfigWithTimeout(TIMEOUT));
+                httpGet.setConfig(getConfigWithTimeout(timeoutMs));
 
-				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
+                if (header != null) {
+                	Iterator<String> it = header.keySet().iterator();
 			        String key = "";
 
 			        while(it.hasNext()) {
 			        	 key = it.next();
 			        	 httpGet.setHeader(key, String.valueOf(header.get(key)));
 			        }
-				}
+                }
 
-				try {
-					response = httpClient.execute(httpGet);
-					int nStatus = response.getStatusLine().getStatusCode();
-
-					logger.info("Get Status : {}", nStatus);
-					sResponse = EntityUtils.toString(response.getEntity(), DEFAULT_CHARSET);
-
-					Map<String, Object> resHeader = new HashMap<>();
-					Header[] headers = response.getAllHeaders();
-					for (Header h : headers) {
-						resHeader.put(h.getName(), h.getValue());
-					}
-
-					resMap.put(STATUS_KEY, nStatus);
-					resMap.put(BODY_KEY, sResponse);
-					resMap.put(HEADERS_KEY, resHeader);
-
-				} catch (IOException e) {
-					logger.error("", e);
-				}
+                HttpResponse response = httpClient.execute(httpGet);
+                logger.info("GET Status for {}: {}", url, response.getStatusLine().getStatusCode());
+                resMap = extractResponseData(response, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+				logger.error("Error during GET request to {}: {}", url, e.getMessage(), e);
 			}
-
 			return resMap;
 		}
 
-		public static String get(boolean isSSL, String url, Map<String, Object> header) {
-			Map<String, Object> resMap = getMap(isSSL, url, header);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
-		}
+		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, String> header) {
+            return getMap(isSSL, url, header, DEFAULT_TIMEOUT_MS);
+        }
 
-		public static String get(boolean isSSL, String url) {
-			return get(isSSL, url, null);
-		}
+        public static String get(boolean isSSL, String url, Map<String, String> header, int timeoutMs) {
+            Map<String, Object> resMap = getMap(isSSL, url, header, timeoutMs);
+            return (resMap.isEmpty() || !resMap.containsKey(BODY_KEY)) ? "" : resMap.get(BODY_KEY).toString();
+        }
+
+        public static String get(boolean isSSL, String url, Map<String, String> header) {
+            return get(isSSL, url, header, DEFAULT_TIMEOUT_MS);
+        }
+
+        public static String get(boolean isSSL, String url) {
+            return get(isSSL, url, null, DEFAULT_TIMEOUT_MS);
+        }
 	}
 
 	public static class PostRequest {
-		private static List<NameValuePair> listParam;
-
 		private PostRequest() {
 			super();
 		}
 
+
 		private static List<NameValuePair> convertParam(Map<String, Object> param) {
-			listParam = new ArrayList<>();
-	        Iterator<String> it = param.keySet().iterator();
-	        String key = "";
+			List<NameValuePair> listParam = new ArrayList<>();
+			if (param != null) {
+				Iterator<String> it = param.keySet().iterator();
+		        String key = "";
 
-	        while(it.hasNext()) {
-	            key = it.next();
+		        while(it.hasNext()) {
+		            key = it.next();
 
-	            if ( param.get(key).getClass().isArray() ) {
-	            	String[] arr = (String[]) param.get(key);
+		            if ( param.get(key).getClass().isArray() ) {
+		            	String[] arr = (String[]) param.get(key);
 
-	            	for (String s : arr) {
-						listParam.add(new BasicNameValuePair(key, s));
-					}
-	            } else {
-	            	listParam.add(new BasicNameValuePair(key, String.valueOf(param.get(key))));
-	            }
-	        }
-
+		            	for (String s : arr) {
+							listParam.add(new BasicNameValuePair(key, s));
+						}
+		            } else {
+		            	listParam.add(new BasicNameValuePair(key, String.valueOf(param.get(key))));
+		            }
+		        }
+			}
 	        return listParam;
 	    }
 
@@ -239,91 +263,73 @@ public class HttpClientUtil {
 		 * @param header
 		 * @param param
 		 * @param charset
+		 * @param timeoutMs 요청 타임아웃 (밀리초)
 		 * @return
 		 */
-		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			if ( StringUtils.isBlank(url) ) {
-				throw new IllegalArgumentException("url is null");
-			}
+		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset, int timeoutMs) {
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
 
-			httpClient = getHttpClient(isSSL);
-			if (httpClient == null) {
-				return resMap;
+			try ( CloseableHttpClient httpClient = getHttpClient(isSSL) ) {
+				if (httpClient == null) {
+                    return resMap;
+                }
 
-			} else {
 				HttpPost httpPost = new HttpPost(url);
-				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+                httpPost.setConfig(getConfigWithTimeout(timeoutMs));
 
-				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
+                if (header != null) {
+                	Iterator<String> it = header.keySet().iterator();
 			        String key = "";
 
 			        while(it.hasNext()) {
 			        	 key = it.next();
 			        	 httpPost.setHeader(key, String.valueOf(header.get(key)));
 			        }
-				}
+                }
 
-				if (param != null) {
-					listParam = convertParam(param);
-				}
+                List<NameValuePair> listParam = convertParam(param);
+                if ( !listParam.isEmpty() ) {
+                    UrlEncodedFormEntity entity = new UrlEncodedFormEntity(listParam, charset != null ? charset : DEFAULT_CHARSET);
+                    httpPost.setEntity(entity);
+                }
 
-				try {
-					if (listParam != null) {
-						UrlEncodedFormEntity entity = null;
-
-						if (charset != null) {
-							entity = new UrlEncodedFormEntity(listParam, charset);
-							httpPost.setEntity(entity);
-						} else {
-							entity = new UrlEncodedFormEntity(listParam, DEFAULT_CHARSET);
-							httpPost.setEntity(entity);
-						}
-					}
-
-					response = httpClient.execute(httpPost);
-					int nStatus = response.getStatusLine().getStatusCode();
-
-					logger.info("Post Status : {}", nStatus);
-					sResponse = EntityUtils.toString(response.getEntity(), DEFAULT_CHARSET);
-
-					Map<String, Object> resHeader = new HashMap<>();
-					Header[] headers = response.getAllHeaders();
-					for (Header h : headers) {
-						resHeader.put(h.getName(), h.getValue());
-					}
-
-					resMap.put(STATUS_KEY, nStatus);
-					resMap.put(BODY_KEY, sResponse);
-					resMap.put(HEADERS_KEY, resHeader);
-
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
+                HttpResponse response = httpClient.execute(httpPost);
+                logger.info("POST Status for {}: {}", url, response.getStatusLine().getStatusCode());
+                resMap = extractResponseData(response, StandardCharsets.UTF_8);
+			} catch (IOException e) {
+                logger.error("Error during POST request to {}: {}", url, e.getMessage(), e);
+            }
 
 			return resMap;
 		}
 
-		public static String post(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			Map<String, Object> resMap = postMap(isSSL, url, header, param, charset);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
-		}
+		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset) {
+            return postMap(isSSL, url, header, param, charset, DEFAULT_TIMEOUT_MS);
+        }
 
-		public static String post(boolean isSSL, String url, Map<String, Object> param, Charset charset) {
-			return post(isSSL, url, null, param, charset);
-		}
+        public static String post(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset, int timeoutMs) {
+            Map<String, Object> resMap = postMap(isSSL, url, header, param, charset, timeoutMs);
+            return (resMap.isEmpty() || !resMap.containsKey(BODY_KEY)) ? "" : resMap.get(BODY_KEY).toString();
+        }
 
-		public static String post(boolean isSSL, String url, Map<String, Object> param) {
-			return post(isSSL, url, param, null);
-		}
+        public static String post(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset) {
+            return post(isSSL, url, header, param, charset, DEFAULT_TIMEOUT_MS);
+        }
 
-		public static String post(boolean isSSL, String url) {
-			return post(isSSL, url, null);
-		}
+        public static String post(boolean isSSL, String url, Map<String, Object> param, Charset charset) {
+            return post(isSSL, url, null, param, charset, DEFAULT_TIMEOUT_MS);
+        }
+
+        public static String post(boolean isSSL, String url, Map<String, Object> param) {
+            return post(isSSL, url, param, null);
+        }
+
+        public static String post(boolean isSSL, String url) {
+            return post(isSSL, url, null);
+        }
 	}
 
 	public static class RawRequest {
@@ -341,81 +347,73 @@ public class HttpClientUtil {
 		 * @param url
 		 * @param header
 		 * @param payload
+		 * @param timeoutMs 요청 타임아웃 (밀리초)
 		 * @return
 		 */
-		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload) {
-			if ( StringUtils.isBlank(url) ) {
-				throw new IllegalArgumentException("url is null");
-			}
-
-			if ( StringUtils.isBlank(payload) ) {
-				throw new IllegalArgumentException("payload is null");
-			}
+		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			Objects.requireNonNull(payload, "payload must not be null");
+			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
 
-			httpClient = getHttpClient(isSSL);
-			if (httpClient == null) {
-				return resMap;
+			try ( CloseableHttpClient httpClient = getHttpClient(isSSL) ) {
+				if (httpClient == null) {
+                    return resMap;
+                }
 
-			} else {
-				String contentType = (isJson) ? "application/json" : "application/xml";
-				HttpPost httpPost = new HttpPost(url);
-				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+				String contentType = isJson ? "application/json" : "application/xml";
+                HttpPost httpPost = new HttpPost(url);
+                httpPost.setConfig(getConfigWithTimeout(timeoutMs));
 
-				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
+                if (header != null) {
+                	Iterator<String> it = header.keySet().iterator();
 			        String key = "";
 
 			        while(it.hasNext()) {
 			        	 key = it.next();
 			        	 httpPost.setHeader(key, String.valueOf(header.get(key)));
 			        }
-				}
+                }
 
-				try {
-					StringEntity entity = new StringEntity(payload);
-					entity.setContentType(contentType);
+                StringEntity entity = new StringEntity(payload, DEFAULT_CHARSET);
+                entity.setContentType(contentType);
+                httpPost.setEntity(entity);
 
-					httpPost.setEntity(entity);
-
-					response = httpClient.execute(httpPost);
-					int nStatus = response.getStatusLine().getStatusCode();
-
-					logger.info("Post Raw Status : {}", response.getStatusLine().getStatusCode());
-					sResponse = EntityUtils.toString(response.getEntity());
-
-					Map<String, Object> resHeader = new HashMap<>();
-					Header[] headers = response.getAllHeaders();
-					for (Header h : headers) {
-						resHeader.put(h.getName(), h.getValue());
-					}
-
-					resMap.put(STATUS_KEY, nStatus);
-					resMap.put(BODY_KEY, sResponse);
-					resMap.put(HEADERS_KEY, resHeader);
-
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
+                HttpResponse response = httpClient.execute(httpPost);
+                logger.info("POST Raw Status for {}: {}", url, response.getStatusLine().getStatusCode());
+                resMap = extractResponseData(response, DEFAULT_CHARSET);
+			} catch (IOException e) {
+                logger.error("Error during Raw POST request to {}: {}", url, e.getMessage(), e);
+            }
 
 			return resMap;
 		}
 
-		private static String raw(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload) {
-			Map<String, Object> resMap = rawMap(isJson, isSSL, url, header, payload);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
-		}
+		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, String> header, String payload) {
+            return rawMap(isJson, isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
+        }
 
-		public static String json(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			return raw(true, isSSL, url, header, payload);
-		}
+        private static String raw(boolean isJson, boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
+            Map<String, Object> resMap = rawMap(isJson, isSSL, url, header, payload, timeoutMs);
+            return (resMap.isEmpty() || !resMap.containsKey(BODY_KEY)) ? "" : resMap.get(BODY_KEY).toString();
+        }
 
-		public static String xml(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			return raw(false, isSSL, url, header, payload);
-		}
+        public static String json(boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
+            return raw(true, isSSL, url, header, payload, timeoutMs);
+        }
+
+        public static String json(boolean isSSL, String url, Map<String, String> header, String payload) {
+            return json(isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
+        }
+
+        public static String xml(boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
+            return raw(false, isSSL, url, header, payload, timeoutMs);
+        }
+
+        public static String xml(boolean isSSL, String url, Map<String, String> header, String payload) {
+            return xml(isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
+        }
 	}
 
 	public static class MultipartRequest {
@@ -436,97 +434,92 @@ public class HttpClientUtil {
 		 * @param file
 		 * @return
 		 */
-		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param
-				, String fileParamKey, File file) {
-			if ( StringUtils.isBlank(url) ) {
-				throw new IllegalArgumentException("url is null");
-			}
+		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param
+				, String fileParamKey, File file, int timeoutMs) {
 
-			if ( StringUtils.isBlank(fileParamKey) ) {
-				throw new IllegalArgumentException("fileParamKey is null");
-			}
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			Objects.requireNonNull(fileParamKey, "fileParamKey must not be null");
+			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
-			if ( file == null ) {
-				throw new IllegalArgumentException("file is null");
-			}
+			if (file == null) {
+                throw new IllegalArgumentException("File cannot be null.");
+            }
+
+            if ( !file.exists() || !file.isFile() ) {
+                throw new IllegalArgumentException("File does not exist or is not a regular file: " + file.getAbsolutePath());
+            }
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
 
-			httpClient = getHttpClient(isSSL);
-			if (httpClient == null) {
-				return resMap;
+			try ( CloseableHttpClient httpClient = getHttpClient(isSSL) ) {
+				if (httpClient == null) {
+                    return resMap;
+                }
 
-			} else {
 				HttpPost httpPost = new HttpPost(url);
-				//httpPost.setConfig(getConfigWithTimeout(TIMEOUT));
+	            httpPost.setConfig(getConfigWithTimeout(timeoutMs));
 
-				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
+	            if (header != null) {
+	            	Iterator<String> it = header.keySet().iterator();
 			        String key = "";
 
 			        while(it.hasNext()) {
 			        	 key = it.next();
 			        	 httpPost.setHeader(key, String.valueOf(header.get(key)));
 			        }
-				}
+	            }
 
-				try {
-					MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-					FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
+	            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-					builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-					builder.addPart(fileParamKey, fileBody);
+	            FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
+	            builder.addPart(fileParamKey, fileBody);
 
-					if (param != null) {
-				        Iterator<String> it = param.keySet().iterator();
-				        String key = "";
+	            if (param != null) {
+	            	Iterator<String> it = param.keySet().iterator();
+			        String key = "";
 
-				        while(it.hasNext()) {
-				        	 key = it.next();
-				        	 builder.addPart(key, new StringBody(String.valueOf(param.get(key)), ContentType.MULTIPART_FORM_DATA));
-				        }
-					}
+			        while(it.hasNext()) {
+			        	 key = it.next();
+			        	 builder.addPart(key, new StringBody(String.valueOf(param.get(key)), ContentType.MULTIPART_FORM_DATA));
+			        }
+	            }
 
-					HttpEntity entity = builder.build();
-					httpPost.setEntity(entity);
+	            HttpEntity entity = builder.build();
+	            httpPost.setEntity(entity);
 
-					response = httpClient.execute(httpPost);
-					int nStatus = response.getStatusLine().getStatusCode();
-
-					logger.info("Post Multipart Status : {}", nStatus);
-					sResponse = EntityUtils.toString(response.getEntity());
-
-					Map<String, Object> resHeader = new HashMap<>();
-					Header[] headers = response.getAllHeaders();
-					for (Header h : headers) {
-						resHeader.put(h.getName(), h.getValue());
-					}
-
-					resMap.put(STATUS_KEY, nStatus);
-					resMap.put(BODY_KEY, sResponse);
-					resMap.put(HEADERS_KEY, resHeader);
-
-				} catch (IOException e) {
-					logger.error("", e);
-				}
-			}
+	            HttpResponse response = httpClient.execute(httpPost);
+	            logger.info("POST Multipart Status for {}: {}", url, response.getStatusLine().getStatusCode());
+	            resMap = extractResponseData(response, DEFAULT_CHARSET);
+			} catch (IOException e) {
+				logger.error("Error during Multipart POST request to {}: {}", url, e.getMessage(), e);
+            }
 
 			return resMap;
 		}
 
-		public static String multipart(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param
-				, String fileParamKey, File file) {
-			Map<String, Object> resMap = multipartMap(isSSL, url, header, param, fileParamKey, file);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
+		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
+                String fileParamKey, File file) {
+			return multipartMap(isSSL, url, header, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
+		}
+
+		public static String multipart(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
+				String fileParamKey, File file, int timeoutMs) {
+			Map<String, Object> resMap = multipartMap(isSSL, url, header, param, fileParamKey, file, timeoutMs);
+			return (resMap.isEmpty() || !resMap.containsKey(BODY_KEY)) ? "" : resMap.get(BODY_KEY).toString();
+		}
+
+		public static String multipart(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
+				String fileParamKey, File file) {
+			return multipart(isSSL, url, header, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
 		}
 
 		public static String multipart(boolean isSSL, String url, Map<String, Object> param, String fileParamKey, File file) {
-			return multipart(isSSL, url, null, param, fileParamKey, file);
+			return multipart(isSSL, url, null, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
 		}
 
 		public static String multipart(boolean isSSL, String url, String fileParamKey, File file) {
-			return multipart(isSSL, url, null, fileParamKey, file);
+			return multipart(isSSL, url, null, null, fileParamKey, file, DEFAULT_TIMEOUT_MS);
 		}
 	}
 
