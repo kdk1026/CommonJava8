@@ -146,7 +146,8 @@ public class HttpClientUtil {
         }
 
         Map<String, Object> resHeader = new HashMap<>();
-        for (Header h : response.getAllHeaders()) {
+        Header[] headers = response.getAllHeaders();
+        for (Header h : headers) {
             resHeader.put(h.getName(), h.getValue());
         }
 
@@ -228,7 +229,6 @@ public class HttpClientUtil {
 		private PostRequest() {
 			super();
 		}
-
 
 		private static List<NameValuePair> convertParam(Map<String, Object> param) {
 			List<NameValuePair> listParam = new ArrayList<>();
