@@ -46,8 +46,18 @@ public class MaskingUtil {
 			}
 		} else {
 			// 영문 이름 마스킹
-			if (name.length() > 4) {
-				return name.substring(0, 4) + "*".repeat(name.length() - 4);
+			if ( name.length() <=4 ) {
+				StringBuilder maskedName = new StringBuilder();
+		        for (int i = 0; i < name.length(); i++) {
+		            maskedName.append("*");
+		        }
+		        return maskedName.toString();
+			} else {
+				StringBuilder maskedPart = new StringBuilder();
+		        for (int i = 0; i < name.length() - 4; i++) {
+		            maskedPart.append("*");
+		        }
+		        return name.substring(0, 4) + maskedPart.toString();
 			}
 		}
 
@@ -91,7 +101,12 @@ public class MaskingUtil {
 		}
 
 		int length = passportNumber.length();
-		return passportNumber.substring(0, length - 4) + "*".repeat(4);
+		StringBuilder maskedPart = new StringBuilder();
+	    for (int i = 0; i < 4; i++) {
+	        maskedPart.append("*");
+	    }
+
+		return passportNumber.substring(0, length - 4) + maskedPart.toString();
 	}
 
 	/**
@@ -218,7 +233,18 @@ public class MaskingUtil {
 		}
 		String idPart = email.substring(0, atIndex);
 		String domainPart = email.substring(atIndex);
-		String maskedIdPart = idPart.substring(0, 3) + "*".repeat(idPart.length() - 2);
+
+		int repeatCount = idPart.length() - 2;
+		if (repeatCount < 0) {
+			repeatCount = 0;
+		}
+
+		StringBuilder maskedStars = new StringBuilder();
+		for (int i = 0; i < repeatCount; i++) {
+            maskedStars.append("*");
+        }
+
+		String maskedIdPart = idPart.substring(0, 2) + maskedStars.toString();
 
 		return maskedIdPart + domainPart;
 	}
@@ -240,7 +266,14 @@ public class MaskingUtil {
 		if (id.length() <= 3) {
 			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
 		} else {
-			return id.substring(0, 3) + "*".repeat(id.length() - 3); // 앞 3글자만 표시하고 나머지 마스킹
+			int repeatCount = id.length() - 3;
+
+			StringBuilder maskedStars = new StringBuilder();
+			for (int i = 0; i < repeatCount; i++) {
+                maskedStars.append("*");
+            }
+
+			return id.substring(0, 3) + maskedStars.toString(); // 앞 3글자만 표시하고 나머지 마스킹
 		}
 	}
 
@@ -347,12 +380,21 @@ public class MaskingUtil {
 
 	    // 계좌번호 길이가 5자리 이하일 경우 예외 처리
 	    if (cleanAccountNumber.length() <= 5) {
-	        return "*".repeat(cleanAccountNumber.length());
+	    	StringBuilder fullMasked = new StringBuilder();
+	    	for (int i = 0; i < cleanAccountNumber.length(); i++) {
+                fullMasked.append("*");
+            }
+            return fullMasked.toString();
 	    }
 
 	    // 마스킹할 부분과 남길 부분 분리
 	    String visiblePart = cleanAccountNumber.substring(0, cleanAccountNumber.length() - 5);
-	    String maskedPart = "*".repeat(5);
+
+	    StringBuilder fiveStars = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            fiveStars.append("*");
+        }
+        String maskedPart = fiveStars.toString();
 
 	    // 원래 계좌번호에 '-'가 있을 경우 다시 추가
 	    if (accountNumber.contains("-")) {
