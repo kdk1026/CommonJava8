@@ -2,6 +2,7 @@ package common.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,11 +22,13 @@ import org.slf4j.LoggerFactory;
  */
 public class RequestUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
-
 	private RequestUtil() {
 		super();
 	}
+
+	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
+
+	private static final String REQUEST_IS_NULL = "request cannot be null";
 
 	/**
 	 * IP 주소 가져오기
@@ -33,9 +36,7 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getRequestIpAddress(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
 	    String[] sHeaders = {
 	    		"X-Forwarded-For",
@@ -65,9 +66,7 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getRequestDomain(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
 		String sReqUrl = request.getRequestURL().toString();
 		String sServletPath = request.getServletPath();
@@ -80,9 +79,7 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getBaseDomain(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
 		String reqUrl = request.getRequestURL().toString();
 		URI uri;
@@ -102,9 +99,7 @@ public class RequestUtil {
 	 * @return
 	 */
 	public static String getBrowserInfo(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
 		String userAgent = request.getHeader("User-Agent");
         return userAgent != null ? userAgent : "User-Agent 정보 없음";

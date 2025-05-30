@@ -1,6 +1,7 @@
 package common.util;
 
-import org.apache.commons.lang3.StringUtils;
+import java.util.Objects;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -78,9 +79,7 @@ public class PagingUtil {
 			throw new IllegalArgumentException("totalCnt must be greater than 0");
 		}
 
-		if ( StringUtils.isBlank(currentPage) ) {
-			throw new IllegalArgumentException("currentPage must not be null");
-		}
+		Objects.requireNonNull(currentPage.trim(), "currentPage must not be null");
 
 		boolean isNumeric = currentPage.matches("\\d+");
 		if ( !isNumeric ) {

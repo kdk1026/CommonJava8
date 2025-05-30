@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,9 +49,7 @@ public class GsonUtil {
 		}
 
 		public static String converterObjToJsonStr(Object obj, boolean isPretty) {
-			if ( obj == null ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-			}
+			Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 			return isPretty ? PRETTY_GSON.toJson(obj) : NORMAL_GSON.toJson(obj);
 		}
@@ -80,46 +78,33 @@ public class GsonUtil {
 
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String sJson) {
-			if ( StringUtils.isBlank(sJson) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
-			}
+			Objects.requireNonNull(sJson.trim(), ExceptionMessage.isNull("sJson"));
 
 			return NORMAL_GSON.fromJson(sJson, Map.class);
 		}
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
-			if ( StringUtils.isBlank(sJson) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sJson"));
-			}
+			Objects.requireNonNull(sJson.trim(), ExceptionMessage.isNull("sJson"));
 
 			return NORMAL_GSON.fromJson(sJson, JsonObject.class);
 		}
 
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> converterJsonStrToList(String sJsonArr) {
-			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
-			}
+			Objects.requireNonNull(sJsonArr.trim(), ExceptionMessage.isNull("sJsonArr"));
 
 			return NORMAL_GSON.fromJson(sJsonArr, List.class);
 		}
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
-			if ( StringUtils.isBlank(sJsonArr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sJsonArr"));
-			}
+			Objects.requireNonNull(sJsonArr.trim(), ExceptionMessage.isNull("sJsonArr"));
 
 			return NORMAL_GSON.fromJson(sJsonArr, JsonArray.class);
 		}
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
-			if ( StringUtils.isBlank(jsonStr) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
-			}
-
-			if ( clazz == null ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("clazz"));
-			}
+			Objects.requireNonNull(jsonStr.trim(), ExceptionMessage.isNull("jsonStr"));
+			Objects.requireNonNull(clazz, ExceptionMessage.isNull("clazz"));
 
 			return NORMAL_GSON.fromJson(jsonStr, clazz);
 		}
@@ -131,13 +116,8 @@ public class GsonUtil {
 		}
 
 		public static Object readJsonFileObject(String sfileName, Type type) {
-			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
-			}
-
-			if ( type == null ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("type"));
-			}
+			Objects.requireNonNull(sfileName, ExceptionMessage.isNull("sfileName"));
+			Objects.requireNonNull(type, ExceptionMessage.isNull("type"));
 
 			Object obj = null;
 
@@ -154,13 +134,8 @@ public class GsonUtil {
 
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> readJsonFileArray(String sfileName, Type type) {
-			if ( StringUtils.isBlank(sfileName) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("sfileName"));
-			}
-
-			if ( type == null ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("type"));
-			}
+			Objects.requireNonNull(sfileName, ExceptionMessage.isNull("sfileName"));
+			Objects.requireNonNull(type, ExceptionMessage.isNull("type"));
 
 			Object obj = null;
 
