@@ -74,6 +74,7 @@ public class HttpClientUtil {
 	}
 
 	/**
+	 * UTF-8
 	 * @since 1.7
 	 */
 	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
