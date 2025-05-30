@@ -35,12 +35,6 @@ public class PagingUtil {
 
 	/** 전체 블럭 */
 	private int totalBlock;
-	/** 현재 블럭 */
-//	private int currentBlock;
-	/** 이전 블럭 */
-//	private int prevBlock;
-	/** 다음 블럭 */
-//	private int nextBlock;
 
 	/** 이전 블럭 페이지 번호 */
 	private int prevBlockPage;
@@ -123,20 +117,6 @@ public class PagingUtil {
 
 		int nTotalBlock = this.totalPage / this.pagePerScreen;
 		this.setTotalBlock(nTotalBlock);
-
-		/*
-		int nCurrentBlock = this.currentPage / this.pagePerScreen;
-		if (this.currentPage % this.pagePerScreen > 0) {
-			nCurrentBlock ++;
-		}
-		this.setCurrentBlock( nCurrentBlock );
-
-		int nPrevBlock = this.currentBlock - 1;
-		this.setPrevBlock(nPrevBlock);
-
-		int nNextBlock = this.currentBlock + 1;
-		this.setNextBlock( (nNextBlock > nTotalBlock) ? 0 : nNextBlock );
-		*/
 
 		int nPrevBlockPage = this.firstPage - 1;
 		if (nPrevBlockPage < 1) {
@@ -369,3 +349,4 @@ public class PagingUtil {
 	}
 
 }
+
