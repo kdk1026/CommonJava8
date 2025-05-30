@@ -2,6 +2,7 @@ package common.util.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -12,15 +13,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +46,7 @@ public class HttpConnectionUtil {
 	}
 
 	/**
+	 * UTF-8
 	 * @since 1.7
 	 */
 	private static final String DEFAULT_CHARSET = StandardCharsets.UTF_8.toString();
@@ -59,18 +59,31 @@ public class HttpConnectionUtil {
 	private static final String POST_METHOD = "POST";
 	private static final String CONTENT_TYPE = "Content-Type";
 
-	private static URLConnection getURLConnection(URL url) {
-		URLConnection httpConn = null;
+	private static final int DEFAULT_TIMEOUT_MILLIS = 5000;
 
-		try {
-			httpConn = url.openConnection();
+	private static final String URL_IS_NULL = "URL is null";
+	private static final String PAYLOAD_IS_NULL = "payload is null";
+	private static final String TIMEOUT_IS_NULL = "timeout is null";
+	private static final String CHARSET_IS_NULL = "charset is null";
 
-		} catch (IOException e) {
-			logger.error("", e);
-		}
+	private static final String LOG_INVALID_URL = "잘못된 URL 또는 URI: {}";
+	private static final String LOG_IO_EXCEPTION1 = "{} 에서 응답을 읽는 중 오류 발생: {}";
+	private static final String LOG_IO_EXCEPTION2 = "{} 에 대한 오류 응답 본문: {}";
+	private static final String LOG_IO_EXCEPTION3 = "{} 에서 오류 스트림을 읽는 중 오류 발생: {}";
 
-		return httpConn;
-	}
+    /**
+     * URLConnection 객체를 생성하고 연결 및 읽기 타임아웃을 설정합니다.
+     * @param url
+     * @param timeoutMillis
+     * @return
+     * @throws IOException
+     */
+    private static URLConnection getURLConnection(URL url, int timeoutMillis) throws IOException {
+        URLConnection httpConn = url.openConnection();
+        httpConn.setConnectTimeout(timeoutMillis); // 연결 타임아웃 설정
+        httpConn.setReadTimeout(timeoutMillis);    // 읽기 타임아웃 설정
+        return httpConn;
+    }
 
 	public static class GetRequest {
 		private GetRequest() {
@@ -85,122 +98,130 @@ public class HttpConnectionUtil {
 		 * @param isSSL
 		 * @param sUrl
 		 * @param header
+		 * @param timeoutMillis
 		 * @return
 		 */
-		public static Map<String, Object> getMap(boolean isSSL, String sUrl, Map<String, Object> header) {
-			if ( StringUtils.isBlank(sUrl) ) {
-				throw new IllegalArgumentException("sUrl is null");
-			}
+		private static Map<String, Object> getMap(boolean isSSL, String sUrl, Map<String, Object> header, int timeoutMillis) {
+			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
-
-//			~ Java 11
-//			URL url = null;
-//			try {
-//				url = new URL(sUrl);
-//
-//			} catch (MalformedURLException e) {
-//				logger.error("", e);
-//			}
-
-//			Java 17 ~
-			URI uri = null;
-			try {
-				uri = new URI(sUrl);
-			} catch (URISyntaxException e) {
-				logger.error("", e);
-			}
-
 			URL url = null;
-			try {
-				if ( uri != null ) {
-					url = uri.toURL();
-				}
-			} catch (MalformedURLException e) {
-				logger.error("", e);
-			}
 
-			if (url == null) {
-				return resMap;
-			}
+            try {
+                URI uri = new URI(sUrl);
+                url = uri.toURL();
+            } catch (URISyntaxException | MalformedURLException e) {
+                logger.error(LOG_INVALID_URL, sUrl, e);
+                return resMap;
+            }
 
-			URLConnection httpConn = getURLConnection(url);
+            // AutoCloseable 대상이 아님
+            HttpURLConnection httpConn = null;
 			try {
-				if (httpConn == null) {
-					return resMap;
-				}
+				httpConn = (HttpURLConnection) getURLConnection(url, timeoutMillis);
+
+				httpConn.setRequestMethod(GET_METHOD);
 
 				if (isSSL) {
-					((HttpsURLConnection) httpConn).setRequestMethod(GET_METHOD);
-				} else {
-					((HttpURLConnection) httpConn).setRequestMethod(GET_METHOD);
+					@SuppressWarnings("unused")
+					HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
 				}
 
 				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
-			        String key = "";
-
-			        while(it.hasNext()) {
-			        	 key = it.next();
-			        	 httpConn.setRequestProperty(key, String.valueOf(header.get(key)));
-			        }
+					for ( Map.Entry<String, Object> entry : header.entrySet() ) {
+                        httpConn.setRequestProperty(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
 				}
 
-				int nStatus = 0;
-				if (isSSL) {
-					nStatus = ((HttpsURLConnection) httpConn).getResponseCode();
-				} else {
-					nStatus = ((HttpURLConnection) httpConn).getResponseCode();
-				}
-				logger.info("Get Status : {}", nStatus);
+				int nStatus = httpConn.getResponseCode();
+                logger.info("{} 에 대한 GET 상태: {}", sUrl, nStatus);
 
-				InputStreamReader isr = new InputStreamReader(httpConn.getInputStream());
-				BufferedReader br = new BufferedReader(isr);
-				String buf = "";
+                String sResponse = getResponseBody(sUrl, httpConn);
 
-		        while (true) {
-		        	buf = br.readLine();
+                Map<String, List<String>> resHeader = httpConn.getHeaderFields();
 
-		            if (buf == null) {
-		                 break;
-		            } else {
-		            	 sResponse = buf;
-		            }
-		         }
-
-		        isr.close();
-		        br.close();
-
-				Map<String, List<String>> resHeader = httpConn.getHeaderFields();
-
-				resMap.put(STATUS_KEY, nStatus);
-				resMap.put(BODY_KEY, sResponse);
-				resMap.put(HEADERS_KEY, resHeader);
+                resMap.put(STATUS_KEY, nStatus);
+                resMap.put(BODY_KEY, sResponse);
+                resMap.put(HEADERS_KEY, resHeader);
 
 			} catch (IOException e) {
-				logger.error("", e);
+				logger.error("{} 에 대한 GET 요청 중 IO 오류 발생: {}", sUrl, e.getMessage(), e);
 			} finally {
 				if (httpConn != null) {
-					if (isSSL) {
-						((HttpsURLConnection) httpConn).disconnect();
-					} else {
-						((HttpURLConnection) httpConn).disconnect();
-					}
-				}
+                    httpConn.disconnect();
+                }
 			}
 
 			return resMap;
 		}
 
-		public static String get(boolean isSSL, String url, Map<String, Object> header) {
-			Map<String, Object> resMap = getMap(isSSL, url, header);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
+		private static String getResponseBody(String sUrl, HttpURLConnection httpConn) {
+			String sResponse = "";
+
+			try (
+            		InputStream is = httpConn.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is, DEFAULT_CHARSET);
+                    BufferedReader br = new BufferedReader(isr)
+            ) {
+
+               StringBuilder responseBuilder = new StringBuilder();
+               String line;
+               // 응답 본문 읽기
+               while ((line = br.readLine()) != null) {
+                   responseBuilder.append(line);
+               }
+               sResponse = responseBuilder.toString();
+			} catch (IOException e) {
+				logger.error(LOG_IO_EXCEPTION1, sUrl, e);
+
+				// 오류 스트림이 있다면 읽어오기 시도
+				try (
+				   InputStream errorStream = httpConn.getErrorStream();
+				   InputStreamReader errorIsr = new InputStreamReader(errorStream, DEFAULT_CHARSET);
+				   BufferedReader errorBr = new BufferedReader(errorIsr)
+				) {
+					StringBuilder errorResponseBuilder = new StringBuilder();
+					String errorLine;
+					while ( (errorLine = errorBr.readLine()) != null ) {
+						errorResponseBuilder.append(errorLine);
+					}
+					sResponse = errorResponseBuilder.toString();
+					logger.error(LOG_IO_EXCEPTION2, sUrl, sResponse);
+				} catch (IOException innerE) {
+					logger.error(LOG_IO_EXCEPTION3, sUrl, innerE);
+				}
+           	}
+			return sResponse;
 		}
 
+		public static String get(boolean isSSL, String url, Map<String, Object> header, int timeoutMillis) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if ( header == null || header.isEmpty() ) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a GET request.");
+			}
+
+			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
+
+            Map<String, Object> resMap = getMap(isSSL, url, header, timeoutMillis);
+            return (resMap.isEmpty() || resMap.get(BODY_KEY) == null) ? "" : resMap.get(BODY_KEY).toString();
+        }
+
+		public static String get(boolean isSSL, String url, Map<String, Object> header) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if ( header == null || header.isEmpty() ) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a GET request.");
+			}
+
+            return get(isSSL, url, header, DEFAULT_TIMEOUT_MILLIS);
+        }
+
 		public static String get(boolean isSSL, String url) {
-			return get(isSSL, url, null);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+            return get(isSSL, url, null, DEFAULT_TIMEOUT_MILLIS);
+        }
 	}
 
 	public static class PostRequest {
@@ -209,34 +230,37 @@ public class HttpConnectionUtil {
 		}
 
 		private static String convertParam(Map<String, Object> param) {
-			List<String> listKey = new ArrayList<>();
-			Iterator<String> it = param.keySet().iterator();
-			while (it.hasNext()) {
-				listKey.add(it.next());
-			}
+			if ( param == null || param.isEmpty() ) {
+                return "";
+            }
 
 			StringBuilder sb = new StringBuilder();
-			String key = "";
+            boolean first = true;
 
-			for (int i=0; i < listKey.size(); i++) {
-				key = listKey.get(i);
+            for ( Map.Entry<String, Object> entry : param.entrySet() ) {
+                if (!first) {
+                    sb.append("&");
+                }
+                first = false;
 
-				if (i == 0) {
-					sb.append(key).append("=").append(param.get(key));
-				} else {
-					if ( param.get(key).getClass().isArray() ) {
-						String[] arr = (String[]) param.get(key);
+                String key = entry.getKey();
+                Object value = entry.getValue();
 
-						for (String s : arr) {
-							sb.append("&").append(key).append("=").append(s);
-						}
-					} else {
-						sb.append("&").append(key).append("=").append(param.get(key));
-					}
-				}
-			}
-
-			return sb.toString();
+                // 값이 배열인 경우 (예: String[]), 각 요소를 파라미터로 추가
+                if (value.getClass().isArray()) {
+                    // String[] 배열이라고 가정 (다른 배열 타입이 필요하면 확장)
+                    String[] arr = (String[]) value;
+                    for (int i = 0; i < arr.length; i++) {
+                        if (i > 0) {
+                            sb.append("&");
+                        }
+                        sb.append(key).append("=").append(arr[i]);
+                    }
+                } else {
+                    sb.append(key).append("=").append(value);
+                }
+            }
+            return sb.toString();
 		}
 
 		/**
@@ -249,147 +273,192 @@ public class HttpConnectionUtil {
 		 * @param header
 		 * @param param
 		 * @param charset
+		 * @param timeoutMillis
 		 * @return
 		 */
-		public static Map<String, Object> postMap(boolean isSSL, String sUrl, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			if ( StringUtils.isBlank(sUrl) ) {
-				throw new IllegalArgumentException("sUrl is null");
-			}
+		private static Map<String, Object> postMap(boolean isSSL, String sUrl, Map<String, Object> header, Map<String, Object> param, Charset charset, int timeoutMillis) {
+			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
 
-			Map<String, Object> resMap = new HashMap<>();
+            Map<String, Object> resMap = new HashMap<>();
+            URL url = null;
+
+            try {
+                URI uri = new URI(sUrl);
+                url = uri.toURL();
+            } catch (URISyntaxException | MalformedURLException e) {
+                logger.error(LOG_INVALID_URL, sUrl, e);
+                return resMap;
+            }
+
+            HttpURLConnection httpConn = null;
+            try {
+                httpConn = (HttpURLConnection) getURLConnection(url, timeoutMillis);
+
+                httpConn.setRequestMethod(POST_METHOD);
+
+                if (isSSL) {
+					@SuppressWarnings("unused")
+					HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
+				}
+
+                // POST 요청의 기본 Content-Type 설정
+                httpConn.setRequestProperty(CONTENT_TYPE, "application/x-www-form-urlencoded");
+                httpConn.setDoOutput(true); // POST 요청을 위해 출력 스트림 활성화
+
+                // 요청 헤더 설정
+                if (header != null) {
+                    for (Map.Entry<String, Object> entry : header.entrySet()) {
+                        httpConn.setRequestProperty(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                }
+
+                // 파라미터가 있다면 출력 스트림을 통해 전송
+                if (param != null && !param.isEmpty()) {
+                    String sParam = convertParam(param);
+                    Charset effectiveCharset = (charset != null) ? charset : StandardCharsets.UTF_8; // 문자셋 선택
+                    // try-with-resources를 사용하여 OutputStream 자동 닫기
+                    try (OutputStream os = httpConn.getOutputStream()) {
+                        os.write(sParam.getBytes(effectiveCharset)); // 파라미터 바이트로 변환하여 쓰기
+                    }
+                }
+
+                // 응답 상태 코드 가져오기
+                int nStatus = httpConn.getResponseCode();
+                logger.info("{} 에 대한 POST 상태: {}", sUrl, nStatus);
+
+                String sResponse = postResponseBody(sUrl, httpConn);
+
+                // 응답 헤더 가져오기
+                Map<String, List<String>> resHeader = httpConn.getHeaderFields();
+
+                // 결과 맵에 상태 코드, 본문, 헤더 추가
+                resMap.put(STATUS_KEY, nStatus);
+                resMap.put(BODY_KEY, sResponse);
+                resMap.put(HEADERS_KEY, resHeader);
+
+            } catch (IOException e) {
+                logger.error("{} 에 대한 POST 요청 중 IO 오류 발생: {}", sUrl, e.getMessage(), e);
+            } finally {
+                // HttpURLConnection 연결 해제
+                if (httpConn != null) {
+                    httpConn.disconnect();
+                }
+            }
+            return resMap;
+        }
+
+		private static String postResponseBody(String sUrl, HttpURLConnection httpConn) {
 			String sResponse = "";
 
-//			~ Java 11
-//			URL url = null;
-//			try {
-//				url = new URL(sUrl);
-//
-//			} catch (MalformedURLException e) {
-//				logger.error("", e);
-//			}
-
-//			Java 17 ~
-			URI uri = null;
-			try {
-				uri = new URI(sUrl);
-			} catch (URISyntaxException e) {
-				logger.error("", e);
-			}
-
-			URL url = null;
-			try {
-				url = uri.toURL();
-			} catch (MalformedURLException e) {
-				logger.error("", e);
-			}
-
-			if (url == null) {
-				return resMap;
-			}
-
-			URLConnection httpConn = getURLConnection(url);
-			try {
-				if (httpConn == null) {
-					return resMap;
-				}
-
-				if (isSSL) {
-					((HttpsURLConnection) httpConn).setRequestMethod(POST_METHOD);
-				} else {
-					((HttpURLConnection) httpConn).setRequestMethod(POST_METHOD);
-				}
-				httpConn.setRequestProperty(CONTENT_TYPE, "application/x-www-form-urlencoded");
-
-				// Default : Get - true, Post - false
-				httpConn.setDoOutput(true);
-
-				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
-			        String key = "";
-
-			        while(it.hasNext()) {
-			        	 key = it.next();
-			        	 httpConn.setRequestProperty(key, String.valueOf(header.get(key)));
-			        }
-				}
-
-				if (param != null) {
-					String sParam = convertParam(param);
-
-					OutputStream os = httpConn.getOutputStream();
-
-					if (charset != null) {
-						os.write(sParam.getBytes(charset));
-					} else {
-						os.write(sParam.getBytes(DEFAULT_CHARSET));
-					}
-
-					os.flush();
-					os.close();
-				}
-
-				int nStatus = 0;
-				if (isSSL) {
-					nStatus = ((HttpsURLConnection) httpConn).getResponseCode();
-				} else {
-					nStatus = ((HttpURLConnection) httpConn).getResponseCode();
-				}
-				logger.info("Post Status : {}", nStatus);
-
-				InputStreamReader isr = new InputStreamReader(httpConn.getInputStream());
-				BufferedReader br = new BufferedReader(isr);
-				String buf = "";
-
-		        while (true) {
-		        	buf = br.readLine();
-
-		            if (buf == null) {
-		                 break;
-		            } else {
-		            	 sResponse = buf;
-		            }
-		         }
-
-		        isr.close();
-		        br.close();
-
-				Map<String, List<String>> resHeader = httpConn.getHeaderFields();
-
-				resMap.put(STATUS_KEY, nStatus);
-				resMap.put(BODY_KEY, sResponse);
-				resMap.put(HEADERS_KEY, resHeader);
-
+			try (
+					InputStream is = httpConn.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is, DEFAULT_CHARSET);
+                    BufferedReader br = new BufferedReader(isr)
+			) {
+               StringBuilder responseBuilder = new StringBuilder();
+               String line;
+               // 응답 본문 읽기
+               while ((line = br.readLine()) != null) {
+                   responseBuilder.append(line);
+               }
+               sResponse = responseBuilder.toString();
 			} catch (IOException e) {
-				logger.error("", e);
-			} finally {
-				if (httpConn != null) {
-					if (isSSL) {
-						((HttpsURLConnection) httpConn).disconnect();
-					} else {
-						((HttpURLConnection) httpConn).disconnect();
-					}
-				}
+               logger.error(LOG_IO_EXCEPTION1, sUrl, e);
+               // 오류 스트림이 있다면 읽어오기 시도
+               try (InputStream errorStream = httpConn.getErrorStream();
+                    InputStreamReader errorIsr = new InputStreamReader(errorStream, DEFAULT_CHARSET);
+                    BufferedReader errorBr = new BufferedReader(errorIsr)) {
+                   StringBuilder errorResponseBuilder = new StringBuilder();
+                   String errorLine;
+                   while ((errorLine = errorBr.readLine()) != null) {
+                       errorResponseBuilder.append(errorLine);
+                   }
+                   sResponse = errorResponseBuilder.toString();
+                   logger.error(LOG_IO_EXCEPTION2, sUrl, sResponse);
+               } catch (IOException innerE) {
+                   logger.error(LOG_IO_EXCEPTION3, sUrl, innerE);
+               }
+			}
+			return sResponse;
+		}
+
+		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
 			}
 
-			return resMap;
-		}
+			if ( param == null || param.isEmpty() ) {
+				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
+			}
+
+			Objects.requireNonNull(charset, CHARSET_IS_NULL);
+
+            return postMap(isSSL, url, header, param, charset, DEFAULT_TIMEOUT_MILLIS);
+        }
+
+		public static String post(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset, int timeoutMillis) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
+			}
+
+			if ( param == null || param.isEmpty() ) {
+				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
+			}
+
+			Objects.requireNonNull(charset, CHARSET_IS_NULL);
+			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
+
+            Map<String, Object> resMap = postMap(isSSL, url, header, param, charset, timeoutMillis);
+            return (resMap.isEmpty() || resMap.get(BODY_KEY) == null) ? "" : resMap.get(BODY_KEY).toString();
+        }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			Map<String, Object> resMap = postMap(isSSL, url, header, param, charset);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
+			}
+
+			if ( param == null || param.isEmpty() ) {
+				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
+			}
+
+			Objects.requireNonNull(charset, CHARSET_IS_NULL);
+
+            return post(isSSL, url, header, param, charset, DEFAULT_TIMEOUT_MILLIS);
+        }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> param, Charset charset) {
-			return post(isSSL, url, null, param, charset);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if ( param == null || param.isEmpty() ) {
+				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
+			}
+
+			Objects.requireNonNull(charset, CHARSET_IS_NULL);
+
+            return post(isSSL, url, null, param, charset, DEFAULT_TIMEOUT_MILLIS);
+        }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> param) {
-			return post(isSSL, url, param, null);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if ( param == null || param.isEmpty() ) {
+				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
+			}
+
+            return post(isSSL, url, null, param, null, DEFAULT_TIMEOUT_MILLIS);
+        }
 
 		public static String post(boolean isSSL, String url) {
-			return post(isSSL, url, null);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+            return post(isSSL, url, null, null, null, DEFAULT_TIMEOUT_MILLIS);
+        }
 	}
 
 	public static class RawRequest {
@@ -407,144 +476,167 @@ public class HttpConnectionUtil {
 		 * @param sUrl
 		 * @param header
 		 * @param payload
+		 * @param timeoutMillis
 		 * @return
 		 */
-		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String sUrl, Map<String, Object> header, String payload) {
-			if ( StringUtils.isBlank(sUrl) ) {
-				throw new IllegalArgumentException("sUrl is null");
-			}
-
-			if ( StringUtils.isBlank(payload) ) {
-				throw new IllegalArgumentException("payload is null");
-			}
+		private static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String sUrl, Map<String, Object> header, String payload, int timeoutMillis) {
+			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
+			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
-			String sResponse = "";
+            URL url = null;
 
-//			~ Java 11
-//			URL url = null;
-//			try {
-//				url = new URL(sUrl);
-//
-//			} catch (MalformedURLException e) {
-//				logger.error("", e);
-//			}
+            try {
+                URI uri = new URI(sUrl);
+                url = uri.toURL();
+            } catch (URISyntaxException | MalformedURLException e) {
+                logger.error(LOG_INVALID_URL, sUrl, e);
+                return resMap;
+            }
 
-//			Java 17 ~
-			URI uri = null;
+            HttpURLConnection httpConn = null;
 			try {
-				uri = new URI(sUrl);
-			} catch (URISyntaxException e) {
-				logger.error("", e);
-			}
+				httpConn = (HttpURLConnection) getURLConnection(url, timeoutMillis);
 
-			URL url = null;
-			try {
-				if ( uri != null ) {
-					url = uri.toURL();
-				}
-			} catch (MalformedURLException e) {
-				logger.error("", e);
-			}
+				httpConn.setRequestMethod(POST_METHOD);
 
-			if (url == null) {
-				return resMap;
-			}
-
-			URLConnection httpConn = getURLConnection(url);
-			try {
-				if (httpConn == null) {
-					return resMap;
-				}
-
-				if (isSSL) {
-					((HttpsURLConnection) httpConn).setRequestMethod(POST_METHOD);
-				} else {
-					((HttpURLConnection) httpConn).setRequestMethod(POST_METHOD);
+                if (isSSL) {
+					@SuppressWarnings("unused")
+					HttpsURLConnection httpsConn = (HttpsURLConnection) httpConn;
 				}
 
 				if (isJson) {
-					httpConn.setRequestProperty(CONTENT_TYPE, "application/json");
-				} else {
-					httpConn.setRequestProperty(CONTENT_TYPE, "application/xml");
-				}
+                    httpConn.setRequestProperty(CONTENT_TYPE, "application/json");
+                } else {
+                    httpConn.setRequestProperty(CONTENT_TYPE, "application/xml");
+                }
 
 				// Default : Get - true, Post - false
-				httpConn.setDoOutput(true);
+				httpConn.setDoOutput(true); // POST 요청을 위해 출력 스트림 활성화
 
 				if (header != null) {
-			        Iterator<String> it = header.keySet().iterator();
-			        String key = "";
+                    for (Map.Entry<String, Object> entry : header.entrySet()) {
+                        httpConn.setRequestProperty(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                }
 
-			        while(it.hasNext()) {
-			        	 key = it.next();
-			        	 httpConn.setRequestProperty(key, String.valueOf(header.get(key)));
-			        }
-				}
+				try ( OutputStream os = httpConn.getOutputStream() ) {
+                    os.write(payload.getBytes(DEFAULT_CHARSET)); // 페이로드 바이트로 변환하여 쓰기
+                }
 
-				OutputStream os = httpConn.getOutputStream();
-				os.write(payload.getBytes(DEFAULT_CHARSET));
-				os.flush();
-				os.close();
+				int nStatus = httpConn.getResponseCode();
+				logger.info("{} 에 대한 Raw POST 상태: {}", sUrl, nStatus);
 
-				int nStatus = 0;
-				if (isSSL) {
-					nStatus = ((HttpsURLConnection) httpConn).getResponseCode();
-				} else {
-					nStatus = ((HttpURLConnection) httpConn).getResponseCode();
-				}
-				logger.info("Post Raw Status : {}", nStatus);
+				String sResponse = rawResponseBody(sUrl, httpConn);
 
-				InputStreamReader isr = new InputStreamReader(httpConn.getInputStream());
-				BufferedReader br = new BufferedReader(isr);
-				String buf = "";
+                // 응답 헤더 가져오기
+                Map<String, List<String>> resHeader = httpConn.getHeaderFields();
 
-		        while (true) {
-		        	buf = br.readLine();
-
-		            if (buf == null) {
-		                 break;
-		            } else {
-		            	 sResponse = buf;
-		            }
-		         }
-
-		        isr.close();
-		        br.close();
-
-				Map<String, List<String>> resHeader = httpConn.getHeaderFields();
-
-				resMap.put(STATUS_KEY, nStatus);
-				resMap.put(BODY_KEY, sResponse);
-				resMap.put(HEADERS_KEY, resHeader);
-
+                // 결과 맵에 상태 코드, 본문, 헤더 추가
+                resMap.put(STATUS_KEY, nStatus);
+                resMap.put(BODY_KEY, sResponse);
+                resMap.put(HEADERS_KEY, resHeader);
 			} catch (IOException e) {
-				logger.error("", e);
+				logger.error("{} 에 대한 RAW POST 요청 중 IO 오류 발생: {}", sUrl, e.getMessage(), e);
 			} finally {
 				if (httpConn != null) {
-					if (isSSL) {
-						((HttpsURLConnection) httpConn).disconnect();
-					} else {
-						((HttpURLConnection) httpConn).disconnect();
-					}
-				}
+                    httpConn.disconnect();
+                }
 			}
 
 			return resMap;
 		}
 
-		private static String raw(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload) {
-			Map<String, Object> resMap = rawMap(isJson, isSSL, url, header, payload);
-			return (resMap.isEmpty()) ? "" : resMap.get(BODY_KEY).toString();
+		private static String rawResponseBody(String sUrl, HttpURLConnection httpConn) {
+			String sResponse = "";
+
+			try (
+					InputStream is = httpConn.getInputStream();
+					InputStreamReader isr = new InputStreamReader(is, DEFAULT_CHARSET);
+					BufferedReader br = new BufferedReader(isr)
+			) {
+
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                // 응답 본문 읽기
+                while ((line = br.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+                sResponse = responseBuilder.toString();
+            } catch (IOException e) {
+                logger.error(LOG_IO_EXCEPTION1, sUrl, e);
+                // 오류 스트림이 있다면 읽어오기 시도
+                try (InputStream errorStream = httpConn.getErrorStream();
+                     InputStreamReader errorIsr = new InputStreamReader(errorStream, DEFAULT_CHARSET);
+                     BufferedReader errorBr = new BufferedReader(errorIsr)) {
+                    StringBuilder errorResponseBuilder = new StringBuilder();
+                    String errorLine;
+                    while ((errorLine = errorBr.readLine()) != null) {
+                        errorResponseBuilder.append(errorLine);
+                    }
+                    sResponse = errorResponseBuilder.toString();
+                    logger.error(LOG_IO_EXCEPTION2, sUrl, sResponse);
+                } catch (IOException innerE) {
+                    logger.error(LOG_IO_EXCEPTION3, sUrl, innerE);
+                }
+            }
+			return sResponse;
 		}
+
+		private static String raw(boolean isJson, boolean isSSL, String url, Map<String, Object> header, String payload, int timeoutMillis) {
+            Map<String, Object> resMap = rawMap(isJson, isSSL, url, header, payload, timeoutMillis);
+            return (resMap.isEmpty() || resMap.get(BODY_KEY) == null) ? "" : resMap.get(BODY_KEY).toString();
+        }
+
+		public static String json(boolean isSSL, String url, Map<String, Object> header, String payload, int timeoutMillis) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a JSON request.");
+			}
+
+			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
+
+            return raw(true, isSSL, url, header, payload, timeoutMillis);
+        }
 
 		public static String json(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			return raw(true, isSSL, url, header, payload);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a JSON request.");
+			}
+
+			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+
+            return json(isSSL, url, header, payload, DEFAULT_TIMEOUT_MILLIS);
+        }
+
+		public static String xml(boolean isSSL, String url, Map<String, Object> header, String payload, int timeoutMillis) {
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a XML request.");
+			}
+
+			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
+
+            return raw(false, isSSL, url, header, payload, timeoutMillis);
+        }
 
 		public static String xml(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			return raw(false, isSSL, url, header, payload);
-		}
+			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+
+			if (header == null || header.isEmpty()) {
+				throw new IllegalArgumentException("Header map cannot be null or empty when making a XML request.");
+			}
+
+			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+
+            return xml(isSSL, url, header, payload, DEFAULT_TIMEOUT_MILLIS);
+        }
 	}
 
 	public static class MultipartRequest {
@@ -553,6 +645,14 @@ public class HttpConnectionUtil {
 		}
 
 		// XXX - https://blog.morizyun.com/blog/android-httpurlconnection-post-multipart/
+		// Multipart 요청 구현은 경계(boundary) 처리 및 파일 스트리밍 때문에 복잡합니다.
+        // 복잡한 Multipart 요청이 자주 필요하다면 Apache HttpClient 또는 OkHttp와 같은
+        // 전용 HTTP 클라이언트 라이브러리를 사용하는 것을 권장합니다.
+        // 수동 구현 시 다음을 포함합니다:
+        // 1. 고유한 경계 문자열 생성.
+        // 2. "Content-Type" 헤더를 "multipart/form-data; boundary=<경계>"로 설정.
+        // 3. 각 파트(폼 필드, 파일)를 OutputStream에 "--<경계>"로 시작하고 "\r\n"으로 끝내서 작성.
+        // 4. 요청을 "--<경계>--\r\n"으로 종료.
 	}
 
 }
