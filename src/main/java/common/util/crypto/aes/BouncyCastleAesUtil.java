@@ -94,6 +94,10 @@ public class BouncyCastleAesUtil {
 	public static SecretKey generateAesKey(int keySize) throws NoSuchAlgorithmException, NoSuchProviderException {
 		Objects.requireNonNull(keySize, "keySize must not be null");
 
+		if ( keySize != 128 && keySize != 192 && keySize != 256 ) {
+			throw new IllegalArgumentException("keySize must be 128, 192, or 256 bits");
+		}
+
         KeyGenerator keyGen = KeyGenerator.getInstance("AES", BouncyCastleProvider.PROVIDER_NAME);
         keyGen.init(keySize);
         return keyGen.generateKey();
@@ -110,16 +114,6 @@ public class BouncyCastleAesUtil {
 		byte[] keyBytes = key.getEncoded();
 		return Base64.getEncoder().encodeToString(keyBytes);
 	}
-
-    /**
-     * 초기화 벡터(IV) 생성 (CBC 모드에 필요)
-     * @return
-     */
-    public static byte[] generateIv() {
-        byte[] iv = new byte[16];
-        new SecureRandom().nextBytes(iv);
-        return iv;
-    }
 
     /**
      * AES 암호화

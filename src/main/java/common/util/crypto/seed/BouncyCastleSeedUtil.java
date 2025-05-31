@@ -107,16 +107,6 @@ public class BouncyCastleSeedUtil {
 	}
 
     /**
-     * 초기화 벡터(IV) 생성 (CBC 모드에 필요)
-     * @return
-     */
-    public static byte[] generateIv() {
-        byte[] iv = new byte[16];
-        new SecureRandom().nextBytes(iv);
-        return iv;
-    }
-
-    /**
      * SEED 암호화
      * @param algorithm
      * @param key

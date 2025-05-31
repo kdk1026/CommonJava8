@@ -177,6 +177,12 @@ public class BouncyCastleRsaUtil {
      * @throws NoSuchProviderException
      */
     public static KeyPair generateRsaKeyPair(int keySize) throws NoSuchAlgorithmException, NoSuchProviderException {
+    	Objects.requireNonNull(keySize, "keySize must not be null");
+
+		if (keySize != 2048 || keySize != 3072 || keySize != 4096) {
+			throw new IllegalArgumentException("keySize must be one of 2048, 3072, or 4096");
+    	}
+
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
         keyPairGen.initialize(keySize);
         return keyPairGen.generateKeyPair();

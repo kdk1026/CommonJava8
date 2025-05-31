@@ -5,8 +5,11 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.security.Security;
 
+import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +26,8 @@ import org.slf4j.LoggerFactory;
  * 권장되는 Bouncy Castle 라이브러리를 사용하여 해싱을 수행
  *  - 암호화와는 다르게, 원본 데이터를 고정된 길이의 "해시 값" 또는 "다이제스트"로 변환하는 단방향 함수
  *  - 해시 값은 원본 데이터의 무결성을 확인하거나, 비밀번호를 저장할 때 직접 저장하는 대신 해시 값을 저장하는 등 다양한 용도로 사용
+ *
+ *  - "MD5", "SHA-256", "SHA-512", "Bcrypt"
  * </pre>
  *
  * @author kdk
@@ -36,6 +41,8 @@ public class BouncyCastleHashingUtil {
 	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleHashingUtil.class);
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
+
+	private static final String ORIGINAL_TEXT_IS_NULL = "원본 텍스트가 비어 있거나 null입니다. 해싱을 수행할 수 없습니다.";
 
 	static {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -84,6 +91,10 @@ public class BouncyCastleHashingUtil {
 	 * @return
 	 */
 	public static String md5Hash(String originalText) {
+		if ( StringUtils.isBlank(originalText) ) {
+			throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
+		}
+
 		byte[] md5Hash = null;
 
 		try {
@@ -105,6 +116,10 @@ public class BouncyCastleHashingUtil {
 	 * @return
 	 */
 	public static String sha256Hash(String originalText) {
+		if ( StringUtils.isBlank(originalText) ) {
+			throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
+		}
+
 		byte[] md5Hash = null;
 
 		try {
@@ -126,6 +141,10 @@ public class BouncyCastleHashingUtil {
 	 * @return
 	 */
 	public static String sha512Hash(String originalText) {
+		if ( StringUtils.isBlank(originalText) ) {
+			throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
+		}
+
 		byte[] md5Hash = null;
 
 		try {
@@ -136,6 +155,52 @@ public class BouncyCastleHashingUtil {
 		}
 
 		return bytesToHex(md5Hash);
+	}
+
+	public static class Bcrypt {
+		private Bcrypt() {
+			super();
+		}
+
+		/**
+		 * <pre>
+		 * Bcrypt 해싱
+		 * </pre>
+		 * @param originalText
+		 * @return
+		 */
+		public static String bcryptHash(String originalText) {
+			if ( StringUtils.isBlank(originalText) ) {
+				throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
+			}
+
+			SecureRandom random = new SecureRandom();
+	        byte[] salt = new byte[16];
+	        random.nextBytes(salt);
+
+	        int cost = 12;
+	        return OpenBSDBCrypt.generate(originalText.toCharArray(), salt, cost);
+		}
+
+		/**
+		 * <pre>
+		 * Bcrypt 해싱 검증
+		 * </pre>
+		 * @param originalText
+		 * @param hashedText
+		 * @return
+		 */
+		public static boolean checkBcryptHash(String originalText, String hashedText) {
+			if ( StringUtils.isBlank(originalText) ) {
+				throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
+			}
+
+			if ( StringUtils.isBlank(hashedText) ) {
+				throw new IllegalArgumentException("해시된 텍스트가 비어 있거나 null입니다. 검증을 수행할 수 없습니다.");
+			}
+
+			return OpenBSDBCrypt.checkPassword(hashedText, originalText.toCharArray());
+		}
 	}
 
 }
