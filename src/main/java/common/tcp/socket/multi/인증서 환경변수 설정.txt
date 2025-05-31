@@ -1,0 +1,2 @@
+ System.setProperty("javax.net.ssl.trustStore", "path/to/your/truststore.jks");
+ System.setProperty("javax.net.ssl.trustStorePassword", "your_truststore_password");
