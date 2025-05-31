@@ -283,7 +283,7 @@ public class NioNonBlockingServerThread {
        } catch (IOException e) {
            // 여기서 예외를 다시 던지거나 (throws IOException),
            // 해당 오류가 치명적이라고 판단되면 여기서 stopServer()를 직접 호출할 수도 있습니다.
-           // 현재는 상위 호출자인 startServer의 catch (Exception e) 블록에서 처리됩니다.
+           // 현재는 상위 호출자인 startServer의 catch 블록에서 처리됩니다.
            throw new IOException("클라이언트 연결 수락 중 오류가 발생했습니다. (포트: " + mPort + ")", e);
        }
 	}
