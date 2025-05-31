@@ -43,7 +43,7 @@ public class TripleDesUtil {
 
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 
-	public static final String DESede_ECB_PKCS5PADDING ="DESede/ECB/PKCS5Padding";
+	public static final String DESEDE_ECB_PKCS5PADDING ="DESede/ECB/PKCS5Padding";
 
 	/**
 	 * Triple DES 암호화
@@ -73,7 +73,7 @@ public class TripleDesUtil {
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
-			Cipher cipher = Cipher.getInstance(DESede_ECB_PKCS5PADDING);
+			Cipher cipher = Cipher.getInstance(DESEDE_ECB_PKCS5PADDING);
 
 			cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -116,7 +116,7 @@ public class TripleDesUtil {
 
 			SecretKey secretKey = new SecretKeySpec(keyBytes, "DESede");
 
-			Cipher cipher = Cipher.getInstance(DESede_ECB_PKCS5PADDING);
+			Cipher cipher = Cipher.getInstance(DESEDE_ECB_PKCS5PADDING);
 
 			cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
