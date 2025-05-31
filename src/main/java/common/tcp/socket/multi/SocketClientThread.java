@@ -182,9 +182,8 @@ public class SocketClientThread {
                 sb.append(new String(buffer, 0, nRead, charsetName));
 
                 // 여기에 프로토콜에 따른 메시지 종료 조건 추가 필요
-                // 예: 만약 메시지 끝에 개행 문자가 있다면:
-                // endsWith("\n") 체크해서 break;
-                // 혹은 고정 길이 메시지라면 해당 길이만큼 읽은 후 break;
+                // 예: 만약 메시지 끝에 개행 문자가 있다면, 반복문 빠져나가게 처리
+                // 혹은 고정 길이 메시지라면 해당 길이만큼 읽은 후, 반복문 빠져나가게 처리
 
                 // 일단은 단일 read() 호출로 하나의 메시지를 받는다고 가정하고 바로 종료
                 // 이 부분을 실제 레거시 서버 프로토콜에 맞춰 조정해야 합니다.
@@ -196,7 +195,6 @@ public class SocketClientThread {
             if ( sRecvData.isEmpty() ) {
                 logger.warn("수신된 데이터가 없습니다. 서버에서 데이터가 오지 않았거나 연결이 끊어졌을 수 있습니다.");
                 // 데이터가 없는 경우에도 연결 종료를 고려할 수 있음
-                // stopClient();
                 return null;
             }
 
