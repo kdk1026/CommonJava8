@@ -52,7 +52,7 @@ import common.util.file.NioFileUtil;
  *
  * @author 김대광
  *
- * @deprecated RsaCryptoUtil 참고
+ * @deprecated 다음으로 대체: {@link common.util.crypto.rsa.RsaCryptoUtil}
  */
 @Deprecated
 public class OldRsaCryptoUtil {
