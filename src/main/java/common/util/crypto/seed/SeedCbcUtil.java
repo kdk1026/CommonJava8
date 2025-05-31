@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * 2025. 5. 31. kdk	최초작성
  * </pre>
  *
- *
+ * @author 김대광
  * @author kdk
  */
 public class SeedCbcUtil {

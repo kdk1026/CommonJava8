@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import common.util.ExceptionMessage;
+import common.util.crypto.EncryptResult;
 
 /**
  * <pre>
@@ -153,21 +154,4 @@ public class AesCryptoUtil {
 		return strDecryptText;
 	}
 
-	public static class EncryptResult {
-        private String encryptedText;
-        private String iv; // Base64 인코딩된 IV 문자열
-
-        public EncryptResult(String encryptedText, String iv) {
-            this.encryptedText = encryptedText;
-            this.iv = iv;
-        }
-
-        public String getEncryptedText() {
-            return encryptedText;
-        }
-
-        public String getIv() {
-            return iv;
-        }
-    }
 }

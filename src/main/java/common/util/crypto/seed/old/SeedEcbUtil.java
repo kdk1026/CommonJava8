@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * 	 > java 8
  * </pre>
  *
+ * @author 김대광
  * @deprecated ECB 모드는 보안상 취약점이 많아 사용을 권장하지 않습니다. CBC로 대체
  */
 @Deprecated

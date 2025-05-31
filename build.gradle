@@ -143,6 +143,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/net.sf.jxls/jxls-core
 	implementation group: 'net.sf.jxls', name: 'jxls-core', version: '1.0.6'
 
+	// https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
+	implementation("org.bouncycastle:bcprov-jdk18on:1.80")
+
 /* Test */
 	testImplementation group: 'junit', name: 'junit', version: junitVersion
 }

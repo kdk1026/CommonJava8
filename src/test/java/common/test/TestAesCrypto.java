@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
+import common.util.crypto.EncryptResult;
 import common.util.crypto.aes.AesCryptoUtilV2;
-import common.util.crypto.aes.AesCryptoUtilV2.EncryptResult;
 
 /**
  * <pre>

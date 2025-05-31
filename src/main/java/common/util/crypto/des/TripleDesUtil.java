@@ -1,4 +1,4 @@
-package common.util.crypto;
+package common.util.crypto.des;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
