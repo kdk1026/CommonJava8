@@ -76,34 +76,49 @@ public class GsonUtil {
 			super();
 		}
 
+		private static void validateJsonString(String jsonStr) {
+			Objects.requireNonNull(jsonStr, ExceptionMessage.isNull("jsonStr"));
+			if (jsonStr.trim().isEmpty()) {
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
+			}
+		}
+
+		private static void validateJsonArrayString(String jsonArrayStr) {
+			Objects.requireNonNull(jsonArrayStr, ExceptionMessage.isNull("jsonArrayStr"));
+			if (jsonArrayStr.trim().isEmpty()) {
+				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonArrayStr"));
+			}
+		}
+
 		@SuppressWarnings("unchecked")
 		public static Map<String, Object> converterJsonStrToMap(String sJson) {
-			Objects.requireNonNull(sJson.trim(), ExceptionMessage.isNull("sJson"));
+			validateJsonString(sJson);
 
 			return NORMAL_GSON.fromJson(sJson, Map.class);
 		}
 
 		public static JsonObject converterJsonStrToJsonObj(String sJson) {
-			Objects.requireNonNull(sJson.trim(), ExceptionMessage.isNull("sJson"));
+			validateJsonString(sJson);
 
 			return NORMAL_GSON.fromJson(sJson, JsonObject.class);
 		}
 
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> converterJsonStrToList(String sJsonArr) {
-			Objects.requireNonNull(sJsonArr.trim(), ExceptionMessage.isNull("sJsonArr"));
+			validateJsonArrayString(sJsonArr);
 
 			return NORMAL_GSON.fromJson(sJsonArr, List.class);
 		}
 
 		public static JsonArray converterJsonStrToJsonArray(String sJsonArr) {
-			Objects.requireNonNull(sJsonArr.trim(), ExceptionMessage.isNull("sJsonArr"));
+			validateJsonArrayString(sJsonArr);
 
 			return NORMAL_GSON.fromJson(sJsonArr, JsonArray.class);
 		}
 
 		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
-			Objects.requireNonNull(jsonStr.trim(), ExceptionMessage.isNull("jsonStr"));
+			validateJsonString(jsonStr);
+
 			Objects.requireNonNull(clazz, ExceptionMessage.isNull("clazz"));
 
 			return NORMAL_GSON.fromJson(jsonStr, clazz);
@@ -115,8 +130,16 @@ public class GsonUtil {
 			super();
 		}
 
+		private static void validateFileName(String fileName) {
+			Objects.requireNonNull(fileName, ExceptionMessage.isNull("fileName"));
+			if (fileName.trim().isEmpty()) {
+				throw new IllegalArgumentException(ExceptionMessage.isNull("fileName"));
+			}
+		}
+
 		public static Object readJsonFileObject(String sfileName, Type type) {
-			Objects.requireNonNull(sfileName, ExceptionMessage.isNull("sfileName"));
+			validateFileName(sfileName);
+
 			Objects.requireNonNull(type, ExceptionMessage.isNull("type"));
 
 			Object obj = null;
@@ -134,7 +157,8 @@ public class GsonUtil {
 
 		@SuppressWarnings("unchecked")
 		public static <T> List<T> readJsonFileArray(String sfileName, Type type) {
-			Objects.requireNonNull(sfileName, ExceptionMessage.isNull("sfileName"));
+			validateFileName(sfileName);
+
 			Objects.requireNonNull(type, ExceptionMessage.isNull("type"));
 
 			Object obj = null;

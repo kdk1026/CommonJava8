@@ -102,7 +102,10 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		private static Map<String, Object> getMap(boolean isSSL, String sUrl, Map<String, Object> header, int timeoutMillis) {
-			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
+			Objects.requireNonNull(sUrl, URL_IS_NULL);
+			if ( sUrl.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			Map<String, Object> resMap = new HashMap<>();
 			URL url = null;
@@ -195,7 +198,10 @@ public class HttpConnectionUtil {
 		}
 
 		public static String get(boolean isSSL, String url, Map<String, Object> header, int timeoutMillis) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if ( header == null || header.isEmpty() ) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a GET request.");
@@ -208,7 +214,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String get(boolean isSSL, String url, Map<String, Object> header) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if ( header == null || header.isEmpty() ) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a GET request.");
@@ -218,7 +227,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String get(boolean isSSL, String url) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
             return get(isSSL, url, null, DEFAULT_TIMEOUT_MILLIS);
         }
@@ -277,7 +289,10 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		private static Map<String, Object> postMap(boolean isSSL, String sUrl, Map<String, Object> header, Map<String, Object> param, Charset charset, int timeoutMillis) {
-			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
+			Objects.requireNonNull(sUrl, URL_IS_NULL);
+			if ( sUrl.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
             Map<String, Object> resMap = new HashMap<>();
             URL url = null;
@@ -383,7 +398,10 @@ public class HttpConnectionUtil {
 		}
 
 		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
@@ -399,7 +417,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset, int timeoutMillis) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
@@ -417,7 +438,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> header, Map<String, Object> param, Charset charset) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a POST request.");
@@ -433,7 +457,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> param, Charset charset) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if ( param == null || param.isEmpty() ) {
 				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
@@ -445,7 +472,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String post(boolean isSSL, String url, Map<String, Object> param) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if ( param == null || param.isEmpty() ) {
 				throw new IllegalArgumentException("Parameter map cannot be null or empty when making a POST request.");
@@ -455,7 +485,10 @@ public class HttpConnectionUtil {
         }
 
 		public static String post(boolean isSSL, String url) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
             return post(isSSL, url, null, null, null, DEFAULT_TIMEOUT_MILLIS);
         }
@@ -480,8 +513,15 @@ public class HttpConnectionUtil {
 		 * @return
 		 */
 		private static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String sUrl, Map<String, Object> header, String payload, int timeoutMillis) {
-			Objects.requireNonNull(sUrl.trim(), URL_IS_NULL);
-			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(sUrl, URL_IS_NULL);
+			if ( sUrl.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
+
+			Objects.requireNonNull(payload, PAYLOAD_IS_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_IS_NULL);
+			}
 
 			Map<String, Object> resMap = new HashMap<>();
             URL url = null;
@@ -589,51 +629,77 @@ public class HttpConnectionUtil {
         }
 
 		public static String json(boolean isSSL, String url, Map<String, Object> header, String payload, int timeoutMillis) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a JSON request.");
 			}
 
-			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(payload, PAYLOAD_IS_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_IS_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
 
             return raw(true, isSSL, url, header, payload, timeoutMillis);
         }
 
 		public static String json(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a JSON request.");
 			}
 
-			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(payload, PAYLOAD_IS_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_IS_NULL);
+			}
 
             return json(isSSL, url, header, payload, DEFAULT_TIMEOUT_MILLIS);
         }
 
 		public static String xml(boolean isSSL, String url, Map<String, Object> header, String payload, int timeoutMillis) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a XML request.");
 			}
 
-			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(payload, PAYLOAD_IS_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_IS_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMillis, TIMEOUT_IS_NULL);
 
             return raw(false, isSSL, url, header, payload, timeoutMillis);
         }
 
 		public static String xml(boolean isSSL, String url, Map<String, Object> header, String payload) {
-			Objects.requireNonNull(url.trim(), URL_IS_NULL);
+			Objects.requireNonNull(url, URL_IS_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_IS_NULL);
+			}
 
 			if (header == null || header.isEmpty()) {
 				throw new IllegalArgumentException("Header map cannot be null or empty when making a XML request.");
 			}
 
-			Objects.requireNonNull(payload.trim(), PAYLOAD_IS_NULL);
+			Objects.requireNonNull(payload, PAYLOAD_IS_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_IS_NULL);
+			}
 
             return xml(isSSL, url, header, payload, DEFAULT_TIMEOUT_MILLIS);
         }

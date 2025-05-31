@@ -182,7 +182,11 @@ public class HttpClientUtil {
 		 * @return
 		 */
 		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, String> header, int timeoutMs) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -215,7 +219,10 @@ public class HttpClientUtil {
 		}
 
 		public static Map<String, Object> getMap(boolean isSSL, String url, Map<String, String> header) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( header == null || header.isEmpty() ) {
         		throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -225,7 +232,10 @@ public class HttpClientUtil {
         }
 
         public static String get(boolean isSSL, String url, Map<String, String> header, int timeoutMs) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( header == null || header.isEmpty() ) {
         		throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -238,7 +248,10 @@ public class HttpClientUtil {
         }
 
         public static String get(boolean isSSL, String url, Map<String, String> header) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( header == null || header.isEmpty() ) {
         		throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -248,7 +261,7 @@ public class HttpClientUtil {
         }
 
         public static String get(boolean isSSL, String url) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
 
             return get(isSSL, url, null, DEFAULT_TIMEOUT_MS);
         }
@@ -296,7 +309,11 @@ public class HttpClientUtil {
 		 * @return
 		 */
 		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset, int timeoutMs) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -336,7 +353,10 @@ public class HttpClientUtil {
 		}
 
 		public static Map<String, Object> postMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -352,7 +372,10 @@ public class HttpClientUtil {
         }
 
         public static String post(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset, int timeoutMs) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -370,7 +393,10 @@ public class HttpClientUtil {
         }
 
         public static String post(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param, Charset charset) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( header != null && header.isEmpty() ) {
         		throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -386,7 +412,10 @@ public class HttpClientUtil {
         }
 
         public static String post(boolean isSSL, String url, Map<String, Object> param, Charset charset) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( param == null || param.isEmpty() ) {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
@@ -398,7 +427,10 @@ public class HttpClientUtil {
         }
 
         public static String post(boolean isSSL, String url, Map<String, Object> param) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
         	if ( param == null || param.isEmpty() ) {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
@@ -408,7 +440,7 @@ public class HttpClientUtil {
         }
 
         public static String post(boolean isSSL, String url) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
 
             return post(isSSL, url, null);
         }
@@ -434,7 +466,15 @@ public class HttpClientUtil {
 		 */
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
 			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+			if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			Map<String, Object> resMap = new HashMap<>();
@@ -473,13 +513,19 @@ public class HttpClientUtil {
 		}
 
 		public static Map<String, Object> rawMap(boolean isJson, boolean isSSL, String url, Map<String, String> header, String payload) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
 			}
 
-        	Objects.requireNonNull(payload.trim(), PAYLOAD_NOT_BE_NULL);
+        	Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+        	if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
 
             return rawMap(isJson, isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
         }
@@ -490,51 +536,77 @@ public class HttpClientUtil {
         }
 
         public static String json(boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
 			}
 
-        	Objects.requireNonNull(payload.trim(), PAYLOAD_NOT_BE_NULL);
+        	Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+        	if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
+
         	Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
             return raw(true, isSSL, url, header, payload, timeoutMs);
         }
 
         public static String json(boolean isSSL, String url, Map<String, String> header, String payload) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
 			}
 
-        	Objects.requireNonNull(payload.trim(), PAYLOAD_NOT_BE_NULL);
+        	Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+        	if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
 
             return json(isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
         }
 
         public static String xml(boolean isSSL, String url, Map<String, String> header, String payload, int timeoutMs) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
 			}
 
-        	Objects.requireNonNull(payload.trim(), PAYLOAD_NOT_BE_NULL);
+        	Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+        	if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
+
         	Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
             return raw(false, isSSL, url, header, payload, timeoutMs);
         }
 
         public static String xml(boolean isSSL, String url, Map<String, String> header, String payload) {
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
 			}
 
-        	Objects.requireNonNull(payload.trim(), PAYLOAD_NOT_BE_NULL);
+        	Objects.requireNonNull(payload, PAYLOAD_NOT_BE_NULL);
+        	if ( payload.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(PAYLOAD_NOT_BE_NULL);
+			}
 
             return xml(isSSL, url, header, payload, DEFAULT_TIMEOUT_MS);
         }
@@ -562,7 +634,15 @@ public class HttpClientUtil {
 				, String fileParamKey, File file, int timeoutMs) {
 
 			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
 			if (file == null) {
@@ -625,7 +705,10 @@ public class HttpClientUtil {
 		public static Map<String, Object> multipartMap(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
                 String fileParamKey, File file) {
 
-        	Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+        	Objects.requireNonNull(url, URL_NOT_BE_NULL);
+        	if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -635,7 +718,11 @@ public class HttpClientUtil {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
 			}
 
-			Objects.requireNonNull(fileParamKey.trim(), FILE_PARAM_KEY_NOT_BE_NULL);
+			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(file, PAYLOAD_NOT_BE_NULL);
 
 			return multipartMap(isSSL, url, header, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
@@ -644,7 +731,10 @@ public class HttpClientUtil {
 		public static String multipart(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
 				String fileParamKey, File file, int timeoutMs) {
 
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -654,7 +744,11 @@ public class HttpClientUtil {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
 			}
 
-			Objects.requireNonNull(fileParamKey.trim(), FILE_PARAM_KEY_NOT_BE_NULL);
+			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(file, PAYLOAD_NOT_BE_NULL);
 			Objects.requireNonNull(timeoutMs, TIMEOUT_NOT_BE_NULL);
 
@@ -665,7 +759,10 @@ public class HttpClientUtil {
 		public static String multipart(boolean isSSL, String url, Map<String, String> header, Map<String, Object> param,
 				String fileParamKey, File file) {
 
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( header != null && header.isEmpty() ) {
 				throw new IllegalArgumentException(HEADER_NOT_BE_NULL);
@@ -675,28 +772,47 @@ public class HttpClientUtil {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
 			}
 
-			Objects.requireNonNull(fileParamKey.trim(), FILE_PARAM_KEY_NOT_BE_NULL);
+			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(file, PAYLOAD_NOT_BE_NULL);
 
 			return multipart(isSSL, url, header, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
 		}
 
 		public static String multipart(boolean isSSL, String url, Map<String, Object> param, String fileParamKey, File file) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
 
 			if ( param != null && param.isEmpty() ) {
 				throw new IllegalArgumentException(PARAM_NOT_BE_NULL);
 			}
 
-			Objects.requireNonNull(fileParamKey.trim(), FILE_PARAM_KEY_NOT_BE_NULL);
+			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(file, PAYLOAD_NOT_BE_NULL);
 
 			return multipart(isSSL, url, null, param, fileParamKey, file, DEFAULT_TIMEOUT_MS);
 		}
 
 		public static String multipart(boolean isSSL, String url, String fileParamKey, File file) {
-			Objects.requireNonNull(url.trim(), URL_NOT_BE_NULL);
-			Objects.requireNonNull(fileParamKey.trim(), FILE_PARAM_KEY_NOT_BE_NULL);
+			Objects.requireNonNull(url, URL_NOT_BE_NULL);
+			if ( url.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(URL_NOT_BE_NULL);
+			}
+
+			Objects.requireNonNull(fileParamKey, FILE_PARAM_KEY_NOT_BE_NULL);
+			if ( fileParamKey.trim().isEmpty() ) {
+			    throw new IllegalArgumentException(FILE_PARAM_KEY_NOT_BE_NULL);
+			}
+
 			Objects.requireNonNull(file, PAYLOAD_NOT_BE_NULL);
 
 			return multipart(isSSL, url, null, null, fileParamKey, file, DEFAULT_TIMEOUT_MS);

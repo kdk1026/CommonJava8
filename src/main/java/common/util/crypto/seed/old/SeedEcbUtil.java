@@ -1,4 +1,4 @@
-package common.util.crypto.seed;
+package common.util.crypto.seed.old;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -21,7 +21,10 @@ import org.slf4j.LoggerFactory;
  * - Base64
  * 	 > java 8
  * </pre>
+ *
+ * @deprecated ECB 모드는 보안상 취약점이 많아 사용을 권장하지 않습니다. CBC로 대체
  */
+@Deprecated
 public class SeedEcbUtil {
 
 	private SeedEcbUtil() {

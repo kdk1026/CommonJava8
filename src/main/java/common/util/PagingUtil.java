@@ -73,7 +73,10 @@ public class PagingUtil {
 			throw new IllegalArgumentException("totalCnt must be greater than 0");
 		}
 
-		Objects.requireNonNull(currentPage.trim(), "currentPage must not be null");
+		Objects.requireNonNull(currentPage, "currentPage must not be null");
+		if (currentPage.trim().isEmpty()) {
+			throw new IllegalArgumentException("currentPage must not be null");
+		}
 
 		boolean isNumeric = currentPage.matches("\\d+");
 		if ( !isNumeric ) {
