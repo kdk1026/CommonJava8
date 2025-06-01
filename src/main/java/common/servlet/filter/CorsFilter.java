@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * -----------------------------------
  * 2021. 8. 9. 김대광	JavaDoc 작성
  * </pre>
- * 
+ *
  * <pre>
  * Spring / SpringSeucirty 사용 시, 자체 설정 이용할 것
  * </pre>
@@ -33,13 +33,14 @@ public class CorsFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 			throws IOException, ServletException {
-		
+
 		HttpServletResponse response = (HttpServletResponse) res;
+		// XXX * 은 최초 테스트 후, 적절하게 변경할 것
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET");
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, x-requested-with, Authorization");
-		
+
 		chain.doFilter(req, res);
 	}
 
@@ -47,5 +48,5 @@ public class CorsFilter implements Filter {
 	public void destroy() {
 		// Auto-generated method stub
 	}
-	
+
 }
