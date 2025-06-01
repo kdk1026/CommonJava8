@@ -32,7 +32,7 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskName(String name) {
-		String regex = ".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
+		String regex = ".*?[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
 
 		if (name.matches(regex)) {
 			// 한글 이름 마스킹
@@ -452,11 +452,14 @@ public class MaskingUtil {
 	 */
 	public static String maskIPAddress(String ipAddress) {
         // IPv4 형식 확인
-        if (ipAddress.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
-            return ipAddress.replaceAll("(\\d+\\.\\d+\\.\\d+\\.).*", "$1***");
-        } else {
-            return "";
-        }
+		if (ipAddress.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
+		    int lastDotIndex = ipAddress.lastIndexOf('.');
+		    if (lastDotIndex != -1) {
+		        String prefix = ipAddress.substring(0, lastDotIndex + 1);
+		        return prefix + "***";
+		    }
+		}
+		return "";
     }
 
 	/**
