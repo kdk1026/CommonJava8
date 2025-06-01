@@ -163,7 +163,7 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		return str.matches(".*[\\W].*");
+		return str.matches(".*?[\\W].*");
 	}
 
     /**
@@ -391,11 +391,11 @@ public class ValidUtil {
         }
 
 		// 2. 조합 개수 확인
-		boolean hasLetter = str.matches(".*[a-zA-Z].*");	// 영문 포함 여부
-		boolean hasDigit = str.matches(".*\\d.*");			// 숫자 포함 여부
+		boolean hasLetter = str.matches(".*?[a-zA-Z].*");	// 영문 포함 여부
+		boolean hasDigit = str.matches(".*?\\d.*");			// 숫자 포함 여부
 
 		// 특수문자 확인: 영문, 숫자, 언더스코어(`_`)를 제외한 문자가 있는지 확인
-		boolean hasSpecialChar = str.matches(".*[^a-zA-Z\\d\\s].*");
+		boolean hasSpecialChar = str.matches(".*?[^a-zA-Z\\d\\s].*");
 
 		int combinationCount = 0;
         if (hasLetter) combinationCount++;

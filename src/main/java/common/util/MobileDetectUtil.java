@@ -16,7 +16,7 @@ public class MobileDetectUtil {
 	private static final String IOS = "ios";
 	private static final String ETC = "etc";
 
-	private static final String ETC_PATTERN = ".*(blackberry|symbian|webos|bada|tizen|windows phone|ubuntu).*";
+	private static final String ETC_PATTERN = ".*?(blackberry|symbian|webos|bada|tizen|windows phone|ubuntu).*";
 
 
 	public static class DeviceType extends BaseObject {
