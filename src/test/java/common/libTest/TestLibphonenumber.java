@@ -29,7 +29,7 @@ public class TestLibphonenumber {
 
 		assertTrue( PhoneNumberUtil.getInstance().isPossibleNumber("031-1234-5678", "KR") );
 
-		// XXX 음... 그닥 형식만 체크하네 정규식으로 체크하는걸로
+		// XXX 형식만 체크하므로 국내 번호는 정규식으로 체크하고, 해외 번호 필요 시 사용하면 될 듯
 		assertTrue( PhoneNumberUtil.getInstance().isPossibleNumber("039-1234-5678", "KR") );
 	}
 
