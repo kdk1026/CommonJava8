@@ -117,12 +117,12 @@ public class NioFileTypeUtil {
 	}
 
 	/**
-	 * 문서 파일 체크
+	 * 파일 체크
 	 * @param sExtension
 	 * @param sMimeType
 	 * @return
 	 */
-	public static boolean isDocFile(String sExtension, String sMimeType) {
+	public static boolean isAllFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
 			throw new IllegalArgumentException("sExtension is null");
 		}
@@ -132,20 +132,20 @@ public class NioFileTypeUtil {
 		}
 
 		String[] sExtArr = {
-			"txt", "rtf", "pdf",
-			"doc", "docx", "ppt", "pptx", "xls", "xlsx",
-			"hwp",
-			"odt", "odp", "ods"
+			"jpg", "jpeg", "png", "gif", "bmp",
+			"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
+			"hwp", "txt", "zip"
 		};
 		List<String> listExt = Arrays.asList(sExtArr);
 
 		String[] sMimeArr = {
-			"text/plain", "application/rtf", "application/pdf",
+			"image/jpeg", "image/png", "image/gif", "image/bmp",
+			"application/pdf",
 			"application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-			"application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 			"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-			"application/x-hwp", "document/unknown", "application/unknown", "application/x-hwp-v5",
-			"application/vnd.oasis.opendocument.text", "application/vnd.oasis.opendocument.presentation", "application/vnd.oasis.opendocument.spreadsheet"
+			"application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+			"application/x-hwp", "application/haansofthwp", "application/vnd.hancom.hwp",
+			"text/plain", "application/zip"
 		};
 		List<String> listMime = Arrays.asList(sMimeArr);
 
@@ -168,12 +168,12 @@ public class NioFileTypeUtil {
 		}
 
 		String[] sExtArr = {
-			"jpg", "jpeg", "gif", "png"
+			"jpg", "jpeg", "png", "gif", "bmp"
 		};
 		List<String> listExt = Arrays.asList(sExtArr);
 
 		String[] sMimeArr = {
-			"image/jpeg", "image/gif", "image/png"
+			"image/jpeg", "image/png", "image/gif", "image/bmp"
 		};
 		List<String> listMime = Arrays.asList(sMimeArr);
 
@@ -181,18 +181,145 @@ public class NioFileTypeUtil {
 	}
 
 	/**
-	 * 실행 파일 체크
-	 * @param sFileName
+	 * 문서 파일 체크
+	 * @param sExtension
+	 * @param sMimeType
 	 * @return
 	 */
-	public static boolean isRunableFile(String sFileName) {
-		if ( StringUtils.isBlank(sFileName) ) {
-			throw new IllegalArgumentException("sFileName is null");
+	public static boolean isDocFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new IllegalArgumentException("sExtension is null");
 		}
 
-		final String RUNABLE_FILE_EXT = "^(.*\\.)(?i)(bat|bin|cmd|com|cpl|dll|exe|gadget|inf1|ins|isu|jse|lnk|msc|msi|msp|mst|paf|pif|ps1|reg|rgs|scr|sct|sh|shb|shs|u3p|vb|vbe|vbs|vbscript|ws|wsf|wsh)$";
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new IllegalArgumentException("sMimeType is null");
+		}
 
-		return sFileName.matches(RUNABLE_FILE_EXT);
+		String[] sExtArr = {
+			"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
+			"hwp", "txt"
+		};
+		List<String> listExt = Arrays.asList(sExtArr);
+
+		String[] sMimeArr = {
+			"application/pdf",
+			"application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+			"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			"application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+			"application/x-hwp", "application/haansofthwp", "application/vnd.hancom.hwp",
+			"text/plain"
+		};
+		List<String> listMime = Arrays.asList(sMimeArr);
+
+		return listExt.contains(sExtension) && listMime.contains(sMimeType);
+	}
+
+	/**
+	 * 압축 파일 체크
+	 * @param sExtension
+	 * @param sMimeType
+	 * @return
+	 */
+	public static boolean isArchiveFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new IllegalArgumentException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new IllegalArgumentException("sMimeType is null");
+		}
+
+		String[] sExtArr = {
+			"zip", "rar", "7z"
+		};
+		List<String> listExt = Arrays.asList(sExtArr);
+
+		String[] sMimeArr = {
+			"application/zip", "application/x-rar-compressed", "application/x-7z-compressed"
+		};
+		List<String> listMime = Arrays.asList(sMimeArr);
+
+		return listExt.contains(sExtension) && listMime.contains(sMimeType);
+	}
+
+	/**
+	 * 오디오 파일 체크
+	 * @param sExtension
+	 * @param sMimeType
+	 * @return
+	 */
+	public static boolean isAudioFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new IllegalArgumentException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new IllegalArgumentException("sMimeType is null");
+		}
+
+		String[] sExtArr = {
+			"mp3", "wav"
+		};
+		List<String> listExt = Arrays.asList(sExtArr);
+
+		String[] sMimeArr = {
+			"audio/mpeg", "audio/wav"
+		};
+		List<String> listMime = Arrays.asList(sMimeArr);
+
+		return listExt.contains(sExtension) && listMime.contains(sMimeType);
+	}
+
+	/**
+	 * 비디오 파일 체크
+	 * @param sExtension
+	 * @param sMimeType
+	 * @return
+	 */
+	public static boolean isVideoFile(String sExtension, String sMimeType) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new IllegalArgumentException("sExtension is null");
+		}
+
+		if ( StringUtils.isBlank(sMimeType) ) {
+			throw new IllegalArgumentException("sMimeType is null");
+		}
+
+		String[] sExtArr = {
+			"mp4", "avi", "mov", "mkv"
+		};
+		List<String> listExt = Arrays.asList(sExtArr);
+
+		String[] sMimeArr = {
+			"video/mp4", "video/x-msvideo", "video/quicktime", "video/x-matroska"
+		};
+		List<String> listMime = Arrays.asList(sMimeArr);
+
+		return listExt.contains(sExtension) && listMime.contains(sMimeType);
+	}
+
+	/**
+	 * <pre>
+	 * 실행 파일 체크
+	 *  - 결과가 true면 업로드 불가, false면 업로드 가능
+	 * </pre>
+	 * @param sExtension
+	 * @return
+	 */
+	public static boolean isRunableFile(String sExtension) {
+		if ( StringUtils.isBlank(sExtension) ) {
+			throw new IllegalArgumentException("sExtension is null");
+		}
+
+		String[] sExtArr = {
+			"bat", "bin", "cmd", "com", "cpl", "dll", "exe", "gadget", "inf1",
+            "ins", "isu", "jse", "lnk", "msc", "msi", "msp", "mst", "paf",
+            "pif", "ps1", "reg", "rgs", "scr", "sct", "sh", "shb", "shs",
+            "u3p", "vb", "vbe", "vbs", "vbscript", "ws", "wsf", "wsh"
+		};
+		List<String> listExt = Arrays.asList(sExtArr);
+
+		return listExt.contains(sExtension);
 	}
 
 }
