@@ -104,19 +104,34 @@ public class BouncyCastleTripleDesUtil {
 		return Base64.getEncoder().encodeToString(keyBytes);
 	}
 
+	/**
+	 * Base64 문자열을 SecretKey로 변환
+	 * @param base64KeyString
+	 * @param algorithm
+	 * @return
+	 */
+	private static SecretKey convertStringToKey(String base64KeyString) {
+		Objects.requireNonNull(base64KeyString, "base64KeyString must not be null");
+
+		byte[] keyBytes = Base64.getDecoder().decode(base64KeyString);
+		return new javax.crypto.spec.SecretKeySpec(keyBytes, "DESede");
+	}
+
     /**
      * Triple DES 암호화
      * @param algorithm
-     * @param key
+     * @param base64KeyString
      * @param plainText
      * @return
      */
-    public static EncryptResult encrypt(String algorithm, SecretKey key, String plainText) {
+    public static EncryptResult encrypt(String algorithm, String base64KeyString, String plainText) {
 		if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException("algorithm must not be blank");
 		}
 
-		Objects.requireNonNull(key, KEY_IS_NULL);
+		if ( StringUtils.isBlank(base64KeyString) ) {
+			throw new IllegalArgumentException(KEY_IS_NULL);
+		}
 
 		if ( StringUtils.isBlank(plainText) ) {
 			throw new IllegalArgumentException("plainText must not be blank");
@@ -127,6 +142,7 @@ public class BouncyCastleTripleDesUtil {
 
     	try {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+    		SecretKey key = convertStringToKey(base64KeyString);
 
     		if ( algorithm.indexOf("ECB") > -1 ) {
     			cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -155,23 +171,26 @@ public class BouncyCastleTripleDesUtil {
     /**
      * Triple DES 복호화
      * @param algorithm
-     * @param key
+     * @param base64KeyString
      * @param ivStr
      * @param cipherText
      * @return
      */
-    public static String decrypt(String algorithm, SecretKey key, String ivStr, String cipherText) {
+    public static String decrypt(String algorithm, String base64KeyString, String ivStr, String cipherText) {
     	if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException("algorithm must not be blank");
 		}
 
-		Objects.requireNonNull(key, KEY_IS_NULL);
+    	if ( StringUtils.isBlank(base64KeyString) ) {
+			throw new IllegalArgumentException(KEY_IS_NULL);
+		}
 
 		Objects.requireNonNull(cipherText, "cipherText must not be null");
 
 		String decryptedText = "";
 		try {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+			SecretKey key = convertStringToKey(base64KeyString);
 
 			if ( algorithm.indexOf("ECB") > -1 ) {
 				cipher.init(Cipher.DECRYPT_MODE, key);
