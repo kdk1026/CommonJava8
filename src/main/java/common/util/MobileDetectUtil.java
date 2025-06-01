@@ -14,10 +14,6 @@ public class MobileDetectUtil {
 
 	private static final String ANDROID = "android";
 	private static final String IOS = "ios";
-	private static final String ETC = "etc";
-
-	private static final String ETC_PATTERN = ".*?(blackberry|symbian|webos|bada|tizen|windows phone|ubuntu).*";
-
 
 	public static class DeviceType extends BaseObject {
 		private static final long serialVersionUID = 1L;
@@ -28,8 +24,6 @@ public class MobileDetectUtil {
 		 * <pre>
 		 * android
 		 * ios
-		 * etc - blackberry | symbian | webos | bada | tizen |
-		 *       windows phone | ubuntu
 		 * </pre>
 		 */
 		private String devicePlatform;
@@ -99,12 +93,8 @@ public class MobileDetectUtil {
 
 		if ( (userAgent.contains(ANDROID)) && (!userAgent.contains("mobile")) ) {
 			deviceType = new DeviceType(true, false, ANDROID);
-		}
-		if ( userAgent.contains("ipad") ) {
+		} else if ( userAgent.contains("ipad") ) {
 			deviceType = new DeviceType(true, false, IOS);
-		}
-		if ( (userAgent.matches(ETC_PATTERN)) && (!userAgent.contains("mobile")) ) {
-			deviceType = new DeviceType(true, false, ETC);
 		}
 
 		return deviceType;
@@ -119,12 +109,8 @@ public class MobileDetectUtil {
 
 		if ( userAgent.contains(ANDROID) ) {
 			deviceType = new DeviceType(false, true, ANDROID);
-		}
-		if ( userAgent.contains("iphone") || userAgent.contains("ipod") ) {
+		} else if ( userAgent.contains("iphone") || userAgent.contains("ipod") ) {
 			deviceType = new DeviceType(false, true, IOS);
-		}
-		if ( userAgent.matches(ETC_PATTERN) ) {
-			deviceType = new DeviceType(true, false, ETC);
 		}
 
 		return deviceType;

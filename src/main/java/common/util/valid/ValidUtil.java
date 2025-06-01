@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 /**
  * <pre>
@@ -163,7 +164,12 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		return str.matches(".*?[\\W].*");
+		for (char ch : str.toCharArray()) {
+            if ( !Character.isLetterOrDigit(ch) && ch != '_' ) {
+                return true;
+            }
+        }
+        return false;
 	}
 
     /**
@@ -427,11 +433,11 @@ public class ValidUtil {
         }
 
 		// 2. 조합 개수 확인
-		boolean hasLetter = str.matches(".*?[a-zA-Z].*");	// 영문 포함 여부
-		boolean hasDigit = str.matches(".*?\\d.*");			// 숫자 포함 여부
+		boolean hasLetter = Pattern.compile("[a-zA-Z]").matcher(str).find();	// 영문 포함 여부
+		boolean hasDigit = Pattern.compile("\\d").matcher(str).find();			// 숫자 포함 여부
 
 		// 특수문자 확인: 영문, 숫자, 언더스코어(`_`)를 제외한 문자가 있는지 확인
-		boolean hasSpecialChar = str.matches(".*?[^a-zA-Z\\d\\s].*");
+		boolean hasSpecialChar = Pattern.compile("[^a-zA-Z\\d\\s]").matcher(str).find();
 
 		int combinationCount = 0;
         if (hasLetter) combinationCount++;

@@ -32,7 +32,7 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskName(String name) {
-		String regex = ".*?[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
+		String regex = "[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
 
 		if (name.matches(regex)) {
 			// 한글 이름 마스킹
