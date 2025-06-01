@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,8 +72,7 @@ public class PoiUtil {
 		String sFileName = file.getName();
 		String sFileExt = sFileName.substring(sFileName.lastIndexOf('.') + 1);
 
-		try {
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
+		try ( InputStream is = new BufferedInputStream(new FileInputStream(file)) ) {
 			Workbook workbook = null;
 
 			switch (sFileExt) {
@@ -88,14 +88,12 @@ public class PoiUtil {
 				break;
 			}
 
-			is.close();
-
 			if ( workbook == null ) {
-				return null;
+				return Collections.emptyList();
 			}
 
 			if ( workbook.getNumberOfSheets() == 0 ) {
-				return null;
+				return Collections.emptyList();
 			}
 
 			Sheet sheet = workbook.getSheetAt(0);
@@ -223,7 +221,6 @@ public class PoiUtil {
 		cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		cellStyle.setFont(font);
 
-		Map<String, Object> dataMap = contentsList.get(0);
 		int nCellCnt = 0;
 
 		// 타이틀
@@ -242,7 +239,7 @@ public class PoiUtil {
 			nCellCnt = 0;
 
 			row = sheet.createRow(i+1);
-			dataMap = contentsList.get(i);
+			Map<String, Object> dataMap = contentsList.get(i);
 
 			for (Map.Entry<String, Object> entry : dataMap.entrySet()) {
 				Object value = entry.getValue();
