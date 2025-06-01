@@ -1,4 +1,4 @@
-package common.util.crypto.seed;
+package common.util.crypto.seed.cbc;
 
 /**
 @file KISA_SEED_CBC.java

@@ -1,4 +1,4 @@
-package common.util.crypto.seed;
+package common.util.crypto.seed.cbc;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

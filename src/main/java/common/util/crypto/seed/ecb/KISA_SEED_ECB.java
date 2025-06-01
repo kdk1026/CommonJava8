@@ -1,4 +1,4 @@
-package common.util.crypto.seed.old;
+package common.util.crypto.seed.ecb;
 
 // 21.08.13 - SonarLint 지시에 따른 주저리 주저리 : 이건 KISA에서 제공하는거 가져오건거라.... 몰랐는데 변수명이랑 메소드명이랑 개판이구나... 컨벤션에 심각하게 어긋나는
 
@@ -8,9 +8,7 @@ package common.util.crypto.seed.old;
  * @author Copyright (c) 2013 by KISA
  * @remarks http://seed.kisa.or.kr/
  *
- *	@deprecated ECB 모드는 보안상 취약점이 많아 사용을 권장하지 않습니다. CBC로 대체
  */
-@Deprecated
 public class KISA_SEED_ECB {
 
 
