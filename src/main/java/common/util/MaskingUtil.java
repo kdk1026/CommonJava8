@@ -32,7 +32,9 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskName(String name) {
-		if (name == null || name.length() > 50) {
+		if (StringUtils.isBlank(name)) {
+			return "";
+		} else if (name.length() > 50) {
 			return name;
 		}
 
@@ -431,6 +433,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskBirthdate(String birthdate) {
+		if (StringUtils.isBlank(birthdate)) {
+			return "";
+		}
+
 		// 입력값에 '-' 포함 여부 확인
         boolean hasHyphen = birthdate.contains("-");
 
@@ -455,6 +461,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskIPAddress(String ipAddress) {
+		if (StringUtils.isBlank(ipAddress)) {
+			return "";
+		}
+
         // IPv4 형식 확인
 		if (ipAddress.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
 		    int lastDotIndex = ipAddress.lastIndexOf('.');
@@ -475,6 +485,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskIPv6Address(String ipv6Address) {
+		if (StringUtils.isBlank(ipv6Address)) {
+			return "";
+		}
+
         // Scope ID 제거
         String cleanAddress = ipv6Address.split("%")[0];
 
@@ -498,6 +512,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskStudentID(String studentID) {
+		if (StringUtils.isBlank(studentID)) {
+			return "";
+		}
+
         // 숫자만 포함된 학번 (예: 202312345)
         if (studentID.matches("\\d{8,9}")) {
             return studentID.substring(0, 4) + "****";
