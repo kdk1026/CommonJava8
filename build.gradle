@@ -146,6 +146,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on
 	implementation("org.bouncycastle:bcprov-jdk18on:1.80")
 
+	// https://mvnrepository.com/artifact/com.googlecode.libphonenumber/libphonenumber
+	implementation("com.googlecode.libphonenumber:libphonenumber:9.0.6")
+
 /* Test */
 	testImplementation group: 'junit', name: 'junit', version: junitVersion
 }
