@@ -212,9 +212,45 @@ public class ValidUtil {
 	        throw new IllegalArgumentException("String is null or blank.");
 	    }
 
-        String emailRegex = "^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\\.)+[A-Za-z]{2,}$";
+	    // 1. @ 기준으로 로컬 파트와 도메인 파트 분리
+	    int atIndex = str.indexOf('@');
+	    if (atIndex == -1) { // @가 없으면 이메일 형식이 아님
+	        return false;
+	    }
 
-	    return str.matches(emailRegex);
+	    String localPart = str.substring(0, atIndex);
+	    String domainPart = str.substring(atIndex + 1);
+
+	    // 2. 로컬 파트 검증
+	    // 로컬 파트: 영문자, 숫자, 점(.), 언더스코어(_), 퍼센트(%), 플러스(+), 하이픈(-)
+	    if (!localPart.matches("^[A-Za-z0-9._%+-]+$")) {
+	        return false;
+	    }
+
+	    // 3. 도메인 파트 검증
+	    // 도메인 파트: 영문자, 숫자, 하이픈(-)을 허용하며, 여러 개의 서브도메인이 점(.)으로 구분
+	    // 마지막은 최소 2글자 이상의 TLD (예: com, co.kr)
+	    // `.`으로 분리하여 각 부분을 검증합니다.
+	    String[] domainSegments = domainPart.split("\\.");
+	    if (domainSegments.length < 2) { // 최소한 "domain.com" 형태 (도메인 + TLD)
+	        return false;
+	    }
+
+	    // TLD (최상위 도메인) 검증: 최소 2글자 이상의 영문자
+	    String tld = domainSegments[domainSegments.length - 1];
+	    if (!tld.matches("^[A-Za-z]{2,}$")) {
+	        return false;
+	    }
+
+	    // 나머지 도메인 세그먼트 검증: 영문자, 숫자, 하이픈(-) 허용
+	    for (int i = 0; i < domainSegments.length - 1; i++) {
+	        String segment = domainSegments[i];
+	        if (!segment.matches("^[A-Za-z0-9-]+$") || segment.isEmpty()) { // 세그먼트가 비어있거나 유효하지 않은 문자 포함
+	            return false;
+	        }
+	    }
+
+	    return true;
 	}
 
 	/**
