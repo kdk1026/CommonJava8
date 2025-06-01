@@ -32,6 +32,10 @@ public class MaskingUtil {
 	 * @return
 	 */
 	public static String maskName(String name) {
+		if (name == null || name.length() > 50) {
+			return name;
+		}
+
 		String regex = "[ㄱ-ㅎㅏ-ㅣ가-힣]+.*";
 
 		if (name.matches(regex)) {
