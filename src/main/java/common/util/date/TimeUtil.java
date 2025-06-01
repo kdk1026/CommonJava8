@@ -17,6 +17,10 @@ import java.util.Date;
  */
 public class TimeUtil {
 
+	private TimeUtil() {
+		super();
+	}
+
 	private static class Valid {
 		private static boolean isValidDateRange(Date date) {
 			if (date == null) {
@@ -28,7 +32,7 @@ public class TimeUtil {
 		}
 	}
 
-	private static class TIME_MAXIMUM {
+	private static class TimeMaximum {
 		public static final int SEC = 60;
 		public static final int MIN = 60;
 		public static final int HOUR = 24;
@@ -48,18 +52,30 @@ public class TimeUtil {
 
 		String msg = null;
 
-		if ( diffTime < TIME_MAXIMUM.SEC ) {
-			msg = diffTime + "초전";
-		} else if ( (diffTime /= TIME_MAXIMUM.SEC) < TIME_MAXIMUM.MIN ) {
-			msg = diffTime + "분전";
-		} else if ( (diffTime /= TIME_MAXIMUM.MIN) < TIME_MAXIMUM.HOUR ) {
-			msg = diffTime + "시간전";
-		} else if ( (diffTime /= TIME_MAXIMUM.HOUR) < TIME_MAXIMUM.DAY ) {
-			msg = diffTime + "일전";
-		} else if ( (diffTime /= TIME_MAXIMUM.DAY) < TIME_MAXIMUM.MONTH ) {
-			msg = diffTime + "달전";
+		if ( diffTime < TimeMaximum.SEC ) {
+		    msg = diffTime + "초전";
 		} else {
-			msg = diffTime + "년전";
+		    diffTime = diffTime / TimeMaximum.SEC;
+		    if ( diffTime < TimeMaximum.MIN ) {
+		        msg = diffTime + "분전";
+		    } else {
+		        diffTime = diffTime / TimeMaximum.MIN;
+		        if ( diffTime < TimeMaximum.HOUR ) {
+		            msg = diffTime + "시간전";
+		        } else {
+		            diffTime = diffTime / TimeMaximum.HOUR;
+		            if ( diffTime < TimeMaximum.DAY ) {
+		                msg = diffTime + "일전";
+		            } else {
+		                diffTime = diffTime / TimeMaximum.DAY;
+		                if ( diffTime < TimeMaximum.MONTH ) {
+		                    msg = diffTime + "달전";
+		                } else {
+		                    msg = diffTime + "년전";
+		                }
+		            }
+		        }
+		    }
 		}
 
 		return msg;

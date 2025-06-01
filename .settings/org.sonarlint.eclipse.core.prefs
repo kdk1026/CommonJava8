@@ -1,7 +1,7 @@
 autoEnabled=true
 bindingSuggestionsDisabled=false
 eclipse.preferences.version=1
-fileExclusions=FILE\:src/main/java/common/util/crypto/rsa/OldRsaCryptoUtil.java\r\nFILE\:src/main/java/common/util/push/ApnsPushUtil.java\r\nFILE\:src/main/java/common/util/push/FcmPushUtil.java\r\nFILE\:src/main/java/common/util/push/FcmUtil.java
+fileExclusions=FILE\:src/main/java/common/util/crypto/rsa/OldRsaCryptoUtil.java\r\nFILE\:src/main/java/common/util/push/ApnsPushUtil.java\r\nFILE\:src/main/java/common/util/push/FcmPushUtil.java\r\nFILE\:src/main/java/common/util/push/FcmUtil.java\r\nFILE\:src/main/java/common/util/crypto/seed/ecb/KISA_SEED_ECB.java\r\nFILE\:src/main/java/common/util/crypto/seed/ecb/SeedEcbUtil.java\r\nFILE\:src/main/java/common/util/crypto/seed/cbc/SeedCbcUtil.java\r\nFILE\:src/main/java/common/util/crypto/seed/cbc/KISA_SEED_CBC.java
 indexingBasedOnEclipsePlugIns=true
 projectKey=kdk1026_CommonJava8
 serverId=SonarCloud/kdk1026
