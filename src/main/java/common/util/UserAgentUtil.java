@@ -23,6 +23,7 @@ public class UserAgentUtil {
 	}
 
 	private static final String USER_AGENT = "User-Agent";
+	private static final String REQUEST_IS_NULL = "request is null";
 
 	/**
 	 * 모바일 브라우저 여부 체크
@@ -31,7 +32,7 @@ public class UserAgentUtil {
 	 */
 	public static boolean isMobile(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
+			throw new IllegalArgumentException(REQUEST_IS_NULL);
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
@@ -46,7 +47,7 @@ public class UserAgentUtil {
 	 */
 	public static String isMobileOs(HttpServletRequest request) {
 		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
+			throw new IllegalArgumentException(REQUEST_IS_NULL);
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
@@ -74,7 +75,7 @@ public class UserAgentUtil {
 	 */
 	public static boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
 		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
+			throw new IllegalArgumentException(REQUEST_IS_NULL);
 		}
 
 		if ( StringUtils.isBlank(chkStr) ) {
@@ -85,6 +86,45 @@ public class UserAgentUtil {
 
 		return sUserAgent != null && sUserAgent.indexOf(chkStr) > -1;
 	}
+
+	/**
+	 * UserAgent에서 브라우저 식별
+	 * @param request
+	 * @return
+	 */
+	public static String getBrowser(HttpServletRequest request) {
+		if ( request == null ) {
+			throw new IllegalArgumentException(REQUEST_IS_NULL);
+		}
+
+		String userAgent = request.getHeader(USER_AGENT);
+
+        if (userAgent == null) {
+            return "Unknown";
+        }
+
+        userAgent = userAgent.toLowerCase();
+
+        if (userAgent.contains("samsungbrowser")) {
+            return "Samsung Internet";
+        } else if (userAgent.contains("whale")) {
+            return "Whale";
+        } else if (userAgent.contains("edge")) {
+            return "Microsoft Edge";
+        } else if (userAgent.contains("opr") || userAgent.contains("opera")) {
+            return "Opera";
+        } else if (userAgent.contains("chrome")) {
+            return "Chrome";
+        } else if (userAgent.contains("firefox")) {
+            return "Firefox";
+        } else if (userAgent.contains("safari") && !userAgent.contains("chrome")) {
+            return "Safari";
+        } else if (userAgent.contains("msie") || userAgent.contains("trident")) {
+            return "Internet Explorer";
+        } else {
+            return "Other";
+        }
+    }
 
 }
 
