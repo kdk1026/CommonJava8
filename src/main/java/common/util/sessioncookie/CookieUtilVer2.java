@@ -24,11 +24,10 @@ public class CookieUtilVer2 {
 	 * @param name
 	 * @param value
 	 * @param expiry
-	 * @param isUseJs
 	 * @param isSecure
 	 * @param domain
 	 */
-	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, boolean isUseJs, String domain) {
+	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, String domain) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
 		Objects.requireNonNull(name, ExceptionMessage.isNull("name"));
 		if (name.trim().isEmpty()) {
@@ -48,11 +47,8 @@ public class CookieUtilVer2 {
 		cookie.setMaxAge(expiry);
 		cookie.setPath("/");
 
+		cookie.setHttpOnly(true);
 		cookie.setSecure(isSecure);
-
-		if (!isUseJs) {
-			cookie.setHttpOnly(true);
-		}
 
 		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
@@ -121,6 +117,11 @@ public class CookieUtilVer2 {
 			for (int i=0; i < cookies.length; i++) {
 				cookies[i].setPath("/");
 				cookies[i].setMaxAge(0);
+				cookies[i].setHttpOnly(true);
+
+				if ( cookies[i].getSecure() ) {
+					cookies[i].setSecure(true);
+				}
 
 				response.addCookie(cookies[i]);
 			}
@@ -144,13 +145,10 @@ public class CookieUtilVer2 {
 		Cookie cookie = new Cookie(cookieName, null);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
+		cookie.setHttpOnly(true);
 
 		if ( cookie.getSecure() ) {
 			cookie.setSecure(true);
-		}
-
-		if ( cookie.isHttpOnly() ) {
-			cookie.setHttpOnly(true);
 		}
 
 		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
