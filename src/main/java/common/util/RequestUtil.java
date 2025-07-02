@@ -68,9 +68,18 @@ public class RequestUtil {
 	public static String getRequestDomain(HttpServletRequest request) {
 		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
-		String sReqUrl = request.getRequestURL().toString();
-		String sServletPath = request.getServletPath();
-		return sReqUrl.replace(sServletPath, "");
+	    String scheme = request.getScheme();
+	    String domain = request.getServerName();
+	    int port = request.getServerPort();
+	    String contextPath = request.getContextPath();
+
+	    boolean isDefaultPort = (scheme.equals("http") && port == 80) || (scheme.equals("https") && port == 443);
+
+	    String baseUrl = isDefaultPort
+	        ? scheme + "://" + domain
+	        : scheme + "://" + domain + ":" + port;
+
+	    return baseUrl + contextPath;
 	}
 
 	/**
