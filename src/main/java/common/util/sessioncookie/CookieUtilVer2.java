@@ -57,9 +57,7 @@ public class CookieUtilVer2 {
 		}
 
 		cookie.setHttpOnly(true);
-
-		boolean isSecure = !LOCAL_PROFILE.equals(profile);
-		cookie.setSecure(isSecure);
+		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
 
 		response.addCookie(cookie);
 	}
@@ -93,9 +91,7 @@ public class CookieUtilVer2 {
 		}
 
 		cookie.setHttpOnly(true);
-
-		boolean isSecure = !LOCAL_PROFILE.equals(profile);
-		cookie.setSecure(isSecure);
+		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
 
 		response.addCookie(cookie);
 	}
