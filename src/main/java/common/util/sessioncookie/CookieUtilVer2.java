@@ -160,9 +160,7 @@ public class CookieUtilVer2 {
 				cookies[i].setDomain(cookies[i].getDomain());
 
 				cookies[i].setHttpOnly(true);
-
-				boolean isSecure = !LOCAL_PROFILE.equals(profile);
-				cookies[i].setSecure(isSecure);
+				cookies[i].setSecure(!LOCAL_PROFILE.equals(profile));
 
 				response.addCookie(cookies[i]);
 			}
@@ -193,9 +191,7 @@ public class CookieUtilVer2 {
 		}
 
 		cookie.setHttpOnly(true);
-
-		boolean isSecure = !LOCAL_PROFILE.equals(profile);
-		cookie.setSecure(isSecure);
+		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
 
 		response.addCookie(cookie);
 	}
