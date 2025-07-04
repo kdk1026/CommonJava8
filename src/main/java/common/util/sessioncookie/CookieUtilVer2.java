@@ -20,16 +20,18 @@ public class CookieUtilVer2 {
 	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
 	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
 
+	private static final String LOCAL_PROFILE = "local";
+
 	/**
 	 * Servlet 3.0 쿠키 설정
 	 * @param response
 	 * @param name
 	 * @param value
 	 * @param expiry
-	 * @param isSecure
 	 * @param domain
+	 * @param profile
 	 */
-	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, String domain) {
+	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, String domain, String profile) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
 		Objects.requireNonNull(name, NAME_IS_NUL);
 		if (name.trim().isEmpty()) {
@@ -45,16 +47,19 @@ public class CookieUtilVer2 {
 			throw new IllegalArgumentException(ExceptionMessage.isNegative("expiry"));
 		}
 
+
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(expiry);
 		cookie.setPath("/");
 
-		cookie.setHttpOnly(true);
-		cookie.setSecure(isSecure);
-
 		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
 		}
+
+		cookie.setHttpOnly(true);
+
+		boolean isSecure = !LOCAL_PROFILE.equals(profile);
+		cookie.setSecure(isSecure);
 
 		response.addCookie(cookie);
 	}
@@ -65,10 +70,10 @@ public class CookieUtilVer2 {
 	 * @param name
 	 * @param value
 	 * @param expiry
-	 * @param isSecure
 	 * @param domain
+	 * @param profile
 	 */
-	public static void addSessionCookie(HttpServletResponse response, String name, String value, boolean isSecure, String domain) {
+	public static void addSessionCookie(HttpServletResponse response, String name, String value, String domain, String profile) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
 		Objects.requireNonNull(name, NAME_IS_NUL);
 		if (name.trim().isEmpty()) {
@@ -83,12 +88,14 @@ public class CookieUtilVer2 {
 		Cookie cookie = new Cookie(name, value);
 		cookie.setPath("/");
 
-		cookie.setHttpOnly(true);
-		cookie.setSecure(isSecure);
-
 		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
 		}
+
+		cookie.setHttpOnly(true);
+
+		boolean isSecure = !LOCAL_PROFILE.equals(profile);
+		cookie.setSecure(isSecure);
 
 		response.addCookie(cookie);
 	}
@@ -142,8 +149,9 @@ public class CookieUtilVer2 {
 	 * 모든 쿠키 제거
 	 * @param request
 	 * @param response
+	 * @param profile
 	 */
-	public static void removeCookies(HttpServletRequest request, HttpServletResponse response) {
+	public static void removeCookies(HttpServletRequest request, HttpServletResponse response, String profile) {
 		Objects.requireNonNull(request, REQUEST_IS_NUL);
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
 
@@ -153,11 +161,13 @@ public class CookieUtilVer2 {
 			for (int i=0; i < cookies.length; i++) {
 				cookies[i].setPath("/");
 				cookies[i].setMaxAge(0);
+
+				cookies[i].setDomain(cookies[i].getDomain());
+
 				cookies[i].setHttpOnly(true);
 
-				if ( cookies[i].getSecure() ) {
-					cookies[i].setSecure(true);
-				}
+				boolean isSecure = !LOCAL_PROFILE.equals(profile);
+				cookies[i].setSecure(isSecure);
 
 				response.addCookie(cookies[i]);
 			}
@@ -170,8 +180,9 @@ public class CookieUtilVer2 {
 	 * @param response
 	 * @param cookieName
 	 * @param domain
+	 * @param profile
 	 */
-	public static void removeCookie(HttpServletResponse response, String cookieName, String domain) {
+	public static void removeCookie(HttpServletResponse response, String cookieName, String domain, String profile) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
 		Objects.requireNonNull(cookieName, COOKIE_NAME_IS_NUL);
 		if (cookieName.trim().isEmpty()) {
@@ -181,15 +192,15 @@ public class CookieUtilVer2 {
 		Cookie cookie = new Cookie(cookieName, null);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
-		cookie.setHttpOnly(true);
-
-		if ( cookie.getSecure() ) {
-			cookie.setSecure(true);
-		}
 
 		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
 			cookie.setDomain(domain);
 		}
+
+		cookie.setHttpOnly(true);
+
+		boolean isSecure = !LOCAL_PROFILE.equals(profile);
+		cookie.setSecure(isSecure);
 
 		response.addCookie(cookie);
 	}
