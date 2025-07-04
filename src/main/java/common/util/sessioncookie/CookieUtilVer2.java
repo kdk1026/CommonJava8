@@ -17,6 +17,8 @@ public class CookieUtilVer2 {
 	private static final String RESPONSE_IS_NUL = ExceptionMessage.isNull("response");
 	private static final String REQUEST_IS_NUL = ExceptionMessage.isNull("request");
 	private static final String COOKIE_NAME_IS_NUL = ExceptionMessage.isNull("cookieName");
+	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
+	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
 
 	/**
 	 * Servlet 3.0 쿠키 설정
@@ -29,14 +31,14 @@ public class CookieUtilVer2 {
 	 */
 	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, boolean isSecure, String domain) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
-		Objects.requireNonNull(name, ExceptionMessage.isNull("name"));
+		Objects.requireNonNull(name, NAME_IS_NUL);
 		if (name.trim().isEmpty()) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("name"));
+			throw new IllegalArgumentException(NAME_IS_NUL);
 		}
 
-        Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+        Objects.requireNonNull(value, VALUE_IS_NUL);
         if (value.trim().isEmpty()) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("value"));
+			throw new IllegalArgumentException(VALUE_IS_NUL);
 		}
 
 		if ( expiry < 0 ) {
@@ -45,6 +47,40 @@ public class CookieUtilVer2 {
 
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(expiry);
+		cookie.setPath("/");
+
+		cookie.setHttpOnly(true);
+		cookie.setSecure(isSecure);
+
+		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
+			cookie.setDomain(domain);
+		}
+
+		response.addCookie(cookie);
+	}
+
+	/**
+	 * Servlet 3.0 세션 쿠키 설정
+	 * @param response
+	 * @param name
+	 * @param value
+	 * @param expiry
+	 * @param isSecure
+	 * @param domain
+	 */
+	public static void addSessionCookie(HttpServletResponse response, String name, String value, boolean isSecure, String domain) {
+		Objects.requireNonNull(response, RESPONSE_IS_NUL);
+		Objects.requireNonNull(name, NAME_IS_NUL);
+		if (name.trim().isEmpty()) {
+			throw new IllegalArgumentException(NAME_IS_NUL);
+		}
+
+		Objects.requireNonNull(value, VALUE_IS_NUL);
+		if (value.trim().isEmpty()) {
+			throw new IllegalArgumentException(VALUE_IS_NUL);
+		}
+
+		Cookie cookie = new Cookie(name, value);
 		cookie.setPath("/");
 
 		cookie.setHttpOnly(true);
