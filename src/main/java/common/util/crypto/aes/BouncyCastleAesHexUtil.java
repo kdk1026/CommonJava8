@@ -31,7 +31,7 @@ import common.util.crypto.EncryptResult;
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2025. 6. 1. kdk	최초작성
+ * 2025. 8. 6. kdk	최초작성
  * </pre>
  *
  * <pre>
@@ -40,17 +40,19 @@ import common.util.crypto.EncryptResult;
  *  - 128비트(16바이트)의 블록 크기를 사용
  *  - 전 세계적으로 가장 널리 사용되는 대칭 키 암호화 표준
  *  - 128비트, 192비트, 256비트의 키 길이
+ *
+ *  - Hex 인코딩은 파일명에 넣기 안전하고, 운영체제 호환성이 높음
  * </pre>
  *
  * @author kdk
  */
-public class BouncyCastleAesUtil {
+public class BouncyCastleAesHexUtil {
 
-	private BouncyCastleAesUtil() {
+	private BouncyCastleAesHexUtil() {
 		super();
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleAesUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleAesHexUtil.class);
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
@@ -71,14 +73,8 @@ public class BouncyCastleAesUtil {
 			super();
 		}
 
-		/** 암호화 하려는 평문의 길이가 16바이트의 배수여야 함 */
-		public static final String AES_CBC_NOPADDING = "AES/CBC/NoPadding";
-
-		/** 가장 일반적 (권장) : JavaScript 라이브러인 CryptoJS 와 맞출려면 이것을 사용해야 함 */
+		/** 가장 일반적 (권장) */
 		public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
-
-		/** 권장하지 않음 */
-		public static final String AES_ECB_NOPADDING = "AES/ECB/NoPadding";
 
 		/** 권장하지 않음 */
 		public static final String AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
@@ -128,6 +124,34 @@ public class BouncyCastleAesUtil {
 		return new javax.crypto.spec.SecretKeySpec(keyBytes, "AES");
 	}
 
+	/**
+	 * 바이트 배열 → Hex 문자열
+	 * @param bytes
+	 * @return
+	 */
+	private static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02x", b));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Hex 문자열 → 바이트 배열
+     * @param hex
+     * @return
+     */
+    private static byte[] hexToBytes(String hex) {
+        int len = hex.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(hex.charAt(i), 16) << 4)
+                                + Character.digit(hex.charAt(i+1), 16));
+        }
+        return data;
+    }
+
     /**
      * AES 암호화
      * @param algorithm
@@ -174,8 +198,8 @@ public class BouncyCastleAesUtil {
     			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
     		}
 
-    		byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(UTF_8));
-			encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
+			byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(UTF_8));
+			encryptedText = bytesToHex(encryptedBytes);
 
     	} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
                 InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException |
@@ -183,7 +207,7 @@ public class BouncyCastleAesUtil {
         	logger.error("AES 암호화 중 오류 발생: {}", e.getMessage(), e);
 		}
 
-        return new EncryptResult(encryptedText, generatedIvString);
+    	return new EncryptResult(encryptedText, generatedIvString);
     }
 
     /**
@@ -191,19 +215,15 @@ public class BouncyCastleAesUtil {
      * @param algorithm
      * @param base64KeyString
      * @param ivStr
-     * @param cipherText
+     * @param hexCipherText
      * @return
      */
-    public static String decrypt(String algorithm, String base64KeyString, String ivStr, String cipherText) {
-    	if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException("algorithm must not be blank");
-		}
-
+    public static String decrypt(String algorithm, String base64KeyString, String ivStr, String hexCipherText) {
     	if ( StringUtils.isBlank(base64KeyString) ) {
 			throw new IllegalArgumentException(KEY_IS_NULL);
 		}
 
-		Objects.requireNonNull(cipherText, "cipherText must not be null");
+		Objects.requireNonNull(hexCipherText, "hexCipherText must not be null");
 
 		String decryptedText = "";
 		try {
@@ -221,8 +241,8 @@ public class BouncyCastleAesUtil {
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
 			}
 
-			byte[] decryptedBytes = Base64.getDecoder().decode(cipherText);
-			decryptedText = new String(cipher.doFinal(decryptedBytes), UTF_8);
+			byte[] decryptedBytes = cipher.doFinal(hexToBytes(hexCipherText));
+			decryptedText = new String(decryptedBytes, UTF_8);
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException |
                 InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException |
