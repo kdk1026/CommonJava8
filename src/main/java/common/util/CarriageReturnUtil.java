@@ -25,18 +25,15 @@ public class CarriageReturnUtil {
 	 * @return
 	 */
 	public static String changeBrTag(String content) {
-		String osName = System.getProperty("os.name");
-
-		double dOsVersion = Double.parseDouble(System.getProperty("os.version"));
-		int osVersion = (int) dOsVersion;
-
-		if ( osName.contains("win") ) {
-			return content.replace("\r\n", BR_TAG);
-		} else if ( osName.contains("mac") && osVersion < 9 ) {
-			return content.replace("\r", BR_TAG);
-		} else {
-			return content.replace("\n", BR_TAG);
+		if ( content == null || "".equals(content.trim()) ) {
+			return null;
 		}
+
+		String newContent = content.replace("\r\n", BR_TAG); // Windows
+	    newContent = newContent.replace("\r", BR_TAG);       // 구형 Mac OS
+	    newContent = newContent.replace("\n", BR_TAG);       // Unix/Linux/최신 Mac
+
+	    return newContent;
 	}
 
 }
