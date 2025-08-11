@@ -30,7 +30,7 @@ public class CarriageReturnUtil {
 		}
 
 		String newContent = content.replace("\r\n", BR_TAG); // Windows
-	    newContent = newContent.replace("\r", BR_TAG);       // 구형 Mac OS
+	    newContent = newContent.replace("\r", BR_TAG);       // 구형 Mac OS (9 이하)
 	    newContent = newContent.replace("\n", BR_TAG);       // Unix/Linux/최신 Mac
 
 	    return newContent;
