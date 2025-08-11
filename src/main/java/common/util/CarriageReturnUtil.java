@@ -25,7 +25,7 @@ public class CarriageReturnUtil {
 	 * @return
 	 */
 	public static String changeBrTag(String content) {
-		if ( content == null || "".equals(content.trim()) ) {
+		if ( content == null || content.trim().isEmpty() ) {
 			return null;
 		}
 
