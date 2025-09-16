@@ -26,6 +26,9 @@ public class MaskingUtil {
 	 * 이름 마스킹
 	 *  - 3자리 : 가운데 마스킹
 	 *  - 4자리 : 가운데 2자리 마스킹
+	 *  - 5자리 : 가운데 3자리 마스킹
+	 *  - 6자리 : 가운데 4자리 마스킹
+	 *  - 6자리 이상 : 첫자리, 마지막자리 제외한 마스킹
 	 * </pre>
 	 *
 	 * @param name
@@ -49,6 +52,20 @@ public class MaskingUtil {
 				return name.charAt(0) + "*" + name.charAt(2);
 			} else if (length == 4) {
 				return name.charAt(0) + "**" + name.charAt(3);
+			} else if (length == 5) {
+				return name.charAt(0) + "***" + name.charAt(4);
+			} else if (length == 6) {
+				return name.charAt(0) + "****" + name.charAt(5);
+			} else {
+				char firstChar = name.charAt(0);
+			    char lastChar = name.charAt(length - 1);
+
+			    StringBuilder maskedMiddle = new StringBuilder();
+			    for (int i = 0; i < length - 2; i++) {
+			        maskedMiddle.append("*");
+			    }
+
+			    return firstChar + maskedMiddle.toString() + lastChar;
 			}
 		} else {
 			// 영문 이름 마스킹
@@ -66,8 +83,6 @@ public class MaskingUtil {
 		        return name.substring(0, 4) + maskedPart.toString();
 			}
 		}
-
-		return "";
 	}
 
 	/**
