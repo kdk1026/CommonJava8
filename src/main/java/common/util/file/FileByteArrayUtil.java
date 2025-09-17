@@ -59,7 +59,7 @@ public class FileByteArrayUtil {
      * 		.body(byteFile);
      * } else if ( "download".equalsIgnoreCase(mode) ) {
      * 	return ResponseEntity.ok()
-     * 		.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(vo.fileName, StandardCharsets.UTF_8.toString()) + "\"")
+     * 		.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + vo.fileName + "\"")
      * 		.header(HttpHeaders.CONTENT_TYPE, vo.fileMimeType)
      * 		.body(byteFile);
      * } else {
