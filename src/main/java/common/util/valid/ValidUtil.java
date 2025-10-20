@@ -2,9 +2,7 @@ package common.util.valid;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.regex.Pattern;
 
 /**
@@ -27,6 +25,11 @@ public class ValidUtil {
 
 	/**
 	 * Null, 공백 체크
+	 *
+	 * <pre>
+	 * org.apache.commons.lang3.StringUtils.isBlank 권장
+	 * </pre>
+	 *
 	 * @param str
 	 * @return
 	 */
@@ -66,7 +69,7 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		return str.matches("^\\d+$");
+		return str.matches("^\\d+");
 	}
 
 	/**
@@ -260,7 +263,7 @@ public class ValidUtil {
 	}
 
 	/**
-	 * 전화번호 형식 체크
+	 * 전화번호 형식 체크 (휴대폰 번호 제외)
 	 * @param strVal
 	 * @return
 	 * @throws IllegalArgumentException
@@ -270,7 +273,9 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		return str.matches("^(0(2|3[1-3]|4[1-4]|5[1-5]|6[1-4]|70|502|503|504|505|506|507))-?(\\d{3,4})-?(\\d{4})+$");
+		String phoneRegex = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})|^(070|050[2-7])-?(\\d{4})-?(\\d{4})|^(15|16|18)\\d{2}-?(\\d{4})$";
+
+		return str.matches(phoneRegex);
 	}
 
 	/**
@@ -284,7 +289,7 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		String cellPhoneRegex = "^(010)-?(\\d{4})-?(\\d{4})$";
+		String cellPhoneRegex = "^010-?\\d{4}-?\\d{4}$";
 
 		return str.matches(cellPhoneRegex);
 	}
@@ -333,6 +338,11 @@ public class ValidUtil {
 
 	/**
 	 * YYYYMMDD 형식 체크
+	 *
+	 * <pre>
+	 * 윤년이나 월별 일수를 모두 고려하여 정확하게 날짜를 파싱하고 검증
+	 * </pre>
+	 *
 	 * @param str
 	 * @return
 	 * @throws IllegalArgumentException
@@ -342,21 +352,50 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		if (!str.matches("^\\d{8}$")) {
-            return false;
-        }
+		if ( !str.matches("^(\\d{8}|\\d{4}-\\d{2}-\\d{2})$") ) {
+			return false;
+		}
 
 		try {
-			// 윤년이나 월별 일수를 모두 고려하여 정확하게 날짜를 파싱하고 검증
-			LocalDate.parse(str, DateTimeFormatter.BASIC_ISO_DATE);
-			return true;
+			if ( str.contains("-") ) {
+				LocalDate.parse(str);
+				return true;
+			} else {
+				LocalDate.parse(str, DateTimeFormatter.ofPattern("yyyyMMdd"));
+				return true;
+			}
 		} catch (DateTimeException e) {
 			return false;
 		}
 	}
 
 	/**
+	 * HHmm 형식 체크
+	 *
+	 * <pre>
+	 * HH:mm 형식 체크
+	 * str.matches("^([01]\\d|2[0-3]):[0-5]\\d$")
+	 * </pre>
+	 *
+	 * @param str
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public static boolean isHHmm(String str) {
+		if ( isBlank(str) ) {
+			throw new IllegalArgumentException("String is null or blank.");
+		}
+
+		return str.matches("^([01]\\d|2[0-3])[0-5]\\d$");
+	}
+
+	/**
 	 * HHmmss 형식 체크
+	 *
+	 * <pre>
+	 * HH:mm:ss 형식 체크
+	 * str.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$")
+	 * </pre>
 	 * @param str
 	 * @return
 	 * @throws IllegalArgumentException
@@ -366,16 +405,7 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		if (!str.matches("^\\d{6}$")) {
-            return false;
-        }
-
-		try {
-			LocalTime.parse(str, DateTimeFormatter.ofPattern("HHmmss"));
-			return true;
-		} catch (DateTimeParseException e) {
-			return false;
-		}
+		return str.matches("^(?:[01]\\d|2[0-3])[0-5]\\d[0-5]\\d$");
 	}
 
 	/**
@@ -389,7 +419,7 @@ public class ValidUtil {
 			throw new IllegalArgumentException("String is null or blank.");
 		}
 
-		return str.matches("^[Y|N]+$");
+		return str.matches("^[YN]$");
 	}
 
 	/**
