@@ -1,12 +1,15 @@
 package common.util.file;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.activation.MimetypesFileTypeMap;
+import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
@@ -87,9 +90,7 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(InputStream is) {
-		if ( is == null ) {
-			throw new IllegalArgumentException("is is null");
-		}
+		Objects.requireNonNull(is, "is is null");
 
 		String mimeType = "";
 		Tika tika = new Tika();
@@ -166,6 +167,23 @@ public class FileTypeUtil {
 		List<String> listMime = Arrays.asList(sMimeArr);
 
 		return listExt.contains(sExtension) && listMime.contains(sMimeType);
+	}
+
+	/**
+	 * 이미지 파일이 올바른 이미지 형식이거나 손상되지 않았는지 체크
+	 * @param imageStream
+	 * @return
+	 */
+	public boolean isValidImage(InputStream imageStream) {
+		Objects.requireNonNull(imageStream, "imageStream is null");
+
+	    try {
+	        BufferedImage image = ImageIO.read(imageStream);
+	        return image != null;
+	    } catch (IOException e) {
+	        // 파일이 올바른 이미지 형식이 아니거나 손상된 경우
+	        return false;
+	    }
 	}
 
 	/**
