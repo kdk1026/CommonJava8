@@ -34,6 +34,7 @@ public class FileTypeUtil {
 
 	/**
 	 * 파일 MIME Type 구하기
+	 *  - 정확성 떨어짐
 	 * @param filePath
 	 * @return
 	 */
@@ -52,6 +53,7 @@ public class FileTypeUtil {
 	 * <pre>
 	 * 파일 MIME Type 구하기
 	 *   - Apache Tika 사용
+	 *   - 정확성 떨어짐
 	 * </pre>
 	 * @param filePath
 	 * @return
@@ -79,6 +81,7 @@ public class FileTypeUtil {
 	 * <pre>
 	 * 파일 MIME Type 구하기
 	 *   - Apache Tika 사용
+	 *   - 정확성 높음
 	 * </pre>
 	 * @param is
 	 * @return
@@ -153,12 +156,12 @@ public class FileTypeUtil {
 		}
 
 		String[] sExtArr = {
-			"jpg", "jpeg", "png", "gif", "bmp"
+			"jpg", "jpeg", "png", "gif"
 		};
 		List<String> listExt = Arrays.asList(sExtArr);
 
 		String[] sMimeArr = {
-			"image/jpeg", "image/png", "image/gif", "image/bmp"
+			"image/jpeg", "image/png", "image/gif"
 		};
 		List<String> listMime = Arrays.asList(sMimeArr);
 
