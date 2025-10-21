@@ -120,14 +120,14 @@ public class FileTypeUtil {
 		}
 
 		String[] sExtArr = {
-			"jpg", "jpeg", "png", "gif", "bmp",
+			"jpg", "jpeg", "png", "gif",
 			"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
 			"hwp", "txt", "zip"
 		};
 		List<String> listExt = Arrays.asList(sExtArr);
 
 		String[] sMimeArr = {
-			"image/jpeg", "image/png", "image/gif", "image/bmp",
+			"image/jpeg", "image/png", "image/gif",
 			"application/pdf",
 			"application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 			"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
