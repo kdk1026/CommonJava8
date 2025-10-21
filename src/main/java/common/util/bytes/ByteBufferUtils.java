@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -82,9 +83,7 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer toByteBufferObject(Object obj, String sEncoding) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		if ( StringUtils.isBlank(sEncoding) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNull(ENCODING));
@@ -234,16 +233,24 @@ public class ByteBufferUtils {
 	}
 
 	public static ByteBuffer getByteBufferFromByteArray(byte[] bytesArray) {
+		Objects.requireNonNull(bytesArray, "bytesArray is null");
+
 		return ByteBuffer.wrap(bytesArray);
 	}
 
 	public static byte[] getByteArrayFromByteBuffer(ByteBuffer byteBuffer) {
+		Objects.requireNonNull(byteBuffer, ExceptionMessage.isNull("byteBuffer"));
+
 		byte[] bytesArray = new byte[byteBuffer.remaining()];
 		byteBuffer.get(bytesArray, 0, bytesArray.length);
 		return bytesArray;
 	}
 
 	public static byte[] getByteArrayFromByteBufferLimit(ByteBuffer byteBuffer, int newPosition, int limit) {
+		Objects.requireNonNull(byteBuffer, ExceptionMessage.isNull("byteBuffer"));
+		Objects.requireNonNull(newPosition, ExceptionMessage.isNull("newPosition"));
+		Objects.requireNonNull(limit, ExceptionMessage.isNull("limit"));
+
 		byteBuffer.position(newPosition);
 		byteBuffer.limit(limit);
 
@@ -254,6 +261,10 @@ public class ByteBufferUtils {
 	}
 
 	public static byte[] getByteArrayFromByteBufferLength(ByteBuffer byteBuffer, int newPosition, int length) {
+		Objects.requireNonNull(byteBuffer, ExceptionMessage.isNull("byteBuffer"));
+		Objects.requireNonNull(newPosition, ExceptionMessage.isNull("newPosition"));
+		Objects.requireNonNull(length, ExceptionMessage.isNull("length"));
+
 		byteBuffer.position(newPosition);
 		byteBuffer.limit(newPosition + length);
 

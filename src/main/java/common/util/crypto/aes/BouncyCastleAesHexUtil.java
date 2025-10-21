@@ -223,7 +223,9 @@ public class BouncyCastleAesHexUtil {
 			throw new IllegalArgumentException(KEY_IS_NULL);
 		}
 
-		Objects.requireNonNull(hexCipherText, "hexCipherText must not be null");
+    	if ( StringUtils.isBlank(hexCipherText) ) {
+    		throw new IllegalArgumentException("hexCipherText must not be blank");
+    	}
 
 		String decryptedText = "";
 		try {

@@ -203,7 +203,9 @@ public class BouncyCastleAesUtil {
 			throw new IllegalArgumentException(KEY_IS_NULL);
 		}
 
-		Objects.requireNonNull(cipherText, "cipherText must not be null");
+    	if ( StringUtils.isBlank(cipherText) ) {
+    		throw new IllegalArgumentException("cipherText must not be blank");
+    	}
 
 		String decryptedText = "";
 		try {
