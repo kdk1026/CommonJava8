@@ -33,7 +33,22 @@ public class FileTypeUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(FileTypeUtil.class);
+
+	private static final String EXTENSION = "sExtension";
+	private static final String MIMETYPE = "sMimeType";
 
 	/**
 	 * 파일 MIME Type 구하기
@@ -43,7 +58,7 @@ public class FileTypeUtil {
 	 */
 	public static String getFileMimeType(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
 		}
 
 		File file = new File(filePath);
@@ -63,7 +78,7 @@ public class FileTypeUtil {
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
 		}
 
 		String mimeType = "";
@@ -90,7 +105,7 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(InputStream is) {
-		Objects.requireNonNull(is, "is is null");
+		Objects.requireNonNull(is, ExceptionMessage.isNull("is"));
 
 		String mimeType = "";
 		Tika tika = new Tika();
@@ -113,11 +128,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isAllFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -149,11 +164,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isImgFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -175,7 +190,7 @@ public class FileTypeUtil {
 	 * @return
 	 */
 	public boolean isValidImage(InputStream imageStream) {
-		Objects.requireNonNull(imageStream, "imageStream is null");
+		Objects.requireNonNull(imageStream, ExceptionMessage.isNull("imageStream"));
 
 	    try {
 	        BufferedImage image = ImageIO.read(imageStream);
@@ -194,11 +209,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isDocFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -228,11 +243,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isArchiveFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -256,11 +271,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isAudioFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -284,11 +299,11 @@ public class FileTypeUtil {
 	 */
 	public static boolean isVideoFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -314,7 +329,7 @@ public class FileTypeUtil {
 	 */
 	public static boolean isRunableFile(String sExtension) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		String[] sExtArr = {

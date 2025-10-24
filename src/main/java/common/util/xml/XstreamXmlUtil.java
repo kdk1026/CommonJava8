@@ -4,6 +4,7 @@ import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,14 +23,26 @@ public class XstreamXmlUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml, String root) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new IllegalArgumentException("xml is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("xml"));
 		}
 
 		if ( StringUtils.isBlank(root) ) {
-			throw new IllegalArgumentException("root is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("root"));
 		}
 
 		Map<String, Object> map = null;
@@ -46,11 +59,11 @@ public class XstreamXmlUtil {
 
 	public static String convertMapToXmlStr(Map<String, Object> map, String root) {
 		if ( map == null || map.isEmpty() ) {
-			throw new IllegalArgumentException("map is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		if ( StringUtils.isBlank(root) ) {
-			throw new IllegalArgumentException("root is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("root"));
 		}
 
 		XStream xStream = new XStream();
@@ -73,12 +86,18 @@ public class XstreamXmlUtil {
 		@SuppressWarnings("rawtypes")
 		@Override
 		public boolean canConvert(Class type) {
+			Objects.requireNonNull(type, ExceptionMessage.isNull("type"));
+
 			return type.equals(HashMap.class);
 		}
 
 		@SuppressWarnings("rawtypes")
 		@Override
 		public void marshal(Object value, HierarchicalStreamWriter writer , MarshallingContext context) {
+			Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+			Objects.requireNonNull(writer, ExceptionMessage.isNull("writer"));
+			Objects.requireNonNull(context, ExceptionMessage.isNull("context"));
+
 			AbstractMap map = (AbstractMap) value;
 			Entry entry = null;
 			Object entryKey = null;
@@ -104,6 +123,9 @@ public class XstreamXmlUtil {
 
 		@Override
 		public Object unmarshal(HierarchicalStreamReader reader , UnmarshallingContext context) {
+			Objects.requireNonNull(reader, ExceptionMessage.isNull("reader"));
+			Objects.requireNonNull(context, ExceptionMessage.isNull("context"));
+
 			Map<String, Object> map = new HashMap<>();
 
 			while(reader.hasMoreChildren()) {

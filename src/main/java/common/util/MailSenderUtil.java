@@ -46,6 +46,14 @@ public class MailSenderUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String MAIL_PROP_FILE = "mail.properties";
 
 	/**
@@ -84,15 +92,15 @@ public class MailSenderUtil {
 	 */
 	public static boolean sendmail(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
 		if ( mailTos == null || mailTos.length == 0 ) {
-			throw new IllegalArgumentException("mailTos is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailTos"));
 		}
 
 		if ( StringUtils.isBlank(mailSubject) ) {
-			throw new IllegalArgumentException("mailSubject is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailSubject"));
 		}
 
 		if ( StringUtils.isBlank(mailMsg) ) {
-			throw new IllegalArgumentException("mailMsg is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailMsg"));
 		}
 
 		boolean isSuccess = false;
@@ -170,15 +178,15 @@ public class MailSenderUtil {
 	 */
 	public static boolean sendmailCommons(String[] mailTos, String mailSubject, String mailMsg, File attachFile) {
 		if ( mailTos == null || mailTos.length == 0 ) {
-			throw new IllegalArgumentException("mailTos is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailTos"));
 		}
 
 		if ( StringUtils.isBlank(mailSubject) ) {
-			throw new IllegalArgumentException("mailSubject is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailSubject"));
 		}
 
 		if ( StringUtils.isBlank(mailMsg) ) {
-			throw new IllegalArgumentException("mailMsg is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("mailMsg"));
 		}
 
 		boolean isSuccess = false;

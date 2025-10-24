@@ -28,9 +28,17 @@ public class Base64Util {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	public static String encode(String text) {
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		return Base64.getEncoder().encodeToString(text.getBytes());
@@ -38,11 +46,11 @@ public class Base64Util {
 
 	public static String encode(String text, String charset) {
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException("charset is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
 		}
 
 		try {
@@ -55,7 +63,7 @@ public class Base64Util {
 
 	public static String decode(String encodedText) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException("encodedText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
 		}
 
 		byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes());
@@ -64,11 +72,11 @@ public class Base64Util {
 
 	public static String decode(String encodedText, String charset) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException("encodedText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException("charset is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
 		}
 
 		try {

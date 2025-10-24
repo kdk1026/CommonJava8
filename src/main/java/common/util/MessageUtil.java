@@ -15,13 +15,21 @@ public class MessageUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(MessageUtil.class);
 
 	private static final String PROP_CLASS_PATH = "messages/";
 
 	private static Properties getMessagePropertiesClasspath(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propertiesFileName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		String sFileName = PROP_CLASS_PATH + propFileName;
@@ -38,7 +46,7 @@ public class MessageUtil {
 
 	public static String getMessage(String propertiesFileName, Object ... arguments) {
 		if ( arguments == null || arguments.length == 0 ) {
-			throw new IllegalArgumentException("arguments is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("arguments"));
 		}
 
 		Properties prop = getMessagePropertiesClasspath(propertiesFileName);

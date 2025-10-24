@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,6 +53,18 @@ public class PoiUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * 엑셀 파일 읽기
 	 * @param file
@@ -59,13 +72,13 @@ public class PoiUtil {
 	 * @return
 	 */
 	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, boolean isDecimal) {
-		if ( file == null ) {
-			throw new IllegalArgumentException("file is null");
+		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
+
+		if ( cellNames == null || cellNames.length <= 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellNames"));
 		}
 
-		if ( cellNames == null ) {
-			throw new IllegalArgumentException("cellNames is null");
-		}
+		Objects.requireNonNull(isDecimal, ExceptionMessage.isNull("isDecimal"));
 
 		List<Map<String, Object>> resList = new ArrayList<>();
 
@@ -176,16 +189,16 @@ public class PoiUtil {
 	 * @return
 	 */
 	private static Workbook createWorkbookFromContents(String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
-		if ( fileName == null ) {
-			throw new IllegalArgumentException("fileName is null");
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
 		if ( contentsList == null || contentsList.isEmpty() ) {
-			throw new IllegalArgumentException("contentsList is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
 		}
 
 		if ( cellTitles == null || cellTitles.length == 0 ) {
-			throw new IllegalArgumentException("cellTitles is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellTitles"));
 		}
 
 		String sFileExt = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -277,7 +290,19 @@ public class PoiUtil {
 	 */
 	public static boolean writeExcel(String destFilePath, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new IllegalArgumentException("destFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destFilePath"));
+		}
+
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
+		}
+
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
+		}
+
+		if ( cellTitles == null || cellTitles.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellTitles"));
 		}
 
 		boolean isSuccess = false;
@@ -310,12 +335,19 @@ public class PoiUtil {
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
 			, String fileName, List<Map<String, Object>> contentsList, String[] cellTitles) {
 
-		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
+		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
+
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		if (response == null) {
-			throw new IllegalArgumentException("response is null");
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
+		}
+
+		if ( cellTitles == null || cellTitles.length == 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellTitles"));
 		}
 
 		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);

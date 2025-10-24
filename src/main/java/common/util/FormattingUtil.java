@@ -24,6 +24,14 @@ public class FormattingUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String FORMAT_HYPHEN = "$1-$2-$3";
 	private static final String FORMAT_NOT_HYPHEN = "$1$2$3";
 
@@ -39,7 +47,7 @@ public class FormattingUtil {
 	 */
 	public static String makePhoneNumber(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sPattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
@@ -61,7 +69,7 @@ public class FormattingUtil {
 	 */
 	public static String makePhoneNumberMasking(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		Pattern pattern = Pattern
@@ -101,7 +109,7 @@ public class FormattingUtil {
 	 */
 	public static String makeCellPhoneNumber(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sPattern = "^(01[016789])-?(\\d{3,4})-?(\\d{4})$";
@@ -123,7 +131,7 @@ public class FormattingUtil {
 	 */
 	public static String makeCellPhoneNumberMasking(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		Pattern pattern = Pattern.compile("^(01[016789])-?(\\d{3,4})-?(\\d{4})$");
@@ -162,7 +170,7 @@ public class FormattingUtil {
 	 */
 	public static String makeBusinessRegNum(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sPattern = "^(\\d{3})-?(\\d{2})-?(\\d{5})$";
@@ -184,7 +192,7 @@ public class FormattingUtil {
 	 */
 	public static String makeYYYYMMDD(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		final String datePattern = "^(\\d{4})[\\-/. ]?(\\d{2})[\\-/. ]?(\\d{2})$";
@@ -220,7 +228,7 @@ public class FormattingUtil {
 	 */
 	public static String makeBirthdayMasking(String str, boolean isShowHundred, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		Pattern pattern = Pattern
@@ -272,7 +280,7 @@ public class FormattingUtil {
 	 */
 	public static String convertMoneyHangul(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sMoney = str.replace(",", "");
@@ -318,7 +326,7 @@ public class FormattingUtil {
 	 */
 	public static String makeNameMasking(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		int nLen = str.length();
@@ -380,7 +388,7 @@ public class FormattingUtil {
 	 */
 	public static String makeIpv4AddrMasking(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -419,7 +427,7 @@ public class FormattingUtil {
 	 */
 	public static String makeIpv6AddrMasking(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -459,7 +467,7 @@ public class FormattingUtil {
 	 */
 	public static String passwordMasking(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		char[] c = new char[str.length()];
@@ -480,7 +488,7 @@ public class FormattingUtil {
 	 */
 	public static String makeCardNo(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sPattern = "";
@@ -521,7 +529,7 @@ public class FormattingUtil {
 	 */
 	public static String makeCardNoMasking(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sCardNo = "";

@@ -6,6 +6,7 @@ import java.io.Writer;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,12 +20,22 @@ public class ClobUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(ClobUtil.class);
 
 	public static String toString(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		StringBuilder sb = new StringBuilder();
 
@@ -47,11 +58,11 @@ public class ClobUtil {
 
 	public static String toString(Map<String, Object> map, String key) {
 		if ( map == null || map.isEmpty() ) {
-			throw new IllegalArgumentException("map is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -74,12 +85,10 @@ public class ClobUtil {
 	}
 
 	public static void write(Clob clob, String text) {
-		if ( clob == null ) {
-			throw new IllegalArgumentException("clob is null");
-		}
+		Objects.requireNonNull(clob, ExceptionMessage.isNull("clob"));
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		try {

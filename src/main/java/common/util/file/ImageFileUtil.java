@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -32,6 +33,22 @@ public class ImageFileUtil {
 
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(ImageFileUtil.class);
 
 	/**
@@ -44,19 +61,19 @@ public class ImageFileUtil {
 	 */
 	public static void resize(String sSrcPath, String sDestPath, int nWidth, int nHeight, boolean isScale) {
 		if ( StringUtils.isBlank(sSrcPath) ) {
-			throw new IllegalArgumentException("sSrcPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sSrcPath"));
 		}
 
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new IllegalArgumentException("sDestPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sDestPath"));
 		}
 
 		if ( nWidth < 1 ) {
-			throw new IllegalArgumentException("nWidth is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nWidth"));
 		}
 
 		if ( nHeight < 1 ) {
-			throw new IllegalArgumentException("nHeight is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nHeight"));
 		}
 
 		File srcFile = new File(sSrcPath);
@@ -73,20 +90,15 @@ public class ImageFileUtil {
 	 * @param isScale
 	 */
 	public static void resize(File srcFile, File destFile, int nWidth, int nHeight, boolean isScale) {
-		if ( srcFile == null ) {
-			throw new IllegalArgumentException("srcFile is null");
-		}
-
-		if ( destFile == null ) {
-			throw new IllegalArgumentException("destFile is null");
-		}
+		Objects.requireNonNull(srcFile, ExceptionMessage.isNull("srcFile"));
+		Objects.requireNonNull(destFile, ExceptionMessage.isNull("destFile"));
 
 		if ( nWidth < 1 ) {
-			throw new IllegalArgumentException("nWidth is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nWidth"));
 		}
 
 		if ( nHeight < 1 ) {
-			throw new IllegalArgumentException("nHeight is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nHeight"));
 		}
 
 		final String sSrcPath = srcFile.getPath();
@@ -160,17 +172,13 @@ public class ImageFileUtil {
 	 * @param destFile
 	 */
 	private static void writeImage(Image image, String sImageFormat, File destFile) {
-		if ( image == null ) {
-			throw new IllegalArgumentException("image is null");
-		}
+		Objects.requireNonNull(image, ExceptionMessage.isNull("image"));
 
 		if ( StringUtils.isBlank(sImageFormat) ) {
-			throw new IllegalArgumentException("sImageFormat is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sImageFormat"));
 		}
 
-		if ( destFile == null ) {
-			throw new IllegalArgumentException("destFile is null");
-		}
+		Objects.requireNonNull(destFile, ExceptionMessage.isNull("destFile"));
 
 		BufferedImage bufImg = null;
 
@@ -203,19 +211,19 @@ public class ImageFileUtil {
 	 */
 	private static double getScale(int nResizeWidth, int nResizeHeight, int nOrgWidth, int nOrgHeight) {
 		if ( nResizeWidth < 1 ) {
-			throw new IllegalArgumentException("nResizeWidth is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nResizeWidth"));
 		}
 
 		if ( nResizeHeight < 1 ) {
-			throw new IllegalArgumentException("nResizeHeight is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nResizeHeight"));
 		}
 
 		if ( nOrgWidth < 1 ) {
-			throw new IllegalArgumentException("nOrgWidth is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nOrgWidth"));
 		}
 
 		if ( nOrgHeight < 1 ) {
-			throw new IllegalArgumentException("nOrgHeight is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nOrgHeight"));
 		}
 
 		double dWidthScale = (double) nResizeWidth / nOrgWidth;

@@ -18,6 +18,14 @@ public class DBEncodingUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * @since 1.7
 	 */
@@ -45,7 +53,7 @@ public class DBEncodingUtil {
 
 			public static String readHangeul(String val) {
 				if ( StringUtils.isBlank(val) ) {
-					throw new IllegalArgumentException("value is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("val"));
 				}
 
 				String sVal = "";
@@ -59,11 +67,7 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
 				if ( map == null || map.isEmpty() ) {
-					throw new IllegalArgumentException("map is null");
-				}
-
-				if ( keys == null || keys.length == 0 ) {
-					throw new IllegalArgumentException("keys is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 				}
 
 				String key = "";
@@ -83,11 +87,7 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
 				if ( list == null || list.isEmpty() ) {
-					throw new IllegalArgumentException("list is null");
-				}
-
-				if ( keys == null || keys.length == 0 ) {
-					throw new IllegalArgumentException("keys is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 				}
 
 				for (Map<Object, Object> map : list) {
@@ -106,7 +106,7 @@ public class DBEncodingUtil {
 
 			public static String readHangeul(String val) {
 				if ( StringUtils.isBlank(val) ) {
-					throw new IllegalArgumentException("value is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("val"));
 				}
 
 				String sVal = "";
@@ -120,11 +120,7 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(Map<Object, Object> map, String ... keys) {
 				if ( map == null || map.isEmpty() ) {
-					throw new IllegalArgumentException("map is null");
-				}
-
-				if ( keys == null || keys.length == 0 ) {
-					throw new IllegalArgumentException("keys is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 				}
 
 				String key = "";
@@ -144,11 +140,7 @@ public class DBEncodingUtil {
 
 			public static void readHangeul(List<Map<Object, Object>> list, String ... keys) {
 				if ( list == null || list.isEmpty() ) {
-					throw new IllegalArgumentException("list is null");
-				}
-
-				if ( keys == null || keys.length == 0 ) {
-					throw new IllegalArgumentException("keys is null");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 				}
 
 				for (Map<Object, Object> map : list) {
@@ -159,11 +151,7 @@ public class DBEncodingUtil {
 
 		public static void writeHangeul(Map<Object, Object> map, String ... keys) {
 			if ( map == null || map.isEmpty() ) {
-				throw new IllegalArgumentException("map is null");
-			}
-
-			if ( keys == null || keys.length == 0 ) {
-				throw new IllegalArgumentException("keys is null");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 			}
 
 			String key = "";

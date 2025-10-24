@@ -31,6 +31,14 @@ public class FileByteArrayUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * 폴더 구분자
 	 */
@@ -76,11 +84,11 @@ public class FileByteArrayUtil {
 		FileViewDownloadVo vo = new FileViewDownloadVo();
 
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new IllegalArgumentException("destFilePath는 null일 수 없습니다.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destFilePath"));
 		}
 
 		if ( StringUtils.isBlank(fileNm) ) {
-			throw new IllegalArgumentException("fileNm은 null일 수 없습니다.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileNm"));
 		}
 
 		String fileFullPath = destFilePath + FOLDER_SEPARATOR + fileNm;

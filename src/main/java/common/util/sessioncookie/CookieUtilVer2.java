@@ -6,12 +6,22 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import common.util.ExceptionMessage;
-
 public class CookieUtilVer2 {
 
 	private CookieUtilVer2() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
 	}
 
 	private static final String RESPONSE_IS_NUL = ExceptionMessage.isNull("response");

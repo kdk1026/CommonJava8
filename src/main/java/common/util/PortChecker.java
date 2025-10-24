@@ -30,13 +30,25 @@ public class PortChecker {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	public static boolean isConnected(String host, int port) {
 		if ( StringUtils.isBlank(host) ) {
-			throw new IllegalArgumentException("host is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("host"));
 		}
 
 		if ( port < 0 || port > 65535 ) {
-			throw new IllegalArgumentException("port is invalid");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("port"));
 		}
 
 		boolean isConnect = false;

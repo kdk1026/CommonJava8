@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -45,9 +46,27 @@ public class SftpClientUtil {
 
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private Session session = null;
 	private Channel channel = null;
 	private ChannelSftp channelSftp = null;
+
+	private static final String DEST_PATH = "sDestPath";
 
 	/**
 	 * SFTP 연결
@@ -61,19 +80,19 @@ public class SftpClientUtil {
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) throws JSchException {
 		if ( StringUtils.isBlank(sHost) ) {
-			throw new IllegalArgumentException("sHost is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sHost"));
 		}
 
-		if ( nPort <= 0 ) {
-			throw new IllegalArgumentException("nPort is null");
+		if ( nPort < 0 || nPort > 65535 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nPort"));
 		}
 
 		if ( StringUtils.isBlank(sUsername) ) {
-			throw new IllegalArgumentException("sUsername is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sUsername"));
 		}
 
 		if ( StringUtils.isBlank(sPassword) ) {
-			throw new IllegalArgumentException("sPassword is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPassword"));
 		}
 
 		boolean isConnected = false;
@@ -124,12 +143,10 @@ public class SftpClientUtil {
 	 */
 	public void upload(String sDestPath, File file) throws IOException, SftpException {
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new IllegalArgumentException("sDestPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(DEST_PATH));
 		}
 
-		if ( file == null ) {
-			throw new IllegalArgumentException("file is null");
-		}
+		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
 
 		try ( FileInputStream fis = new FileInputStream(file) ) {
 			channelSftp.cd(sDestPath);
@@ -148,12 +165,10 @@ public class SftpClientUtil {
 	 */
 	public void delete(String sDestPath, File file) throws SftpException {
 		if ( StringUtils.isBlank(sDestPath) ) {
-			throw new IllegalArgumentException("sDestPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(DEST_PATH));
 		}
 
-		if ( file == null ) {
-			throw new IllegalArgumentException("file is null");
-		}
+		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
 
 		String fileName = file.getName();
 
@@ -184,6 +199,10 @@ public class SftpClientUtil {
 	 * @throws SftpException
 	 */
 	public Vector<LsEntry> ls(String sDestPath) throws SftpException {
+		if ( StringUtils.isBlank(sDestPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(DEST_PATH));
+		}
+
 		@SuppressWarnings("unchecked")
 		Vector<LsEntry> lsVec = channelSftp.ls(sDestPath);
 		return lsVec;
@@ -197,6 +216,14 @@ public class SftpClientUtil {
 	 * @return
 	 */
 	public boolean rename(String sOldPath, String sNewPath) {
+		if ( StringUtils.isBlank(sOldPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sOldPath"));
+		}
+
+		if ( StringUtils.isBlank(sNewPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sNewPath"));
+		}
+
 		boolean isSuccess = false;
 
 		try {

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
@@ -19,12 +20,26 @@ public class DBUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(DBUtil.class);
 
 	public static Connection getConnection(Properties prop) {
-		if ( prop == null ) {
-			throw new IllegalArgumentException("Properties is null");
-		}
+		Objects.requireNonNull(prop, ExceptionMessage.isNull("prop"));
 
 		Connection conn = null;
 		String sDriver = prop.getProperty("jdbc.driverClassName");
@@ -44,16 +59,14 @@ public class DBUtil {
 	}
 
 	public static PreparedStatement getPreparedStatement(Connection conn, String sQuery, List<String> params) {
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new IllegalArgumentException("Query is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sQuery"));
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new IllegalArgumentException("Params is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("params"));
 		}
 
 		PreparedStatement pstmt = null;
@@ -74,9 +87,7 @@ public class DBUtil {
 	}
 
 	public static ResultSet getResultSet(PreparedStatement pstmt) {
-		if ( pstmt == null ) {
-			throw new IllegalArgumentException("PreparedStatement is null");
-		}
+		Objects.requireNonNull(pstmt, ExceptionMessage.isNull("pstmt"));
 
 		ResultSet rs = null;
 
@@ -91,12 +102,10 @@ public class DBUtil {
 	}
 
 	public static void runQuery(Connection conn, String sQuery) {
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new IllegalArgumentException("Query is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sQuery"));
 		}
 
 		try ( PreparedStatement pstmt = conn.prepareStatement(sQuery) ) {
@@ -108,17 +117,9 @@ public class DBUtil {
 	}
 
 	public static void close(ResultSet rs, PreparedStatement pstmt, Connection conn) {
-		if ( rs == null ) {
-			throw new IllegalArgumentException("ResultSet is null");
-		}
-
-		if ( pstmt == null ) {
-			throw new IllegalArgumentException("PreparedStatement is null");
-		}
-
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(rs, ExceptionMessage.isNull("rs"));
+		Objects.requireNonNull(pstmt, ExceptionMessage.isNull("pstmt"));
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		try {
 			rs.close();
@@ -130,13 +131,8 @@ public class DBUtil {
 	}
 
 	public static void close(ResultSet rs, PreparedStatement pstmt) {
-		if ( rs == null ) {
-			throw new IllegalArgumentException("ResultSet is null");
-		}
-
-		if ( pstmt == null ) {
-			throw new IllegalArgumentException("PreparedStatement is null");
-		}
+		Objects.requireNonNull(rs, ExceptionMessage.isNull("rs"));
+		Objects.requireNonNull(pstmt, ExceptionMessage.isNull("pstmt"));
 
 		try {
 			rs.close();
@@ -157,16 +153,14 @@ public class DBUtil {
 	}
 
 	public static CallableStatement getCallableStatement(Connection conn, String sQuery, List<String> params) {
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new IllegalArgumentException("Query is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sQuery"));
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new IllegalArgumentException("Params is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("params"));
 		}
 
 		CallableStatement cstmt = null;
@@ -189,20 +183,18 @@ public class DBUtil {
 	}
 
 	public static ResultSet getCallableResultSet(Connection conn, String sQuery, List<String> params, int nCursorIdx) {
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		if ( StringUtils.isBlank(sQuery) ) {
-			throw new IllegalArgumentException("Query is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sQuery"));
 		}
 
 		if ( params == null || params.isEmpty() ) {
-			throw new IllegalArgumentException("Params is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("params"));
 		}
 
 		if ( nCursorIdx < 1 ) {
-			throw new IllegalArgumentException("Cursor Index is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nCursorIdx"));
 		}
 
 		ResultSet rs = null;
@@ -230,17 +222,9 @@ public class DBUtil {
 	}
 
 	public static void close(ResultSet rs, CallableStatement cstmt, Connection conn) {
-		if ( rs == null ) {
-			throw new IllegalArgumentException("ResultSet is null");
-		}
-
-		if ( cstmt == null ) {
-			throw new IllegalArgumentException("CallableStatement is null");
-		}
-
-		if ( conn == null ) {
-			throw new IllegalArgumentException("Connection is null");
-		}
+		Objects.requireNonNull(rs, ExceptionMessage.isNull("rs"));
+		Objects.requireNonNull(cstmt, ExceptionMessage.isNull("cstmt"));
+		Objects.requireNonNull(conn, ExceptionMessage.isNull("conn"));
 
 		try {
 			rs.close();
@@ -252,13 +236,8 @@ public class DBUtil {
 	}
 
 	public static void close(ResultSet rs, CallableStatement cstmt) {
-		if ( rs == null ) {
-			throw new IllegalArgumentException("ResultSet is null");
-		}
-
-		if ( cstmt == null ) {
-			throw new IllegalArgumentException("CallableStatement is null");
-		}
+		Objects.requireNonNull(rs, ExceptionMessage.isNull("rs"));
+		Objects.requireNonNull(cstmt, ExceptionMessage.isNull("cstmt"));
 
 		try {
 			rs.close();

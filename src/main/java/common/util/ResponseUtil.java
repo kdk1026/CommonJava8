@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +29,18 @@ public class ResponseUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(ResponseUtil.class);
 
 	/**
@@ -45,12 +58,10 @@ public class ResponseUtil {
 	 * @return
 	 */
 	public static String contentDisposition(HttpServletRequest request, String str) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sRes = "";
@@ -71,16 +82,11 @@ public class ResponseUtil {
 	}
 
 	public static void downloadReportFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
-
-		if ( response == null ) {
-			throw new IllegalArgumentException("response");
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
+		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new IllegalArgumentException("fileName");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
 		String reportFileName = contentDisposition(request, fileName);
@@ -90,12 +96,10 @@ public class ResponseUtil {
 	}
 
 	public static void setJsonResponse(HttpServletResponse response, String message) throws IOException {
-		if ( response == null ) {
-			throw new IllegalArgumentException("response");
-		}
+		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
 		if ( StringUtils.isBlank(message) ) {
-			throw new IllegalArgumentException("message");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("message"));
 		}
 
 		response.setContentType("application/json");

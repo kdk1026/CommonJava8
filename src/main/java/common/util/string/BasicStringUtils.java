@@ -16,6 +16,18 @@ public class BasicStringUtils {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	/**
 	 * Null, 공백 체크
 	 * @param str
@@ -43,11 +55,11 @@ public class BasicStringUtils {
 	 */
 	public static boolean isContins(final String str, final String validChars) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( isBlank(validChars) ) {
-			throw new IllegalArgumentException("validChars");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("validChars"));
 		}
 
 		return str.indexOf(validChars) > -1;
@@ -62,15 +74,15 @@ public class BasicStringUtils {
 	 */
 	public static String leftPad(final String str, final int size, char ch) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( size <= 0 ) {
-			throw new IllegalArgumentException("size");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("size"));
 		}
 
 		if ( ch == 0 ) {
-			throw new IllegalArgumentException("ch");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("ch"));
 		}
 
 		return (size > str.length()) ? leftPad(ch + str, size, ch) : str;
@@ -85,15 +97,15 @@ public class BasicStringUtils {
 	 */
 	public static String rightPad(final String str, final int size, char ch) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( size <= 0 ) {
-			throw new IllegalArgumentException("size");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("size"));
 		}
 
 		if ( ch == 0 ) {
-			throw new IllegalArgumentException("ch");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("ch"));
 		}
 
 		return (size > str.length()) ? rightPad(str + ch, size, ch) : str;
@@ -106,7 +118,7 @@ public class BasicStringUtils {
 	 */
 	public static String encodeHex(final String str) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		char[] chars = str.toCharArray();
@@ -125,9 +137,8 @@ public class BasicStringUtils {
 	 */
 	public static String decodeHex(final String str) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("str");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
-
 		StringBuilder sb = new StringBuilder();
 		String s = "";
 

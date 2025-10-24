@@ -1,11 +1,25 @@
 package common.util;
 
+import java.util.Objects;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class ConvertCaseUtil {
 
 	private ConvertCaseUtil() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
 	}
 
 	/**
@@ -18,7 +32,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String camelCase(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -56,12 +70,10 @@ public class ConvertCaseUtil {
 	 * @return
 	 */
 	public static String camelCase(char chKey, String str) {
-		if ( chKey == 0 ) {
-			throw new IllegalArgumentException("chKey is null");
-		}
+		Objects.requireNonNull(chKey, ExceptionMessage.isNull("chKey"));
 
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -104,7 +116,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String pascalCase(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -125,7 +137,7 @@ public class ConvertCaseUtil {
 	 */
 	public static String camelCaseToUnderScroe(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sRegEx = "([a-z])([A-Z]+)";

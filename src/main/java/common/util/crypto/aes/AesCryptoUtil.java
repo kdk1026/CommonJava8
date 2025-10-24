@@ -20,7 +20,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.util.ExceptionMessage;
 import common.util.crypto.EncryptResult;
 
 /**
@@ -59,6 +58,14 @@ public class AesCryptoUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(AesCryptoUtil.class);
 
 	/**
@@ -77,7 +84,7 @@ public class AesCryptoUtil {
 		Objects.requireNonNull(strPlainText, "plainText must not be null");
 
 		if ( sKey.length() != 16 && sKey.length() != 24 && sKey.length() != 32 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("key"));
 		}
 
 		String strEncryptText = "";
@@ -121,7 +128,7 @@ public class AesCryptoUtil {
 		Objects.requireNonNull(strEncryptText, "encryptedText must not be null");
 
 		if ( sKey.length() != 16 && sKey.length() != 24 && sKey.length() != 32 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("key"));
 		}
 
 		String strDecryptText = "";

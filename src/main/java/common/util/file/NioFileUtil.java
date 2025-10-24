@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +36,22 @@ public class NioFileUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(NioFileUtil.class);
 
 	/**
@@ -47,6 +64,8 @@ public class NioFileUtil {
 	 */
 	public static final char EXTENSION_SEPARATOR = '.';
 
+	private static final String FILE_PATH = "filePath";
+
 	/**
 	 * 파일의 존재여부 확인
 	 *
@@ -55,7 +74,7 @@ public class NioFileUtil {
 	 */
 	public static boolean isExistsFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		Path path = Paths.get(filePath);
@@ -70,7 +89,7 @@ public class NioFileUtil {
 	 */
 	public static String getFilename(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		int pos = filePath.lastIndexOf(FOLDER_SEPARATOR);
@@ -85,7 +104,7 @@ public class NioFileUtil {
 	 */
 	public static String getFileExtension(String fileName) {
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new IllegalArgumentException("fileName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
 		if (fileName.lastIndexOf(EXTENSION_SEPARATOR) == -1) {
@@ -103,7 +122,7 @@ public class NioFileUtil {
 	 */
 	public static long getFileSize(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		Path path = Paths.get(filePath);
@@ -127,7 +146,7 @@ public class NioFileUtil {
 	 */
 	public static String readableFileSize(long fileSize) {
 		if ( fileSize < 0 ) {
-			throw new IllegalArgumentException("fileSize is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("fileSize"));
 		}
 
 		if (fileSize <= 0)
@@ -146,7 +165,7 @@ public class NioFileUtil {
 	 */
 	public static String lastModified(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		Path path = Paths.get(filePath);
@@ -172,11 +191,11 @@ public class NioFileUtil {
 	 */
 	public static void writeFile(String filePath, String text) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		Path path = Paths.get(filePath);
@@ -199,15 +218,15 @@ public class NioFileUtil {
 	 */
 	public static void writeFile(String filePath, String text, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new IllegalArgumentException("encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encoding"));
 		}
 
 		Path targetFile = Paths.get(filePath);
@@ -229,12 +248,10 @@ public class NioFileUtil {
 	 */
 	public static void writeFile(String filePath, byte[] bData) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
-		if ( bData == null || bData.length == 0 ) {
-			throw new IllegalArgumentException("bData is null");
-		}
+		Objects.requireNonNull(bData, ExceptionMessage.isNull("bData"));
 
 		Path path = Paths.get(filePath);
 		try {
@@ -253,7 +270,7 @@ public class NioFileUtil {
 	 */
 	public static String readFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		String content = "";
@@ -281,11 +298,11 @@ public class NioFileUtil {
 	 */
 	public static String readFile(String filePath, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new IllegalArgumentException("encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encoding"));
 		}
 
 		String content = "";
@@ -315,7 +332,7 @@ public class NioFileUtil {
 	 */
 	public static boolean deleteFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		Path path = Paths.get(filePath);
@@ -351,11 +368,11 @@ public class NioFileUtil {
 	 */
 	public static void copyFile(String srcFilePath, String destFilePath) {
 		if ( StringUtils.isBlank(srcFilePath) ) {
-			throw new IllegalArgumentException("srcFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("srcFilePath"));
 		}
 
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new IllegalArgumentException("destFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destFilePath"));
 		}
 
 		Path srcFile = Paths.get(srcFilePath);
@@ -377,7 +394,7 @@ public class NioFileUtil {
 	 */
 	public static List<String> getAllFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -406,7 +423,7 @@ public class NioFileUtil {
 	 */
 	public static List<String> getFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -439,7 +456,7 @@ public class NioFileUtil {
 	 */
 	public static List<String> getDirectoryList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -470,7 +487,7 @@ public class NioFileUtil {
 	 */
 	public static byte[] convertFileToBytes(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		byte[] bData = null;

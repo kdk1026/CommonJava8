@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,18 @@ public class PropertiesUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
 
 	private static final String PROP_CLASS_PATH = "properties" + NioFileUtil.FOLDER_SEPARATOR;
@@ -49,7 +62,7 @@ public class PropertiesUtil {
 	 */
 	public static Properties getProperties(HttpServletRequest request, String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		Properties prop = new Properties();
@@ -99,7 +112,7 @@ public class PropertiesUtil {
 	 */
 	public static Properties getPropertiesClasspath(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		Properties prop = new Properties();
@@ -130,12 +143,10 @@ public class PropertiesUtil {
 	 * @return
 	 */
 	public static Properties getPropertiesWebInf(HttpServletRequest request, String propFileName) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request must be required");
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		Properties prop = new Properties();
@@ -178,11 +189,11 @@ public class PropertiesUtil {
 		}
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		if ( prop == null || prop.isEmpty() ) {
-			throw new IllegalArgumentException("prop must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("prop"));
 		}
 
 		String fileNmae = "";

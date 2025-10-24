@@ -1,5 +1,7 @@
 package common.util;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +12,18 @@ public class MobileDetectUtil {
 
 	private MobileDetectUtil() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
 	}
 
 	private static final String ANDROID = "android";
@@ -64,9 +78,7 @@ public class MobileDetectUtil {
 	}
 
 	public static DeviceType detecteDevice(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request");
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 
 		DeviceType deviceType = null;
 		String userAgent = request.getHeader("User-Agent");
@@ -86,7 +98,7 @@ public class MobileDetectUtil {
 
 	private static DeviceType isTablet(String userAgent) {
 		if ( StringUtils.isBlank(userAgent) ) {
-			throw new IllegalArgumentException("userAgent");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("userAgent"));
 		}
 
 		DeviceType deviceType = null;
@@ -102,7 +114,7 @@ public class MobileDetectUtil {
 
 	private static DeviceType isMobile(String userAgent) {
 		if ( StringUtils.isBlank(userAgent) ) {
-			throw new IllegalArgumentException("userAgent");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("userAgent"));
 		}
 
 		DeviceType deviceType = null;

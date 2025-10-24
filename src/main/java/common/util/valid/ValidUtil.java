@@ -23,6 +23,14 @@ public class ValidUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * Null, 공백 체크
 	 *
@@ -47,7 +55,7 @@ public class ValidUtil {
 	 */
 	public static boolean isLengthOver(String str, int min, int max) {
 		if ( isBlank(str) ) {
-			throw new IllegalArgumentException("String is null or blank.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( min < 0 || max < 0 ) {
@@ -75,7 +83,7 @@ public class ValidUtil {
 		 */
 		public static boolean isNumber(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^\\d+");
@@ -89,7 +97,7 @@ public class ValidUtil {
 		 */
 		public static boolean isEnglish(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[a-zA-Z]+$");
@@ -103,7 +111,7 @@ public class ValidUtil {
 		 */
 		public static boolean isEngBlank(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[a-zA-Z\\s]+$");
@@ -117,7 +125,7 @@ public class ValidUtil {
 		 */
 		public static boolean isEngNum(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[a-zA-Z0-9]+$");
@@ -131,7 +139,7 @@ public class ValidUtil {
 		 */
 		public static boolean isHangul(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[가-힣]+$");
@@ -145,7 +153,7 @@ public class ValidUtil {
 		 */
 		public static boolean isHanBlank(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[가-힣\\s]+$");
@@ -159,7 +167,7 @@ public class ValidUtil {
 		 */
 		public static boolean isHanEng(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[가-힣a-zA-Z]+$");
@@ -173,7 +181,7 @@ public class ValidUtil {
 		 */
 		public static boolean isSpecial(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			for (char ch : str.toCharArray()) {
@@ -209,7 +217,7 @@ public class ValidUtil {
 	     */
 		public static boolean isEmail(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -237,7 +245,7 @@ public class ValidUtil {
 	     */
 		public static boolean isEmailWithSubdomains(String str) {
 		    if ( isBlank(str) ) {
-		        throw new IllegalArgumentException("String is null or blank.");
+		        throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		    }
 
 		    // 1. @ 기준으로 로컬 파트와 도메인 파트 분리
@@ -289,7 +297,7 @@ public class ValidUtil {
 		 */
 		public static boolean isPhoneNum(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			String phoneRegex = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})|^(070|050[2-7])-?(\\d{4})-?(\\d{4})|^(15|16|18)\\d{2}-?(\\d{4})$";
@@ -305,7 +313,7 @@ public class ValidUtil {
 		 */
 		public static boolean isCellPhoneNum(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			String cellPhoneRegex = "^010-?\\d{4}-?\\d{4}$";
@@ -324,7 +332,7 @@ public class ValidUtil {
 	     */
 		public static boolean isCompanyRegNum(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			String companyRegNumRegex = "^\\d{3}-?\\d{2}-?\\d{5}$";
@@ -340,7 +348,7 @@ public class ValidUtil {
 		 */
 		public static boolean isIPv4(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			// 0부터 255까지의 숫자를 나타내는 정규식 패턴
@@ -368,7 +376,7 @@ public class ValidUtil {
 		 */
 		public static boolean isYYYYMMDD(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			if ( !str.matches("^(\\d{8}|\\d{4}-\\d{2}-\\d{2})$") ) {
@@ -402,7 +410,7 @@ public class ValidUtil {
 		 */
 		public static boolean isHHmm(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^([01]\\d|2[0-3])[0-5]\\d$");
@@ -421,7 +429,7 @@ public class ValidUtil {
 		 */
 		public static boolean isHHmmss(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^(?:[01]\\d|2[0-3])[0-5]\\d[0-5]\\d$");
@@ -435,7 +443,7 @@ public class ValidUtil {
 		 */
 		public static boolean isYN(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[YN]$");
@@ -463,7 +471,7 @@ public class ValidUtil {
 		 */
 		public static boolean isId(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			return str.matches("^[a-zA-Z][a-zA-Z0-9]{6,29}$");
@@ -483,7 +491,7 @@ public class ValidUtil {
 		 */
 		public static boolean isPassword(String str) {
 			if ( isBlank(str) ) {
-				throw new IllegalArgumentException("String is null or blank.");
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
 			// 1. 첫 글자 영문 확인 및 허용 문자 검증

@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +44,18 @@ public class JxlsUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * 템플릿 파일로부터 Workbook 생성
 	 * @param bean
@@ -51,11 +64,11 @@ public class JxlsUtil {
 	 */
 	private static Workbook createWorkbookTemplateFile(Map<String, Object> bean, String templateFileFullPath) {
 		if ( bean == null || bean.isEmpty() ) {
-			throw new IllegalArgumentException("bean is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
 		}
 
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
-			throw new IllegalArgumentException("templateFileFullPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
 		}
 
 		Workbook workbook = null;
@@ -81,12 +94,20 @@ public class JxlsUtil {
 	 * @return
 	 */
 	public static boolean writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> bean) {
+		if ( StringUtils.isBlank(templateFileFullPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
+		}
+
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new IllegalArgumentException("destFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destFilePath"));
 		}
 
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new IllegalArgumentException("fileName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
+		}
+
+		if ( bean == null || bean.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
 		}
 
 		boolean isSuccess = false;
@@ -115,28 +136,31 @@ public class JxlsUtil {
 	 * @param response
 	 * @param bean
 	 * @param templateFileFullPath
-	 * @param filename
+	 * @param fileName
 	 */
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
-			, Map<String, Object> bean, String templateFileFullPath, String filename) {
+			, Map<String, Object> bean, String templateFileFullPath, String fileName) {
 
-		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
+		Objects.requireNonNull(ExceptionMessage.isNull("request"));
+		Objects.requireNonNull(ExceptionMessage.isNull("response"));
+
+		if ( bean == null || bean.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
 		}
 
-		if (response == null) {
-			throw new IllegalArgumentException("response is null");
+		if ( StringUtils.isBlank(templateFileFullPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
 		}
 
-		if ( StringUtils.isBlank(filename) ) {
-			throw new IllegalArgumentException("filename is null");
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
 		try {
 			Workbook workbook = createWorkbookTemplateFile(bean, templateFileFullPath);
 
-			filename = setFileNameByBrowser(request, filename);
-			response.setHeader("Content-Disposition", "attachment; fileName=\"" + filename+ "\"");
+			fileName = setFileNameByBrowser(request, fileName);
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName+ "\"");
 
 			if (workbook != null) {
 				workbook.write(response.getOutputStream());

@@ -23,8 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.util.ExceptionMessage;
-
 /**
  * <pre>
  * -----------------------------------
@@ -40,6 +38,18 @@ public class RsaCryptoUtil {
 
 	private RsaCryptoUtil() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(RsaCryptoUtil.class);
@@ -128,7 +138,7 @@ public class RsaCryptoUtil {
 	     */
 	    public static PublicKey getPublicKeyFromBase64(String base64PublicKey) {
 			if ( StringUtils.isBlank(base64PublicKey) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PublicKey"));
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64PublicKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
@@ -153,7 +163,7 @@ public class RsaCryptoUtil {
 	     */
 	    public static PrivateKey getPrivateKeyFromBase64(String base64PrivateKey) {
 			if ( StringUtils.isBlank(base64PrivateKey) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PrivateKey"));
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64PrivateKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);
@@ -181,7 +191,7 @@ public class RsaCryptoUtil {
 	 */
 	public static String encrypt(String plainText, PublicKey publicKey, String padding) {
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("plainText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("plainText"));
 		}
 
 		if ( publicKey == null ) {
@@ -215,7 +225,7 @@ public class RsaCryptoUtil {
 	 */
 	public static String decrypt(String encryptedText, PrivateKey privateKey, String padding) {
 		if ( StringUtils.isBlank(encryptedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("encryptedText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encryptedText"));
 		}
 
 		if ( privateKey == null ) {
@@ -223,7 +233,7 @@ public class RsaCryptoUtil {
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("padding"));
 		}
 
 		String decryptedText = "";

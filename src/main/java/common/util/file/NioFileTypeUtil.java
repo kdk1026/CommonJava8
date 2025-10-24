@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.nio.file.spi.FileTypeDetector;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
@@ -31,8 +32,19 @@ public class NioFileTypeUtil {
 		super();
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
+	private static class ExceptionMessage {
 
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
+	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
 
 	private static class NioFileTypeDetector extends FileTypeDetector {
 		private final Tika tika = new Tika();
@@ -43,6 +55,9 @@ public class NioFileTypeUtil {
 		}
 	}
 
+	private static final String EXTENSION = "sExtension";
+	private static final String MIMETYPE = "sMimeType";
+
 	/**
 	 * 파일 MIME Type 구하기
 	 * @param filePath
@@ -50,7 +65,7 @@ public class NioFileTypeUtil {
 	 */
 	public static String getFileMimeType(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
 		}
 
 		String mimeType = "";
@@ -75,7 +90,7 @@ public class NioFileTypeUtil {
 	 */
 	public static String getFileMimeTypeTika(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
 		}
 
 		String mimeType = "";
@@ -99,9 +114,7 @@ public class NioFileTypeUtil {
 	 * @return
 	 */
 	public static String getFileMimeTypeTika(InputStream is) {
-		if ( is == null ) {
-			throw new IllegalArgumentException("is is null");
-		}
+		Objects.requireNonNull(is, ExceptionMessage.isNull("is"));
 
 		String mimeType = "";
 		Tika tika = new Tika();
@@ -124,11 +137,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isAllFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -160,11 +173,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isImgFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -188,11 +201,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isDocFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -222,11 +235,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isArchiveFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -250,11 +263,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isAudioFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -278,11 +291,11 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isVideoFile(String sExtension, String sMimeType) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		if ( StringUtils.isBlank(sMimeType) ) {
-			throw new IllegalArgumentException("sMimeType is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(MIMETYPE));
 		}
 
 		String[] sExtArr = {
@@ -308,7 +321,7 @@ public class NioFileTypeUtil {
 	 */
 	public static boolean isRunableFile(String sExtension) {
 		if ( StringUtils.isBlank(sExtension) ) {
-			throw new IllegalArgumentException("sExtension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(EXTENSION));
 		}
 
 		String[] sExtArr = {

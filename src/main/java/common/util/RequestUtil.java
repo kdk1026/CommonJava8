@@ -26,9 +26,18 @@ public class RequestUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
 
-	private static final String REQUEST_IS_NULL = "request cannot be null";
+	private static final String REQUEST_IS_NULL = ExceptionMessage.isNull("request");
 
 	/**
 	 * IP 주소 가져오기

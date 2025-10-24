@@ -30,6 +30,14 @@ public class SymbolicLinkUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * 윈도우의 경우, 관리작 권한으로 실행해야 함
 	 * @param srcPathStr
@@ -38,11 +46,11 @@ public class SymbolicLinkUtil {
 	 */
 	public static boolean makeSymbolicLink(String srcPathStr, String symLinkPathStr) {
 		if ( StringUtils.isBlank(srcPathStr) ) {
-			throw new IllegalArgumentException("srcPathStr");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("srcPathStr"));
 		}
 
 		if ( StringUtils.isBlank(symLinkPathStr) ) {
-			throw new IllegalArgumentException("symLinkPathStr");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("symLinkPathStr"));
 		}
 
 		boolean isSuccess = false;

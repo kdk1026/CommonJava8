@@ -1,6 +1,7 @@
 package common.util.properties;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +29,18 @@ public class CommonsProperties {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonsProperties.class);
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String PROP_CLASS_PATH = "/properties" + NioFileUtil.FOLDER_SEPARATOR;
 	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "properties/";
 
@@ -49,7 +62,7 @@ public class CommonsProperties {
 		}
 
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		Configurations configs = new Configurations();
@@ -88,7 +101,7 @@ public class CommonsProperties {
 
 	public Object getProperty(String key) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		return config.getProperty(key);
@@ -109,12 +122,10 @@ public class CommonsProperties {
 
 	public void addProperty(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		if ( value == null ) {
-			throw new IllegalArgumentException("value must be required");
-		}
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		config.addProperty(key, value);
 		this.save();
@@ -122,12 +133,10 @@ public class CommonsProperties {
 
 	public void setProperty(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		if ( value == null ) {
-			throw new IllegalArgumentException("value must be required");
-		}
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		config.setProperty(key, value);
 		this.save();
@@ -135,7 +144,7 @@ public class CommonsProperties {
 
 	public void clearProperty(String key) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		config.clearProperty(key);

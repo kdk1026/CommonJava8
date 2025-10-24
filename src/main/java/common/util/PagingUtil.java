@@ -1,7 +1,6 @@
 package common.util;
 
-import java.util.Objects;
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -16,6 +15,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * @author 김대광
  */
 public class PagingUtil {
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
 
 	/** 페이지당 행수, MySQL LIMIT */
 	private int pagePerRow;
@@ -62,20 +73,19 @@ public class PagingUtil {
 		super();
 
 		if ( pagePerRow <= 0 ) {
-			throw new IllegalArgumentException("pagePerRow must be greater than 0");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("pagePerRow"));
 		}
 
 		if ( pagePerScreen <= 0 ) {
-			throw new IllegalArgumentException("pagePerScreen must be greater than 0");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("pagePerScreen"));
 		}
 
 		if ( totalCnt <= 0 ) {
-			throw new IllegalArgumentException("totalCnt must be greater than 0");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("totalCnt"));
 		}
 
-		Objects.requireNonNull(currentPage, "currentPage must not be null");
-		if (currentPage.trim().isEmpty()) {
-			throw new IllegalArgumentException("currentPage must not be null");
+		if ( StringUtils.isBlank(currentPage) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("currentPage"));
 		}
 
 		boolean isNumeric = currentPage.matches("\\d+");

@@ -45,6 +45,14 @@ public class HttpConnectionUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+	}
+
 	/**
 	 * UTF-8
 	 * @since 1.7
@@ -61,10 +69,10 @@ public class HttpConnectionUtil {
 
 	private static final int DEFAULT_TIMEOUT_MILLIS = 5000;
 
-	private static final String URL_IS_NULL = "URL is null";
-	private static final String PAYLOAD_IS_NULL = "payload is null";
-	private static final String TIMEOUT_IS_NULL = "timeout is null";
-	private static final String CHARSET_IS_NULL = "charset is null";
+	private static final String URL_IS_NULL = ExceptionMessage.isNull("URL");
+	private static final String PAYLOAD_IS_NULL = ExceptionMessage.isNull("payload");
+	private static final String TIMEOUT_IS_NULL = ExceptionMessage.isNull("timeout");
+	private static final String CHARSET_IS_NULL = ExceptionMessage.isNull("charset");
 
 	private static final String LOG_INVALID_URL = "잘못된 URL 또는 URI: {}";
 	private static final String LOG_IO_EXCEPTION1 = "{} 에서 응답을 읽는 중 오류 발생: {}";

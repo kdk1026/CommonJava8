@@ -38,24 +38,43 @@ public class AddrSerchApi {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String inValid(String paramName) {
+			return String.format("'%s' is inValid", paramName);
+		}
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(AddrSerchApi.class);
 
 	// API라 상관없을거 같기는 하지만... 클래스에 키가 있다는건 시큐어 코딩 상 무진상 큰일이다.....
 	private static final String CONFM_KEY = "U01TX0FVVEgyMDE4MTAxNzEzMTcwMDEwODI0MDM=";
 	private static final String RESULT_TYPE = "json";
 
+	private static final String CURRENT_PAGE = "currentPage";
+	private static final String COUNT_PER_PAGE = "countPerPage";
+
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getJusoApi(int currentPage, int countPerPage, String keyword) throws IOException {
 		if ( currentPage < 1 ) {
-			throw new IllegalArgumentException("currentPage는 1 이상이어야 합니다.");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative(CURRENT_PAGE));
 		}
 
 		if ( countPerPage < 1 ) {
-			throw new IllegalArgumentException("countPerPage는 1 이상이어야 합니다.");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative(COUNT_PER_PAGE));
 		}
 
 		if ( StringUtils.isBlank(keyword) ) {
-			throw new IllegalArgumentException("keyword는 필수값입니다.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("keyword"));
 		}
 
 		Map<String, Object> resultMap = new HashMap<>();
@@ -113,8 +132,8 @@ public class AddrSerchApi {
 			jusoList.add(tempMap);
 		}
 
-		resultMap.put("countPerPage", commonMap.get("countPerPage"));
-		resultMap.put("currentPage", commonMap.get("currentPage"));
+		resultMap.put(COUNT_PER_PAGE, commonMap.get(COUNT_PER_PAGE));
+		resultMap.put(CURRENT_PAGE, commonMap.get(CURRENT_PAGE));
 		resultMap.put("totalCount", commonMap.get("totalCount"));
 		resultMap.put("jusoList", jusoList);
 

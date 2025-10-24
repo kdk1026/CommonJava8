@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,8 +17,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonReader;
-
-import common.util.ExceptionMessage;
 
 /**
 * <pre>
@@ -38,6 +37,18 @@ public class GsonUtil {
 
 	private GsonUtil() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
 	}
 
 	private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
@@ -77,16 +88,14 @@ public class GsonUtil {
 		}
 
 		private static void validateJsonString(String jsonStr) {
-			Objects.requireNonNull(jsonStr, ExceptionMessage.isNull("jsonStr"));
-			if (jsonStr.trim().isEmpty()) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonStr"));
+			if ( StringUtils.isBlank(jsonStr) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("jsonStr"));
 			}
 		}
 
 		private static void validateJsonArrayString(String jsonArrayStr) {
-			Objects.requireNonNull(jsonArrayStr, ExceptionMessage.isNull("jsonArrayStr"));
-			if (jsonArrayStr.trim().isEmpty()) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("jsonArrayStr"));
+			if ( StringUtils.isBlank(jsonArrayStr) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("jsonArrayStr"));
 			}
 		}
 
@@ -131,9 +140,8 @@ public class GsonUtil {
 		}
 
 		private static void validateFileName(String fileName) {
-			Objects.requireNonNull(fileName, ExceptionMessage.isNull("fileName"));
-			if (fileName.trim().isEmpty()) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("fileName"));
+			if ( StringUtils.isBlank(fileName) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 			}
 		}
 

@@ -39,6 +39,18 @@ public class SshClientUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private Session session = null;
 
 	/**
@@ -52,19 +64,19 @@ public class SshClientUtil {
 	 */
 	public boolean init(String sHost, int nPort, String sUsername, String sPassword) {
 		if ( StringUtils.isBlank(sHost) ) {
-			throw new IllegalArgumentException("sHost is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sHost"));
 		}
 
-		if ( nPort <= 0 ) {
-			throw new IllegalArgumentException("nPort is null");
+		if ( nPort < 0 || nPort > 65535 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nPort"));
 		}
 
 		if ( StringUtils.isBlank(sUsername) ) {
-			throw new IllegalArgumentException("sUsername is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sUsername"));
 		}
 
 		if ( StringUtils.isBlank(sPassword) ) {
-			throw new IllegalArgumentException("sPassword is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPassword"));
 		}
 
 		JSch jsch = new JSch();
@@ -100,7 +112,7 @@ public class SshClientUtil {
 	 */
 	public String runExecRet(String sCommand) throws JSchException, IOException {
 		if ( StringUtils.isBlank(sCommand) ) {
-			throw new IllegalArgumentException("sCommand is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCommand"));
 		}
 
 		if (session == null || !session.isConnected()) {
@@ -166,7 +178,7 @@ public class SshClientUtil {
 	 */
 	public int runExec(String sCommand) throws JSchException, IOException {
 		if ( StringUtils.isBlank(sCommand) ) {
-			throw new IllegalArgumentException("sCommand is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCommand"));
 		}
 
 		if (session == null || !session.isConnected()) {

@@ -18,9 +18,19 @@ public class AgeUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(AgeUtil.class);
 
 	private static final String YYYYMMDD = "yyyyMMdd";
+	private static final String BIRTH_DAY = "birthDay";
+	private static final String FIX_DAY = "fixDay";
 
 	/**
 	 * 현재일을 기준으로 만나이 계산
@@ -29,7 +39,7 @@ public class AgeUtil {
 	 */
 	public static int getAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		Calendar birth = Calendar.getInstance();
@@ -58,11 +68,11 @@ public class AgeUtil {
 	 */
 	public static int getAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new IllegalArgumentException("fixDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
 		int age = 0;
@@ -91,7 +101,7 @@ public class AgeUtil {
 	 */
 	public static int getKoreanAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		int age = 0;
@@ -117,11 +127,11 @@ public class AgeUtil {
 	 */
 	public static int getKoreanAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new IllegalArgumentException("fixDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
 		int age = 0;
@@ -148,7 +158,7 @@ public class AgeUtil {
 	 */
 	public static int getInsurAge(String birthDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		int age = 0;
@@ -190,11 +200,11 @@ public class AgeUtil {
 	 */
 	public static int getInsurAge(String birthDay, String fixDay) {
 		if ( StringUtils.isBlank(birthDay) ) {
-			throw new IllegalArgumentException("birthDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
 		if ( StringUtils.isBlank(fixDay) ) {
-			throw new IllegalArgumentException("fixDay is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
 		int age = 0;

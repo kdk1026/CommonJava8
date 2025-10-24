@@ -6,8 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <pre>
@@ -31,6 +34,18 @@ public class GzipCompressorUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String UTF_8 = StandardCharsets.UTF_8.name();
 
 
@@ -41,6 +56,10 @@ public class GzipCompressorUtil {
      * @throws IOException
      */
     public static String compress(String data) throws IOException {
+    	if ( StringUtils.isBlank(data) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("data"));
+    	}
+
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         try (GZIPOutputStream gzipStream = new GZIPOutputStream(byteStream)) {
             gzipStream.write(data.getBytes(UTF_8));
@@ -55,6 +74,10 @@ public class GzipCompressorUtil {
      * @throws IOException
      */
     public static String decompress(String compressedData) throws IOException {
+    	if ( StringUtils.isBlank(compressedData) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("compressedData"));
+    	}
+
         byte[] compressedBytes = Base64.getDecoder().decode(compressedData);
         ByteArrayInputStream byteStream = new ByteArrayInputStream(compressedBytes);
         try (GZIPInputStream gzipStream = new GZIPInputStream(byteStream)) {
@@ -69,6 +92,8 @@ public class GzipCompressorUtil {
      * @throws IOException
      */
     private static byte[] readAllBytes(InputStream inputStream) throws IOException {
+    	Objects.requireNonNull(inputStream, ExceptionMessage.isNull("inputStream"));
+
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         byte[] temp = new byte[1024];
         int bytesRead;

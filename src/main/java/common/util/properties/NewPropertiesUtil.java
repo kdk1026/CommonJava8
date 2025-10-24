@@ -29,9 +29,17 @@ public class NewPropertiesUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	public static Properties getProperties(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {
-			throw new IllegalArgumentException("propFileName must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("propFileName"));
 		}
 
 		Properties prop = new Properties();
@@ -47,7 +55,7 @@ public class NewPropertiesUtil {
 
 	public static String getProperties(String propFileName, String key) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be required");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		Properties prop = getProperties(propFileName);

@@ -15,6 +15,14 @@ public class EncodeUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
 
 	/**
@@ -25,7 +33,7 @@ public class EncodeUtil {
 	 */
 	public static String encodeBase64(byte[] binaryData) {
 		if ( binaryData == null || binaryData.length == 0 ) {
-			throw new IllegalArgumentException("binaryData is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("binaryData"));
 		}
 
 		return Base64.getEncoder().encodeToString(binaryData);
@@ -39,7 +47,7 @@ public class EncodeUtil {
 	 */
 	public static byte[] decodeBase64(String base64Data) {
 		if ( StringUtils.isBlank(base64Data) ) {
-			throw new IllegalArgumentException("base64Data is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64Data"));
 		}
 
 		return Base64.getDecoder().decode(base64Data);
@@ -57,7 +65,7 @@ public class EncodeUtil {
 	 */
 	public static String urlEncode(String sPlain) {
 		if ( StringUtils.isBlank(sPlain) ) {
-			throw new IllegalArgumentException("sPlain is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPlain"));
 		}
 
 		String sRes = "";
@@ -81,11 +89,11 @@ public class EncodeUtil {
 	 */
 	public static String urlEncode(String sPlain, String sCharsetName) {
 		if ( StringUtils.isBlank(sPlain) ) {
-			throw new IllegalArgumentException("sPlain is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPlain"));
 		}
 
 		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new IllegalArgumentException("sCharsetName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCharsetName"));
 		}
 
 		String sRes = "";
@@ -109,7 +117,7 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String sEncodedData) {
 		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new IllegalArgumentException("sEncodedData is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncodedData"));
 		}
 
 		String sRes = "";
@@ -133,11 +141,11 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String sEncodedData, String sCharsetName) {
 		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new IllegalArgumentException("sEncodedData is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncodedData"));
 		}
 
 		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new IllegalArgumentException("sCharsetName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCharsetName"));
 		}
 
 		String sRes = "";

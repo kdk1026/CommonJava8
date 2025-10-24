@@ -8,6 +8,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -38,6 +39,22 @@ public class FtpClientUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final String ENCODING = StandardCharsets.UTF_8.toString();
 
 	private static String sourcePath = "";
@@ -47,11 +64,11 @@ public class FtpClientUtil {
 
 	public static boolean upload(String host, int port, String username, String password, String destPath, String sourcePath, String extension) {
 		if ( StringUtils.isBlank(sourcePath) ) {
-			throw new IllegalArgumentException("sourcePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sourcePath"));
 		}
 
 		if ( StringUtils.isBlank(extension) ) {
-			throw new IllegalArgumentException("extension is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("extension"));
 		}
 
 		FtpClientUtil.sourcePath = sourcePath;
@@ -61,9 +78,8 @@ public class FtpClientUtil {
 	}
 
 	public static boolean upload(String host, int port, String username, String password, String destPath, File file) {
-		if ( file == null ) {
-			throw new IllegalArgumentException("file is null");
-		}
+		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
+
 
 		FtpClientUtil.file = file;
 
@@ -72,7 +88,7 @@ public class FtpClientUtil {
 
 	public static boolean upload(String host, int port, String username, String password, String destPath, List<File> fileList) {
 		if ( fileList == null || fileList.isEmpty() ) {
-			throw new IllegalArgumentException("fileList is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileList"));
 		}
 
 		FtpClientUtil.fileList = fileList;
@@ -82,23 +98,23 @@ public class FtpClientUtil {
 
 	private static boolean upload(String host, int port, String username, String password, String destPath) {
 		if ( StringUtils.isBlank(host) ) {
-			throw new IllegalArgumentException("host is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("host"));
 		}
 
-		if ( port < 0 ) {
-			throw new IllegalArgumentException("port is null");
+		if ( port < 0 || port > 65535 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("port"));
 		}
 
 		if ( StringUtils.isBlank(username) ) {
-			throw new IllegalArgumentException("username is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("username"));
 		}
 
 		if ( StringUtils.isBlank(password) ) {
-			throw new IllegalArgumentException("password is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("password"));
 		}
 
 		if ( StringUtils.isBlank(destPath) ) {
-			throw new IllegalArgumentException("destPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destPath"));
 		}
 
 		boolean isSucesss = false;
@@ -249,33 +265,61 @@ public class FtpClientUtil {
 
 	public static boolean downloadAll(String host, int port, String username, String password, String destPath, String downloadPath) {
 		if ( StringUtils.isBlank(host) ) {
-			throw new IllegalArgumentException("host is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("host"));
 		}
 
-		if ( port < 0 ) {
-			throw new IllegalArgumentException("port is null");
+		if ( port < 0 || port > 65535 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("port"));
 		}
 
 		if ( StringUtils.isBlank(username) ) {
-			throw new IllegalArgumentException("username is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("username"));
 		}
 
 		if ( StringUtils.isBlank(password) ) {
-			throw new IllegalArgumentException("password is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("password"));
 		}
 
 		if ( StringUtils.isBlank(destPath) ) {
-			throw new IllegalArgumentException("destPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destPath"));
 		}
 
 		if ( StringUtils.isBlank(downloadPath) ) {
-			throw new IllegalArgumentException("downloadPath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("downloadPath"));
 		}
 
 		return download(host, port, username, password, destPath, null, downloadPath);
 	}
 
 	public static boolean download(String host, int port, String username, String password, String destPath, String fileName, String downloadPath) {
+		if ( StringUtils.isBlank(host) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("host"));
+		}
+
+		if ( port < 0 || port > 65535 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("port"));
+		}
+
+		if ( StringUtils.isBlank(username) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("username"));
+		}
+
+		if ( StringUtils.isBlank(password) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("password"));
+		}
+
+		if ( StringUtils.isBlank(destPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destPath"));
+		}
+
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
+		}
+
+		if ( StringUtils.isBlank(downloadPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("downloadPath"));
+		}
+
 		boolean isSucesss = false;
 
 		FTPClient ftpClient = new FTPClient();

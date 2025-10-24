@@ -27,8 +27,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.util.ExceptionMessage;
-
 /**
  * <pre>
  * -----------------------------------
@@ -56,6 +54,14 @@ public class BouncyCastleRsaUtil {
 
 	private BouncyCastleRsaUtil() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleRsaUtil.class);
@@ -122,7 +128,7 @@ public class BouncyCastleRsaUtil {
 	     */
 	    public static PublicKey convertStringToPublicKey(String base64PublicKey) {
 			if ( StringUtils.isBlank(base64PublicKey) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PublicKey"));
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64PublicKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PublicKey);
@@ -147,7 +153,7 @@ public class BouncyCastleRsaUtil {
 	     */
 	    public static PrivateKey convertStringToPrivateKey(String base64PrivateKey) {
 			if ( StringUtils.isBlank(base64PrivateKey) ) {
-				throw new IllegalArgumentException(ExceptionMessage.isNull("base64PrivateKey"));
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64PrivateKey"));
 			}
 
 	        byte[] keyBytes = Base64.getDecoder().decode(base64PrivateKey);

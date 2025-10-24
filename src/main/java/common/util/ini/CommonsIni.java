@@ -1,6 +1,7 @@
 package common.util.ini;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 
@@ -31,6 +32,18 @@ public class CommonsIni {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonsIni.class);
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String PROP_CLASS_PATH = "/ini" + NioFileUtil.FOLDER_SEPARATOR;
 	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "ini/";
 
@@ -49,11 +62,11 @@ public class CommonsIni {
 		}
 
 		if ( request == null && type == 1 ) {
-			throw new IllegalArgumentException("request must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("request"));
 		}
 
 		if ( StringUtils.isBlank(iniFileName) ) {
-			throw new IllegalArgumentException("iniFileName must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("iniFileName"));
 		}
 
 		Configurations configs = new Configurations();
@@ -99,11 +112,11 @@ public class CommonsIni {
 
 	public Object getProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException("section must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);
@@ -124,7 +137,7 @@ public class CommonsIni {
 
 	public Properties getProperties(String section) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException("section must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
 		}
 
 		Properties prop = new Properties();
@@ -142,16 +155,14 @@ public class CommonsIni {
 
 	public void addProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException("section must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		if ( value == null ) {
-			throw new IllegalArgumentException("value must be not null.");
-		}
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		SubnodeConfiguration sObj = config.getSection(section);
 		sObj.addProperty(key, value);
@@ -159,16 +170,14 @@ public class CommonsIni {
 
 	public void setProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException("section must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		if ( value == null ) {
-			throw new IllegalArgumentException("value must be not null.");
-		}
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		SubnodeConfiguration sObj = config.getSection(section);
 		sObj.setProperty(key, value);
@@ -176,11 +185,11 @@ public class CommonsIni {
 
 	public void clearProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException("section must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key must be not null.");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		SubnodeConfiguration sObj = config.getSection(section);

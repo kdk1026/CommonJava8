@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import common.util.ExceptionMessage;
-
 /**
  * <pre>
  * 개정이력
@@ -24,6 +22,18 @@ public class ByteStringUtils {
 
 	private ByteStringUtils() {
 		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
 	}
 
 	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
@@ -60,11 +70,11 @@ public class ByteStringUtils {
 	 */
 	public static int getByteLength(String str, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET_NAME));
 		}
 
 		int nLen = 0;
@@ -87,7 +97,7 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( maxByte < 0 ) {
@@ -116,7 +126,7 @@ public class ByteStringUtils {
 	 */
 	public static boolean isByteOver(String str, int maxByte, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( maxByte < 0 ) {
@@ -124,7 +134,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET_NAME));
 		}
 
 		boolean resFlag = false;
@@ -244,7 +254,7 @@ public class ByteStringUtils {
 	 */
 	public static String substrString(String str, int offset, int length, String charsetName) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("str"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		if ( offset < 0 ) {
@@ -256,7 +266,7 @@ public class ByteStringUtils {
 		}
 
 		if ( StringUtils.isBlank(charsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull(CHARSET_NAME));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET_NAME));
 		}
 
 		String sRes = "";

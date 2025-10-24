@@ -1,5 +1,7 @@
 package common.util;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,8 +24,20 @@ public class UserAgentUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final String USER_AGENT = "User-Agent";
-	private static final String REQUEST_IS_NULL = "request is null";
+	private static final String REQUEST = "request";
 
 	/**
 	 * 모바일 브라우저 여부 체크
@@ -31,9 +45,7 @@ public class UserAgentUtil {
 	 * @return
 	 */
 	public static boolean isMobile(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException(REQUEST_IS_NULL);
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
 		String sUserAgent = request.getHeader(USER_AGENT);
 
@@ -46,9 +58,7 @@ public class UserAgentUtil {
 	 * @return
 	 */
 	public static String isMobileOs(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException(REQUEST_IS_NULL);
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
 		String sUserAgent = request.getHeader(USER_AGENT);
 
@@ -74,12 +84,10 @@ public class UserAgentUtil {
 	 * @return
 	 */
 	public static boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
-		if ( request == null ) {
-			throw new IllegalArgumentException(REQUEST_IS_NULL);
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
 		if ( StringUtils.isBlank(chkStr) ) {
-			throw new IllegalArgumentException("chkStr is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("chkStr"));
 		}
 
 		String sUserAgent = request.getHeader(USER_AGENT);
@@ -93,9 +101,7 @@ public class UserAgentUtil {
 	 * @return
 	 */
 	public static String getBrowser(HttpServletRequest request) {
-		if ( request == null ) {
-			throw new IllegalArgumentException(REQUEST_IS_NULL);
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
 		String userAgent = request.getHeader(USER_AGENT);
 

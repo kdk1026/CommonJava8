@@ -20,12 +20,20 @@ public class JacksonXmlUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(JacksonXmlUtil.class);
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new IllegalArgumentException("xml is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("xml"));
 		}
 
 		Map<String, Object> map = new HashMap<>();
@@ -43,7 +51,7 @@ public class JacksonXmlUtil {
 	@SuppressWarnings("unchecked")
 	public static List<Map<String, Object>> converterXmlStrToMapList(String xml) {
 		if ( StringUtils.isBlank(xml) ) {
-			throw new IllegalArgumentException("xml is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("xml"));
 		}
 
 		List<Map<String, Object>> list = new ArrayList<>();
@@ -61,7 +69,7 @@ public class JacksonXmlUtil {
 
 	public static String convertMapToXmlStr(Map<String, Object> map) {
 		if ( map == null || map.isEmpty() ) {
-			throw new IllegalArgumentException("map is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		JacksonXmlModule xmlModule = new JacksonXmlModule();

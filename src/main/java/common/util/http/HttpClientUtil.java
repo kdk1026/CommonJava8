@@ -73,6 +73,14 @@ public class HttpClientUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+	}
+
 	/**
 	 * UTF-8
 	 * @since 1.7
@@ -85,14 +93,14 @@ public class HttpClientUtil {
 
 	private static final int DEFAULT_TIMEOUT_MS = 5000;
 
-	private static final String URL_NOT_BE_NULL = "url must not be null";
-	private static final String TIMEOUT_NOT_BE_NULL = "timeoutMs must not be null";
+	private static final String URL_NOT_BE_NULL = ExceptionMessage.isNull("url");
+	private static final String TIMEOUT_NOT_BE_NULL = ExceptionMessage.isNull("timeout");
 
-	private static final String HEADER_NOT_BE_NULL = "header must not be null or empty";
-	private static final String PARAM_NOT_BE_NULL = "param must not be null or empty";
-	private static final String CHARSET_NOT_BE_NULL = "charset must not be null";
-	private static final String PAYLOAD_NOT_BE_NULL = "payload must not be null";
-	private static final String FILE_PARAM_KEY_NOT_BE_NULL = "fileParamKey must not be null";
+	private static final String HEADER_NOT_BE_NULL = ExceptionMessage.isNull("header");
+	private static final String PARAM_NOT_BE_NULL = ExceptionMessage.isNull("param");
+	private static final String CHARSET_NOT_BE_NULL = ExceptionMessage.isNull("charset");
+	private static final String PAYLOAD_NOT_BE_NULL = ExceptionMessage.isNull("payload");
+	private static final String FILE_PARAM_KEY_NOT_BE_NULL = ExceptionMessage.isNull("fileParamKey");
 
 	/**
      * CloseableHttpClient 인스턴스를 생성하여 반환

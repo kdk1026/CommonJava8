@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,8 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import common.util.ExceptionMessage;
 
 /**
  * <pre>
@@ -35,6 +34,18 @@ public class BasicObjectUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
 
 	/**
@@ -44,12 +55,10 @@ public class BasicObjectUtil {
 	 * @return
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		if ( StringUtils.isBlank(fieldName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("fieldName"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fieldName"));
 		}
 
 		String str = null;
@@ -71,9 +80,7 @@ public class BasicObjectUtil {
 	 * @since 1.7
 	 */
 	public static List<String> getFieldNames(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		List<String> list = new ArrayList<>();
 
@@ -93,9 +100,7 @@ public class BasicObjectUtil {
 	 * @since 1.7
 	 */
 	public static Map<String, Object> convertObjectToMap(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		Map<String, Object> commandMap = new HashMap<>();
 
@@ -123,13 +128,8 @@ public class BasicObjectUtil {
 	 * @return
 	 */
 	public static Object setReqParamToObject(HttpServletRequest request, Object obj) {
-		if ( request == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("request"));
-		}
-
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		String sKey = "";
 		String sMethodStr = "";
@@ -160,13 +160,8 @@ public class BasicObjectUtil {
 	 * @return
 	 */
 	public static void setHttpResponse(Object obj, HttpServletResponse response) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
-		}
-
-		if ( response == null ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNull("response"));
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
+		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();

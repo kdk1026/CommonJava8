@@ -39,6 +39,18 @@ public class FileUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
 	/**
@@ -53,6 +65,8 @@ public class FileUtil {
 
 	private static final int BUFFER_SIZE = 4096;
 
+	private static final String FILE_PATH = "filePath";
+
 	/**
 	 * 파일의 존재여부 확인
 	 * @param filePath
@@ -60,7 +74,7 @@ public class FileUtil {
 	 */
 	public static boolean isExistsFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -74,7 +88,7 @@ public class FileUtil {
 	 */
 	public static String getFilename(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		int pos = filePath.lastIndexOf(FOLDER_SEPARATOR);
@@ -88,7 +102,7 @@ public class FileUtil {
 	 */
 	public static String getFileExtension(String fileName) {
 		if ( StringUtils.isBlank(fileName) ) {
-			throw new IllegalArgumentException("fileName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
 		if (fileName.lastIndexOf(EXTENSION_SEPARATOR) == -1) {
@@ -105,7 +119,7 @@ public class FileUtil {
 	 */
 	public static long getFileSize(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -122,7 +136,7 @@ public class FileUtil {
 	 */
 	public static String readableFileSize(long fileSize) {
 		if ( fileSize < 0 ) {
-			throw new IllegalArgumentException("fileSize is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("fileSize"));
 		}
 
 		if (fileSize <= 0) return "0";
@@ -139,7 +153,7 @@ public class FileUtil {
 	 */
 	public static String lastModified(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -155,11 +169,11 @@ public class FileUtil {
 	 */
 	public static void writeFile(String filePath, String text) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		File file = new File(filePath);
@@ -182,15 +196,15 @@ public class FileUtil {
 	 */
 	public static void writeFile(String filePath, String text, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
-			throw new IllegalArgumentException("text is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new IllegalArgumentException("encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encoding"));
 		}
 
 		File file = new File(filePath);
@@ -212,7 +226,7 @@ public class FileUtil {
 	 */
 	public static String readFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -247,11 +261,11 @@ public class FileUtil {
 	 */
 	public static String readFile(String filePath, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
-			throw new IllegalArgumentException("encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encoding"));
 		}
 
 		File file = new File(filePath);
@@ -300,7 +314,7 @@ public class FileUtil {
 	 */
 	public static boolean deleteFile(String filePath) throws IOException {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -333,11 +347,11 @@ public class FileUtil {
 	 */
 	public static void copyFile(String srcFilePath, String destFilePath) {
 		if ( StringUtils.isBlank(srcFilePath) ) {
-			throw new IllegalArgumentException("srcFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("srcFilePath"));
 		}
 
 		if ( StringUtils.isBlank(destFilePath) ) {
-			throw new IllegalArgumentException("destFilePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("destFilePath"));
 		}
 
 		File srcFile = new File(srcFilePath);
@@ -367,7 +381,7 @@ public class FileUtil {
 	 */
 	public static List<String> getAllFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);
@@ -384,7 +398,7 @@ public class FileUtil {
 	 */
 	public static List<String> getFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -412,7 +426,7 @@ public class FileUtil {
 	 */
 	public static List<String> getDirectoryList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listDirectories = new ArrayList<>();
@@ -438,7 +452,7 @@ public class FileUtil {
 	 */
 	public static byte[] convertFileToBytes(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException("filePath is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = new File(filePath);

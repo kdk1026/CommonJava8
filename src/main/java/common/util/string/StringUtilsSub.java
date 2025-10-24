@@ -20,6 +20,18 @@ public class StringUtilsSub {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	/**
 	 * UUID 문자열에서 '-'를 제외한 32자리 문자열 반환
 	 * @return
@@ -36,11 +48,7 @@ public class StringUtilsSub {
 	 */
 	public static String join(String delim, String... args) {
 		if ( StringUtils.isBlank(delim) ) {
-			throw new IllegalArgumentException("delim is null");
-		}
-
-		if ( args == null || args.length == 0 ) {
-			throw new IllegalArgumentException("args is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("delim"));
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -60,7 +68,7 @@ public class StringUtilsSub {
 	 */
 	public static String replaceCRLFToHtmlTag(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		final String sCr = "<br/>";
@@ -75,7 +83,7 @@ public class StringUtilsSub {
 	 */
 	public static String replaceHtmlTagToCRLF(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		return str.replace("<br>", "\r\n").replace("<br/>", "\r\n");
@@ -89,7 +97,7 @@ public class StringUtilsSub {
 	 */
 	public static String escapeXss(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		return str.replace("\"", "&quot;").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("'", "\\'").replace("\"", "\\\"");
@@ -103,7 +111,7 @@ public class StringUtilsSub {
 	 */
 	public static String unescapeXss(String str) {
 		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException("str is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		return str.replace("&quot;", "\"").replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("\\'", "'").replace("\\\"", "\"");
@@ -120,7 +128,7 @@ public class StringUtilsSub {
 	 */
 	public static String getStarRating(String strDoubleScore) {
 		if ( StringUtils.isBlank(strDoubleScore) ) {
-			throw new IllegalArgumentException("strDoubleScore is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("strDoubleScore"));
 		}
 
 		String strStarRating = "";
@@ -148,7 +156,7 @@ public class StringUtilsSub {
 	 */
 	public static String space(int nSize) {
 		if ( nSize < 0 ) {
-			throw new IllegalArgumentException("nSize is negative");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nSize"));
 		}
 
 		StringBuilder sb = new StringBuilder();

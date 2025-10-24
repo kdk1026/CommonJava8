@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,11 +30,23 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
-
 	private ObjectUtil() {
 		super();
 	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
+	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
 
 	/**
 	 * @Description
@@ -51,12 +64,10 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static boolean isBlank(Object obj, String fieldName) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		if ( StringUtils.isBlank(fieldName) ) {
-			throw new IllegalArgumentException("FieldName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fieldName"));
 		}
 
 		Field field = FieldUtils.getField(obj.getClass(), fieldName, true);
@@ -87,9 +98,7 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static List<String> getFieldNames(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		List<String> list = new ArrayList<>();
 
@@ -116,13 +125,8 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void paramToObject(HttpServletRequest request, Object obj) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("Request is null");
-		}
-
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		try {
 			BeanUtils.populate(obj, request.getParameterMap());
@@ -146,13 +150,8 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void mapToObject(Map<String, Object> map, Object obj) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("Map is null");
-		}
-
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(map, ExceptionMessage.isNull("map"));
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		try {
 			BeanUtils.populate(obj, map);
@@ -176,13 +175,8 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static void mapToStruct(Map<String, Object> map, Object obj) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("Map is null");
-		}
-
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(map, ExceptionMessage.isNull("map"));
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		String key = "";
 		String name = "";
@@ -227,12 +221,10 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static int getByteLength(Object obj, String sEncoding) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("Encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncoding"));
 		}
 
 		int nByteLen = 0;
@@ -266,16 +258,14 @@ public class ObjectUtil {
 	 * </pre>
 	 */
 	public static int getByteLength(Object obj, String sFieldName, String sEncoding) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("Object is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		if ( StringUtils.isBlank(sFieldName) ) {
-			throw new IllegalArgumentException("FieldName is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sFieldName"));
 		}
 
 		if ( StringUtils.isBlank(sEncoding) ) {
-			throw new IllegalArgumentException("Encoding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncoding"));
 		}
 
 		int nByteLen = 0;

@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,15 +34,25 @@ public class MapUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * Object를 Map<String, Object> 으로 변환
 	 * @param obj
 	 * @param map
 	 */
 	public static Map<String, Object> objectToMapObject(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		Map<String, Object> map = new HashMap<>();
 
@@ -92,9 +103,7 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static Map<String, String> objectToMap(Object obj) {
-		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
-		}
+		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
 
 		Map<String, String> map = null;
 
@@ -124,12 +133,12 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static boolean isBlank(Map<String, Object> map, String key) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("map is null");
+		if ( map == null || map.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
 		if ( map.get(key) == null ) {
@@ -153,12 +162,12 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void notContainsKeyToBlank(Map<String, Object> map, String ... keys) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("map is null");
+		if ( map == null || map.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		if ( keys == null || keys.length == 0 ) {
-			throw new IllegalArgumentException("keys is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("keys"));
 		}
 
 		String key = "";
@@ -187,8 +196,8 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void nullToBlank(Map<String, Object> map) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("map is null");
+		if ( map == null || map.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		String key = "";
@@ -214,8 +223,8 @@ public class MapUtil {
 	 * </pre>
 	 */
 	public static void spaceToBlank(Map<String, Object> map) {
-		if ( map == null ) {
-			throw new IllegalArgumentException("map is null");
+		if ( map == null || map.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 		}
 
 		String key = "";

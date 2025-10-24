@@ -1,5 +1,7 @@
 package common.util.sessioncookie;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -28,6 +30,25 @@ public class SessionUtils {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
+	private static final String REQUEST_IS_NUL = ExceptionMessage.isNull("request");
+	private static final String OBJ_IS_NUL = ExceptionMessage.isNull("obj");
+
 	/**
 	 * 로그인 정보 처리 내부 클래스
 	 * @since 2018. 12. 24.
@@ -53,13 +74,8 @@ public class SessionUtils {
 		 * @param obj
 		 */
 		public static void setAttribute(HttpServletRequest request, Object obj) {
-			if ( request == null ) {
-				throw new IllegalArgumentException("request is null");
-			}
-
-			if ( obj == null ) {
-				throw new IllegalArgumentException("obj is null");
-			}
+			Objects.requireNonNull(request, REQUEST_IS_NUL);
+			Objects.requireNonNull(obj, OBJ_IS_NUL);
 
 			HttpSession session = request.getSession();
 
@@ -75,16 +91,11 @@ public class SessionUtils {
 		 * @param nSecond
 		 */
 		public static void setAttribute(HttpServletRequest request, Object obj, int nSecond) {
-			if ( request == null ) {
-				throw new IllegalArgumentException("request is null");
-			}
-
-			if ( obj == null ) {
-				throw new IllegalArgumentException("obj is null");
-			}
+			Objects.requireNonNull(request, REQUEST_IS_NUL);
+			Objects.requireNonNull(obj, OBJ_IS_NUL);
 
 			if ( nSecond < 1 ) {
-				throw new IllegalArgumentException("nSecond is less than 1");
+				throw new IllegalArgumentException(ExceptionMessage.isNegative("nSecond"));
 			}
 
 			HttpSession session = request.getSession();
@@ -98,9 +109,7 @@ public class SessionUtils {
 		 * @return
 		 */
 		public static Object getSession(HttpServletRequest request) {
-			if ( request == null ) {
-				throw new IllegalArgumentException("request is null");
-			}
+			Objects.requireNonNull(request, REQUEST_IS_NUL);
 
 			HttpSession session = request.getSession(false);
 			return (session == null ? null : session.getAttribute(SESSION_KEY));
@@ -114,17 +123,13 @@ public class SessionUtils {
 	 * @param obj
 	 */
 	public static void setAttribute(HttpServletRequest request, String sKey, Object obj) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NUL);
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new IllegalArgumentException("sKey is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sKey"));
 		}
 
-		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
-		}
+		Objects.requireNonNull(obj, OBJ_IS_NUL);
 
 		HttpSession session = request.getSession();
 
@@ -139,20 +144,16 @@ public class SessionUtils {
 	 * @param nSecond
 	 */
 	public static void setAttribute(HttpServletRequest request, String sKey, Object obj, int nSecond) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NUL);
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new IllegalArgumentException("sKey is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sKey"));
 		}
 
-		if ( obj == null ) {
-			throw new IllegalArgumentException("obj is null");
-		}
+		Objects.requireNonNull(obj, OBJ_IS_NUL);
 
 		if ( nSecond < 1 ) {
-			throw new IllegalArgumentException("nSecond is less than 1");
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("nSecond"));
 		}
 
 		HttpSession session = request.getSession();
@@ -168,12 +169,10 @@ public class SessionUtils {
 	 * @return
 	 */
 	public static Object getAttribute(HttpServletRequest request, String sKey) {
-		if ( request == null ) {
-			throw new IllegalArgumentException("request is null");
-		}
+		Objects.requireNonNull(request, REQUEST_IS_NUL);
 
 		if ( StringUtils.isBlank(sKey) ) {
-			throw new IllegalArgumentException("sKey is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sKey"));
 		}
 
 		HttpSession session = request.getSession(false);

@@ -1,6 +1,7 @@
 package common.util.map;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import org.apache.commons.collections4.map.ListOrderedMap;
 
@@ -14,8 +15,12 @@ import common.util.ConvertCaseUtil;
 @SuppressWarnings("rawtypes")
 public class ResultSetMap extends ListOrderedMap {
 
-	public ResultSetMap() {
-		super();
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
 	}
 
 	private static final long serialVersionUID = 1L;
@@ -23,71 +28,48 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object put(Object key, Object value) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
-
-		if ( value == null ) {
-			throw new IllegalArgumentException("value is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		return super.put(key.toString().toLowerCase(), value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object putCamel(Object key, Object value) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
-
-		if ( value == null ) {
-			throw new IllegalArgumentException("value is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		return super.put(ConvertCaseUtil.camelCase(key.toString()), value);
 	}
 
 	@SuppressWarnings("unchecked")
 	public Object putBasic(Object key, Object value) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
-
-		if ( value == null ) {
-			throw new IllegalArgumentException("value is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
 
 		return super.put(key, value);
 	}
 
 	public String getString(Object key) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		return super.containsKey(key) ? String.valueOf(super.get(key)) : "";
 	}
 
 	public int getInteger(Object key) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		return Integer.parseInt(String.valueOf(super.get(key)));
 	}
 
 	public boolean getBoolean(Object key) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		return Boolean.parseBoolean(String.valueOf(super.get(key)));
 	}
 
 	public long getLong(Object key) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		return Long.parseLong(String.valueOf(super.get(key)));
 	}
@@ -101,9 +83,7 @@ public class ResultSetMap extends ListOrderedMap {
 	 * @return
 	 */
 	public int getNumber(Object key) {
-		if ( key == null ) {
-			throw new IllegalArgumentException("key is null");
-		}
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		int nRet = 0;
 		if ( super.containsKey(key) && super.get(key) != null ) {

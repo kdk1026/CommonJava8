@@ -10,6 +10,14 @@ public class ArrayUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * Array를 List 객체로 변환
 	 * @param arry
@@ -17,7 +25,7 @@ public class ArrayUtil {
 	 */
 	public static <T> List<T> arrayToList(T[] arry) {
 		if ( arry == null || arry.length == 0 ) {
-			throw new IllegalArgumentException("arry is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("arry"));
 		}
 
 		return Arrays.asList(arry);
@@ -31,7 +39,7 @@ public class ArrayUtil {
 	@SuppressWarnings("unchecked")
 	public static <T> T[] listtoArray(List<T> list) {
 		if ( list == null || list.isEmpty() ) {
-			throw new IllegalArgumentException("list is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 		}
 
 		return (T[]) list.toArray();
@@ -44,7 +52,7 @@ public class ArrayUtil {
 	 */
 	public static <T> T[] arraySort(T[] arry) {
 		if ( arry == null || arry.length == 0 ) {
-			throw new IllegalArgumentException("arry is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("arry"));
 		}
 
 		Arrays.sort(arry);
@@ -61,7 +69,7 @@ public class ArrayUtil {
 	 */
 	public static <T> T[] arrayReverseSort(T[] arry) {
 		if ( arry == null || arry.length == 0 ) {
-			throw new IllegalArgumentException("arry is null or empty");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("arry"));
 		}
 
 		Arrays.sort(arry, Collections.reverseOrder());
