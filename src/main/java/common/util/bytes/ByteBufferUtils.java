@@ -17,6 +17,9 @@ public class ByteBufferUtils {
 
 	private static final Logger logger = LoggerFactory.getLogger(ByteBufferUtils.class);
 
+	private static final String ENCODING = "sEncoding";
+	private static final String BYTE_BUFFER = "byteBuffer";
+
 	private ByteBufferUtils() {
 		super();
 	}
@@ -32,9 +35,6 @@ public class ByteBufferUtils {
 	    }
 
 	}
-
-	private static final String ENCODING = "sEncoding";
-	private static final String BYTE_BUFFER = "byteBuffer";
 
 	public static ByteBuffer toByteBufferString(String str, String sEncoding) {
 		if ( StringUtils.isBlank(str) ) {

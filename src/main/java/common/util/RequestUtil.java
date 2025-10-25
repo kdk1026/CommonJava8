@@ -34,7 +34,6 @@ public class RequestUtil {
 	        return String.format("'%s' is null", paramName);
 	    }
 
-
 	}
 
 	private static final String REQUEST_IS_NULL = ExceptionMessage.isNull("request");
