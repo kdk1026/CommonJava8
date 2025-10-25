@@ -49,18 +49,9 @@ public class JacksonUtil {
 
 	}
 
-	private static JacksonUtil instance;
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
-
-	private static synchronized JacksonUtil getInstance() {
-        if (instance == null) {
-			instance = new JacksonUtil();
-        }
-
-        return instance;
-    }
 
 	public static class ToJson {
 		private ToJson() {
@@ -73,7 +64,6 @@ public class JacksonUtil {
 			String jsonStr = "";
 
 			try {
-				getInstance();
 				if (!isPretty) {
 					jsonStr = MAPPER.writeValueAsString(obj);
 				} else {
@@ -93,7 +83,6 @@ public class JacksonUtil {
 			String jsonStr = "";
 
 			try {
-				getInstance();
 				if (!isPretty) {
 					jsonStr = MAPPER.writeValueAsString(map);
 				} else {
@@ -113,7 +102,6 @@ public class JacksonUtil {
 			String jsonStr = "";
 
 			try {
-				getInstance();
 				if (!isPretty) {
 					jsonStr = MAPPER.writeValueAsString(list);
 				} else {
@@ -130,7 +118,6 @@ public class JacksonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("map"));
 			}
 
-			getInstance();
 			return MAPPER.valueToTree(map);
 		}
 
@@ -139,7 +126,6 @@ public class JacksonUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("list"));
 			}
 
-			getInstance();
 			return MAPPER.valueToTree(list);
 		}
 	}
@@ -168,7 +154,6 @@ public class JacksonUtil {
 			Map<String, Object> map = new HashMap<>();
 
 			try {
-				getInstance();
 				map = MAPPER.readValue(jsonStr, Map.class);
 			} catch (IOException e) {
 				logger.error("", e);
@@ -182,7 +167,6 @@ public class JacksonUtil {
 			JsonNode jsonNode = null;
 
 			try {
-				getInstance();
 				jsonNode = MAPPER.readTree(jsonStr);
 			} catch (IOException e) {
 				logger.error("", e);
@@ -197,7 +181,6 @@ public class JacksonUtil {
 			List<T> list = new ArrayList<>();
 
 			try {
-				getInstance();
 				list = MAPPER.readValue(jsonArrStr, List.class);
 			} catch (IOException e) {
 				logger.error("", e);
@@ -211,7 +194,6 @@ public class JacksonUtil {
 			ArrayNode arrayNode = null;
 
 			try {
-				getInstance();
 				arrayNode = (ArrayNode) MAPPER.readTree(jsonArrStr);
 			} catch (IOException e) {
 				logger.error("", e);
@@ -225,7 +207,6 @@ public class JacksonUtil {
 			Objects.requireNonNull(clazz, ExceptionMessage.isNull("clazz"));
 
 			try {
-				getInstance();
 				Object result = MAPPER.readValue(jsonStr, clazz);
 				return clazz.cast(result);
 			} catch (IOException e) {
@@ -254,7 +235,6 @@ public class JacksonUtil {
 		    Object obj = null;
 
 		    try {
-		    	getInstance();
 		        obj = MAPPER.readValue(new File(sfileName), typeReference);
 		    } catch (IOException e) {
 		        logger.error("Error reading JSON file", e);
@@ -271,7 +251,6 @@ public class JacksonUtil {
 		    List<T> obj = null;
 
 		    try {
-		    	getInstance();
 		        obj = MAPPER.readValue(new File(sfileName), typeReference);
 		    } catch (IOException e) {
 		        logger.error("Error reading JSON file", e);
