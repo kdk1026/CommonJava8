@@ -32,6 +32,20 @@ import org.slf4j.LoggerFactory;
  */
 public class NioFileUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(NioFileUtil.class);
+
+	/**
+	 * 폴더 구분자
+	 */
+	public static final String FOLDER_SEPARATOR = "/";
+
+	/**
+	 * 확장자 구분자
+	 */
+	public static final char EXTENSION_SEPARATOR = '.';
+
+	private static final String FILE_PATH = "filePath";
+
 	private NioFileUtil() {
 		super();
 	}
@@ -51,20 +65,6 @@ public class NioFileUtil {
 		}
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(NioFileUtil.class);
-
-	/**
-	 * 폴더 구분자
-	 */
-	public static final String FOLDER_SEPARATOR = "/";
-
-	/**
-	 * 확장자 구분자
-	 */
-	public static final char EXTENSION_SEPARATOR = '.';
-
-	private static final String FILE_PATH = "filePath";
 
 	/**
 	 * 파일의 존재여부 확인

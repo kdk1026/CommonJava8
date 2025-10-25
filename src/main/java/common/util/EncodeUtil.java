@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 public class EncodeUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
+
 	private EncodeUtil() {
 		super();
 	}
@@ -22,8 +24,6 @@ public class EncodeUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
 
 	/**
 	 * Base64 인코딩

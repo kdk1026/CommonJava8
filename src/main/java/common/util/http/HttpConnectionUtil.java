@@ -41,18 +41,6 @@ public class HttpConnectionUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpConnectionUtil.class);
 
-	private HttpConnectionUtil() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNull(String paramName) {
-	        return String.format("'%s' is null", paramName);
-	    }
-
-	}
-
 	/**
 	 * UTF-8
 	 * @since 1.7
@@ -69,15 +57,28 @@ public class HttpConnectionUtil {
 
 	private static final int DEFAULT_TIMEOUT_MILLIS = 5000;
 
-	private static final String URL_IS_NULL = ExceptionMessage.isNull("URL");
-	private static final String PAYLOAD_IS_NULL = ExceptionMessage.isNull("payload");
-	private static final String TIMEOUT_IS_NULL = ExceptionMessage.isNull("timeout");
-	private static final String CHARSET_IS_NULL = ExceptionMessage.isNull("charset");
-
 	private static final String LOG_INVALID_URL = "잘못된 URL 또는 URI: {}";
 	private static final String LOG_IO_EXCEPTION1 = "{} 에서 응답을 읽는 중 오류 발생: {}";
 	private static final String LOG_IO_EXCEPTION2 = "{} 에 대한 오류 응답 본문: {}";
 	private static final String LOG_IO_EXCEPTION3 = "{} 에서 오류 스트림을 읽는 중 오류 발생: {}";
+
+
+	private HttpConnectionUtil() {
+		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+	}
+
+	private static final String URL_IS_NULL = ExceptionMessage.isNull("URL");
+	private static final String PAYLOAD_IS_NULL = ExceptionMessage.isNull("payload");
+	private static final String TIMEOUT_IS_NULL = ExceptionMessage.isNull("timeout");
+	private static final String CHARSET_IS_NULL = ExceptionMessage.isNull("charset");
 
     /**
      * URLConnection 객체를 생성하고 연결 및 읽기 타임아웃을 설정합니다.

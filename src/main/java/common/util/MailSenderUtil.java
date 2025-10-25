@@ -42,6 +42,8 @@ public class MailSenderUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailSenderUtil.class);
 
+	private static final String MAIL_PROP_FILE = "mail.properties";
+
 	private MailSenderUtil() {
 		super();
 	}
@@ -53,8 +55,6 @@ public class MailSenderUtil {
 	    }
 
 	}
-
-	private static final String MAIL_PROP_FILE = "mail.properties";
 
 	/**
 	 * mail.host = smtp.gmail.com

@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 public class DBUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(DBUtil.class);
+
 	private DBUtil() {
 		super();
 	}
@@ -35,8 +37,6 @@ public class DBUtil {
 		}
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(DBUtil.class);
 
 	public static Connection getConnection(Properties prop) {
 		Objects.requireNonNull(prop, ExceptionMessage.isNull("prop"));

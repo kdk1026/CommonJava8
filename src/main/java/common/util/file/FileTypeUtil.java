@@ -29,6 +29,11 @@ import org.slf4j.LoggerFactory;
  */
 public class FileTypeUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(FileTypeUtil.class);
+
+	private static final String EXTENSION = "sExtension";
+	private static final String MIMETYPE = "sMimeType";
+
 	private FileTypeUtil() {
 		super();
 	}
@@ -44,11 +49,6 @@ public class FileTypeUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(FileTypeUtil.class);
-
-	private static final String EXTENSION = "sExtension";
-	private static final String MIMETYPE = "sMimeType";
 
 	/**
 	 * 파일 MIME Type 구하기

@@ -26,16 +26,16 @@ import org.slf4j.LoggerFactory;
  */
 public class SeedEcbUtil {
 
-	private SeedEcbUtil() {
-		super();
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(SeedEcbUtil.class);
 
 	/**
 	 * @since 1.7
 	 */
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
+
+	private SeedEcbUtil() {
+		super();
+	}
 
 	/**
 	 * SEED ECB 암호화 (Base64 인코딩)

@@ -69,18 +69,6 @@ public class HttpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
-	private HttpClientUtil() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNull(String paramName) {
-	        return String.format("'%s' is null", paramName);
-	    }
-
-	}
-
 	/**
 	 * UTF-8
 	 * @since 1.7
@@ -92,6 +80,18 @@ public class HttpClientUtil {
 	public static final String HEADERS_KEY = "headers";
 
 	private static final int DEFAULT_TIMEOUT_MS = 5000;
+
+	private HttpClientUtil() {
+		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+	}
 
 	private static final String URL_NOT_BE_NULL = ExceptionMessage.isNull("url");
 	private static final String TIMEOUT_NOT_BE_NULL = ExceptionMessage.isNull("timeout");

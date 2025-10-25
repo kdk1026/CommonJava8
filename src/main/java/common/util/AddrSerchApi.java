@@ -34,6 +34,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class AddrSerchApi {
 
+	private static final Logger logger = LoggerFactory.getLogger(AddrSerchApi.class);
+
+	// API라 상관없을거 같기는 하지만... 클래스에 키가 있다는건 시큐어 코딩 상 무진상 큰일이다.....
+	private static final String CONFM_KEY = "U01TX0FVVEgyMDE4MTAxNzEzMTcwMDEwODI0MDM=";
+	private static final String RESULT_TYPE = "json";
+
+	private static final String CURRENT_PAGE = "currentPage";
+	private static final String COUNT_PER_PAGE = "countPerPage";
+
 	private AddrSerchApi() {
 		super();
 	}
@@ -53,15 +62,6 @@ public class AddrSerchApi {
 		}
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(AddrSerchApi.class);
-
-	// API라 상관없을거 같기는 하지만... 클래스에 키가 있다는건 시큐어 코딩 상 무진상 큰일이다.....
-	private static final String CONFM_KEY = "U01TX0FVVEgyMDE4MTAxNzEzMTcwMDEwODI0MDM=";
-	private static final String RESULT_TYPE = "json";
-
-	private static final String CURRENT_PAGE = "currentPage";
-	private static final String COUNT_PER_PAGE = "countPerPage";
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> getJusoApi(int currentPage, int countPerPage, String keyword) throws IOException {

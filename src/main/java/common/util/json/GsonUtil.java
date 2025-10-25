@@ -35,6 +35,9 @@ public class GsonUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(GsonUtil.class);
 
+	private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+	private static final Gson NORMAL_GSON = new GsonBuilder().disableHtmlEscaping().create();
+
 	private GsonUtil() {
 		super();
 	}
@@ -50,9 +53,6 @@ public class GsonUtil {
 	    }
 
 	}
-
-	private static final Gson PRETTY_GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-	private static final Gson NORMAL_GSON = new GsonBuilder().disableHtmlEscaping().create();
 
 	public static class ToJson {
 		private ToJson() {

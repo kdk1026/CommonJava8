@@ -22,12 +22,12 @@ import java.util.Locale;
  */
 public class Jsr310DateUtil {
 
+	private static final String YYYYMMDD = "yyyyMMdd";
+	private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+
 	private Jsr310DateUtil() {
 		super();
 	}
-
-	private static final String YYYYMMDD = "yyyyMMdd";
-	private static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
 	/**
 	 * 현재 날짜 및 시간 반환

@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
+
 	private ObjectUtil() {
 		super();
 	}
@@ -45,8 +47,6 @@ public class ObjectUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ObjectUtil.class);
 
 	/**
 	 * @Description

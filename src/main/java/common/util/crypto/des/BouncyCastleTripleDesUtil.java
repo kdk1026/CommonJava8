@@ -47,15 +47,13 @@ import common.util.crypto.EncryptResult;
  */
 public class BouncyCastleTripleDesUtil {
 
-	private BouncyCastleTripleDesUtil() {
-		super();
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleTripleDesUtil.class);
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
-	private static final String KEY_IS_NULL = "key must not be null";
+	private BouncyCastleTripleDesUtil() {
+		super();
+	}
 
 	static {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -63,6 +61,18 @@ public class BouncyCastleTripleDesUtil {
             logger.debug("Bouncy Castle Provider 등록 완료.");
         }
     }
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
 
 	/**
 	 * 일반적인 CBC, ECB만 정의 (필요 시, 다른 알고리즘 추가 가능)
@@ -98,7 +108,7 @@ public class BouncyCastleTripleDesUtil {
 	 * @return
 	 */
 	public static String convertKeyToString(SecretKey key) {
-		Objects.requireNonNull(key, KEY_IS_NULL);
+		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
 
 		byte[] keyBytes = key.getEncoded();
 		return Base64.getEncoder().encodeToString(keyBytes);
@@ -111,8 +121,6 @@ public class BouncyCastleTripleDesUtil {
 	 * @return
 	 */
 	private static SecretKey convertStringToKey(String base64KeyString) {
-		Objects.requireNonNull(base64KeyString, "base64KeyString must not be null");
-
 		byte[] keyBytes = Base64.getDecoder().decode(base64KeyString);
 		return new javax.crypto.spec.SecretKeySpec(keyBytes, "DESede");
 	}
@@ -121,20 +129,21 @@ public class BouncyCastleTripleDesUtil {
      * Triple DES 암호화
      * @param algorithm
      * @param base64KeyString
+     * @param ivStr - null or empty or 16바이트 문자열
      * @param plainText
      * @return
      */
-    public static EncryptResult encrypt(String algorithm, String base64KeyString, String plainText) {
+    public static EncryptResult encrypt(String algorithm, String base64KeyString, String ivStr, String plainText) {
 		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException("algorithm must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
 
 		if ( StringUtils.isBlank(base64KeyString) ) {
-			throw new IllegalArgumentException(KEY_IS_NULL);
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
 
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException("plainText must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("plainText"));
 		}
 
     	String encryptedText = "";
@@ -147,9 +156,15 @@ public class BouncyCastleTripleDesUtil {
     		if ( algorithm.indexOf("ECB") > -1 ) {
     			cipher.init(Cipher.ENCRYPT_MODE, key);
     		} else {
-    			SecureRandom secureRandom = new SecureRandom();
-                byte[] ivBytes = new byte[16];
-                secureRandom.nextBytes(ivBytes);
+    			byte[] ivBytes = null;
+
+    			if ( StringUtils.isBlank(ivStr) ) {
+	    			SecureRandom secureRandom = new SecureRandom();
+	    			ivBytes = new byte[16];
+	    			secureRandom.nextBytes(ivBytes);
+    			} else {
+    				ivBytes = ivStr.getBytes(UTF_8);
+    			}
 
     			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
 
@@ -172,20 +187,23 @@ public class BouncyCastleTripleDesUtil {
      * Triple DES 복호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr
+     * @param ivStr CBC인 경우 필수
+     * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
      * @param cipherText
      * @return
      */
-    public static String decrypt(String algorithm, String base64KeyString, String ivStr, String cipherText) {
-    	if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException("algorithm must not be blank");
+    public static String decrypt(String algorithm, String base64KeyString, String ivStr, boolean isBase64Iv, String cipherText) {
+		if ( StringUtils.isBlank(algorithm) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
 
     	if ( StringUtils.isBlank(base64KeyString) ) {
-			throw new IllegalArgumentException(KEY_IS_NULL);
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
 
-		Objects.requireNonNull(cipherText, "cipherText must not be null");
+    	if ( StringUtils.isBlank(cipherText) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cipherText"));
+    	}
 
 		String decryptedText = "";
 		try {
@@ -196,10 +214,16 @@ public class BouncyCastleTripleDesUtil {
 				cipher.init(Cipher.DECRYPT_MODE, key);
 			} else {
 				if ( StringUtils.isBlank(ivStr) ) {
-					throw new IllegalArgumentException("iv must not be blank");
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
 				}
 
-				byte[] ivBytes = Base64.getDecoder().decode(ivStr);
+				byte[] ivBytes = null;
+				if ( isBase64Iv ) {
+					ivBytes = Base64.getDecoder().decode(ivStr);
+				} else {
+					ivBytes = ivStr.getBytes(UTF_8);
+				}
+
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
 			}
 

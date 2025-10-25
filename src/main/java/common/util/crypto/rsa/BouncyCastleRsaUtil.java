@@ -52,23 +52,13 @@ import org.slf4j.LoggerFactory;
  */
 public class BouncyCastleRsaUtil {
 
-	private BouncyCastleRsaUtil() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNullOrEmpty(String paramName) {
-	        return String.format("'%s' is null or empty", paramName);
-	    }
-
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(BouncyCastleRsaUtil.class);
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
-	private static final String KEY_IS_NULL = "key must not be null";
+	private BouncyCastleRsaUtil() {
+		super();
+	}
 
 	static {
         if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
@@ -76,6 +66,18 @@ public class BouncyCastleRsaUtil {
             logger.debug("Bouncy Castle Provider 등록 완료.");
         }
     }
+
+	private static class ExceptionMessage {
+
+		public static String isNull(String paramName) {
+	        return String.format("'%s' is null", paramName);
+	    }
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
 
 	/**
 	 * 일반적인 OAEP만 정의 (필요 시, 다른 알고리즘 추가 가능)
@@ -99,11 +101,11 @@ public class BouncyCastleRsaUtil {
 
 		/**
 		 * 공개키를 Base64 문자열로 변환
-		 * @param key
+		 * @param publicKey
 		 * @return
 		 */
 		public static String convertPublicKeyToString(PublicKey publicKey) {
-			Objects.requireNonNull(publicKey, KEY_IS_NULL);
+			Objects.requireNonNull(publicKey, ExceptionMessage.isNull("publicKey"));
 
 			byte[] keyBytes = publicKey.getEncoded();
 			return Base64.getEncoder().encodeToString(keyBytes);
@@ -111,11 +113,11 @@ public class BouncyCastleRsaUtil {
 
 		/**
 		 * 개인키를 Base64 문자열로 변환
-		 * @param key
+		 * @param privateKey
 		 * @return
 		 */
 		public static String convertPrivateKeyToString(PrivateKey privateKey) {
-			Objects.requireNonNull(privateKey, KEY_IS_NULL);
+			Objects.requireNonNull(privateKey, ExceptionMessage.isNull("privateKey"));
 
 			byte[] keyBytes = privateKey.getEncoded();
 			return Base64.getEncoder().encodeToString(keyBytes);
@@ -183,7 +185,7 @@ public class BouncyCastleRsaUtil {
      * @throws NoSuchProviderException
      */
     public static KeyPair generateRsaKeyPair(int keySize) throws NoSuchAlgorithmException, NoSuchProviderException {
-    	Objects.requireNonNull(keySize, "keySize must not be null");
+    	Objects.requireNonNull(keySize, ExceptionMessage.isNull("keySize"));
 
 		if (keySize != 2048 || keySize != 3072 || keySize != 4096) {
 			throw new IllegalArgumentException("keySize must be one of 2048, 3072, or 4096");
@@ -203,13 +205,13 @@ public class BouncyCastleRsaUtil {
 	 */
 	public static String encrypt(String algorithm, PublicKey publicKey, String plainText) {
 		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException("algorithm must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
 
-		Objects.requireNonNull(publicKey, KEY_IS_NULL);
+		Objects.requireNonNull(publicKey, ExceptionMessage.isNull("publicKey"));
 
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException("plainText must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("plainText"));
 		}
 
 		String encryptedText = "";
@@ -238,13 +240,13 @@ public class BouncyCastleRsaUtil {
 	 */
 	public static String decrypt(String algorithm, PrivateKey privateKey, String cipherText) {
 		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException("algorithm must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
 
-		Objects.requireNonNull(privateKey, KEY_IS_NULL);
+		Objects.requireNonNull(privateKey, ExceptionMessage.isNull("privateKey"));
 
 		if ( StringUtils.isBlank(cipherText) ) {
-			throw new IllegalArgumentException("cipherText must not be blank");
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cipherText"));
 		}
 
 		String decryptedText = "";

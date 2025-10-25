@@ -20,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class FormattingUtil {
 
+	private static final String FORMAT_HYPHEN = "$1-$2-$3";
+	private static final String FORMAT_NOT_HYPHEN = "$1$2$3";
+
 	private FormattingUtil() {
 		super();
 	}
@@ -31,9 +34,6 @@ public class FormattingUtil {
 	    }
 
 	}
-
-	private static final String FORMAT_HYPHEN = "$1-$2-$3";
-	private static final String FORMAT_NOT_HYPHEN = "$1$2$3";
 
 	/**
 	 * <pre>

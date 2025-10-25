@@ -12,9 +12,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//XXX : Oracle 에서 oracle.sql.Clob 만 사용 가능한지 확인
 public class ClobUtil {
 
-	// XXX : Oracle 에서 oracle.sql.Clob 만 사용 가능한지 확인
+	private static final Logger logger = LoggerFactory.getLogger(ClobUtil.class);
 
 	private ClobUtil() {
 		super();
@@ -31,8 +32,6 @@ public class ClobUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ClobUtil.class);
 
 	public static String toString(Object obj) {
 		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));

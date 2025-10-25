@@ -9,6 +9,10 @@ import common.util.ConvertCaseUtil;
 
 public class ParamMap extends HashMap<String, Object> {
 
+	private static final long serialVersionUID = 1L;
+
+	private static final String VALUE = "value";
+
 	private static class ExceptionMessage {
 
 		public static String isNull(String paramName) {
@@ -21,14 +25,12 @@ public class ParamMap extends HashMap<String, Object> {
 
 	}
 
-	private static final long serialVersionUID = 1L;
-
 	public Object putCamelCase(String key, Object value) {
 		if ( StringUtils.isBlank(key) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(ConvertCaseUtil.camelCase(key), value);
 	}
@@ -38,7 +40,7 @@ public class ParamMap extends HashMap<String, Object> {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(ConvertCaseUtil.pascalCase(key), value);
 	}
@@ -48,7 +50,7 @@ public class ParamMap extends HashMap<String, Object> {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
 		}
 
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(key.toLowerCase(), value);
 	}

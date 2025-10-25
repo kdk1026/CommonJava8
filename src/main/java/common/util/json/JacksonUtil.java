@@ -33,6 +33,10 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
  */
 public class JacksonUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
 	private JacksonUtil() {
 		super();
 	}
@@ -48,10 +52,6 @@ public class JacksonUtil {
 	    }
 
 	}
-
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
-	private static final Logger logger = LoggerFactory.getLogger(JacksonUtil.class);
 
 	public static class ToJson {
 		private ToJson() {

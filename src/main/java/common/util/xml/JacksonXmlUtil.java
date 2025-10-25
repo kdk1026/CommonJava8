@@ -16,6 +16,8 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 public class JacksonXmlUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(JacksonXmlUtil.class);
+
 	private JacksonXmlUtil() {
 		super();
 	}
@@ -27,8 +29,6 @@ public class JacksonXmlUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(JacksonXmlUtil.class);
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, Object> converterXmlStrToMap(String xml) {

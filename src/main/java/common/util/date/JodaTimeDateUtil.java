@@ -26,12 +26,12 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class JodaTimeDateUtil {
 
+	private static final String YYYYMMDD = "yyyyMMdd";
+	public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
+
 	private JodaTimeDateUtil() {
 		super();
 	}
-
-	private static final String YYYYMMDD = "yyyyMMdd";
-	public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 
 	/**
 	 * 현재 날짜 및 시간 반환
@@ -66,7 +66,7 @@ public class JodaTimeDateUtil {
 		public static String getCurrentTime() {
 			return DateTime.now().toString("HHmmss");
 		}
-		
+
 		/**
 		 * 현재 연도 반환
 		 * @return
@@ -74,7 +74,7 @@ public class JodaTimeDateUtil {
 		public static int getYear() {
 			return DateTime.now().getYear();
 		}
-		
+
 		/**
 		 * 현재 월 반환
 		 * @return
@@ -82,7 +82,7 @@ public class JodaTimeDateUtil {
 		public static int getMonth() {
 			return DateTime.now().getMonthOfYear();
 		}
-		
+
 		/**
 		 * 현재 일 반환
 		 * @return
@@ -90,7 +90,7 @@ public class JodaTimeDateUtil {
 		public static int getDayOfMonth() {
 			return DateTime.now().getDayOfMonth();
 		}
-		
+
 		/**
 		 * 현재 시간 반환
 		 * @return
@@ -98,7 +98,7 @@ public class JodaTimeDateUtil {
 		public static int getHour() {
 			return DateTime.now().getHourOfDay();
 		}
-		
+
 		/**
 		 * 현재 분 반환
 		 * @return
@@ -107,7 +107,7 @@ public class JodaTimeDateUtil {
 			return DateTime.now().getMinuteOfHour();
 		}
 	}
-	
+
 	/**
 	 * String 타입 형식의 포맷 변환
 	 */

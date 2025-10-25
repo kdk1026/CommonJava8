@@ -14,6 +14,12 @@ import org.slf4j.LoggerFactory;
  */
 public class AgeUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(AgeUtil.class);
+
+	private static final String YYYYMMDD = "yyyyMMdd";
+	private static final String BIRTH_DAY = "birthDay";
+	private static final String FIX_DAY = "fixDay";
+
 	private AgeUtil() {
 		super();
 	}
@@ -25,12 +31,6 @@ public class AgeUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(AgeUtil.class);
-
-	private static final String YYYYMMDD = "yyyyMMdd";
-	private static final String BIRTH_DAY = "birthDay";
-	private static final String FIX_DAY = "fixDay";
 
 	/**
 	 * 현재일을 기준으로 만나이 계산

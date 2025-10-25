@@ -10,6 +10,9 @@ import common.BaseObject;
 
 public class MobileDetectUtil {
 
+	private static final String ANDROID = "android";
+	private static final String IOS = "ios";
+
 	private MobileDetectUtil() {
 		super();
 	}
@@ -25,9 +28,6 @@ public class MobileDetectUtil {
 	    }
 
 	}
-
-	private static final String ANDROID = "android";
-	private static final String IOS = "ios";
 
 	public static class DeviceType extends BaseObject {
 		private static final long serialVersionUID = 1L;

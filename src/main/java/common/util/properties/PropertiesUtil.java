@@ -30,6 +30,11 @@ import common.util.file.NioFileUtil;
  */
 public class PropertiesUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
+
+	private static final String PROP_CLASS_PATH = "properties" + NioFileUtil.FOLDER_SEPARATOR;
+	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "properties/";
+
 	private PropertiesUtil() {
 		super();
 	}
@@ -45,11 +50,6 @@ public class PropertiesUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(PropertiesUtil.class);
-
-	private static final String PROP_CLASS_PATH = "properties" + NioFileUtil.FOLDER_SEPARATOR;
-	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "properties/";
 
 	/**
 	 * <pre>

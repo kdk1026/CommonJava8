@@ -25,6 +25,13 @@ import org.slf4j.LoggerFactory;
  */
 public class ResponseUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(ResponseUtil.class);
+
+	/**
+	 * @since 1.7
+	 */
+	private static final String UTF8 = StandardCharsets.UTF_8.toString();
+
 	private ResponseUtil() {
 		super();
 	}
@@ -40,13 +47,6 @@ public class ResponseUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ResponseUtil.class);
-
-	/**
-	 * @since 1.7
-	 */
-	private static final String UTF8 = StandardCharsets.UTF_8.toString();
 
 	/**
 	 * <pre>

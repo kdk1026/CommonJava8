@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 public class MessageUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(MessageUtil.class);
+
+	private static final String PROP_CLASS_PATH = "messages/";
+
 	private MessageUtil() {
 		super();
 	}
@@ -22,10 +26,6 @@ public class MessageUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(MessageUtil.class);
-
-	private static final String PROP_CLASS_PATH = "messages/";
 
 	private static Properties getMessagePropertiesClasspath(String propFileName) {
 		if ( StringUtils.isBlank(propFileName) ) {

@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
  */
 public class RequestUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
+
 	private RequestUtil() {
 		super();
 	}
@@ -34,8 +36,6 @@ public class RequestUtil {
 
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(RequestUtil.class);
 
 	private static final String REQUEST_IS_NULL = ExceptionMessage.isNull("request");
 

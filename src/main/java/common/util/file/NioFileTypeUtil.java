@@ -28,6 +28,11 @@ import org.slf4j.LoggerFactory;
  */
 public class NioFileTypeUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
+
+	private static final String EXTENSION = "sExtension";
+	private static final String MIMETYPE = "sMimeType";
+
 	private NioFileTypeUtil() {
 		super();
 	}
@@ -44,8 +49,6 @@ public class NioFileTypeUtil {
 
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(NioFileTypeUtil.class);
-
 	private static class NioFileTypeDetector extends FileTypeDetector {
 		private final Tika tika = new Tika();
 
@@ -54,9 +57,6 @@ public class NioFileTypeUtil {
 			return tika.detect(path);
 		}
 	}
-
-	private static final String EXTENSION = "sExtension";
-	private static final String MIMETYPE = "sMimeType";
 
 	/**
 	 * 파일 MIME Type 구하기

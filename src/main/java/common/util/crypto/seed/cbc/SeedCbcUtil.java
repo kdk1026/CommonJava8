@@ -24,16 +24,16 @@ import org.slf4j.LoggerFactory;
  */
 public class SeedCbcUtil {
 
-	private SeedCbcUtil() {
-		super();
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(SeedCbcUtil.class);
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
 	private static final String KEY_IS_NULL = "sKey는 null일 수 없습니다.";
 	private static final String KEY_SIZE_INVALID = "sKey 길이는 16보다 작을 수 없습니다.";
+
+	private SeedCbcUtil() {
+		super();
+	}
 
 	// 패딩 함수는 SEED의 블록 크기인 16바이트에 맞춰 PKCS7 패딩을 적용합니다.
     private static byte[] setPadding(byte[] data, int blockSize) {

@@ -15,6 +15,10 @@ import common.util.ConvertCaseUtil;
 @SuppressWarnings("rawtypes")
 public class ResultSetMap extends ListOrderedMap {
 
+	private static final long serialVersionUID = 1L;
+
+	private static final String VALUE = "value";
+
 	private static class ExceptionMessage {
 
 		public static String isNull(String paramName) {
@@ -23,13 +27,11 @@ public class ResultSetMap extends ListOrderedMap {
 
 	}
 
-	private static final long serialVersionUID = 1L;
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object put(Object key, Object value) {
 		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(key.toString().toLowerCase(), value);
 	}
@@ -37,7 +39,7 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	public Object putCamel(Object key, Object value) {
 		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(ConvertCaseUtil.camelCase(key.toString()), value);
 	}
@@ -45,7 +47,7 @@ public class ResultSetMap extends ListOrderedMap {
 	@SuppressWarnings("unchecked")
 	public Object putBasic(Object key, Object value) {
 		Objects.requireNonNull(key, ExceptionMessage.isNull("key"));
-		Objects.requireNonNull(value, ExceptionMessage.isNull("value"));
+		Objects.requireNonNull(value, ExceptionMessage.isNull(VALUE));
 
 		return super.put(key, value);
 	}

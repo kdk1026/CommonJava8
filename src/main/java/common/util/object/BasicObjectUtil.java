@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
  */
 public class BasicObjectUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
+
 	private BasicObjectUtil() {
 		super();
 	}
@@ -45,8 +47,6 @@ public class BasicObjectUtil {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(BasicObjectUtil.class);
 
 	/**
 	 * Object의 Field가 Blank인지 체크

@@ -35,6 +35,8 @@ public class FtpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FtpClientUtil.class);
 
+	private static final String ENCODING = StandardCharsets.UTF_8.toString();
+
 	private FtpClientUtil() {
 		super();
 	}
@@ -54,8 +56,6 @@ public class FtpClientUtil {
 		}
 
 	}
-
-	private static final String ENCODING = StandardCharsets.UTF_8.toString();
 
 	private static String sourcePath = "";
 	private static String extension = "";

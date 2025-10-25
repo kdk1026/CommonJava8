@@ -13,11 +13,11 @@ package common.util;
  */
 public class CarriageReturnUtil {
 
+	private static final String BR_TAG = "<br />";
+
 	private CarriageReturnUtil() {
 		super();
 	}
-
-	private static final String BR_TAG = "<br />";
 
 	/**
 	 * 캐리지 리턴 문자열을 줄바꿈 태그로 변환

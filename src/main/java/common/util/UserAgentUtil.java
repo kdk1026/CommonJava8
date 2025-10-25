@@ -20,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class UserAgentUtil {
 
+	private static final String USER_AGENT = "User-Agent";
+	private static final String REQUEST = "request";
+
 	private UserAgentUtil() {
 		super();
 	}
@@ -35,9 +38,6 @@ public class UserAgentUtil {
 	    }
 
 	}
-
-	private static final String USER_AGENT = "User-Agent";
-	private static final String REQUEST = "request";
 
 	/**
 	 * 모바일 브라우저 여부 체크

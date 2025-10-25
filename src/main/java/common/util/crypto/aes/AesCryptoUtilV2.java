@@ -7,7 +7,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.Objects;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,6 +16,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,18 +41,6 @@ import common.util.crypto.EncryptResult;
  */
 public class AesCryptoUtilV2 {
 
-	private AesCryptoUtilV2() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNegative(String paramName) {
-			return String.format("'%s' is negative", paramName);
-		}
-
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(AesCryptoUtilV2.class);
 
 	private static final String CHARSET = StandardCharsets.UTF_8.toString();
@@ -69,17 +57,42 @@ public class AesCryptoUtilV2 {
 	/** */
 	public static final String AES_ECB_PKCS5PADDING ="AES/ECB/PKCS5Padding";
 
+	private AesCryptoUtilV2() {
+		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
+
 	/**
 	 * AES 암호화
 	 * @param plainText
 	 * @param key
+	 * @param iv - null or empty or 16바이트 문자열
 	 * @param padding
 	 * @return
 	 */
-	public static EncryptResult encrypt(String plainText, String key, String padding) {
-		Objects.requireNonNull(plainText, "plainText must not be null");
-		Objects.requireNonNull(key, "key must not be null");
-		Objects.requireNonNull(padding, "padding must not be null");
+	public static EncryptResult encrypt(String plainText, String key, String iv, String padding) {
+		if ( StringUtils.isBlank(plainText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("plainText"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("padding"));
+		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNegative("key"));
@@ -94,9 +107,15 @@ public class AesCryptoUtilV2 {
 			Cipher cipher = Cipher.getInstance(padding);
 
 			if ( padding.indexOf("CBC") > -1 ) {
-				SecureRandom secureRandom = new SecureRandom();
-                byte[] ivBytes = new byte[16];
-                secureRandom.nextBytes(ivBytes);
+				byte[] ivBytes = null;
+
+    			if ( StringUtils.isBlank(iv) ) {
+	    			SecureRandom secureRandom = new SecureRandom();
+	    			ivBytes = new byte[16];
+	    			secureRandom.nextBytes(ivBytes);
+    			} else {
+    				ivBytes = iv.getBytes(CHARSET);
+    			}
 
 				// CBC의 경우, IvParameterSpec 생략 가능
                 IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
@@ -123,15 +142,27 @@ public class AesCryptoUtilV2 {
 	 * AES 복호화
 	 * @param encryptedText
 	 * @param key
-	 * @param iv
+	 * @param iv CBC인 경우 필수
+	 * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
 	 * @param padding
 	 * @return
 	 */
-	public static String decrypt(String encryptedText, String key, String iv, String padding) {
-		Objects.requireNonNull(encryptedText, "encryptedText must not be null");
-		Objects.requireNonNull(key, "key must not be null");
-		Objects.requireNonNull(iv, "iv must not be null for CBC mode");
-		Objects.requireNonNull(padding, "padding must not be null");
+	public static String decrypt(String encryptedText, String key, String iv, boolean isBase64Iv, String padding) {
+		if ( StringUtils.isBlank(encryptedText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encryptedText"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
+		if ( StringUtils.isBlank(iv) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("iv"));
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("padding"));
+		}
 
 		if ( key.length() != 16 && key.length() != 24 && key.length() != 32 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNegative("key"));
@@ -145,9 +176,16 @@ public class AesCryptoUtilV2 {
 			Cipher cipher = Cipher.getInstance(padding);
 
 			if ( padding.indexOf("CBC") > -1 ) {
-				Objects.requireNonNull(iv, "iv for CBC mode");
+				if ( StringUtils.isBlank(iv) ) {
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("iv"));
+				}
 
-				byte[] ivBytes = Base64.getDecoder().decode(iv);
+				byte[] ivBytes = null;
+				if ( isBase64Iv ) {
+					ivBytes = Base64.getDecoder().decode(iv);
+				} else {
+					ivBytes = iv.getBytes(CHARSET);
+				}
 
 				IvParameterSpec ivSpec = new IvParameterSpec(ivBytes);
 				cipher.init(Cipher.DECRYPT_MODE, secretKey, ivSpec);

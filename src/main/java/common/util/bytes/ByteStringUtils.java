@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ByteStringUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
+
 	private ByteStringUtils() {
 		super();
 	}
@@ -35,8 +37,6 @@ public class ByteStringUtils {
 		}
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ByteStringUtils.class);
 
 	/**
 	 * @since 1.7

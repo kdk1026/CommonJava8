@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 public class ByteBufferUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(ByteBufferUtils.class);
+
 	private ByteBufferUtils() {
 		super();
 	}
@@ -30,8 +32,6 @@ public class ByteBufferUtils {
 	    }
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ByteBufferUtils.class);
 
 	private static final String ENCODING = "sEncoding";
 	private static final String BYTE_BUFFER = "byteBuffer";

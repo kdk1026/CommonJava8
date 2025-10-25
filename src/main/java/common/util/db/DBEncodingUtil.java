@@ -14,18 +14,6 @@ public class DBEncodingUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(DBEncodingUtil.class);
 
-	private DBEncodingUtil() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNullOrEmpty(String paramName) {
-	        return String.format("'%s' is null or empty", paramName);
-	    }
-
-	}
-
 	/**
 	 * @since 1.7
 	 */
@@ -37,6 +25,18 @@ public class DBEncodingUtil {
 	 * @since 1.7
 	 */
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
+
+	private DBEncodingUtil() {
+		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
 
 	public static class US7ASCII {
 		private US7ASCII() {

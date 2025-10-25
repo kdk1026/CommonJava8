@@ -29,6 +29,9 @@ public class CommonsProperties {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonsProperties.class);
 
+	private static final String PROP_CLASS_PATH = "/properties" + NioFileUtil.FOLDER_SEPARATOR;
+	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "properties/";
+
 	private static class ExceptionMessage {
 
 		public static String isNull(String paramName) {
@@ -40,9 +43,6 @@ public class CommonsProperties {
 	    }
 
 	}
-
-	private static final String PROP_CLASS_PATH = "/properties" + NioFileUtil.FOLDER_SEPARATOR;
-	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "properties/";
 
 	private FileBasedConfigurationBuilder<PropertiesConfiguration> builder;
 	private PropertiesConfiguration config;

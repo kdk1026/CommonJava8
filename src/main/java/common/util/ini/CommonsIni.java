@@ -32,6 +32,9 @@ public class CommonsIni {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonsIni.class);
 
+	private static final String PROP_CLASS_PATH = "/ini" + NioFileUtil.FOLDER_SEPARATOR;
+	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "ini/";
+
 	private static class ExceptionMessage {
 
 		public static String isNull(String paramName) {
@@ -43,9 +46,6 @@ public class CommonsIni {
 	    }
 
 	}
-
-	private static final String PROP_CLASS_PATH = "/ini" + NioFileUtil.FOLDER_SEPARATOR;
-	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "ini/";
 
 	@SuppressWarnings("unused")
 	private FileBasedConfigurationBuilder<INIConfiguration> builder;

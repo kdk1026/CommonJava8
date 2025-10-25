@@ -27,6 +27,11 @@ public class FileByteArrayUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(FileByteArrayUtil.class);
 
+	/**
+	 * 폴더 구분자
+	 */
+	private static final String FOLDER_SEPARATOR = "/";
+
 	private FileByteArrayUtil() {
 		super();
 	}
@@ -38,11 +43,6 @@ public class FileByteArrayUtil {
 	    }
 
 	}
-
-	/**
-	 * 폴더 구분자
-	 */
-	private static final String FOLDER_SEPARATOR = "/";
 
 	public static class FileViewDownloadVo implements Serializable {
 

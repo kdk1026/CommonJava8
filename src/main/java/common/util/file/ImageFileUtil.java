@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ImageFileUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(ImageFileUtil.class);
+
 	private ImageFileUtil() {
 
 	}
@@ -48,8 +50,6 @@ public class ImageFileUtil {
 		}
 
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ImageFileUtil.class);
 
 	/**
 	 * 이미지 리사이즈

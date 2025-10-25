@@ -12,11 +12,11 @@ import org.slf4j.LoggerFactory;
 
 public class ByteUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(ByteUtils.class);
+
 	private ByteUtils() {
 		super();
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(ByteUtils.class);
 
 	/**
 	 * Object의 Bytes 길이 구하기

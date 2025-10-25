@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 public class CookieUtilVer2 {
 
+	private static final String LOCAL_PROFILE = "local";
+
 	private CookieUtilVer2() {
 		super();
 	}
@@ -29,8 +31,6 @@ public class CookieUtilVer2 {
 	private static final String COOKIE_NAME_IS_NUL = ExceptionMessage.isNull("cookieName");
 	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
 	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
-
-	private static final String LOCAL_PROFILE = "local";
 
 	/**
 	 * Servlet 3.0 쿠키 설정

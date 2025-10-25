@@ -30,6 +30,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class GzipCompressorUtil {
 
+	private static final String UTF_8 = StandardCharsets.UTF_8.name();
+
 	private GzipCompressorUtil() {
 		super();
 	}
@@ -45,9 +47,6 @@ public class GzipCompressorUtil {
 	    }
 
 	}
-
-	private static final String UTF_8 = StandardCharsets.UTF_8.name();
-
 
     /**
      * 문자열을 Gzip으로 압축 후 Base64 인코딩

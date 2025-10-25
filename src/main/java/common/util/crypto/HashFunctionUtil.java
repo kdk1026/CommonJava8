@@ -21,11 +21,11 @@ import org.slf4j.LoggerFactory;
  */
 public class HashFunctionUtil {
 
+	private static final Logger logger = LoggerFactory.getLogger(HashFunctionUtil.class);
+
 	private HashFunctionUtil() {
 		super();
 	}
-
-	private static final Logger logger = LoggerFactory.getLogger(HashFunctionUtil.class);
 
 	/**
 	 * Md5 해쉬함수로 인코딩<br/>

@@ -42,6 +42,8 @@ public class SftpClientUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(SftpClientUtil.class);
 
+	private static final String DEST_PATH = "sDestPath";
+
 	private SftpClientUtil() {
 
 	}
@@ -65,8 +67,6 @@ public class SftpClientUtil {
 	private Session session = null;
 	private Channel channel = null;
 	private ChannelSftp channelSftp = null;
-
-	private static final String DEST_PATH = "sDestPath";
 
 	/**
 	 * SFTP 연결

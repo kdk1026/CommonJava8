@@ -35,22 +35,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FileUtil {
 
-	private FileUtil() {
-		super();
-	}
-
-	private static class ExceptionMessage {
-
-		public static String isNullOrEmpty(String paramName) {
-	        return String.format("'%s' is null or empty", paramName);
-	    }
-
-		public static String isNegative(String paramName) {
-			return String.format("'%s' is negative", paramName);
-		}
-
-	}
-
 	private static final Logger logger = LoggerFactory.getLogger(FileUtil.class);
 
 	/**
@@ -66,6 +50,22 @@ public class FileUtil {
 	private static final int BUFFER_SIZE = 4096;
 
 	private static final String FILE_PATH = "filePath";
+
+	private FileUtil() {
+		super();
+	}
+
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
+	}
 
 	/**
 	 * 파일의 존재여부 확인
