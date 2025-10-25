@@ -27,13 +27,13 @@ public class TestAesCrypto {
 
 		key = "hEUEFcfoo7HxwDfIHmO2cYG9H0t1COCs";
 
-		EncryptResult encryptResult = AesCryptoUtilV2.encrypt("안녕", key, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
+		EncryptResult encryptResult = AesCryptoUtilV2.encrypt("안녕", key, null, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
 
 		String encryptedText = encryptResult.getEncryptedText();
 		System.out.println(encryptedText);
 		String iv = encryptResult.getIv();
 
-		String decryptedText = AesCryptoUtilV2.decrypt(encryptedText, key, iv, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
+		String decryptedText = AesCryptoUtilV2.decrypt(encryptedText, key, iv, true, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
 		System.out.println(decryptedText);
 
 		assertTrue(true);
