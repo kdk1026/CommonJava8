@@ -1,9 +1,14 @@
 package common.util.valid;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <pre>
@@ -18,6 +23,8 @@ import java.util.regex.Pattern;
  * @author 김대광
  */
 public class ValidUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(ValidUtil.class);
 
 	private ValidUtil() {
 		super();
@@ -64,6 +71,33 @@ public class ValidUtil {
 
 		int strLen = str.length();
 		return (strLen < min) || (strLen > max);
+	}
+
+	/**
+	 * URL 체크
+	 * @param str
+	 * @return
+	 */
+	public static boolean isSafeUrl(String str) {
+		if ( isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		try {
+			// 절대 URL 검사
+			URL url = new URL(str);
+			String protocol = url.getProtocol();
+
+			return "http".equalsIgnoreCase(protocol) || "https".equalsIgnoreCase(protocol);
+
+		} catch (MalformedURLException e) {
+			logger.error("Not an absolute URL, checking for relative path: {}", e.getMessage());
+			// 상대 경로 검사
+			return str.equals("/") || str.startsWith("/");
+		} catch (Exception e) {
+			logger.error("Unexpected error during URL check: {}", e.getMessage());
+			return false;
+		}
 	}
 
 	/**
@@ -174,7 +208,7 @@ public class ValidUtil {
 		}
 
 		/**
-		 * 문자열에 특수문자(알파벳, 숫자, 언더스코어(_)를 제외한 문자)가 포함되어 있는지 체크
+		 * 문자열에 특수문자(알파벳, 숫자, 언더스코어(_), 공백을 제외한 문자)가 포함되어 있는지 체크
 		 * @param str
 		 * @return
 		 * @throws IllegalArgumentException
@@ -184,12 +218,33 @@ public class ValidUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
-			for (char ch : str.toCharArray()) {
-	            if ( !Character.isLetterOrDigit(ch) && ch != '_' ) {
-	                return true;
-	            }
-	        }
-	        return false;
+	        return Pattern.compile("[^\\w\\s]").matcher(str).find();
+		}
+
+		/**
+		 * 공백 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isSpace(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			return Pattern.compile("[\\s]").matcher(str).find();
+		}
+
+		/**
+		 * 한글을 제외한 문자로만 이루어져 있는지 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isNotHangul(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			return str.matches("[^가-힣]+");
 		}
 	}
 
@@ -482,8 +537,9 @@ public class ValidUtil {
 		 * 비밀번호 형식 체크
 		 *  1. 첫 글자 영문
 		 *  2. 첫 글자 이후 영문, 숫자, 특수문자 조합
-		 *    2.1. 영문/숫자/특수문자 중 2가지 조합 시, 10자리 이상
-		 *    2.2. 영문/숫자/특수문자 중 3가지 조합 시, 8자리 이상
+		 *   - 영문, 숫자, 특수문자 중 2가지 조합: 최소 10자 이상
+		 *   - 영문, 숫자, 특수문자 중 3가지 조합: 최소 8자 이상
+		 *   - 1가지 이하 조합은 유효하지 않음.
 		 * </pre>
 		 * @param str
 		 * @return
