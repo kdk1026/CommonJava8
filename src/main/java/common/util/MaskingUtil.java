@@ -237,23 +237,11 @@ public class MaskingUtil {
 		}
 
 		int atIndex = email.indexOf("@");
-		if (atIndex <= 2) {
-			throw new IllegalArgumentException("Invalid email address");
-		}
+
 		String idPart = email.substring(0, atIndex);
 		String domainPart = email.substring(atIndex);
 
-		int repeatCount = idPart.length() - 2;
-		if (repeatCount < 0) {
-			repeatCount = 0;
-		}
-
-		StringBuilder maskedStars = new StringBuilder();
-		for (int i = 0; i < repeatCount; i++) {
-            maskedStars.append("*");
-        }
-
-		String maskedIdPart = idPart.substring(0, 2) + maskedStars.toString();
+		String maskedIdPart = maskId(idPart);
 
 		return maskedIdPart + domainPart;
 	}
