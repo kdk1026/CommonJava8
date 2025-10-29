@@ -238,6 +238,10 @@ public class MaskingUtil {
 
 		int atIndex = email.indexOf("@");
 
+		if ( atIndex < 1 ) {
+			throw new IllegalArgumentException("Invalid email address");
+		}
+
 		String idPart = email.substring(0, atIndex);
 		String domainPart = email.substring(atIndex);
 
