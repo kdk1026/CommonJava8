@@ -18,6 +18,7 @@ import java.util.Locale;
  * 개정이력
  * -----------------------------------
  * 21.07.31	CalcDate 메소드 일부 추가
+ * 25.11.03 메소드명 정리
  * </pre>
  */
 public class Jsr310DateUtil {
@@ -51,7 +52,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String getTodayString(String dateFormat) {
+		public static String getTodayStringFormatted(String dateFormat) {
 			return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat));
 		}
 
@@ -178,7 +179,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String getDateToString(Date date, String dateFormat) {
+		public static String getDateToFormattedString(Date date, String dateFormat) {
 			LocalDateTime localDateTime = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 			return localDateTime.format(DateTimeFormatter.ofPattern(dateFormat));
 		}
@@ -240,7 +241,7 @@ public class Jsr310DateUtil {
 		 * @param days
 		 * @return
 		 */
-		public static String plusMinusDay(String strDate, int days) {
+		public static String plusMinusDayFrom(String strDate, int days) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			if (days > 0) {
@@ -276,7 +277,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String plusMinusMonth(int months, String dateFormat) {
+		public static String plusMinusMonthFormatted(int months, String dateFormat) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.now();
 			if (months > 0) {
@@ -314,7 +315,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String plusMinusMonth(String strDate, int months, String dateFormat) {
+		public static String plusMinusMonthFormatted(String strDate, int months, String dateFormat) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(dateFormat));
 			if (months > 0) {
@@ -350,7 +351,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String plusMinusYear(int years, String dateFormat) {
+		public static String plusMinusYearFormatted(int years, String dateFormat) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.now();
 			if (years > 0) {
@@ -369,7 +370,7 @@ public class Jsr310DateUtil {
 		 * @param years
 		 * @return
 		 */
-		public static String plusMinusYear(String strDate, int years) {
+		public static String plusMinusYearFrom(String strDate, int years) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			if (years > 0) {
@@ -388,7 +389,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String plusMinusYear(String strDate, int years, String dateFormat) {
+		public static String plusMinusYearFromFormatted(String strDate, int years, String dateFormat) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(dateFormat));
 			if (years > 0) {
@@ -435,7 +436,7 @@ public class Jsr310DateUtil {
 		 * @param hours
 		 * @return
 		 */
-		public static String plusMinusHour(String strDate, int hours) {
+		public static String plusMinusHourFrom(String strDate, int hours) {
 			String strDateRes = "";
 			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
 			if (hours > 0) {
@@ -472,7 +473,7 @@ public class Jsr310DateUtil {
 		 * @param minutes
 		 * @return
 		 */
-		public static String plusMinusMinute(String strDate, int minutes) {
+		public static String plusMinusMinuteFrom(String strDate, int minutes) {
 			String strDateRes = "";
 			LocalDateTime localDateTime = LocalDateTime.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDDHHMMSS));
 			if (minutes > 0) {
@@ -617,7 +618,7 @@ public class Jsr310DateUtil {
 		 * @param strDate
 		 * @return
 		 */
-		public static int getDayOfWeek(String strDate) {
+		public static int getDayOfWeekFromDate(String strDate) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.getDayOfWeek().getValue();
 		}
@@ -626,7 +627,7 @@ public class Jsr310DateUtil {
 		 * 현재 날짜의 1일의 요일 반환
 		 * @return
 		 */
-		public static int getFirstDayOfWeek() {
+		public static int getWeekStartDay() {
 			String strDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMM01"));
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.getDayOfWeek().getValue();
@@ -637,7 +638,7 @@ public class Jsr310DateUtil {
 		 * @param strDate
 		 * @return
 		 */
-		public static int getFirstDayOfWeek(String strDate) {
+		public static int getWeekStartDayFromDate(String strDate) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.withDayOfMonth(1).getDayOfWeek().getValue();
 		}
@@ -647,7 +648,7 @@ public class Jsr310DateUtil {
 		 * @param locale
 		 * @return
 		 */
-		public static String getDayOfWeekLocale(Locale locale) {
+		public static String getTodayDayOfWeekLocale(Locale locale) {
 			LocalDate localDate = LocalDate.now();
 			return localDate.format(DateTimeFormatter.ofPattern("E", locale));
 		}
@@ -658,7 +659,7 @@ public class Jsr310DateUtil {
 		 * @param locale
 		 * @return
 		 */
-		public static String getDayOfWeekLocale(String strDate, Locale locale) {
+		public static String getDayOfWeekFromDateLocale(String strDate, Locale locale) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.format(DateTimeFormatter.ofPattern("E", locale));
 		}
@@ -677,7 +678,7 @@ public class Jsr310DateUtil {
 		 * 현재 날짜의 마지막 일자를 반환
 		 * @return
 		 */
-		public static int getLastDayOfMonth() {
+		public static int getEndOfCurrentMonth() {
 			LocalDate localDate = LocalDate.now();
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		}
@@ -686,7 +687,7 @@ public class Jsr310DateUtil {
 		 * 현재 날짜의 마지막 일자를 yyyyMMdd 형식으로 반환
 		 * @return
 		 */
-		public static String getLastDayOfMonthString() {
+		public static String getEndOfCurrentMonthString() {
 			LocalDate localDate = LocalDate.now();
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 		}
@@ -696,7 +697,7 @@ public class Jsr310DateUtil {
 		 * @param strDate
 		 * @return
 		 */
-		public static int getLastDayOfMonth(String strDate) {
+		public static int getEndOfMonthFromDate(String strDate) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
 		}
@@ -706,7 +707,7 @@ public class Jsr310DateUtil {
 		 * @param strDate
 		 * @return
 		 */
-		public static String getLastDayOfMonthString(String strDate) {
+		public static String getEndOfMonthStringFromDate(String strDate) {
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(YYYYMMDD));
 			return localDate.with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern(YYYYMMDD));
 		}

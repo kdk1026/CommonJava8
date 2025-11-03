@@ -133,7 +133,7 @@ public class ApnsPushUtil {
 					PushedNotification notification = notifications.get(i);
 
 					int identifier = notification.getIdentifier();
-					String sendDate = Jsr310DateUtil.Today.getTodayString("yyyy-MM-dd HH:mm:ss");
+					String sendDate = Jsr310DateUtil.Today.getTodayStringFormatted("yyyy-MM-dd HH:mm:ss");
 					boolean isSuccess = false;
 
 					rtnMap = new HashMap<>();

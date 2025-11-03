@@ -169,7 +169,7 @@ public class FcmPushUtil {
 		header.put("Authorization", sAuthorization);
 
 		String sRes = HttpClientUtil.RawRequest.json(true, FCM_URL, header, rawPayload);
-		String sendDate = Jsr310DateUtil.Today.getTodayString("yyyy-MM-dd HH:mm:ss");
+		String sendDate = Jsr310DateUtil.Today.getTodayStringFormatted("yyyy-MM-dd HH:mm:ss");
 
 		try {
 			JsonNode rtnNode = mapper.readTree(sRes);
