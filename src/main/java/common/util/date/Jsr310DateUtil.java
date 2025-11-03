@@ -315,7 +315,7 @@ public class Jsr310DateUtil {
 		 * @param dateFormat
 		 * @return
 		 */
-		public static String plusMinusMonthFormatted(String strDate, int months, String dateFormat) {
+		public static String plusMinusMonthFromFormatted(String strDate, int months, String dateFormat) {
 			String strDateRes = "";
 			LocalDate localDate = LocalDate.parse(strDate, DateTimeFormatter.ofPattern(dateFormat));
 			if (months > 0) {
