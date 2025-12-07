@@ -290,7 +290,7 @@ public class UserAgentUtil {
 			Matcher matcher = Pattern.compile("Mac OS X\\s*([0-9._]+)").matcher(userAgent);
 
 			if ( matcher.find() ) {
-				String version = matcher.group(1);
+				String version = matcher.group(1).replace('_', '.');
 
 				return "Mac OS " + version;
 			}
