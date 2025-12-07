@@ -114,7 +114,7 @@ public class UserAgentUtil {
 		public static boolean isPC(HttpServletRequest request) {
 			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
-			return !isTablet(request) && !isOnlyMobile(request);
+			return !isTablet(request) && !isMobile(request);
 		}
 	}
 
