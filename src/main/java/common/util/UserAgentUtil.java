@@ -1,6 +1,8 @@
 package common.util;
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,6 +24,8 @@ public class UserAgentUtil {
 
 	private static final String USER_AGENT = "User-Agent";
 	private static final String REQUEST = "request";
+	private static final String MOBILE = "mobile";
+	private static final String UNKNOWN = "Unknown";
 
 	private UserAgentUtil() {
 		super();
@@ -39,42 +43,322 @@ public class UserAgentUtil {
 
 	}
 
-	/**
-	 * 모바일 브라우저 여부 체크
-	 * @param request
-	 * @return
-	 */
-	public static boolean isMobile(HttpServletRequest request) {
-		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+	public static class Device {
+		private Device() {
+		}
 
-		String sUserAgent = request.getHeader(USER_AGENT);
+		/**
+		 * 태블릿 기기 감지
+		 * @param request
+		 * @return
+		 */
+		public static boolean isTablet(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
-		return sUserAgent != null && sUserAgent.indexOf("Mobi") > -1;
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains("ipad") ||
+					(userAgent.contains("android") && !userAgent.contains(MOBILE)) ||
+					userAgent.contains("tablet");
+		}
+
+		/**
+		 * 모바일 기기(태블릿 제외) 감지
+		 * @param request
+		 * @return
+		 */
+		public static boolean isOnlyMobile(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains(MOBILE) && !isTablet(request);
+		}
+
+		/**
+		 * 모바일 기기(태블릿 포함) 감지
+		 * @param request
+		 * @return
+		 */
+		public static boolean isMobile(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains(MOBILE);
+		}
+
+		/**
+		 * PC(데스크톱) 기기 감지
+		 * @param request
+		 * @return
+		 */
+		public static boolean isPC(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			return !isTablet(request) && !isOnlyMobile(request);
+		}
 	}
 
-	/**
-	 * Android, iOS 여부 체크
-	 * @param request
-	 * @return
+	public static class Os {
+		private Os() {
+		}
+
+		/**
+		 * 윈도우 여부 체크
+		 * @param request
+		 * @return
+		 */
+		public static boolean isWindows(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        }
+
+			return userAgent.contains("Windows NT");
+		}
+
+		/**
+		 * Linux 여부 체크
+		 * @param request
+		 * @return
+		 */
+		public static boolean isLinux(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains("linux");
+		}
+
+		/**
+		 * Mac 여부 체크
+		 * @param request
+		 * @return
+		 */
+		public static boolean isMac(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains("macintosh") || userAgent.contains("mac os x");
+		}
+
+		/**
+		 * Android 여부 체크
+		 * @param request
+		 * @return
+		 */
+		public static boolean isAndroid(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+	            return false;
+	        } else {
+	        	userAgent = userAgent.toLowerCase();
+	        }
+
+			return userAgent.contains("android");
+		}
+
+		/**
+		 * iOS 여부 체크
+		 * @param request
+		 * @return
+		 */
+		public static boolean isIos(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+				return false;
+			} else {
+				userAgent = userAgent.toLowerCase();
+			}
+
+			return userAgent.contains("iPhone") || userAgent.contains("iPad") || userAgent.contains("iPod");
+		}
+	}
+
+	/*
+	 * yauaa 라이브러리 사용 권장 (User Agent 문자열의 형식은 언제든지 바뀔 수 있음)
 	 */
-	public static String isMobileOs(HttpServletRequest request) {
-		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
-
-		String sUserAgent = request.getHeader(USER_AGENT);
-
-		if ( sUserAgent == null ) {
-            return "";
-        }
-
-		if ( sUserAgent.contains("Android") ) {
-			return "Android";
+	public static class OsVersion {
+		private OsVersion() {
 		}
 
-		if ( sUserAgent.contains("iPhone") || sUserAgent.contains("iPad") || sUserAgent.contains("iPod") ) {
-			return "iOS";
+		/**
+		 * Windows 버전 가져오기
+		 * @param request
+		 * @return
+		 */
+		public static String getWindowsVersion(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			if ( !Os.isWindows(request) ) {
+				return UNKNOWN;
+			}
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+				return UNKNOWN;
+			} else {
+				userAgent = userAgent.toLowerCase();
+			}
+
+			Matcher matcher = Pattern.compile("Windows NT (\\d+\\.\\d+)").matcher(userAgent);
+			if ( matcher.find() ) {
+				String ntVersion = matcher.group(1);
+
+				switch (ntVersion) {
+	                case "5.1":
+	                    return "Windows XP";
+	                case "6.1":
+	                    return "Windows 7";
+	                case "6.2":
+	                    return "Windows 8";
+	                case "6.3":
+	                    return "Windows 8.1";
+	                case "10.0":
+	                    return "Windows 10/11";
+	                default:
+	                    return "Windows NT " + ntVersion;
+				}
+			}
+
+			return "Windows (Version Unknown)";
 		}
 
-		return "";
+		/**
+		 * Mac OS 버전 가져오기
+		 *  - mac OS 11부터는 10.15.7 고정
+		 * @param request
+		 * @return
+		 */
+		public static String getMacOsVersion(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			if ( !Os.isMac(request) ) {
+				return UNKNOWN;
+			}
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+				return UNKNOWN;
+			} else {
+				userAgent = userAgent.toLowerCase();
+			}
+
+			Matcher matcher = Pattern.compile("Mac OS X\\s*([0-9._]+)").matcher(userAgent);
+
+			if ( matcher.find() ) {
+				String version = matcher.group(1);
+
+				return "Mac OS " + version;
+			}
+
+			return UNKNOWN;
+		}
+
+		/**
+		 * Android 버전 가져오기
+		 * @param request
+		 * @return
+		 */
+		public static String getAndroidVersion(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			if ( !Os.isAndroid(request) ) {
+				return UNKNOWN;
+			}
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+				return UNKNOWN;
+			} else {
+				userAgent = userAgent.toLowerCase();
+			}
+
+			Matcher matcher = Pattern.compile("Android\\s+([0-9.]+)").matcher(userAgent);
+
+			if ( matcher.find() ) {
+				String version = matcher.group(1);
+
+				return "Android " + version;
+			}
+
+			return UNKNOWN;
+		}
+
+		/**
+		 * iOS 버전 가져오기
+		 * @param request
+		 * @return
+		 */
+		public static String getIosVersion(HttpServletRequest request) {
+			Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
+
+			if ( !Os.isIos(request) ) {
+				return UNKNOWN;
+			}
+
+			String userAgent = request.getHeader(USER_AGENT);
+
+			if ( userAgent == null || userAgent.isEmpty() ) {
+				return UNKNOWN;
+			} else {
+				userAgent = userAgent.toLowerCase();
+			}
+
+			Matcher matcher = Pattern.compile("CPU\\s+(?:iPhone|iPad|iPod)\\s+OS\\s+([0-9_]+)\\s+like\\s+Mac\\s+OS\\s+X").matcher(userAgent);
+
+			if ( matcher.find() ) {
+				String version = matcher.group(1).replace('_', '.');
+
+				return "iOS " + version;
+			}
+
+			return UNKNOWN;
+		}
 	}
 
 	/**
@@ -105,11 +389,11 @@ public class UserAgentUtil {
 
 		String userAgent = request.getHeader(USER_AGENT);
 
-        if (userAgent == null) {
-            return "Unknown";
-        }
-
-        userAgent = userAgent.toLowerCase();
+		if ( userAgent == null || userAgent.isEmpty() ) {
+			return UNKNOWN;
+		} else {
+			userAgent = userAgent.toLowerCase();
+		}
 
         if (userAgent.contains("samsungbrowser")) {
             return "Samsung Internet";
@@ -133,4 +417,3 @@ public class UserAgentUtil {
     }
 
 }
-

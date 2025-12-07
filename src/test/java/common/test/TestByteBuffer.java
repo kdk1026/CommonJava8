@@ -12,7 +12,7 @@ public class TestByteBuffer {
 
 	@Test
 	public void test() {
-		String sDate = Jsr310DateUtil.Today.getTodayString("yyyyMMdd");
+		String sDate = Jsr310DateUtil.Today.getTodayStringFormatted("yyyyMMdd");
 
 		String sMsg = "8400100"+sDate;
 		byte[] bMsg = sMsg.getBytes();
@@ -30,7 +30,7 @@ public class TestByteBuffer {
 	}
 
 	public void testArrayCopy() {
-		String sDate = Jsr310DateUtil.Today.getTodayString("yyyyMMdd");
+		String sDate = Jsr310DateUtil.Today.getTodayStringFormatted("yyyyMMdd");
 
 		byte[] bMsg = new byte[15];
 
@@ -82,7 +82,7 @@ public class TestByteBuffer {
 	}
 
 	public void testBuffer() {
-		String sDate = Jsr310DateUtil.Today.getTodayString("yyyyMMdd");
+		String sDate = Jsr310DateUtil.Today.getTodayStringFormatted("yyyyMMdd");
 
 		ByteBuffer buffer = ByteBuffer.allocate(15);
 

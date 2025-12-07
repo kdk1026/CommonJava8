@@ -13,8 +13,8 @@ public class TestCreateCalander {
 		String yearMonth = "202011";
 		String yearMonthDay = yearMonth + "01";
 
-		int dayOfWeek = Jsr310DateUtil.GetDayOfWeek.getFirstDayOfWeek(yearMonthDay);
-		int lastDayOfMonth = Jsr310DateUtil.GetDayOfMonth.getLastDayOfMonth(yearMonthDay);
+		int dayOfWeek = Jsr310DateUtil.GetDayOfWeek.getWeekStartDayFromDate(yearMonthDay);
+		int lastDayOfMonth = Jsr310DateUtil.GetDayOfMonth.getEndOfMonthFromDate(yearMonthDay);
 
 		// Joda-Time 과 Java 8의 JSR-310은 Calendar와 다르게 일요일이 7이므로 1로 변경
 		if ( dayOfWeek == 7 ) {
