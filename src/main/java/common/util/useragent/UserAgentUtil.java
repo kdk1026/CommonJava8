@@ -1,4 +1,4 @@
-package common.util;
+package common.util.useragent;
 
 import java.util.Objects;
 import java.util.regex.Matcher;
