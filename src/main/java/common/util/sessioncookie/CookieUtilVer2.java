@@ -35,6 +35,7 @@ public class CookieUtilVer2 {
 	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
 	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
 
+	// static class의 public 변수(C의 구조체와 유사 형태)는 SonarLint가 지적함
 	@Getter
 	@Builder
 	public static class CookieConfig {
