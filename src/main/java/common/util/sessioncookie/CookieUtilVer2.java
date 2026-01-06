@@ -57,12 +57,12 @@ public class CookieUtilVer2 {
 		private String value;
 
 		@Builder.Default
-		public int expiry = -1; 	// 기본값: 세션 쿠키
+		private int expiry = -1; 	// 기본값: 세션 쿠키
 
-		protected String domain;
+		private String domain;
 
 		@Builder.Default
-		protected String profile = LOCAL_PROFILE;
+		private String profile = LOCAL_PROFILE;
 	}
 
 	/**
