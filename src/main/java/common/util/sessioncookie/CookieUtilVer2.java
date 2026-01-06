@@ -35,7 +35,21 @@ public class CookieUtilVer2 {
 	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
 	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
 
-	// static class의 public 변수(C의 구조체와 유사 형태)는 SonarLint가 지적함
+	 /**
+	 * <pre>
+	 * -----------------------------------
+	 * 개정이력
+	 * -----------------------------------
+	 * 2026. 1. 7. 김대광	최초작성
+	 * </pre>
+	 *
+	 * <pre>
+	 * static class의 public 변수(C의 구조체와 유사 형태)는 SonarLint가 지적하므로 LomBok 이용한 Builder 패턴 스타일로 처리
+	 * - Make destFilePath a static final constant or non-public and provide accessors if needed.
+	 * </pre>
+	 *
+	 * @author 김대광
+	 */
 	@Getter
 	@Builder
 	public static class CookieConfig {
