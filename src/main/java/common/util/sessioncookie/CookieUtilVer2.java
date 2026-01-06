@@ -6,6 +6,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Builder;
+import lombok.Getter;
+
 public class CookieUtilVer2 {
 
 	private static final String LOCAL_PROFILE = "local";
@@ -32,42 +35,64 @@ public class CookieUtilVer2 {
 	private static final String NAME_IS_NUL = ExceptionMessage.isNull("name");
 	private static final String VALUE_IS_NUL = ExceptionMessage.isNull("value");
 
+	@Getter
+	@Builder
+	public static class CookieConfig {
+		private String name;
+		private String value;
+
+		@Builder.Default
+		public int expiry = -1; 	// 기본값: 세션 쿠키
+
+		protected String domain;
+
+		@Builder.Default
+		protected String profile = LOCAL_PROFILE;
+	}
+
 	/**
 	 * Servlet 3.0 쿠키 설정
 	 * @param response
-	 * @param name
-	 * @param value
-	 * @param expiry
-	 * @param domain
-	 * @param profile
+	 * @param cookieConfig
+	 * <pre>
+	 * {@code
+	 * CookieConfig config = CookieConfig.builder()
+	 * 	.name("sid")
+	 * 	.value("abc123")
+	 * 	.expiry(3600)
+	 * 	.domain("example.com");
+	 * 	.profile("local")
+	 * 	.build();
+	 * }
+	 * </pre>
 	 */
-	public static void addCookie(HttpServletResponse response, String name, String value, int expiry, String domain, String profile) {
+	public static void addCookie(HttpServletResponse response, CookieConfig cookieConfig) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
-		Objects.requireNonNull(name, NAME_IS_NUL);
-		if (name.trim().isEmpty()) {
+		Objects.requireNonNull(cookieConfig.name, NAME_IS_NUL);
+		if (cookieConfig.name.trim().isEmpty()) {
 			throw new IllegalArgumentException(NAME_IS_NUL);
 		}
 
-        Objects.requireNonNull(value, VALUE_IS_NUL);
-        if (value.trim().isEmpty()) {
+        Objects.requireNonNull(cookieConfig.value, VALUE_IS_NUL);
+        if (cookieConfig.value.trim().isEmpty()) {
 			throw new IllegalArgumentException(VALUE_IS_NUL);
 		}
 
-		if ( expiry < 0 ) {
+		if ( cookieConfig.expiry < 0 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNegative("expiry"));
 		}
 
 
-		Cookie cookie = new Cookie(name, value);
-		cookie.setMaxAge(expiry);
+		Cookie cookie = new Cookie(cookieConfig.name, cookieConfig.value);
+		cookie.setMaxAge(cookieConfig.expiry);
 		cookie.setPath("/");
 
-		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
-			cookie.setDomain(domain);
+		if ( (cookieConfig.domain != null) && (!cookieConfig.domain.trim().isEmpty()) ) {
+			cookie.setDomain(cookieConfig.domain);
 		}
 
 		cookie.setHttpOnly(true);
-		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
+		cookie.setSecure(!LOCAL_PROFILE.equals(cookieConfig.profile));
 
 		response.addCookie(cookie);
 	}
@@ -75,32 +100,39 @@ public class CookieUtilVer2 {
 	/**
 	 * Servlet 3.0 세션 쿠키 설정
 	 * @param response
-	 * @param name
-	 * @param value
-	 * @param domain
-	 * @param profile
+	 * @param cookieConfig
+	 * <pre>
+	 * {@code
+	 * CookieConfig config = CookieConfig.builder()
+	 * 	.name("sid")
+	 * 	.value("abc123")
+	 * 	.domain("example.com");
+	 * 	.profile("local")
+	 * 	.build();
+	 * }
+	 * </pre>
 	 */
-	public static void addSessionCookie(HttpServletResponse response, String name, String value, String domain, String profile) {
+	public static void addSessionCookie(HttpServletResponse response, CookieConfig cookieConfig) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
-		Objects.requireNonNull(name, NAME_IS_NUL);
-		if (name.trim().isEmpty()) {
+		Objects.requireNonNull(cookieConfig.name, NAME_IS_NUL);
+		if (cookieConfig.name.trim().isEmpty()) {
 			throw new IllegalArgumentException(NAME_IS_NUL);
 		}
 
-		Objects.requireNonNull(value, VALUE_IS_NUL);
-		if (value.trim().isEmpty()) {
+        Objects.requireNonNull(cookieConfig.value, VALUE_IS_NUL);
+        if (cookieConfig.value.trim().isEmpty()) {
 			throw new IllegalArgumentException(VALUE_IS_NUL);
 		}
 
-		Cookie cookie = new Cookie(name, value);
+		Cookie cookie = new Cookie(cookieConfig.name, cookieConfig.value);
 		cookie.setPath("/");
 
-		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
-			cookie.setDomain(domain);
+		if ( (cookieConfig.domain != null) && (!cookieConfig.domain.trim().isEmpty()) ) {
+			cookie.setDomain(cookieConfig.domain);
 		}
 
 		cookie.setHttpOnly(true);
-		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
+		cookie.setSecure(!LOCAL_PROFILE.equals(cookieConfig.profile));
 
 		response.addCookie(cookie);
 	}
@@ -181,27 +213,34 @@ public class CookieUtilVer2 {
 	 * 특정 쿠키 제거
 	 * @param request
 	 * @param response
-	 * @param cookieName
-	 * @param domain
-	 * @param profile
+	 * @param cookieConfig
+	 * <pre>
+	 * {@code
+	 * CookieConfig config = CookieConfig.builder()
+	 * 	.name("sid")
+	 * 	.domain("example.com");
+	 * 	.profile("local")
+	 * 	.build();
+	 * }
+	 * </pre>
 	 */
-	public static void removeCookie(HttpServletResponse response, String cookieName, String domain, String profile) {
+	public static void removeCookie(HttpServletResponse response, CookieConfig cookieConfig) {
 		Objects.requireNonNull(response, RESPONSE_IS_NUL);
-		Objects.requireNonNull(cookieName, COOKIE_NAME_IS_NUL);
-		if (cookieName.trim().isEmpty()) {
-			throw new IllegalArgumentException(COOKIE_NAME_IS_NUL);
+		Objects.requireNonNull(cookieConfig.name, NAME_IS_NUL);
+		if (cookieConfig.name.trim().isEmpty()) {
+			throw new IllegalArgumentException(NAME_IS_NUL);
 		}
 
-		Cookie cookie = new Cookie(cookieName, null);
+		Cookie cookie = new Cookie(cookieConfig.name, null);
 		cookie.setPath("/");
 		cookie.setMaxAge(0);
 
-		if ( (domain != null) && (!domain.trim().isEmpty()) ) {
-			cookie.setDomain(domain);
+		if ( (cookieConfig.domain != null) && (!cookieConfig.domain.trim().isEmpty()) ) {
+			cookie.setDomain(cookieConfig.domain);
 		}
 
 		cookie.setHttpOnly(true);
-		cookie.setSecure(!LOCAL_PROFILE.equals(profile));
+		cookie.setSecure(!LOCAL_PROFILE.equals(cookieConfig.profile));
 
 		response.addCookie(cookie);
 	}
