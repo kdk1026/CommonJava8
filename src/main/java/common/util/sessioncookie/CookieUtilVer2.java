@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 public class CookieUtilVer2 {
 
@@ -52,6 +53,7 @@ public class CookieUtilVer2 {
 	 */
 	@Getter
 	@Builder
+	@ToString
 	public static class CookieConfig {
 		private String name;
 		private String value;
