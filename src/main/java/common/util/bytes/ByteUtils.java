@@ -36,8 +36,12 @@ public class ByteUtils {
 		try {
 			Field[] fields = obj.getClass().getDeclaredFields();
 			for (Field f : fields) {
-				if (f.get(obj) != null) {
-					nByteLen += f.get(obj).toString().getBytes(sEncoding).length;
+				f.setAccessible(true);
+
+				Object value = f.get(obj);
+
+				if (value != null) {
+					nByteLen += value.toString().getBytes(sEncoding).length;
 				}
 			}
 		} catch (UnsupportedEncodingException | IllegalArgumentException | IllegalAccessException e) {
