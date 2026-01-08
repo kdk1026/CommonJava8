@@ -38,7 +38,7 @@ public class BasicStringUtils {
 	}
 
     /**
-     * null인 경우 기본 문자열로 대체
+     * Null인 경우 기본 문자열로 대체
      * @param str
      * @param defaultStr
      * @return
