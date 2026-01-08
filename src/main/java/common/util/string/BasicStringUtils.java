@@ -53,7 +53,7 @@ public class BasicStringUtils {
 	 * @param validChars
 	 * @return
 	 */
-	public static boolean isContins(final String str, final String validChars) {
+	public static boolean isContains(final String str, final String validChars) {
 		if ( isBlank(str) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
