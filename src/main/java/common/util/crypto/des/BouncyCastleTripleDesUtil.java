@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import common.util.crypto.EncryptResult;
+import common.util.crypto.aes.BouncyCastleAesUtil.ExceptionMessage;
 
 /**
  * <pre>
@@ -84,15 +85,21 @@ public class BouncyCastleTripleDesUtil {
 	}
 
 	/**
-	 * Triple DES 키 생성 (192 비트)
+	 * Triple DES 키 생성 (128, 192 비트 가능)
 	 * @param keySize
 	 * @return
 	 * @throws NoSuchAlgorithmException
 	 * @throws NoSuchProviderException
 	 */
-	public static SecretKey generateTripleDesKey() throws NoSuchAlgorithmException, NoSuchProviderException {
+	public static SecretKey generateTripleDesKey(int keySize) throws NoSuchAlgorithmException, NoSuchProviderException {
+		Objects.requireNonNull(keySize, ExceptionMessage.isNull("keySize"));
+
+		if ( keySize != 128 && keySize != 192 ) {
+			throw new IllegalArgumentException("keySize must be 128, 192 bits");
+		}
+
         KeyGenerator keyGen = KeyGenerator.getInstance("DESede", BouncyCastleProvider.PROVIDER_NAME);
-        keyGen.init(192);
+        keyGen.init(keySize);
         return keyGen.generateKey();
     }
 
