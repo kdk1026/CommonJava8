@@ -82,13 +82,10 @@ public class BouncyCastleAesUtil {
 			super();
 		}
 
-		/** 과거 권장, 현재 권장 안함 : JavaScript 라이브러인 CryptoJS 와 맞출려면 이것을 사용해야 함 */
+		/** 과거 권장, 비권장 : JavaScript 라이브러인 CryptoJS 와 맞출려면 이것을 사용해야 함 */
 		public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
 
-		/** 권장 안함 */
-		public static final String AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
-
-		/** 현재 권장 : JavaScript는 내장 보안 API인 Web Crypto API 이용하여 구현 */
+		/** 강력 권장 : JavaScript는 내장 보안 API인 Web Crypto API 이용하여 구현 */
 		public static final String AES_GCM_NOPADDING = "AES/GCM/NoPadding";
 	}
 
@@ -162,9 +159,7 @@ public class BouncyCastleAesUtil {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
-    		if ( algorithm.contains("ECB") ) {
-    			cipher.init(Cipher.ENCRYPT_MODE, key);
-    		} else if ( algorithm.contains("CBC") ){
+    		if ( algorithm.contains("CBC") ){
     			byte[] ivBytes = null;
 
     			if ( StringUtils.isBlank(ivStr) ) {
@@ -232,9 +227,7 @@ public class BouncyCastleAesUtil {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
-			if ( algorithm.contains("ECB") ) {
-				cipher.init(Cipher.DECRYPT_MODE, key);
-			} else if ( algorithm.contains("CBC") ){
+			if ( algorithm.contains("CBC") ){
 				if ( StringUtils.isBlank(ivStr) ) {
 					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
 				}
