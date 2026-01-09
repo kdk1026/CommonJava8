@@ -135,7 +135,7 @@ public class BouncyCastleAesUtil {
      * AES 암호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr - null or empty or 16바이트 문자열
+     * @param ivStr - null | empty | CBC : 16바이트 문자열 | GCM : 12바이트 문자열
      * @param plainText
      * @return
      */
@@ -204,7 +204,7 @@ public class BouncyCastleAesUtil {
      * AES 복호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr CBC인 경우 필수
+     * @param ivStr
      * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
      * @param cipherText
      * @return
