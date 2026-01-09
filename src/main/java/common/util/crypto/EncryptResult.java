@@ -18,11 +18,11 @@ import lombok.ToString;
 @ToString
 public class EncryptResult {
 
-	private String encryptedText;
+	private String cipherText;
     private String iv; // Base64 인코딩된 IV 문자열
 
     public EncryptResult(String encryptedText, String iv) {
-        this.encryptedText = encryptedText;
+        this.cipherText = encryptedText;
         this.iv = iv;
     }
 

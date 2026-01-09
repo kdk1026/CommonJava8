@@ -136,11 +136,10 @@ public class BouncyCastleAesUtil {
      * AES 암호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr - null | empty | CBC : 16바이트 문자열 | GCM : 12바이트 문자열
      * @param plainText
      * @return
      */
-    public static EncryptResult encrypt(String algorithm, String base64KeyString, String ivStr, String plainText) {
+    public static EncryptResult encrypt(String algorithm, String base64KeyString, String plainText) {
 		if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
@@ -161,32 +160,22 @@ public class BouncyCastleAesUtil {
     		SecretKey key = convertStringToKey(base64KeyString);
 
     		if ( algorithm.contains("CBC") ){
-    			byte[] ivBytes = null;
-
-    			if ( StringUtils.isBlank(ivStr) ) {
-	    			SecureRandom secureRandom = new SecureRandom();
-	    			ivBytes = new byte[16];
-	    			secureRandom.nextBytes(ivBytes);
-    			} else {
-    				ivBytes = ivStr.getBytes(UTF_8);
-    			}
+    			SecureRandom secureRandom = new SecureRandom();
+    			byte[] ivBytes = new byte[16];
+    			secureRandom.nextBytes(ivBytes);
 
     			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
 
     			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
     		} else if ( algorithm.contains("GCM") ) {
-    			byte[] ivBytes = null;
-
-    			if ( StringUtils.isBlank(ivStr) ) {
-	    			SecureRandom secureRandom = new SecureRandom();
-	    			ivBytes = new byte[12];
-	    			secureRandom.nextBytes(ivBytes);
-    			} else {
-    				ivBytes = ivStr.getBytes(UTF_8);
-    			}
+    			SecureRandom secureRandom = new SecureRandom();
+    			byte[] ivBytes = new byte[12];
+    			secureRandom.nextBytes(ivBytes);
 
     			GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
     			cipher.init(Cipher.ENCRYPT_MODE, key, spec);
+
+    			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
     		}
 
     		byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(UTF_8));
@@ -205,12 +194,11 @@ public class BouncyCastleAesUtil {
      * AES 복호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr
-     * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
+     * @param base64IvString
      * @param cipherText
      * @return
      */
-    public static String decrypt(String algorithm, String base64KeyString, String ivStr, boolean isBase64Iv, String cipherText) {
+    public static String decrypt(String algorithm, String base64KeyString, String base64IvString, String cipherText) {
 		if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
@@ -219,8 +207,8 @@ public class BouncyCastleAesUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
 
-    	if ( StringUtils.isBlank(ivStr) ) {
-    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
+    	if ( StringUtils.isBlank(base64IvString) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64IvString"));
     	}
 
     	if ( StringUtils.isBlank(cipherText) ) {
@@ -233,29 +221,11 @@ public class BouncyCastleAesUtil {
 			SecretKey key = convertStringToKey(base64KeyString);
 
 			if ( algorithm.contains("CBC") ){
-				if ( StringUtils.isBlank(ivStr) ) {
-					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
-				}
-
-				byte[] ivBytes = null;
-				if ( isBase64Iv ) {
-					ivBytes = Base64.getDecoder().decode(ivStr);
-				} else {
-					ivBytes = ivStr.getBytes(UTF_8);
-				}
+				byte[] ivBytes = Base64.getDecoder().decode(base64IvString);
 
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
 			} else if ( algorithm.contains("GCM") ) {
-				if ( StringUtils.isBlank(ivStr) ) {
-					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
-				}
-
-				byte[] ivBytes = null;
-				if ( isBase64Iv ) {
-					ivBytes = Base64.getDecoder().decode(ivStr);
-				} else {
-					ivBytes = ivStr.getBytes(UTF_8);
-				}
+				byte[] ivBytes = Base64.getDecoder().decode(base64IvString);
 
 				GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
 				cipher.init(Cipher.DECRYPT_MODE, key, spec);
