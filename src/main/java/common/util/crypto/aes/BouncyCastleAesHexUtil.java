@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import common.util.crypto.EncryptResult;
-import common.util.crypto.aes.BouncyCastleAesUtil.ExceptionMessage;
 
 /**
  * <pre>
