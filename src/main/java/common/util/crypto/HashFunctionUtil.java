@@ -29,7 +29,7 @@ public class HashFunctionUtil {
 
 	/**
 	 * Md5 해쉬함수로 인코딩<br/>
-	 * 	- SHA-1과 함께 암호화 길이가 64비트로 낮아 권고하지 않는 해쉬함수<br/>
+	 * 	- SHA-1과 함께 암호화 길이가 128비트로 낮아 권고하지 않는 해쉬함수<br/>
 	 *  - commons.codec.DigestUtils.md5Hex(plain)
 	 * @param strPlainText
 	 * @return
@@ -40,7 +40,7 @@ public class HashFunctionUtil {
 
 	/**
 	 * SHA-256 해쉬함수로 인코딩<br/>
-	 * 	- 암호화 길이가 128비트로 권고하는 해쉬함수<br/>
+	 * 	- 암호화 길이가 256비트로 권고하는 해쉬함수<br/>
 	 *  - commons.codec.DigestUtils.sha256Hex(plain)
 	 * @param strPlainText
 	 * @return
@@ -51,7 +51,7 @@ public class HashFunctionUtil {
 
 	/**
 	 * SHA-512 해쉬함수로 인코딩<br/>
-	 * 	- 암호화 길이가 256비트로 권고하는 해쉬함수<br/>
+	 * 	- 암호화 길이가 512비트로 권고하는 해쉬함수<br/>
 	 *  - commons.codec.DigestUtils.sha512Hex(plain)
 	 * @param strPlainText
 	 * @return

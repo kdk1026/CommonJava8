@@ -85,7 +85,7 @@ public class BouncyCastleHashingUtil {
 	/**
 	 * <pre>
 	 * MD5 해싱
-	 * 	- SHA-1과 함께 해시 값 길이가 64비트로 낮아 권고하지 않음
+	 * 	- SHA-1과 함께 해시 값 길이가 128비트로 낮아 권고하지 않음
 	 * </pre>
 	 * @param strPlainText
 	 * @return
@@ -110,7 +110,7 @@ public class BouncyCastleHashingUtil {
 	/**
 	 * <pre>
 	 * SHA-256 해싱
-	 * 	- 해시 값 길이가 128비트로 권고
+	 * 	- 해시 값 길이가 256비트로 권고
 	 * </pre>
 	 * @param strPlainText
 	 * @return
@@ -135,7 +135,7 @@ public class BouncyCastleHashingUtil {
 	/**
 	 * <pre>
 	 * SHA-512 해싱
-	 * 	- 해시 값 길이가 256비트로 권고
+	 * 	- 해시 값 길이가 512비트로 매우 권고
 	 * </pre>
 	 * @param strPlainText
 	 * @return
