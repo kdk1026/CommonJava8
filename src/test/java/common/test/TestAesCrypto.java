@@ -29,7 +29,7 @@ public class TestAesCrypto {
 
 		EncryptResult encryptResult = AesCryptoUtilV2.encrypt("안녕", key, null, AesCryptoUtilV2.AES_CBC_PKCS5PADDING);
 
-		String encryptedText = encryptResult.getEncryptedText();
+		String encryptedText = encryptResult.getCipherText();
 		System.out.println(encryptedText);
 		String iv = encryptResult.getIv();
 
