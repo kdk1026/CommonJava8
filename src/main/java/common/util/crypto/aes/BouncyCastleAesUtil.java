@@ -17,6 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.lang3.StringUtils;
@@ -92,6 +93,9 @@ public class BouncyCastleAesUtil {
 
 		/** 권장하지 않음 */
 		public static final String AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
+
+		/** 강력 권장 : JavaScript는 내장 보안 API인 Web Crypto API 이용하여 구현 */
+		public static final String AES_GCM_NOPADDING = "AES/GCM/NoPadding";
 	}
 
 	/**
@@ -164,9 +168,9 @@ public class BouncyCastleAesUtil {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
-    		if ( algorithm.indexOf("ECB") > -1 ) {
+    		if ( algorithm.contains("ECB") ) {
     			cipher.init(Cipher.ENCRYPT_MODE, key);
-    		} else {
+    		} else if ( algorithm.contains("CBC") ){
     			byte[] ivBytes = null;
 
     			if ( StringUtils.isBlank(ivStr) ) {
@@ -180,6 +184,19 @@ public class BouncyCastleAesUtil {
     			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
 
     			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
+    		} else if ( algorithm.contains("GCM") ) {
+    			byte[] ivBytes = null;
+
+    			if ( StringUtils.isBlank(ivStr) ) {
+	    			SecureRandom secureRandom = new SecureRandom();
+	    			ivBytes = new byte[12];
+	    			secureRandom.nextBytes(ivBytes);
+    			} else {
+    				ivBytes = ivStr.getBytes(UTF_8);
+    			}
+
+    			GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
+    			cipher.init(Cipher.ENCRYPT_MODE, key, spec);
     		}
 
     		byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(UTF_8));
@@ -221,9 +238,9 @@ public class BouncyCastleAesUtil {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
-			if ( algorithm.indexOf("ECB") > -1 ) {
+			if ( algorithm.contains("ECB") ) {
 				cipher.init(Cipher.DECRYPT_MODE, key);
-			} else {
+			} else if ( algorithm.contains("CBC") ){
 				if ( StringUtils.isBlank(ivStr) ) {
 					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
 				}
@@ -236,6 +253,20 @@ public class BouncyCastleAesUtil {
 				}
 
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
+			} else if ( algorithm.contains("GCM") ) {
+				if ( StringUtils.isBlank(ivStr) ) {
+					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
+				}
+
+				byte[] ivBytes = null;
+				if ( isBase64Iv ) {
+					ivBytes = Base64.getDecoder().decode(ivStr);
+				} else {
+					ivBytes = ivStr.getBytes(UTF_8);
+				}
+
+				GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
+				cipher.init(Cipher.DECRYPT_MODE, key, spec);
 			}
 
 			byte[] decryptedBytes = Base64.getDecoder().decode(cipherText);

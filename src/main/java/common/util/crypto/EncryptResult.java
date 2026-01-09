@@ -1,6 +1,9 @@
 package common.util.crypto;
 
- /**
+import lombok.Getter;
+import lombok.ToString;
+
+/**
  * <pre>
  * -----------------------------------
  * 개정이력
@@ -11,6 +14,8 @@ package common.util.crypto;
  *
  * @author kdk
  */
+@Getter
+@ToString
 public class EncryptResult {
 
 	private String encryptedText;
@@ -19,14 +24,6 @@ public class EncryptResult {
     public EncryptResult(String encryptedText, String iv) {
         this.encryptedText = encryptedText;
         this.iv = iv;
-    }
-
-    public String getEncryptedText() {
-        return encryptedText;
-    }
-
-    public String getIv() {
-        return iv;
     }
 
 }
