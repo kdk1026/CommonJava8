@@ -82,19 +82,13 @@ public class BouncyCastleAesUtil {
 			super();
 		}
 
-		/** 암호화 하려는 평문의 길이가 16바이트의 배수여야 함 */
-		public static final String AES_CBC_NOPADDING = "AES/CBC/NoPadding";
-
-		/** 가장 일반적 (권장) : JavaScript 라이브러인 CryptoJS 와 맞출려면 이것을 사용해야 함 */
+		/** 과거 권장, 현재 권장 안함 : JavaScript 라이브러인 CryptoJS 와 맞출려면 이것을 사용해야 함 */
 		public static final String AES_CBC_PKCS5PADDING = "AES/CBC/PKCS5Padding";
 
-		/** 권장하지 않음 */
-		public static final String AES_ECB_NOPADDING = "AES/ECB/NoPadding";
-
-		/** 권장하지 않음 */
+		/** 권장 안함 */
 		public static final String AES_ECB_PKCS5PADDING = "AES/ECB/PKCS5Padding";
 
-		/** 강력 권장 : JavaScript는 내장 보안 API인 Web Crypto API 이용하여 구현 */
+		/** 현재 권장 : JavaScript는 내장 보안 API인 Web Crypto API 이용하여 구현 */
 		public static final String AES_GCM_NOPADDING = "AES/GCM/NoPadding";
 	}
 
