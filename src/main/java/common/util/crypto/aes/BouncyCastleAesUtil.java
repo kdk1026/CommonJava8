@@ -218,6 +218,10 @@ public class BouncyCastleAesUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
 
+    	if ( StringUtils.isBlank(ivStr) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
+    	}
+
     	if ( StringUtils.isBlank(cipherText) ) {
     		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cipherText"));
     	}
