@@ -17,6 +17,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 
 import org.apache.commons.lang3.StringUtils;
@@ -80,17 +81,11 @@ public class BouncyCastleSeedUtil {
 			super();
 		}
 
-		/** 암호화 하려는 평문의 길이가 16바이트의 배수여야 함 */
-		public static final String SEED_CBC_NOPADDING = "SEED/CBC/NoPadding";
+		/** 표준이며 보안성이 우수함 (권장) */
+		public static final String SEED_CBC_PKCS5PADDING = "SEED/CBC/PKCS7Padding";
 
-		/** 가장 일반적 (권장) */
-		public static final String SEED_CBC_PKCS5PADDING = "SEED/CBC/PKCS5Padding";
-
-		/** 권장하지 않음 */
-		public static final String SEED_ECB_NOPADDING = "SEED/ECB/NoPadding";
-
-		/** 권장하지 않음 */
-		public static final String SEED_ECB_PKCS5PADDING = "SEED/ECB/PKCS5Padding";
+		/** 높은 보안성이 필요할 때 쓰지만 구현이 까다로움 (주의) */
+		public static final String AES_GCM_NOPADDING = "SEED/GCM/NoPadding";
 	}
 
 	/**
@@ -131,11 +126,10 @@ public class BouncyCastleSeedUtil {
      * SEED 암호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr - null or empty or 16바이트 문자열
      * @param plainText
      * @return
      */
-    public static EncryptResult encrypt(String algorithm, String base64KeyString, String ivStr, String plainText) {
+    public static EncryptResult encrypt(String algorithm, String base64KeyString, String plainText) {
 		if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
@@ -155,20 +149,21 @@ public class BouncyCastleSeedUtil {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
-    		if ( algorithm.indexOf("ECB") > -1 ) {
-    			cipher.init(Cipher.ENCRYPT_MODE, key);
-    		} else {
-    			byte[] ivBytes = null;
-
-    			if ( StringUtils.isBlank(ivStr) ) {
-	    			SecureRandom secureRandom = new SecureRandom();
-	    			ivBytes = new byte[16];
-	    			secureRandom.nextBytes(ivBytes);
-    			} else {
-    				ivBytes = ivStr.getBytes(UTF_8);
-    			}
+    		if ( algorithm.contains("CBC") ) {
+    			SecureRandom secureRandom = new SecureRandom();
+    			byte[] ivBytes = new byte[16];
+    			secureRandom.nextBytes(ivBytes);
 
     			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+
+    			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
+    		} else if ( algorithm.contains("GCM") ) {
+    			SecureRandom secureRandom = new SecureRandom();
+    			byte[] ivBytes = new byte[12];
+    			secureRandom.nextBytes(ivBytes);
+
+    			GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
+    			cipher.init(Cipher.ENCRYPT_MODE, key, spec);
 
     			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
     		}
@@ -189,12 +184,11 @@ public class BouncyCastleSeedUtil {
      * SEED 복호화
      * @param algorithm
      * @param base64KeyString
-     * @param ivStr CBC인 경우 필수
-     * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
+     * @param base64IvString
      * @param cipherText
      * @return
      */
-    public static String decrypt(String algorithm, String base64KeyString, String ivStr, boolean isBase64Iv, String cipherText) {
+    public static String decrypt(String algorithm, String base64KeyString, String base64IvString, String cipherText) {
 		if ( StringUtils.isBlank(algorithm) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
 		}
@@ -202,6 +196,10 @@ public class BouncyCastleSeedUtil {
     	if ( StringUtils.isBlank(base64KeyString) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
+
+      	if ( StringUtils.isBlank(base64IvString) ) {
+    		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64IvString"));
+    	}
 
     	if ( StringUtils.isBlank(cipherText) ) {
     		throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cipherText"));
@@ -212,21 +210,15 @@ public class BouncyCastleSeedUtil {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
-			if ( algorithm.indexOf("ECB") > -1 ) {
-				cipher.init(Cipher.DECRYPT_MODE, key);
-			} else {
-				if ( StringUtils.isBlank(ivStr) ) {
-					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
-				}
-
-				byte[] ivBytes = null;
-				if ( isBase64Iv ) {
-					ivBytes = Base64.getDecoder().decode(ivStr);
-				} else {
-					ivBytes = ivStr.getBytes(UTF_8);
-				}
+			if ( algorithm.contains("CBC") ) {
+				byte[] ivBytes = Base64.getDecoder().decode(base64IvString);
 
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
+			} else if ( algorithm.contains("GCM") ) {
+				byte[] ivBytes = Base64.getDecoder().decode(base64IvString);
+
+				GCMParameterSpec spec = new GCMParameterSpec(128, ivBytes);
+				cipher.init(Cipher.DECRYPT_MODE, key, spec);
 			}
 
 			byte[] decryptedBytes = Base64.getDecoder().decode(cipherText);

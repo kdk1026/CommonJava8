@@ -159,7 +159,7 @@ public class BouncyCastleAesUtil {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
-    		if ( algorithm.contains("CBC") ){
+    		if ( algorithm.contains("CBC") ) {
     			SecureRandom secureRandom = new SecureRandom();
     			byte[] ivBytes = new byte[16];
     			secureRandom.nextBytes(ivBytes);
@@ -220,7 +220,7 @@ public class BouncyCastleAesUtil {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
-			if ( algorithm.contains("CBC") ){
+			if ( algorithm.contains("CBC") ) {
 				byte[] ivBytes = Base64.getDecoder().decode(base64IvString);
 
 				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
