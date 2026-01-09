@@ -74,19 +74,13 @@ public class BouncyCastleTripleDesUtil {
 
 	}
 
-	/**
-	 * 일반적인 CBC, ECB만 정의 (필요 시, 다른 알고리즘 추가 가능)
-	 */
 	public static class Algorithm {
 		private Algorithm() {
 			super();
 		}
 
-		/** 가장 일반적 (권장) */
+		/** 권장 */
 		public static final String DESEDE_CBC_PKCS5PADDING = "DESede/CBC/PKCS5Padding";
-
-		/** 권장하지 않음 */
-		public static final String DESEDE_ECB_PKCS5PADDING = "DESede/ECB/PKCS5Padding";
 	}
 
 	/**
@@ -153,23 +147,19 @@ public class BouncyCastleTripleDesUtil {
     		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
-    		if ( algorithm.indexOf("ECB") > -1 ) {
-    			cipher.init(Cipher.ENCRYPT_MODE, key);
-    		} else {
-    			byte[] ivBytes = null;
+			byte[] ivBytes = null;
 
-    			if ( StringUtils.isBlank(ivStr) ) {
-	    			SecureRandom secureRandom = new SecureRandom();
-	    			ivBytes = new byte[16];
-	    			secureRandom.nextBytes(ivBytes);
-    			} else {
-    				ivBytes = ivStr.getBytes(UTF_8);
-    			}
+			if ( StringUtils.isBlank(ivStr) ) {
+    			SecureRandom secureRandom = new SecureRandom();
+    			ivBytes = new byte[16];
+    			secureRandom.nextBytes(ivBytes);
+			} else {
+				ivBytes = ivStr.getBytes(UTF_8);
+			}
 
-    			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
+			cipher.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(ivBytes));
 
-    			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
-    		}
+			generatedIvString = Base64.getEncoder().encodeToString(ivBytes);
 
     		byte[] encryptedBytes = cipher.doFinal(plainText.getBytes(UTF_8));
 			encryptedText = Base64.getEncoder().encodeToString(encryptedBytes);
@@ -210,22 +200,18 @@ public class BouncyCastleTripleDesUtil {
 			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
-			if ( algorithm.indexOf("ECB") > -1 ) {
-				cipher.init(Cipher.DECRYPT_MODE, key);
-			} else {
-				if ( StringUtils.isBlank(ivStr) ) {
-					throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
-				}
-
-				byte[] ivBytes = null;
-				if ( isBase64Iv ) {
-					ivBytes = Base64.getDecoder().decode(ivStr);
-				} else {
-					ivBytes = ivStr.getBytes(UTF_8);
-				}
-
-				cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
+			if ( StringUtils.isBlank(ivStr) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("ivStr"));
 			}
+
+			byte[] ivBytes = null;
+			if ( isBase64Iv ) {
+				ivBytes = Base64.getDecoder().decode(ivStr);
+			} else {
+				ivBytes = ivStr.getBytes(UTF_8);
+			}
+
+			cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(ivBytes));
 
 			byte[] decryptedBytes = Base64.getDecoder().decode(cipherText);
 			decryptedText = new String(cipher.doFinal(decryptedBytes), UTF_8);

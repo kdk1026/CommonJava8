@@ -75,7 +75,7 @@ public class BouncyCastleAesUtil {
 	}
 
 	/**
-	 * 일반적인 CBC, ECB만 정의 (필요 시, 다른 알고리즘 추가 가능)
+	 * 레거시 시스템 위한 CBC/PKCS5Padding와 GCM만
 	 */
 	public static class Algorithm {
 		private Algorithm() {
