@@ -5,11 +5,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
 import java.security.Security;
 
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.crypto.generators.OpenBSDBCrypt;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * 개정이력
  * -----------------------------------
  * 2025. 6. 1. kdk	최초작성
+ * 2026. 1.10. kdk  Bcrypt 분리
  * </pre>
  *
  * <pre>
@@ -155,52 +154,6 @@ public class BouncyCastleHashingUtil {
 		}
 
 		return bytesToHex(md5Hash);
-	}
-
-	public static class Bcrypt {
-		private Bcrypt() {
-			super();
-		}
-
-		/**
-		 * <pre>
-		 * Bcrypt 해싱
-		 * </pre>
-		 * @param originalText
-		 * @return
-		 */
-		public static String bcryptHash(String originalText) {
-			if ( StringUtils.isBlank(originalText) ) {
-				throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
-			}
-
-			SecureRandom random = new SecureRandom();
-	        byte[] salt = new byte[16];
-	        random.nextBytes(salt);
-
-	        int cost = 12;
-	        return OpenBSDBCrypt.generate(originalText.toCharArray(), salt, cost);
-		}
-
-		/**
-		 * <pre>
-		 * Bcrypt 해싱 검증
-		 * </pre>
-		 * @param originalText
-		 * @param hashedText
-		 * @return
-		 */
-		public static boolean checkBcryptHash(String originalText, String hashedText) {
-			if ( StringUtils.isBlank(originalText) ) {
-				throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
-			}
-
-			if ( StringUtils.isBlank(hashedText) ) {
-				throw new IllegalArgumentException("해시된 텍스트가 비어 있거나 null입니다. 검증을 수행할 수 없습니다.");
-			}
-
-			return OpenBSDBCrypt.checkPassword(hashedText, originalText.toCharArray());
-		}
 	}
 
 }
