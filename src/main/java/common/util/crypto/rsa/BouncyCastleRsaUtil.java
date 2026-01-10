@@ -79,10 +79,7 @@ public class BouncyCastleRsaUtil {
 
 	}
 
-	/**
-	 * 일반적인 OAEP만 정의 (필요 시, 다른 알고리즘 추가 가능)
-	 */
-	public static class Algorithm {
+	private static class Algorithm {
 		private Algorithm() {
 			super();
 		}
@@ -198,16 +195,11 @@ public class BouncyCastleRsaUtil {
 
 	/**
 	 * RSA 암호화
-	 * @param algorithm
 	 * @param publicKey
 	 * @param plainText
 	 * @return
 	 */
-	public static String encrypt(String algorithm, PublicKey publicKey, String plainText) {
-		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
-		}
-
+	public static String encrypt(PublicKey publicKey, String plainText) {
 		Objects.requireNonNull(publicKey, ExceptionMessage.isNull("publicKey"));
 
 		if ( StringUtils.isBlank(plainText) ) {
@@ -217,7 +209,7 @@ public class BouncyCastleRsaUtil {
 		String encryptedText = "";
 
 		try {
-			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+			Cipher cipher = Cipher.getInstance(Algorithm.RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING, BouncyCastleProvider.PROVIDER_NAME);
 			cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] encryptedMessage = cipher.doFinal(plainText.getBytes(UTF_8));
 			encryptedText = Base64.getEncoder().encodeToString(encryptedMessage);
@@ -233,16 +225,11 @@ public class BouncyCastleRsaUtil {
 
 	/**
 	 * RSA 복호화
-	 * @param encryptedText
 	 * @param privateKey
-	 * @param padding
+	 * @param cipherText
 	 * @return
 	 */
-	public static String decrypt(String algorithm, PrivateKey privateKey, String cipherText) {
-		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
-		}
-
+	public static String decrypt(PrivateKey privateKey, String cipherText) {
 		Objects.requireNonNull(privateKey, ExceptionMessage.isNull("privateKey"));
 
 		if ( StringUtils.isBlank(cipherText) ) {
@@ -252,7 +239,7 @@ public class BouncyCastleRsaUtil {
 		String decryptedText = "";
 
 		try {
-			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+			Cipher cipher = Cipher.getInstance(Algorithm.RSA_ECB_OAEP_WITH_SHA256_AND_MGF1_PADDING, BouncyCastleProvider.PROVIDER_NAME);
 			cipher.init(Cipher.DECRYPT_MODE, privateKey);
 			byte[] decryptedMessage = cipher.doFinal(Base64.getDecoder().decode(cipherText));
 			decryptedText = new String(decryptedMessage, UTF_8);
