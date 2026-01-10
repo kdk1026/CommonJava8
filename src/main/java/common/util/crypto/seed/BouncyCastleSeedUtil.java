@@ -86,7 +86,7 @@ public class BouncyCastleSeedUtil {
 		public static final String SEED_CBC_PKCS5PADDING = "SEED/CBC/PKCS7Padding";
 
 		/** 높은 보안성이 필요할 때 쓰지만 구현이 까다로움 (주의) */
-		public static final String AES_GCM_NOPADDING = "SEED/GCM/NoPadding";
+		public static final String SEED_GCM_NOPADDING = "SEED/GCM/NoPadding";
 	}
 
 	/**
