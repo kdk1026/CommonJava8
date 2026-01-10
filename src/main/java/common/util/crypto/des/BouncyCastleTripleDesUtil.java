@@ -18,6 +18,7 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -123,7 +124,7 @@ public class BouncyCastleTripleDesUtil {
 	 */
 	private static SecretKey convertStringToKey(String base64KeyString) {
 		byte[] keyBytes = Base64.getDecoder().decode(base64KeyString);
-		return new javax.crypto.spec.SecretKeySpec(keyBytes, "DESede");
+		return new SecretKeySpec(keyBytes, "DESede");
 	}
 
     /**
