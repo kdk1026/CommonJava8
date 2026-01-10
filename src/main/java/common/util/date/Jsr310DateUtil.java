@@ -411,7 +411,7 @@ public class Jsr310DateUtil {
 		}
 
 		/**
-		 * 현재 날짜의 이전/이후 날짜를 yyyyMMdd 형식의 String 타입으로 반환<br/>
+		 * 현재 날짜의 이전/이후 날짜를 yyyyMMddHHmmss 형식의 String 타입으로 반환<br/>
 		 * 	- 인자 값이 음수 인 경우, 이전 시간 반환<br/>
 		 * 	- 인자 값이 양수 인 경우, 이후 시간 반환
 		 * @param hours
