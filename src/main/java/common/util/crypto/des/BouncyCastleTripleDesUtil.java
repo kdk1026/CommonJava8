@@ -75,7 +75,7 @@ public class BouncyCastleTripleDesUtil {
 
 	}
 
-	public static class Algorithm {
+	private static class Algorithm {
 		private Algorithm() {
 			super();
 		}
@@ -128,17 +128,12 @@ public class BouncyCastleTripleDesUtil {
 
     /**
      * Triple DES 암호화
-     * @param algorithm
      * @param base64KeyString
      * @param ivStr - null or empty or 16바이트 문자열
      * @param plainText
      * @return
      */
-    public static EncryptResult encrypt(String algorithm, String base64KeyString, String ivStr, String plainText) {
-		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
-		}
-
+    public static EncryptResult encrypt(String base64KeyString, String ivStr, String plainText) {
 		if ( StringUtils.isBlank(base64KeyString) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
@@ -151,7 +146,7 @@ public class BouncyCastleTripleDesUtil {
     	String generatedIvString = null;
 
     	try {
-    		Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+    		Cipher cipher = Cipher.getInstance(Algorithm.DESEDE_CBC_PKCS5PADDING, BouncyCastleProvider.PROVIDER_NAME);
     		SecretKey key = convertStringToKey(base64KeyString);
 
 			byte[] ivBytes = null;
@@ -182,18 +177,13 @@ public class BouncyCastleTripleDesUtil {
 
     /**
      * Triple DES 복호화
-     * @param algorithm
      * @param base64KeyString
      * @param ivStr CBC인 경우 필수
      * @param isBase64Iv 암호화 시, iv 인자 없이 암호화 한 경우 true
      * @param cipherText
      * @return
      */
-    public static String decrypt(String algorithm, String base64KeyString, String ivStr, boolean isBase64Iv, String cipherText) {
-		if ( StringUtils.isBlank(algorithm) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("algorithm"));
-		}
-
+    public static String decrypt(String base64KeyString, String ivStr, boolean isBase64Iv, String cipherText) {
     	if ( StringUtils.isBlank(base64KeyString) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64KeyString"));
 		}
@@ -204,7 +194,7 @@ public class BouncyCastleTripleDesUtil {
 
 		String decryptedText = "";
 		try {
-			Cipher cipher = Cipher.getInstance(algorithm, BouncyCastleProvider.PROVIDER_NAME);
+			Cipher cipher = Cipher.getInstance(Algorithm.DESEDE_CBC_PKCS5PADDING, BouncyCastleProvider.PROVIDER_NAME);
 			SecretKey key = convertStringToKey(base64KeyString);
 
 			if ( StringUtils.isBlank(ivStr) ) {
