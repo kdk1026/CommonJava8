@@ -38,9 +38,7 @@ public class BouncyCastleBcryptUtil {
     }
 
 	/**
-	 * <pre>
 	 * Bcrypt 해싱
-	 * </pre>
 	 * @param originalText
 	 * @return
 	 */
@@ -58,9 +56,7 @@ public class BouncyCastleBcryptUtil {
 	}
 
 	/**
-	 * <pre>
 	 * Bcrypt 해싱 검증
-	 * </pre>
 	 * @param originalText
 	 * @param hashedText
 	 * @return
