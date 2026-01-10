@@ -44,7 +44,7 @@ public class BouncyCastleBcryptUtil {
 	 * @param originalText
 	 * @return
 	 */
-	public static String hashpw(String originalText) {
+	public static String bcryptHash(String originalText) {
 		if ( StringUtils.isBlank(originalText) ) {
 			throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
 		}
@@ -65,7 +65,7 @@ public class BouncyCastleBcryptUtil {
 	 * @param hashedText
 	 * @return
 	 */
-	public static boolean checkpw(String originalText, String hashedText) {
+	public static boolean checkBcryptHash(String originalText, String hashedText) {
 		if ( StringUtils.isBlank(originalText) ) {
 			throw new IllegalArgumentException(ORIGINAL_TEXT_IS_NULL);
 		}
