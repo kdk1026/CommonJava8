@@ -19,6 +19,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -119,7 +120,7 @@ public class BouncyCastleSeedUtil {
 	 */
 	private static SecretKey convertStringToKey(String base64KeyString) {
 		byte[] keyBytes = Base64.getDecoder().decode(base64KeyString);
-		return new javax.crypto.spec.SecretKeySpec(keyBytes, "SEED");
+		return new SecretKeySpec(keyBytes, "SEED");
 	}
 
     /**
