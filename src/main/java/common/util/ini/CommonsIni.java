@@ -35,6 +35,8 @@ public class CommonsIni {
 	private static final String PROP_CLASS_PATH = "/ini" + NioFileUtil.FOLDER_SEPARATOR;
 	private static final String PROP_WEB_INF_PATH = "/WEB-INF" + NioFileUtil.FOLDER_SEPARATOR + "ini/";
 
+	private static final String SECTION = "section";
+
 	private static class ExceptionMessage {
 
 		public static String isNull(String paramName) {
@@ -112,7 +114,7 @@ public class CommonsIni {
 
 	public Object getProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(SECTION));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
@@ -137,7 +139,7 @@ public class CommonsIni {
 
 	public Properties getProperties(String section) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(SECTION));
 		}
 
 		Properties prop = new Properties();
@@ -155,7 +157,7 @@ public class CommonsIni {
 
 	public void addProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(SECTION));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
@@ -170,7 +172,7 @@ public class CommonsIni {
 
 	public void setProperty(String section, String key, Object value) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(SECTION));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
@@ -185,7 +187,7 @@ public class CommonsIni {
 
 	public void clearProperty(String section, String key) {
 		if ( StringUtils.isBlank(section) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("section"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(SECTION));
 		}
 
 		if ( StringUtils.isBlank(key) ) {
