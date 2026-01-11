@@ -119,7 +119,7 @@ public class CommonsFileUtil {
 
 	/**
 	 * <pre>
-	 * 파일 용량 구하기
+	 * 파일 용량, 읽기 편한 단위로 변환
 	 *   - B, KB, MB, GB, TB
 	 * </pre>
 	 * @param size
