@@ -175,9 +175,7 @@ public class MapUtil {
 		for (int i=0; i < keys.length; i++) {
 			key = keys[i];
 
-			if ( !map.containsKey(key) ) {
-				map.put(key, "");
-			}
+			map.computeIfAbsent(key, k -> "");
 		}
 	}
 
