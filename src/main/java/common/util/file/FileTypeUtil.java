@@ -138,7 +138,7 @@ public class FileTypeUtil {
 		String[] sExtArr = {
 			"jpg", "jpeg", "png", "gif",
 			"pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
-			"hwp", "txt", "zip"
+			"hwp", "txt", "zip", "rar", "7z"
 		};
 		List<String> listExt = Arrays.asList(sExtArr);
 
@@ -149,7 +149,7 @@ public class FileTypeUtil {
 			"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 			"application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
 			"application/x-hwp", "application/haansofthwp", "application/vnd.hancom.hwp",
-			"text/plain", "application/zip"
+			"text/plain", "application/zip", "application/x-rar-compressed", "application/x-7z-compressed"
 		};
 		List<String> listMime = Arrays.asList(sMimeArr);
 
