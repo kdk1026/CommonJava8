@@ -150,7 +150,7 @@ public class CommonsFileUtil {
 	}
 
 	/**
-	 * 텍스트 내용을 행당 경로에 파일로 생성
+	 * 텍스트 내용을 해당 경로에 파일로 생성
 	 * @param filePath
 	 * @param text
 	 */
@@ -173,7 +173,7 @@ public class CommonsFileUtil {
 	}
 
 	/**
-	 * 텍스트 내용을 행당 경로에 파일로 생성
+	 * 텍스트 내용을 해당 경로에 파일로 생성
 	 * @param filePath
 	 * @param text
 	 * @param encoding
