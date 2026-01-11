@@ -36,15 +36,7 @@ public class CommonsFileUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonsFileUtil.class);
 
-	/**
-	 * 폴더 구분자
-	 */
-	public static final String FOLDER_SEPARATOR = "/";
-
-	/**
-	 * 확장자 구분자
-	 */
-	public static final char EXTENSION_SEPARATOR = FilenameUtils.EXTENSION_SEPARATOR;
+	private static final String FILE_PATH = "filePath";
 
 	private CommonsFileUtil() {
 		super();
@@ -70,7 +62,7 @@ public class CommonsFileUtil {
 	 */
 	public static boolean isExistsFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		Path path = Paths.get(filePath);
@@ -84,7 +76,7 @@ public class CommonsFileUtil {
 	 */
 	public static String getFilename(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		return FilenameUtils.getBaseName(filePath);
@@ -110,7 +102,7 @@ public class CommonsFileUtil {
 	 */
 	public static long getFileSize(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -140,7 +132,7 @@ public class CommonsFileUtil {
 	 */
 	public static String lastModified(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -156,7 +148,7 @@ public class CommonsFileUtil {
 	 */
 	public static void writeFile(String filePath, String text) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
@@ -180,7 +172,7 @@ public class CommonsFileUtil {
 	 */
 	public static void writeFile(String filePath, String text, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(text) ) {
@@ -207,7 +199,7 @@ public class CommonsFileUtil {
 	 */
 	public static String readFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		String content = "";
@@ -231,7 +223,7 @@ public class CommonsFileUtil {
 	 */
 	public static String readFile(String filePath, String encoding) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		if ( StringUtils.isBlank(encoding) ) {
@@ -257,7 +249,7 @@ public class CommonsFileUtil {
 	 */
 	public static boolean deleteFile(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		File file = FileUtils.getFile(filePath);
@@ -296,7 +288,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getAllFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -317,7 +309,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getFileList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -340,7 +332,7 @@ public class CommonsFileUtil {
 	 */
 	public static List<String> getDirectoryList(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		List<String> listFiles = new ArrayList<>();
@@ -363,7 +355,7 @@ public class CommonsFileUtil {
 	 */
 	public static byte[] convertFileToBytes(String filePath) {
 		if ( StringUtils.isBlank(filePath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FILE_PATH));
 		}
 
 		byte[] bData = null;
