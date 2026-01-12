@@ -78,14 +78,14 @@ public class ValidUtil {
 	 * @param str
 	 * @return
 	 */
-	public static boolean isSafeUrl(String str) {
-		if ( isBlank(str) ) {
+	public static boolean isSafeUrl(String urlStr) {
+		if ( isBlank(urlStr) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		try {
 			// 절대 URL 검사
-			URL url = new URL(str);
+			URL url = new URL(urlStr);
 			String protocol = url.getProtocol();
 
 			return "http".equalsIgnoreCase(protocol) || "https".equalsIgnoreCase(protocol);
@@ -93,7 +93,7 @@ public class ValidUtil {
 		} catch (MalformedURLException e) {
 			logger.error("Not an absolute URL, checking for relative path: {}", e.getMessage());
 			// 상대 경로 검사
-			return str.equals("/") || str.startsWith("/");
+			return urlStr.equals("/") || urlStr.startsWith("/");
 		} catch (Exception e) {
 			logger.error("Unexpected error during URL check: {}", e.getMessage());
 			return false;
