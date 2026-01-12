@@ -14,6 +14,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
+ /**
+ * <pre>
+ * @deprecated
+ * ★★★ firebase-admin 이용으로 변경되어 사용 불가 ★★★
+ * https://github.com/kdk1026/CommonJava8v2/blob/main/src/main/java/common/util/xml/JacksonXmlUtil.java 로 대체
+ * </pre>
+ *
+ *
+ * @author 김대광
+ */
+@Deprecated
 public class JacksonXmlUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(JacksonXmlUtil.class);
