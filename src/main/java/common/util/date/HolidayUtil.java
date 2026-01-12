@@ -158,18 +158,22 @@ public class HolidayUtil {
 	}
 
 	private static List<HolidayData> convertToHolidayData(List<Map<String, Object>> mapList) {
-		List<HolidayData> holidayList = new ArrayList<>();
+		List<HolidayData> holidayList = null;
 
-		for (Map<String, Object> map : mapList) {
-			HolidayData data = HolidayData.builder()
-					.dateKind(String.valueOf(map.get("dateKind")))
-					.dateName(String.valueOf(map.get("dateName")))
-					.isHoliday(String.valueOf(map.get("isHoliday")))
-					.locdate(String.valueOf(map.get("locdate")))
-					.seq(String.valueOf(map.get("seq")))
-					.build();
+		if (mapList != null) {
+			holidayList = new ArrayList<>();
 
-			holidayList.add(data);
+			for (Map<String, Object> map : mapList) {
+				HolidayData data = HolidayData.builder()
+						.dateKind(String.valueOf(map.get("dateKind")))
+						.dateName(String.valueOf(map.get("dateName")))
+						.isHoliday(String.valueOf(map.get("isHoliday")))
+						.locdate(String.valueOf(map.get("locdate")))
+						.seq(String.valueOf(map.get("seq")))
+						.build();
+
+				holidayList.add(data);
+			}
 		}
 
 		return holidayList;
