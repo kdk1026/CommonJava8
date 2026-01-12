@@ -120,7 +120,7 @@ public class ValidUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
-			return str.matches("^\\d+");
+			return str.matches("^\\d+$");
 		}
 
 		/**
