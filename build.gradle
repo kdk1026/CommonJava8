@@ -36,7 +36,7 @@ ext {
 	httpclientVersion = '4.5.5'
 	log = [
 		slf4jVersion: '1.7.5',
-		logbackVersion: '1.2.3'
+		logbackVersion: '1.5.24'
 	]
 	junitVersion = '4.12'
 }
@@ -129,9 +129,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/joda-time/joda-time
 	implementation group: 'joda-time', name: 'joda-time', version: '2.9.9'
 
-	// https://mvnrepository.com/artifact/com.ibm.icu/icu4j
-	implementation group: 'com.ibm.icu', name: 'icu4j', version: '60.2'
-
 	// https://mvnrepository.com/artifact/com.jcraft/jsch
 	implementation group: 'com.jcraft', name: 'jsch', version: '0.1.54'
 
@@ -163,6 +160,12 @@ dependencies {
 
 	// Source: https://mvnrepository.com/artifact/org.ini4j/ini4j
 	implementation("org.ini4j:ini4j:0.5.4")
+
+	// Source: https://mvnrepository.com/artifact/de.focus-shift/jollyday-core
+	implementation("de.focus-shift:jollyday-core:1.8.0")
+
+	// Source: https://mvnrepository.com/artifact/de.focus-shift/jollyday-jackson
+	implementation("de.focus-shift:jollyday-jackson:1.8.0")
 
 /* Test */
 	testImplementation group: 'junit', name: 'junit', version: junitVersion
