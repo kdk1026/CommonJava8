@@ -33,10 +33,11 @@ public class HolidayUtil {
 
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
+	private static final String API_URL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
 	private static final String SERVICE_ENCODING_KEY = "SzdfNA5AvS6G0ieulBk7j0sAKF5D2WYk41aIs8M9TTPZq28q2p2IYQtcAw7Zqv4lNDnm36ktOVldQaINovtzeQ%3D%3D";
 
 	public static List<Map<String, Object>> getHolidayList(int year) throws IOException {
-		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo");
+		StringBuilder urlBuilder = new StringBuilder(API_URL);
 		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
 		urlBuilder.append("&" + "solYear=" + year);
 		urlBuilder.append("&" + "_type=" + "json");
@@ -45,7 +46,7 @@ public class HolidayUtil {
 	}
 
 	public static List<Map<String, Object>> getHolidayList(int year, int month) throws IOException {
-		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo");
+		StringBuilder urlBuilder = new StringBuilder(API_URL);
 		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
 		urlBuilder.append("&" + "solYear=" + year);
 		urlBuilder.append("&" + "solMonth=" + String.format("%02d", month));
