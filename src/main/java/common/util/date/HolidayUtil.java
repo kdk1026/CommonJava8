@@ -35,38 +35,15 @@ public class HolidayUtil {
 
 	private static final String SERVICE_ENCODING_KEY = "SzdfNA5AvS6G0ieulBk7j0sAKF5D2WYk41aIs8M9TTPZq28q2p2IYQtcAw7Zqv4lNDnm36ktOVldQaINovtzeQ%3D%3D";
 
-	@SuppressWarnings("unchecked")
 	public static List<Map<String, Object>> getHolidayList(int year) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo");
 		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
 		urlBuilder.append("&" + "solYear=" + year);
 		urlBuilder.append("&" + "_type=" + "json");
 
-        URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Content-type", "application/json");
-
-        BufferedReader rd;
-        if(conn.getResponseCode() >= 200 && conn.getResponseCode() <= 300) {
-            rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        } else {
-            rd = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-        }
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = rd.readLine()) != null) {
-            sb.append(line);
-        }
-        rd.close();
-        conn.disconnect();
-
-        Map<String, Object> resultMap = MAPPER.readValue(sb.toString(), Map.class);
-        return getItem(resultMap);
+		return getHolidayList(urlBuilder.toString());
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<Map<String, Object>> getHolidayList(int year, int month) throws IOException {
 		StringBuilder urlBuilder = new StringBuilder("http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo");
 		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
@@ -74,7 +51,12 @@ public class HolidayUtil {
 		urlBuilder.append("&" + "solMonth=" + String.format("%02d", month));
 		urlBuilder.append("&" + "_type=" + "json");
 
-		URL url = new URL(urlBuilder.toString());
+        return getHolidayList(urlBuilder.toString());
+	}
+
+	@SuppressWarnings("unchecked")
+	private static List<Map<String, Object>> getHolidayList(String urlStr) throws IOException {
+		URL url = new URL(urlStr);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
 		conn.setRequestProperty("Content-type", "application/json");
