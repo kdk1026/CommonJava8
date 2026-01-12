@@ -5,10 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * <pre>
@@ -31,32 +38,74 @@ public class HolidayUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	private static final ObjectMapper MAPPER = new ObjectMapper();
 
 	private static final String API_URL = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo";
-	private static final String SERVICE_ENCODING_KEY = "SzdfNA5AvS6G0ieulBk7j0sAKF5D2WYk41aIs8M9TTPZq28q2p2IYQtcAw7Zqv4lNDnm36ktOVldQaINovtzeQ%3D%3D";
 
-	public static List<Map<String, Object>> getHolidayList(int year) throws IOException {
+	@Getter
+	@Builder
+	@ToString
+	public static class HolidayData {
+		private String dateKind;
+		private String dateName;
+		private String isHoliday;
+		private String locdate;
+		private String seq;
+	}
+
+	public static List<HolidayData> getHolidayList(String serviceEncodingKey, int year) throws IOException {
+		if ( StringUtils.isBlank(serviceEncodingKey) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("serviceEncodingKey"));
+		}
+
+		if (year < 1900 || year > 2100) {
+	        throw new IllegalArgumentException("연도는 1900년에서 2100년 사이여야 합니다.");
+	    }
+
 		StringBuilder urlBuilder = new StringBuilder(API_URL);
-		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
+		urlBuilder.append("?" + "serviceKey=" + serviceEncodingKey);
 		urlBuilder.append("&" + "solYear=" + year);
 		urlBuilder.append("&" + "_type=" + "json");
 
-		return getHolidayList(urlBuilder.toString());
+		List<Map<String, Object>> mapList = fetchHolidayDataFromApi(urlBuilder.toString());
+
+		return convertToHolidayData(mapList);
 	}
 
-	public static List<Map<String, Object>> getHolidayList(int year, int month) throws IOException {
+	public static List<HolidayData> getHolidayList(String serviceEncodingKey, int year, int month) throws IOException {
+		if ( StringUtils.isBlank(serviceEncodingKey) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("serviceEncodingKey"));
+		}
+
+		if (year < 1900 || year > 2100) {
+	        throw new IllegalArgumentException("연도는 1900년에서 2100년 사이여야 합니다.");
+	    }
+
+		if (month < 1 || month > 12) {
+	        throw new IllegalArgumentException("월은 1~12 사이여야 합니다: " + month);
+	    }
+
 		StringBuilder urlBuilder = new StringBuilder(API_URL);
-		urlBuilder.append("?" + "serviceKey=" + SERVICE_ENCODING_KEY);
+		urlBuilder.append("?" + "serviceKey=" + serviceEncodingKey);
 		urlBuilder.append("&" + "solYear=" + year);
 		urlBuilder.append("&" + "solMonth=" + String.format("%02d", month));
 		urlBuilder.append("&" + "_type=" + "json");
 
-        return getHolidayList(urlBuilder.toString());
+		List<Map<String, Object>> mapList = fetchHolidayDataFromApi(urlBuilder.toString());
+
+		return convertToHolidayData(mapList);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<Map<String, Object>> getHolidayList(String urlStr) throws IOException {
+	private static List<Map<String, Object>> fetchHolidayDataFromApi(String urlStr) throws IOException {
 		URL url = new URL(urlStr);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("GET");
@@ -106,6 +155,24 @@ public class HolidayUtil {
 		}
 
 		return list;
+	}
+
+	private static List<HolidayData> convertToHolidayData(List<Map<String, Object>> mapList) {
+		List<HolidayData> holidayList = new ArrayList<>();
+
+		for (Map<String, Object> map : mapList) {
+			HolidayData data = HolidayData.builder()
+					.dateKind(String.valueOf(map.get("dateKind")))
+					.dateName(String.valueOf(map.get("dateName")))
+					.isHoliday(String.valueOf(map.get("isHoliday")))
+					.locdate(String.valueOf(map.get("locdate")))
+					.seq(String.valueOf(map.get("seq")))
+					.build();
+
+			holidayList.add(data);
+		}
+
+		return holidayList;
 	}
 
 }
