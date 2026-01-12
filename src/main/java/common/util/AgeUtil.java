@@ -1,20 +1,27 @@
 package common.util;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-/**
+ /**
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * -----------------------------------
+ * 2026. 1. 12. 김대광	최초작성
+ * </pre>
+ *
+ * <pre>
  * 만나이, 한국식 나이, 보험 나이 등을 계산하는 기능 제공
+ * - 구식 Calendar 걷어냄
+ * </pre>
+ *
+ * @author 김대광
  */
 public class AgeUtil {
-
-	private static final Logger logger = LoggerFactory.getLogger(AgeUtil.class);
 
 	private static final String YYYYMMDD = "yyyyMMdd";
 	private static final String BIRTH_DAY = "birthDay";
@@ -42,21 +49,15 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
-		Calendar birth = Calendar.getInstance();
-		Calendar now = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		LocalDate birth = LocalDate.parse(birthDay, DateTimeFormatter.ofPattern(YYYYMMDD));
+		LocalDate now = LocalDate.now();
 
-		try {
-			Date date = formatter.parse(birthDay);
-			birth.setTime(date);
-		} catch (ParseException e) {
-			logger.error("getAge ParseException", e);
-		}
+		int age = now.getYear() - birth.getYear();
 
-		int age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-		if (birth.get(Calendar.DAY_OF_YEAR) >= now.get(Calendar.DAY_OF_YEAR)) {
+		if (birth.getDayOfYear() >= now.getDayOfYear()) {
 			age = age -1;
 		}
+
 		return age;
 	}
 
@@ -75,22 +76,17 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
-		int age = 0;
-		Calendar birth = Calendar.getInstance();
-		Calendar fix = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(YYYYMMDD);
 
-		try {
-			birth.setTime(formatter.parse(birthDay));
-			fix.setTime(formatter.parse(fixDay));
-		} catch (ParseException e) {
-			logger.error("getAge ParseException", e);
-		}
+		LocalDate birth = LocalDate.parse(birthDay, formatter);
+		LocalDate fix = LocalDate.parse(fixDay, formatter);
 
-		age = fix.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-		if (birth.get(Calendar.DAY_OF_YEAR) >= fix.get(Calendar.DAY_OF_YEAR)) {
+		int age = fix.getYear() - birth.getYear();
+
+		if (birth.getDayOfYear() >= fix.getDayOfYear()) {
 			age = age -1;
 		}
+
 		return age;
 	}
 
@@ -104,19 +100,10 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
-		int age = 0;
-		Calendar birth = Calendar.getInstance();
-		Calendar now = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		LocalDate birth = LocalDate.parse(birthDay, DateTimeFormatter.ofPattern(YYYYMMDD));
+		LocalDate now = LocalDate.now();
 
-		try {
-			birth.setTime(formatter.parse(birthDay));
-		} catch (ParseException e) {
-			logger.error("getKoreanAge ParseException", e);
-		}
-
-		age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + 1;
-		return age;
+		return now.getYear() - birth.getYear() + 1;
 	}
 
 	/**
@@ -134,20 +121,12 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
-		int age = 0;
-		Calendar birth = Calendar.getInstance();
-		Calendar fix = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(YYYYMMDD);
 
-		try {
-			birth.setTime(formatter.parse(birthDay));
-			fix.setTime(formatter.parse(fixDay));
-		} catch (ParseException e) {
-			logger.error("getKoreanAge ParseException", e);
-		}
+		LocalDate birth = LocalDate.parse(birthDay, formatter);
+		LocalDate fix = LocalDate.parse(fixDay, formatter);
 
-		age = fix.get(Calendar.YEAR) - birth.get(Calendar.YEAR) + 1;
-		return age;
+		return fix.getYear() - birth.getYear() + 1;
 	}
 
 	/**
@@ -161,35 +140,12 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(BIRTH_DAY));
 		}
 
-		int age = 0;
-		Calendar birth = Calendar.getInstance();
-		Calendar now = Calendar.getInstance();
-		Calendar target = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		LocalDate birth = LocalDate.parse(birthDay, DateTimeFormatter.ofPattern(YYYYMMDD));
+		LocalDate now = LocalDate.now();
+		LocalDate targetDate = now.minusMonths(6);
 
-		try {
-			birth.setTime(formatter.parse(birthDay));
-		} catch (ParseException e) {
-			logger.error("getInsurAge ParseException", e);
-		}
-
-		target.setTime(birth.getTime());
-		target.set(Calendar.YEAR, now.get(Calendar.YEAR));
-		target.set(Calendar.MONTH, (birth.get(Calendar.MONTH) + 6));
-
-		if (target.get(Calendar.YEAR) > now.get(Calendar.YEAR)) {
-			target.add(Calendar.YEAR, -1);
-		}
-
-		age = now.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-		if (birth.get(Calendar.DAY_OF_YEAR) >= now.get(Calendar.DAY_OF_YEAR)) {
-			age = age -1;
-		}
-
-		if (target.get(Calendar.DAY_OF_YEAR) < now.get(Calendar.DAY_OF_YEAR)) {
-			age = age +1;
-		}
-		return age;
+		// 만 나이 계산 (ChronoUnit.YEARS는 생일이 지났는지 여부를 자동으로 계산함)
+		return (int) ChronoUnit.YEARS.between(birth, targetDate);
 	}
 
 	/**
@@ -207,36 +163,15 @@ public class AgeUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIX_DAY));
 		}
 
-		int age = 0;
-		Calendar birth = Calendar.getInstance();
-		Calendar fix = Calendar.getInstance();
-		Calendar target = Calendar.getInstance();
-		SimpleDateFormat formatter = new SimpleDateFormat(YYYYMMDD);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(YYYYMMDD);
 
-		try {
-			birth.setTime(formatter.parse(birthDay));
-			fix.setTime(formatter.parse(fixDay));
-		} catch (ParseException e) {
-			logger.error("getInsurAge ParseException", e);
-		}
+		LocalDate birth = LocalDate.parse(birthDay, formatter);
+		LocalDate fix = LocalDate.parse(fixDay, formatter);
 
-		target.setTime(birth.getTime());
-		target.set(Calendar.YEAR, fix.get(Calendar.YEAR));
-		target.set(Calendar.MONTH, (birth.get(Calendar.MONTH) + 6));
+		LocalDate insuranceStandardDate = fix.minusMonths(6);
 
-		if (target.get(Calendar.YEAR) > fix.get(Calendar.YEAR)) {
-			target.add(Calendar.YEAR, -1);
-		}
-
-		age = fix.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-		if (birth.get(Calendar.DAY_OF_YEAR) >= fix.get(Calendar.DAY_OF_YEAR)) {
-			age = age -1;
-		}
-
-		if (target.get(Calendar.DAY_OF_YEAR) < fix.get(Calendar.DAY_OF_YEAR)) {
-			age = age +1;
-		}
-		return age;
+		// 만 나이 계산 (ChronoUnit.YEARS는 생일이 지났는지 여부를 자동으로 계산함)
+		return (int) ChronoUnit.YEARS.between(birth, insuranceStandardDate);
 	}
 
 }
