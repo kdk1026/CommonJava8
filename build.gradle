@@ -36,7 +36,8 @@ ext {
 	httpclientVersion = '4.5.5'
 	log = [
 		slf4jVersion: '1.7.5',
-		logbackVersion: '1.5.24'
+		logbackVersion: '1.2.13'
+		//logbackVersion: '1.5.24'
 	]
 	junitVersion = '4.12'
 }
