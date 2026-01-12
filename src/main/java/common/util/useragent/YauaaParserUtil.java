@@ -2,9 +2,6 @@ package common.util.useragent;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,8 +32,6 @@ import nl.basjes.parse.useragent.UserAgentAnalyzer;
  */
 public class YauaaParserUtil {
 
-	private static final String USER_AGENT = "User-Agent";
-	private static final String REQUEST = "request";
 	private static final String UA_STRING = "uaString";
 	private static final String FIELD_NAME = "fieldName";
 
@@ -45,10 +40,6 @@ public class YauaaParserUtil {
 	}
 
 	private static class ExceptionMessage {
-
-		public static String isNull(String paramName) {
-	        return String.format("'%s' is null", paramName);
-	    }
 
 		public static String isNullOrEmpty(String paramName) {
 	        return String.format("'%s' is null or empty", paramName);
@@ -122,57 +113,6 @@ public class YauaaParserUtil {
     }
 
 	/**
-	 * User-Agent 문자열을 분석하여 주요 정보를 반환
-	 * @param request
-	 * @return
-	 */
-	public static Map<String, String> parse(HttpServletRequest request) {
-		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
-
-		String uaString = request.getHeader(USER_AGENT);
-
-		UserAgent agent = ANALYZER.parse(uaString);
-		Map<String, String> result = new HashMap<>();
-
-		/*
-		 * 기기 분류
-		 * - Desktop, Phone, Tablet, Watch, TV, Robot
-		 */
-		result.put("DeviceClass", agent.getValue(UserAgent.DEVICE_CLASS));
-
-		/*
-		 * 기기 명칭 (모델명)
-		 * - Apple iPhone, Samsung SM-G991N (S21 모델명), Google Pixel 6
-		 * - PC(Desktop) 환경에서는 하드웨어 정보를 알 수 없기 때문에 주로 Unknown이나 Macintosh, Desktop 정도로 나옴
-		 */
-		result.put("DeviceName", agent.getValue(UserAgent.DEVICE_NAME));
-
-		/**
-		 * 브라우저 이름
-		 * - Chrome, Safari, Firefox, Edge, SamsungBrowser
-		 */
-		result.put("AgentName", agent.getValue(UserAgent.AGENT_NAME));
-
-		/**
-		 * 브라우저 버전
-		 */
-		result.put("AgentVersion", agent.getValue(UserAgent.AGENT_VERSION));
-
-		/**
-		 * 운영체제 이름
-		 * - Windows NT, Android, iOS, Mac OS X, Linux
-		 */
-		result.put("OperatingSystemName", agent.getValue(UserAgent.OPERATING_SYSTEM_NAME));
-
-		/**
-		 * 운영체제 버전
-		 */
-		result.put("OperatingSystemVersion", agent.getValue(UserAgent.OPERATING_SYSTEM_VERSION));
-
-		return result;
-	}
-
-	/**
 	 * 특정 필드 하나만 반환
 	 * @param uaString
 	 * @param fieldName
@@ -189,23 +129,5 @@ public class YauaaParserUtil {
 
         return ANALYZER.parse(uaString).getValue(fieldName);
     }
-
-	/**
-	 * 특정 필드 하나만 반환
-	 * @param request
-	 * @param fieldName
-	 * @return
-	 */
-	public static String getField(HttpServletRequest request, String fieldName) {
-		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
-
-		String uaString = request.getHeader(USER_AGENT);
-
-		if ( StringUtils.isBlank(fieldName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(FIELD_NAME));
-		}
-
-		return ANALYZER.parse(uaString).getValue(fieldName);
-	}
 
 }

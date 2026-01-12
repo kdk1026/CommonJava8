@@ -25,6 +25,9 @@ import org.slf4j.LoggerFactory;
  * 		setReqParamToObject, setHttpResponse 는 웹 환경에서... 포함시켜서 실행했더니 JNI 에러 뜨네...
  * </pre>
  *
+ * <pre>
+ * commons-beanutils 이용한 간결한 ObjectUtil, ServletObjectUtil 사용 권장
+ * </pre>
  *
  * @author 김대광
  */

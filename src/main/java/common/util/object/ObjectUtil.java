@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -24,8 +22,9 @@ import org.slf4j.LoggerFactory;
  * <pre>
  * -----------------------------------
  * 개정이력
- * 2018. 9. 3. 김대광	최초작성
+ * 2018. 9. 3.  김대광 최초작성
  * 2021. 8. 13. 김대광 SonarLint 지시에 주저리 주저리 (This accessibility bypass should be removed (뭐시기가 어쩌고 저째? 뭔소리여))
+ * 2026. 1. 12. 김대광 일부 ServletObjectUtil 으로 분리
  * </pre>
  */
 public class ObjectUtil {
@@ -108,32 +107,6 @@ public class ObjectUtil {
 		}
 
 		return list;
-	}
-
-	/**
-	 * @Description
-	 * <pre>
-	 * 요청 파라미터를 Object로 변환
-	 * </pre>
-	 * @param request
-	 * @param obj
-	 * @since 1.7
-	 * <pre>
-	 * -----------------------------------
-	 * 개정이력
-	 * 2018. 9. 3. 김대광	최초작성
-	 * </pre>
-	 */
-	public static void paramToObject(HttpServletRequest request, Object obj) {
-		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
-		Objects.requireNonNull(obj, ExceptionMessage.isNull("obj"));
-
-		try {
-			BeanUtils.populate(obj, request.getParameterMap());
-
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			logger.error("", e);
-		}
 	}
 
 	/**

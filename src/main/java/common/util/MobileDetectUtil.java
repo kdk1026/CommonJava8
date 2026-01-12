@@ -8,6 +8,15 @@ import org.apache.commons.lang3.StringUtils;
 
 import common.BaseObject;
 
+/**
+ *
+ * <pre>
+ * common.util.useragent.YauaaParserUtil 사용
+ * </pre>
+ *
+ *
+ * @author 김대광
+ */
 public class MobileDetectUtil {
 
 	private static final String ANDROID = "android";

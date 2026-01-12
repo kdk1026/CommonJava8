@@ -8,13 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Objects;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -31,6 +25,7 @@ import net.sf.jxls.transformer.XLSTransformer;
  * -----------------------------------
  * 2019. 5. 10. 김대광	최초작성
  * 2021. 8. 13. 김대광	SonarLint 지시에 따른 수정
+ * 2026. 1. 12. 김대광	ServletJxlsUtil 으로 일부 분리
  * </pre>
  *
  *
@@ -45,10 +40,6 @@ public class JxlsUtil {
 	}
 
 	private static class ExceptionMessage {
-
-		public static String isNull(String paramName) {
-	        return String.format("'%s' is null", paramName);
-	    }
 
 		public static String isNullOrEmpty(String paramName) {
 	        return String.format("'%s' is null or empty", paramName);
@@ -130,66 +121,5 @@ public class JxlsUtil {
 		return isSuccess;
 	}
 
-	/**
-	 * 템플릿 파일 이용해서 엑셀 파일 다운로드
-	 * @param request
-	 * @param response
-	 * @param bean
-	 * @param templateFileFullPath
-	 * @param fileName
-	 */
-	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
-			, Map<String, Object> bean, String templateFileFullPath, String fileName) {
-
-		Objects.requireNonNull(ExceptionMessage.isNull("request"));
-		Objects.requireNonNull(ExceptionMessage.isNull("response"));
-
-		if ( bean == null || bean.isEmpty() ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
-		}
-
-		if ( StringUtils.isBlank(templateFileFullPath) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
-		}
-
-		if ( StringUtils.isBlank(fileName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
-		}
-
-		try {
-			Workbook workbook = createWorkbookTemplateFile(bean, templateFileFullPath);
-
-			fileName = setFileNameByBrowser(request, fileName);
-			response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName+ "\"");
-
-			if (workbook != null) {
-				workbook.write(response.getOutputStream());
-			}
-
-		} catch ( IOException | ParsePropertyException e) {
-			logger.error("", e);
-		}
-	}
-
-	private static String setFileNameByBrowser(HttpServletRequest request, String str) {
-		String sRes = "";
-		String userAgent = request.getHeader("User-Agent");
-
-		try {
-			final String UTF_8 = StandardCharsets.UTF_8.name();
-			final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
-
-			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF_8).replace("\\+", " ");
-			} else {
-				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
-			}
-
-		} catch (IOException e) {
-			logger.error("", e);
-		}
-
-		return sRes;
-	}
 
 }
