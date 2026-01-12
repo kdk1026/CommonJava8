@@ -142,15 +142,15 @@ public class HolidayUtil {
 			responseMap = (Map<String, Object>) resultMap.get("response");
 		}
 
-		if ( responseMap != null ) {
+		if (responseMap != null) {
 			bodyMap = (Map<String, Object>) responseMap.get("body");
 		}
 
-		if ( bodyMap != null ) {
+		if (bodyMap != null) {
 			itemsMap = (Map<String, Object>) bodyMap.get("items");
 		}
 
-		if ( itemsMap != null ) {
+		if (itemsMap != null) {
 			list = (List<Map<String, Object>>) itemsMap.get("item");
 		}
 
