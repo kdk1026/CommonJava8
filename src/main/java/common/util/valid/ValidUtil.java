@@ -376,7 +376,7 @@ public class ValidUtil {
 
 			try {
 				if ( str.contains("-") ) {
-					LocalDate.parse(str);
+					LocalDate.parse(str, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 					return true;
 				} else {
 					LocalDate.parse(str, DateTimeFormatter.ofPattern("yyyyMMdd"));
