@@ -17,6 +17,14 @@ import com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
+ /**
+ * <pre>
+ * 2024.11.07 이후 업데이트 없어서 군장 안함
+ * - jackson-dataformat-xml 권장
+ * </pre>
+ *
+ * @author 김대광
+ */
 public class XstreamXmlUtil {
 
 	private XstreamXmlUtil() {
