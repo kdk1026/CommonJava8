@@ -17,6 +17,10 @@ import org.apache.commons.lang3.StringUtils;
  * 2025. 5. 27. 김대광	유틸은 Singleton 패턴을 사용하지 않는 것이 좋다는 의견 반영
  * </pre>
  *
+ * <pre>
+ * isCheckUserAgent 제외하면 YauaaParserUtil 사용
+ * </pre>
+ *
  *
  * @author 김대광
  */
@@ -367,6 +371,24 @@ public class UserAgentUtil {
 	 * @param chkStr
 	 * @return
 	 */
+	public static boolean isCheckUserAgent(String uaString, String chkStr) {
+		if ( StringUtils.isBlank(uaString) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("uaString"));
+		}
+
+		if ( StringUtils.isBlank(chkStr) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("chkStr"));
+		}
+
+		return uaString.indexOf(chkStr) > -1;
+	}
+
+	/**
+	 * UserAgent 에서 특정 문자열 유무 체크
+	 * @param request
+	 * @param chkStr
+	 * @return
+	 */
 	public static boolean isCheckUserAgent(HttpServletRequest request, String chkStr) {
 		Objects.requireNonNull(request, ExceptionMessage.isNull(REQUEST));
 
@@ -374,9 +396,9 @@ public class UserAgentUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("chkStr"));
 		}
 
-		String sUserAgent = request.getHeader(USER_AGENT);
+		String userAgent = request.getHeader(USER_AGENT);
 
-		return sUserAgent != null && sUserAgent.indexOf(chkStr) > -1;
+		return userAgent != null && userAgent.indexOf(chkStr) > -1;
 	}
 
 	/**
