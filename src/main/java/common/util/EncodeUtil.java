@@ -112,10 +112,15 @@ public class EncodeUtil {
 	/**
 	 * <pre>
 	 * URL 인코딩
-	 *   - commons.codec
-	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.encode(text)
-	 * </pre>
+	 *  - 현대 웹 환경은 UTF-8이 표준
+	 *  - 국내 레거시 공공기관 사이트나 특정 윈도우 기반 시스템은 EUC-KR 또는 CP949 사용하는 경우 있음
+	 *
+	 * <pre>
+	 * commons.codec
+	 * {@code
+	 * URLCodec urlCodec = new URLCodec();
+	 * urlCodec.encode(text)
+	 * }
 	 * @param text
 	 * @return
 	 */
@@ -135,10 +140,15 @@ public class EncodeUtil {
 	/**
 	 * <pre>
 	 * URL 인코딩
-	 *   - commons.codec
-	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.encode(text, charset)
-	 * </pre>
+	 *  - 현대 웹 환경은 UTF-8이 표준
+	 *  - 국내 레거시 공공기관 사이트나 특정 윈도우 기반 시스템은 EUC-KR 또는 CP949 사용하는 경우 있음
+	 *
+	 * <pre>
+	 * commons.codec
+	 * {@code
+	 * URLCodec urlCodec = new URLCodec();
+	 * urlCodec.encode(text, charset)
+	 * }
 	 * @param text
 	 * @param charset
 	 * @return
@@ -163,10 +173,15 @@ public class EncodeUtil {
 	/**
 	 * <pre>
 	 * URL 디코딩
-	 *   - commons.codec
-	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.decode(encodedText)
-	 * </pre>
+	 *  - 현대 웹 환경은 UTF-8이 표준
+	 *  - 국내 레거시 공공기관 사이트나 특정 윈도우 기반 시스템은 EUC-KR 또는 CP949 사용하는 경우 있음
+	 *
+	 * <pre>
+	 * commons.codec
+	 * {@code
+	 * URLCodec urlCodec = new URLCodec();
+	 * urlCodec.decode(encodedText)
+	 * }
 	 * @param encodedText
 	 * @return
 	 */
@@ -186,11 +201,17 @@ public class EncodeUtil {
 	/**
 	 * <pre>
 	 * URL 디코딩
-	 *   - commons.codec
-	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.decode(encodedText, charset)
-	 * </pre>
+	 *  - 현대 웹 환경은 UTF-8이 표준
+	 *  - 국내 레거시 공공기관 사이트나 특정 윈도우 기반 시스템은 EUC-KR 또는 CP949 사용하는 경우 있음
+	 *
+	 * <pre>
+	 * commons.codec
+	 * {@code
+	 * URLCodec urlCodec = new URLCodec();
+	 * urlCodec.decode(encodedText, charset)
+	 * }
 	 * @param encodedText
+	 * @param charset
 	 * @return
 	 */
 	public static String urlDecode(String encodedText, String charset) {
