@@ -21,6 +21,10 @@ public class CarriageReturnUtil {
 
 	/**
 	 * 캐리지 리턴 문자열을 줄바꿈 태그로 변환
+	 *
+	 * <pre>
+	 * - \r\n = Windows, \r = 구형 Mac OS (9 이하), \n = Unix/Linux/최신 Mac
+	 * </pre>
 	 * @param content
 	 * @return
 	 */
@@ -29,11 +33,7 @@ public class CarriageReturnUtil {
 			return null;
 		}
 
-		String newContent = content.replace("\r\n", BR_TAG); // Windows
-	    newContent = newContent.replace("\r", BR_TAG);       // 구형 Mac OS (9 이하)
-	    newContent = newContent.replace("\n", BR_TAG);       // Unix/Linux/최신 Mac
-
-	    return newContent;
+	    return content.replace("\r\n", BR_TAG).replace("\r", BR_TAG).replace("\n", BR_TAG);
 	}
 
 }
