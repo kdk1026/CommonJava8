@@ -1,5 +1,7 @@
 package common.util;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -522,5 +524,20 @@ public class MaskingUtil {
 
         return "";
     }
+
+	/**
+	 * 비밀번호 마스킹
+	 * @param password
+	 * @return
+	 */
+	public static String maskPassword(String password) {
+		if (StringUtils.isBlank(password)) {
+			return "";
+		}
+
+		char[] c = new char[password.length()];
+		Arrays.fill(c, '*');
+		return String.valueOf(c);
+	}
 
 }
