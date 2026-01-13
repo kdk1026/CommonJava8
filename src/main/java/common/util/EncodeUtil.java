@@ -3,6 +3,7 @@ package common.util;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import org.apache.commons.lang3.StringUtils;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 public class EncodeUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
+
+	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
 	private EncodeUtil() {
 		super();
@@ -27,30 +30,80 @@ public class EncodeUtil {
 
 	/**
 	 * Base64 인코딩
-	 * @param binaryData
+	 * @param text
 	 * @return
 	 * @since 1.8
 	 */
-	public static String encodeBase64(byte[] binaryData) {
-		if ( binaryData == null || binaryData.length == 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("binaryData"));
+	public static String encodeBase64(String text) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
-		return Base64.getEncoder().encodeToString(binaryData);
+		return Base64.getEncoder().encodeToString(text.getBytes());
+	}
+
+	/**
+	 * Base64 인코딩
+	 * @param text
+	 * @param charset
+	 * @return
+	 * @since 1.8
+	 */
+	public static String encodeBase64(String text, String charset) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
+		}
+
+		if ( StringUtils.isBlank(charset) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+		}
+
+		try {
+			return Base64.getEncoder().encodeToString(text.getBytes(charset));
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+			return null;
+		}
 	}
 
 	/**
 	 * Base64 디코딩
-	 * @param binaryData
+	 * @param encodedText
 	 * @return
 	 * @since 1.8
 	 */
-	public static byte[] decodeBase64(String base64Data) {
-		if ( StringUtils.isBlank(base64Data) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("base64Data"));
+	public static String decodeBase64(String encodedText) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
 		}
 
-		return Base64.getDecoder().decode(base64Data);
+		byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes());
+		return new String(textBytes);
+	}
+
+	/**
+	 * Base64 디코딩
+	 * @param encodedText
+	 * @param charset
+	 * @return
+	 * @since 1.8
+	 */
+	public static String decodeBase64(String encodedText, String charset) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
+		}
+
+		if ( StringUtils.isBlank(charset) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+		}
+
+		try {
+			byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes(charset));
+			return new String(textBytes);
+		} catch (UnsupportedEncodingException e) {
+			logger.error("", e);
+			return null;
+		}
 	}
 
 	/**
@@ -58,23 +111,22 @@ public class EncodeUtil {
 	 * URL 인코딩
 	 *   - commons.codec
 	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.encode(plain)
+	 *     > urlCodec.encode(text)
 	 * </pre>
-	 * @param binaryData
+	 * @param text
 	 * @return
 	 */
-	public static String urlEncode(String sPlain) {
-		if ( StringUtils.isBlank(sPlain) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPlain"));
+	public static String urlEncode(String text) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
-		String sRes = "";
 		try {
-			sRes = URLEncoder.encode(sPlain, "UTF-8");
+			return URLEncoder.encode(text, UTF_8);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+			return null;
 		}
-		return sRes;
 	}
 
 	/**
@@ -82,27 +134,27 @@ public class EncodeUtil {
 	 * URL 인코딩
 	 *   - commons.codec
 	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.encode(plain, charset)
+	 *     > urlCodec.encode(text, charset)
 	 * </pre>
-	 * @param binaryData
+	 * @param text
+	 * @param charset
 	 * @return
 	 */
-	public static String urlEncode(String sPlain, String sCharsetName) {
-		if ( StringUtils.isBlank(sPlain) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sPlain"));
+	public static String urlEncode(String text, String charset) {
+		if ( StringUtils.isBlank(text) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("text"));
 		}
 
-		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCharsetName"));
+		if ( StringUtils.isBlank(charset) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
 		}
 
-		String sRes = "";
 		try {
-			sRes = URLEncoder.encode(sPlain, sCharsetName);
+			return URLEncoder.encode(text, charset);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+			return null;
 		}
-		return sRes;
 	}
 
 	/**
@@ -110,23 +162,22 @@ public class EncodeUtil {
 	 * URL 디코딩
 	 *   - commons.codec
 	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.decode(plain)
+	 *     > urlCodec.decode(encodedText)
 	 * </pre>
-	 * @param binaryData
+	 * @param encodedText
 	 * @return
 	 */
-	public static String urlDecode(String sEncodedData) {
-		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncodedData"));
+	public static String urlDecode(String encodedText) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
 		}
 
-		String sRes = "";
 		try {
-			sRes = URLDecoder.decode(sEncodedData, "UTF-8");
+			return URLDecoder.decode(encodedText, UTF_8);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+			return null;
 		}
-		return sRes;
 	}
 
 	/**
@@ -134,27 +185,26 @@ public class EncodeUtil {
 	 * URL 디코딩
 	 *   - commons.codec
 	 *     > URLCodec urlCodec = new URLCodec();
-	 *     > urlCodec.decode(plain, charset)
+	 *     > urlCodec.decode(encodedText, charset)
 	 * </pre>
-	 * @param binaryData
+	 * @param encodedText
 	 * @return
 	 */
-	public static String urlDecode(String sEncodedData, String sCharsetName) {
-		if ( StringUtils.isBlank(sEncodedData) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sEncodedData"));
+	public static String urlDecode(String encodedText, String charset) {
+		if ( StringUtils.isBlank(encodedText) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
 		}
 
-		if ( StringUtils.isBlank(sCharsetName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sCharsetName"));
+		if ( StringUtils.isBlank(charset) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
 		}
 
-		String sRes = "";
 		try {
-			sRes = URLDecoder.decode(sEncodedData, sCharsetName);
+			return URLDecoder.decode(encodedText, charset);
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+			return null;
 		}
-		return sRes;
 	}
 
 }
