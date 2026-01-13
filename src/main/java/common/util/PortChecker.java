@@ -36,10 +36,6 @@ public class PortChecker {
 	        return String.format("'%s' is null or empty", paramName);
 	    }
 
-		public static String isNegative(String paramName) {
-			return String.format("'%s' is negative", paramName);
-		}
-
 	}
 
 	public static boolean isConnected(String host, int port) {
@@ -48,7 +44,7 @@ public class PortChecker {
 		}
 
 		if ( port < 0 || port > 65535 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNegative("port"));
+			throw new IllegalArgumentException("port must be between 0 and 65535");
 		}
 
 		boolean isConnect = false;
