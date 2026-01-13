@@ -10,6 +10,21 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+ /**
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * -----------------------------------
+ * 2026. 1. 13. 김대광	최초작성
+ * </pre>
+ *
+ * <pre>
+ * - Base64 인코딩/디코딩
+ * - UTL 인코딩/디코딩
+ * </pre>
+ *
+ * @author 김대광
+ */
 public class EncodeUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EncodeUtil.class);
