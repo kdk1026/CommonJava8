@@ -16,6 +16,9 @@ public class EncodeUtil {
 
 	private static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
+	private static final String CHARSET = "charset";
+	private static final String ENCODED_TEXT = "encodedText";
+
 	private EncodeUtil() {
 		super();
 	}
@@ -55,7 +58,7 @@ public class EncodeUtil {
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET));
 		}
 
 		try {
@@ -74,7 +77,7 @@ public class EncodeUtil {
 	 */
 	public static String decodeBase64(String encodedText) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ENCODED_TEXT));
 		}
 
 		byte[] textBytes = Base64.getDecoder().decode(encodedText.getBytes());
@@ -90,11 +93,11 @@ public class EncodeUtil {
 	 */
 	public static String decodeBase64(String encodedText, String charset) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ENCODED_TEXT));
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET));
 		}
 
 		try {
@@ -146,7 +149,7 @@ public class EncodeUtil {
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET));
 		}
 
 		try {
@@ -169,7 +172,7 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String encodedText) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ENCODED_TEXT));
 		}
 
 		try {
@@ -192,11 +195,11 @@ public class EncodeUtil {
 	 */
 	public static String urlDecode(String encodedText, String charset) {
 		if ( StringUtils.isBlank(encodedText) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("encodedText"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(ENCODED_TEXT));
 		}
 
 		if ( StringUtils.isBlank(charset) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("charset"));
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty(CHARSET));
 		}
 
 		try {
