@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  *
  * <pre>
  * - Base64 인코딩/디코딩
- * - UTL 인코딩/디코딩
+ * - URL 인코딩/디코딩
  * </pre>
  *
  * @author 김대광
