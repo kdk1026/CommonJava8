@@ -9,6 +9,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * 개정이력
  * -----------------------------------
  * 2021. 8. 13. 김대광	JavaDoc 작성 (SonarLint 지시에 따른 수정)
+ * 2026. 1. 13. 김대광	AI 통한 개선
  * </pre>
  *
  *
@@ -105,59 +106,24 @@ public class PagingUtil {
 	 * 페이징 처리 수행
 	 */
 	private void pagingProcess() {
-		int nTotalPage = (int) Math.ceil((double)this.totalCnt / this.pagePerRow);
-		this.setTotalPage(nTotalPage);
+		this.totalPage = (this.totalCnt + this.pagePerRow - 1) / this.pagePerRow;
+		if (this.totalPage == 0) this.totalPage = 1;
 
-		if (this.currentPage < 1) {
-			this.setCurrentPage(1);
-		} else if (this.currentPage > this.totalPage) {
-			this.setCurrentPage(this.totalPage);
-		}
+		this.currentPage = Math.max(1, Math.min(this.currentPage, this.totalPage));
 
-		if (this.totalPage == 0) {
-			this.setCurrentPage(1);
-		}
+		int currentBlock = (this.currentPage - 1) / this.pagePerScreen;
+		this.firstPage = (currentBlock * this.pagePerScreen) + 1;
+		this.lastPage = Math.min(this.firstPage + this.pagePerScreen - 1, this.totalPage);
 
-		int nLastPage = (int) Math.ceil((double)this.currentPage / this.pagePerScreen) * this.pagePerScreen;
-		nLastPage = (nLastPage > this.totalPage) ? this.totalPage : nLastPage;
-		this.setLastPage(nLastPage);
+		this.prevBlockPage = Math.max(1, this.firstPage - 1);
+		this.nextBlockPage = Math.min(this.lastPage + 1, this.totalPage);
 
-		int nFirstPage = (int) (Math.ceil((float)this.currentPage / this.pagePerScreen) * this.pagePerScreen) - (this.pagePerScreen -1);
-		if (nFirstPage <= 0) {
-			nFirstPage = 1;
-		}
-		this.setFirstPage(nFirstPage);
+		this.offSet = (this.currentPage - 1) * this.pagePerRow;
 
-		int nTotalBlock = this.totalPage / this.pagePerScreen;
-		this.setTotalBlock(nTotalBlock);
+		this.start = this.offSet + 1;
+		this.end = Math.min(this.currentPage * this.pagePerRow, this.totalCnt);
 
-		int nPrevBlockPage = this.firstPage - 1;
-		if (nPrevBlockPage < 1) {
-			nPrevBlockPage = 1;
-		}
-		this.setPrevBlockPage(nPrevBlockPage);
-
-		int nNextBlockPage = this.lastPage + 1;
-		if (nNextBlockPage > this.totalPage) {
-			nNextBlockPage = this.totalPage;
-		}
-		this.setNextBlockPage(nNextBlockPage);
-
-		this.start = this.calcStart();
-		this.end = this.calcEnd();
-
-		int nOffSet = (this.currentPage - 1) * this.pagePerRow;
-		this.setOffSet(nOffSet);
-	}
-
-	public int calcStart() {
-		this.start = (this.currentPage - 1) * this.pagePerRow + 1;
-		return this.start;
-	}
-
-	public int calcEnd() {
-		this.end = this.currentPage * this.pagePerRow;
-		return this.end;
+		this.totalBlock = (this.totalPage + this.pagePerScreen - 1) / this.pagePerScreen;
 	}
 
 	/**
