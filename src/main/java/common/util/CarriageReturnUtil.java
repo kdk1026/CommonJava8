@@ -23,7 +23,9 @@ public class CarriageReturnUtil {
 	 * 캐리지 리턴 문자열을 줄바꿈 태그로 변환
 	 *
 	 * <pre>
-	 * - \r\n = Windows, \r = 구형 Mac OS (9 이하), \n = Unix/Linux/최신 Mac
+	 * - \r\n = Windows
+	 * - \r = 구형 Mac OS (9 이하)
+	 * - \n = Unix/Linux/최신 Mac
 	 * </pre>
 	 * @param content
 	 * @return
