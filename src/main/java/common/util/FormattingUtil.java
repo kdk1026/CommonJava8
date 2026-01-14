@@ -36,8 +36,53 @@ public class FormattingUtil {
 	}
 
 	/**
+	 * 전화번호 포맷
+	 *
 	 * <pre>
-	 * 전환번호 포맷
+	 * 휴대폰 번호
+	 * 일반 전화번호
+	 * 070 인터넷 전화(VoIP)
+	 * 080 수신자 부담 전화
+	 * 030, 050 평생번호 및 안심번호
+	 * 15xx, 16xx, 18xx 등 전국 대표번호
+	 * </pre>
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makePhoneNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String result = makeCellPhoneNum(str, isHyphen);
+
+		if ( StringUtils.isBlank(result) ) {
+			result = makeBasicPhoneNum(str, isHyphen);
+		}
+
+		if ( StringUtils.isBlank(result) ) {
+			result = makeInternetPhoneNum(str, isHyphen);
+		}
+
+		if ( StringUtils.isBlank(result) ) {
+			result = makeTollFreePhoneNum(str, isHyphen);
+		}
+
+		if ( StringUtils.isBlank(result) ) {
+			result = makeVirtualPhoneNum(str, isHyphen);
+		}
+
+		if ( StringUtils.isBlank(result) ) {
+			result = makeBusinessPhoneNum(str, isHyphen);
+		}
+
+		return result;
+	}
+
+	/**
+	 * <pre>
+	 * 일반 전환번호 포맷
 	 *   - 0x(x)-xxx(x)-xxxx
 	 * </pre>
 	 *
@@ -45,12 +90,100 @@ public class FormattingUtil {
 	 * @param isHyphen
 	 * @return
 	 */
-	public static String makePhoneNumber(String str, boolean isHyphen) {
+	public static String makeBasicPhoneNum(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
 		String sPattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(sPattern)) {
+			return null;
+		}
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+	}
+
+	/**
+	 * <pre>
+	 * 070 인터넷 전화(VoIP) 포맷
+	 *   - 070-xxx(x)-xxxx
+	 * </pre>
+	 *
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makeInternetPhoneNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String sPattern = "^070-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(sPattern)) {
+			return null;
+		}
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+	}
+
+	/**
+	 * <pre>
+	 * 080 수신자 부담 전화 포맷
+	 *   - 080-xxx(x)-xxxx
+	 * </pre>
+	 *
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makeTollFreePhoneNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String sPattern = "^080-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(sPattern)) {
+			return null;
+		}
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+	}
+
+	/**
+	 * <pre>
+	 * 030, 050 평생번호 및 안심번호 포맷
+	 *   - 030|050-xxx(x)-xxxx
+	 * </pre>
+	 *
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makeVirtualPhoneNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String sPattern = "^(030|050\\d)-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(sPattern)) {
+			return null;
+		}
+		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+	}
+
+	/**
+	 * <pre>
+	 * 15xx, 16xx, 18xx 등 전국 대표번호 포맷
+	 *   - 15|16|18-xx-xxxx
+	 * </pre>
+	 *
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makeBusinessPhoneNum(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String sPattern = "^(15|16|18)\\d{2}-?\\d{4}$";
 		if (!str.matches(sPattern)) {
 			return null;
 		}
@@ -67,7 +200,7 @@ public class FormattingUtil {
 	 * @param isHyphen
 	 * @return
 	 */
-	public static String makeCellPhoneNumber(String str, boolean isHyphen) {
+	public static String makeCellPhoneNum(String str, boolean isHyphen) {
 		if ( StringUtils.isBlank(str) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
