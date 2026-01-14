@@ -95,11 +95,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -117,11 +117,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^070-?(\\d{3,4})-?(\\d{4})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^070-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -139,11 +139,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^080-?(\\d{3,4})-?(\\d{4})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^080-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -161,11 +161,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^(030|050\\d)-?(\\d{3,4})-?(\\d{4})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^(030|050\\d)-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -183,11 +183,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^(15|16|18)\\d{2}-?\\d{4}$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^(15|16|18)\\d{2}-?\\d{4}$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -205,11 +205,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^(01[016789])-?(\\d{3,4})-?(\\d{4})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^(01[016789])-?(\\d{3,4})-?(\\d{4})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
@@ -227,11 +227,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "^(\\d{3})-?(\\d{2})-?(\\d{5})$";
-		if (!str.matches(sPattern)) {
+		String pattern = "^(\\d{3})-?(\\d{2})-?(\\d{5})$";
+		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(sPattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
 	}
 
 	/**
