@@ -271,6 +271,47 @@ public class FormattingUtil {
 
 	/**
 	 * <pre>
+	 * 카드번호 포맷
+	 *   - (16자리) ####-####-####-####
+	 *   - (15자리) ####-######-#####
+	 * </pre>
+	 *
+	 * @param str
+	 * @param isHyphen
+	 * @return
+	 */
+	public static String makeCardNo(String str, boolean isHyphen) {
+		if ( StringUtils.isBlank(str) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		}
+
+		String pattern = "";
+		String format = "";
+
+		switch (str.length()) {
+		case 16:
+			pattern = "^(\\d{4})-?(\\d{4})-?(\\d{4})-?(\\d{4})$";
+			format = (isHyphen) ? "$1-$2-$3-$4" : "$1$2$3$4";
+			break;
+
+		case 15:
+			pattern = "^(\\d{4})-?(\\d{6})-?(\\d{5})$";
+			format = (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN;
+			break;
+
+		default:
+			break;
+		}
+
+		if (!str.matches(pattern)) {
+			return null;
+		}
+
+		return str.replaceAll(pattern, format);
+	}
+
+	/**
+	 * <pre>
 	 * 수치를 금액 표현으로 변환
 	 *   - #,###
 	 * </pre>
@@ -333,47 +374,6 @@ public class FormattingUtil {
 		}
 
 		return result.toString();
-	}
-
-	/**
-	 * <pre>
-	 * 카드번호 포맷
-	 *   - (16자리) ####-####-####-####
-	 *   - (15자리) ####-######-#####
-	 * </pre>
-	 *
-	 * @param str
-	 * @param isHyphen
-	 * @return
-	 */
-	public static String makeCardNo(String str, boolean isHyphen) {
-		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
-		}
-
-		String pattern = "";
-		String format = "";
-
-		switch (str.length()) {
-		case 16:
-			pattern = "^(\\d{4})-?(\\d{4})-?(\\d{4})-?(\\d{4})$";
-			format = (isHyphen) ? "$1-$2-$3-$4" : "$1$2$3$4";
-			break;
-
-		case 15:
-			pattern = "^(\\d{4})-?(\\d{6})-?(\\d{5})$";
-			format = (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN;
-			break;
-
-		default:
-			break;
-		}
-
-		if (!str.matches(pattern)) {
-			return null;
-		}
-
-		return str.replaceAll(pattern, format);
 	}
 
 }
