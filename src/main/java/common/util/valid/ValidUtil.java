@@ -281,17 +281,102 @@ public class ValidUtil {
 		}
 
 		/**
-		 * 전화번호 형식 체크 (휴대폰 번호 제외)
+		 * 전화번호 형식 체크
+		 *
+		 * <pre>
+		 * 휴대폰 번호 / 일반 전화번호 / 070 인터넷 전화(VoIP) / 080 수신자 부담 전화 / 030, 050 평생번호 및 안심번호 / 15xx, 16xx, 18xx 등 전국 대표번호
+		 * </pre>
 		 * @param strVal
 		 * @return
 		 * @throws IllegalArgumentException
+		 */
+		public static boolean isValidPhoneNum(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			return isCellPhoneNum(str) || isPhoneNum(str) || isInternetPhoneNum(str) || isTollFreePhoneNum(str) || isVirtualPhoneNum(str) || isBusinessPhoneNum(str);
+		}
+
+		/**
+		 * 일반 전화번호 형식 체크
+		 *
+		 * <pre>
+		 * 02: 서울
+		 * 031: 경기, 032: 인천, 033: 강원
+		 * 041: 충남, 042: 대전, 043: 충북, 044: 세종
+		 * 051: 부산, 052: 울산, 053: 대구, 054: 경북, 055: 경남
+		 * 061: 전남, 062: 광주, 063: 전북, 064: 제주
+		 * </pre>
+		 * @param str
+		 * @return
 		 */
 		public static boolean isPhoneNum(String str) {
 			if ( isBlank(str) ) {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
-			String phoneRegex = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})|^(070|050[2-7])-?(\\d{4})-?(\\d{4})|^(15|16|18)\\d{2}-?(\\d{4})$";
+			String phoneRegex = "^(02|03[1-3]|04[1-4]|05[1-5]|06[1-4])-?(\\d{3,4})-?(\\d{4})$";
+
+			return str.matches(phoneRegex);
+		}
+
+		/**
+		 * 070 인터넷 전화(VoIP) 형식 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isInternetPhoneNum(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			String phoneRegex = "^070-?(\\d{3,4})-?(\\d{4})$";
+
+			return str.matches(phoneRegex);
+		}
+
+		/**
+		 * 080 수신자 부담 전화 형식 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isTollFreePhoneNum(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			String phoneRegex = "^080-?(\\d{3,4})-?(\\d{4})$";
+
+			return str.matches(phoneRegex);
+		}
+
+		/**
+		 * 030, 050 평생번호 및 안심번호 형식 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isVirtualPhoneNum(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			String phoneRegex = "^(030|050\\d)-?(\\d{3,4})-?(\\d{4})$";
+
+			return str.matches(phoneRegex);
+		}
+
+		/**
+		 * 15xx, 16xx, 18xx 등 전국 대표번호 형식 체크
+		 * @param str
+		 * @return
+		 */
+		public static boolean isBusinessPhoneNum(String str) {
+			if ( isBlank(str) ) {
+				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+			}
+
+			String phoneRegex = "^(15|16|18)\\d{2}-?\\d{4}$";
 
 			return str.matches(phoneRegex);
 		}
