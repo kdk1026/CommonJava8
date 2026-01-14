@@ -427,7 +427,10 @@ public class MaskingUtil {
     }
 
 	/**
+	 * <pre>
 	 * 비밀번호 마스킹
+	 * - 계정 비밀번호는 대상 아님
+	 * </pre>
 	 * @param password
 	 * @return
 	 */
