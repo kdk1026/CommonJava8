@@ -294,36 +294,45 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sMoney = str.replace(",", "");
-
-		String[] asHanNum1 = { "", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구" };
-		String[] asHanNum2 = { "", "십", "백", "천" };
-		String[] asHanNum3 = { "", "만", "억", "조" };
-
-		StringBuilder sb = new StringBuilder();
-
-		int nCnt = 0;
-		int nLen = sMoney.length();
-		for (int i = 0; i < nLen; i++) {
-			int n = sMoney.charAt(i);
-			sb.append(asHanNum1[n]);
-
-			int nTemp = (nLen - 1 - i);
-			if (n > 0) {
-				sb.append(asHanNum2[nTemp % 4]);
-			} else {
-				nCnt++;
-			}
-
-			// 4의 배수
-			if (((nTemp % 4) == 0) && nCnt != 4) {
-				// 만억조
-				sb.append(asHanNum3[nTemp / 4]);
-			}
-			nCnt = 0;
+		String moneyStr = str.replace(",", "");
+		if (!moneyStr.matches("^\\d+$")) {
+			return "";
 		}
-		sb.append("원");
-		return sb.toString();
+
+		String[] units = {"", "일", "이", "삼", "사", "오", "육", "칠", "팔", "구"};
+	    String[] smallUnits = {"", "십", "백", "천"};
+	    String[] largeUnits = {"", "만", "억", "조", "경"};
+
+	    StringBuilder result = new StringBuilder();
+	    int length = moneyStr.length();
+
+		for (int i = 0; i < length; i++) {
+			int digit = moneyStr.charAt(i) - '0';
+			int reversePos = length - 1 - i;
+
+			if (digit > 0) {
+				if (!(digit == 1 && reversePos % 4 != 0)) {
+					result.append(units[digit]);
+				}
+				result.append(smallUnits[reversePos % 4]);
+			}
+
+			if (reversePos % 4 == 0) {
+				int end = i + 1;
+				int start = Math.max(0, end - 4);
+				long currentSectionValue = Long.parseLong(moneyStr.substring(start, end));
+
+				if (currentSectionValue > 0) {
+					result.append(largeUnits[reversePos / 4]);
+				}
+			}
+		}
+
+		if (result.length() > 0) {
+			result.append("원");
+		}
+
+		return result.toString();
 	}
 
 	/**
@@ -342,29 +351,29 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sPattern = "";
-		String sFormat = "";
+		String pattern = "";
+		String format = "";
 
 		switch (str.length()) {
 		case 16:
-			sPattern = "^(\\d{4})-?(\\d{4})-?(\\d{4})-?(\\d{4})$";
-			sFormat = (isHyphen) ? "$1-$2-$3-$4" : "$1$2$3$4";
+			pattern = "^(\\d{4})-?(\\d{4})-?(\\d{4})-?(\\d{4})$";
+			format = (isHyphen) ? "$1-$2-$3-$4" : "$1$2$3$4";
 			break;
 
 		case 15:
-			sPattern = "^(\\d{4})-?(\\d{6})-?(\\d{5})$";
-			sFormat = (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN;
+			pattern = "^(\\d{4})-?(\\d{6})-?(\\d{5})$";
+			format = (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN;
 			break;
 
 		default:
 			break;
 		}
 
-		if (!str.matches(sPattern)) {
+		if (!str.matches(pattern)) {
 			return null;
 		}
 
-		return str.replaceAll(sPattern, sFormat);
+		return str.replaceAll(pattern, format);
 	}
 
 }
