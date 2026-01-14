@@ -295,7 +295,12 @@ public class ValidUtil {
 				throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 			}
 
-			return isCellPhoneNum(str) || isPhoneNum(str) || isInternetPhoneNum(str) || isTollFreePhoneNum(str) || isVirtualPhoneNum(str) || isBusinessPhoneNum(str);
+			return isCellPhoneNum(str)
+					|| isPhoneNum(str)
+					|| isInternetPhoneNum(str)
+					|| isTollFreePhoneNum(str)
+					|| isVirtualPhoneNum(str)
+					|| isBusinessPhoneNum(str);
 		}
 
 		/**
