@@ -28,6 +28,11 @@ import lombok.ToString;
  * 2026. 1. 14. 김대광	최초작성
  * </pre>
  *
+ * <pre>
+ * www.data.go.kr
+ * : 기상청_단기예보 ((구)_동네예보) 조회서비스
+ * : 단기예보조회
+ * </pre>
  *
  * @author 김대광
  */
