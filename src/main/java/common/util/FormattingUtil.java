@@ -23,6 +23,9 @@ public class FormattingUtil {
 	private static final String FORMAT_HYPHEN = "$1-$2-$3";
 	private static final String FORMAT_NOT_HYPHEN = "$1$2$3";
 
+	private static final String FORMAT_BIZ_HYPHEN = "$1$2-$3";
+	private static final String FORMAT_BIZ_NOT_HYPHEN = "$1$2$3";
+
 	private FormattingUtil() {
 		super();
 	}
@@ -171,7 +174,7 @@ public class FormattingUtil {
 	/**
 	 * <pre>
 	 * 15xx, 16xx, 18xx 등 전국 대표번호 포맷
-	 *   - 15|16|18-xx-xxxx
+	 *   - 15|16|18xx-xxxx
 	 * </pre>
 	 *
 	 * @param str
@@ -183,11 +186,11 @@ public class FormattingUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String pattern = "^(15|16|18)\\d{2}-?\\d{4}$";
+		String pattern = "^(15|16|18)(\\d{2})-?(\\d{4})$";
 		if (!str.matches(pattern)) {
 			return null;
 		}
-		return str.replaceAll(pattern, (isHyphen) ? FORMAT_HYPHEN : FORMAT_NOT_HYPHEN);
+		return str.replaceAll(pattern, (isHyphen) ? FORMAT_BIZ_HYPHEN : FORMAT_BIZ_NOT_HYPHEN);
 	}
 
 	/**
