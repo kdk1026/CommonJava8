@@ -107,9 +107,11 @@ public class MaskingUtil {
 		}
 
 		if (isShowGender) {
-			return rrn.substring(0, 8) + "******"; // 성별 숫자까지 표시
+			// 성별 숫자까지 표시
+			return rrn.substring(0, 8) + "******";
 		} else {
-			return rrn.substring(0, 7) + "*******"; // 뒷자리 전체 마스킹
+			// 뒷자리 전체 마스킹
+			return rrn.substring(0, 7) + "*******";
 		}
 	}
 
@@ -173,6 +175,36 @@ public class MaskingUtil {
 
 	/**
 	 * <pre>
+	 * 아이디 마스킹
+	 *  - 4번째 자리부터 마스킹
+	 * </pre>
+	 *
+	 * @param id
+	 * @return
+	 */
+	public static String maskId(String id) {
+		if ( StringUtils.isBlank(id) ) {
+			return "";
+		}
+
+		int length = id.length();
+
+		if (length <= 3) {
+			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
+		} else {
+			int repeatCount = length - 3;
+
+			StringBuilder maskedStars = new StringBuilder();
+			for (int i = 0; i < repeatCount; i++) {
+                maskedStars.append("*");
+            }
+
+			return id.substring(0, 3) + maskedStars.toString(); // 앞 3글자만 표시하고 나머지 마스킹
+		}
+	}
+
+	/**
+	 * <pre>
 	 * 이메일 마스킹
 	 *  - ID 4번재 자리부터 마스킹
 	 * </pre>
@@ -201,34 +233,6 @@ public class MaskingUtil {
 
 	/**
 	 * <pre>
-	 * 아이디 마스킹
-	 *  - 4번째 자리부터 마스킹
-	 * </pre>
-	 *
-	 * @param id
-	 * @return
-	 */
-	public static String maskId(String id) {
-		if ( StringUtils.isBlank(id) ) {
-			return "";
-		}
-
-		if (id.length() <= 3) {
-			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
-		} else {
-			int repeatCount = id.length() - 3;
-
-			StringBuilder maskedStars = new StringBuilder();
-			for (int i = 0; i < repeatCount; i++) {
-                maskedStars.append("*");
-            }
-
-			return id.substring(0, 3) + maskedStars.toString(); // 앞 3글자만 표시하고 나머지 마스킹
-		}
-	}
-
-	/**
-	 * <pre>
 	 * 주소 마스킹
 	 *  - 도로명 이하의 건물번호 및 상세주소의 숫자
 	 * </pre>
@@ -251,65 +255,37 @@ public class MaskingUtil {
      * - 일반적으로 16자리 중 7번째부터 12번째 숫자 (혹은 9번째부터 12번째 숫자)를
      * </pre>
      *
-     * @param cardNumber 마스킹할 카드번호
-     * @param startIndex 마스킹 시작 인덱스 (1부터 시작, 카드 번호의 실제 숫자 위치 기준). 7 또는 9.
-     * @return 마스킹된 카드번호
-     * @throws IllegalArgumentException 유효하지 않은 startIndex 또는 카드 번호 길이
+     * @param cardNumber
+     * @param startIndex
+     * @return
      */
     public static String maskCardNumber(String cardNumber, int startIndex) {
         if (StringUtils.isBlank(cardNumber)) {
             return "";
         }
 
-        // 입력된 startIndex가 유효한지 검증 (1부터 시작하는 인덱스로 가정)
         if (startIndex != 7 && startIndex != 9) {
-            throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
+        	throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
         }
 
-        // 1. 카드 번호에서 모든 하이픈 제거
-        String plainCardNumber = cardNumber.replace("-", "");
+        char[] chars = cardNumber.toCharArray();
+        int digitCount = 0;
 
-        // 2. 카드번호 길이 검증
-        if (plainCardNumber.length() != 15 && plainCardNumber.length() != 16) {
-            throw new IllegalArgumentException("Invalid card number length. It should be either 15 or 16 digits.");
+        int maskLimit = (startIndex == 7) ? 6 : 4;
+        int maskedSoFar = 0;
+
+        for (int i = 0; i < chars.length; i++) {
+        	if (Character.isDigit(chars[i])) {
+        		digitCount++;
+
+        		if (digitCount >= startIndex && maskedSoFar < maskLimit) {
+        			chars[i] = '*';
+        			maskedSoFar++;
+        		}
+        	}
         }
 
-        // 3. 마스킹할 길이 결정 (startIndex에 따라 마스킹할 '*'의 개수가 다름)
-        int maskLength;
-        if (startIndex == 7) {
-            // 16자리 카드: 7번째부터 4자리 마스킹 (xxxx-xx**-****-xxxx)
-            // 15자리 카드: 7번째부터 6자리 마스킹 (xxxx-xx**-*****-xxx)
-            // 실제 구현에서는 plainCardNumber의 길이에 따라 달라짐
-            maskLength = (plainCardNumber.length() == 16) ? 4 : 6;
-        } else { // startIndex == 9
-            // 9번째부터 4자리 마스킹 (xxxxxxxx-****-xxxx)
-            maskLength = 4;
-        }
-
-        // 4. 순수 숫자 문자열에 마스킹 적용
-        StringBuilder maskedPlainBuilder = new StringBuilder(plainCardNumber);
-        // startIndex는 1부터 시작하는 실제 카드번호의 위치이므로, 배열 인덱스로는 startIndex - 1
-        for (int i = 0; i < maskLength; i++) {
-            // 마스킹 시작 인덱스부터 maskLength만큼 '*'로 대체
-            maskedPlainBuilder.setCharAt(startIndex - 1 + i, '*');
-        }
-        String maskedPlainNumber = maskedPlainBuilder.toString();
-
-        // 5. 원래 카드 번호의 하이픈 위치를 기준으로 마스킹된 번호에 하이픈 재삽입
-        StringBuilder finalMaskedCardNumber = new StringBuilder();
-        int plainIndex = 0; // plainCardNumber의 현재 인덱스
-
-        for (char originalChar : cardNumber.toCharArray()) {
-            if (originalChar == '-') {
-                finalMaskedCardNumber.append('-'); // 원래 하이픈 위치에 하이픈 추가
-            } else {
-                // 하이픈이 아닌 경우, 마스킹된 순수 숫자 문자열에서 해당 숫자/마스크 문자를 가져옴
-                finalMaskedCardNumber.append(maskedPlainNumber.charAt(plainIndex));
-                plainIndex++;
-            }
-        }
-
-        return finalMaskedCardNumber.toString();
+        return new String(chars);
     }
 
 	/**
