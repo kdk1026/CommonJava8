@@ -415,7 +415,8 @@ public class MaskingUtil {
 	/**
 	 * <pre>
 	 * 학번 마스킹
-	 *  - 입학 연도 외 마스킹
+	 *  - 숫자 : 입학 연도 외 마스킹
+	 *  - 문자 + 숫자 : 문자만 마스킹
 	 * </pre>
 	 * @param studentID
 	 * @return
