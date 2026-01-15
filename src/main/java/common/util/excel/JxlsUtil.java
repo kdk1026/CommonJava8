@@ -78,10 +78,10 @@ public class JxlsUtil {
 	 * @param templateFileFullPath
 	 * @param destFilePath
 	 * @param fileName
-	 * @param bean
+	 * @param contentsList
 	 * @return
 	 */
-	public static boolean writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> bean) {
+	public static boolean writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> contentsList) {
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
 		}
@@ -94,11 +94,11 @@ public class JxlsUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		if ( bean == null || bean.isEmpty() ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
 		}
 
-		Workbook workbook = createWorkbookTemplateFile(bean, templateFileFullPath);
+		Workbook workbook = createWorkbookTemplateFile(contentsList, templateFileFullPath);
 		if (workbook == null) {
 			return false;
 		}
