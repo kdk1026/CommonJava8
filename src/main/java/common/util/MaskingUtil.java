@@ -403,6 +403,7 @@ public class MaskingUtil {
         String cleanAddress = ipv6Address.split("%")[0];
 
         try {
+        	// 유효한 IP 주소인지 검증
         	InetAddress.getByName(cleanAddress);
 
         	return cleanAddress.replaceAll("(:[0-9a-fA-F]{1,4}){2}$", ":****:****");
