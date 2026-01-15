@@ -313,7 +313,7 @@ public class MaskingUtil {
 
 	/**
 	 * <pre>
-	 * 계좌번호 마스킹
+	 * 계좌번호 마스킹 (하이픈 포함)
 	 *  - 뒤에서부터 5자리 마스킹
 	 * </pre>
 	 * @param accountNumber
