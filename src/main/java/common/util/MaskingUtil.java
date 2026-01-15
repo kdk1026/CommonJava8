@@ -31,7 +31,7 @@ public class MaskingUtil {
 	 *   : 2글자 첫자리 제외한 마스킹
 	 *   : 첫자리, 마지막자리 제외한 마스킹
 	 *  - 영문
-	 *   : 4자리 이하 : 전부 마스킹
+	 *   : 4자리 이하 : 앞 2자리 제외하고 마스킹
 	 *   : 4자리 이상 : 앞 4자리 제외하고 마스킹
 	 * </pre>
 	 *
@@ -76,22 +76,19 @@ public class MaskingUtil {
 
 	private static String maskEnglishName(String name) {
 		int length = name.length();
+		StringBuilder sb = new StringBuilder();
 
 		if (length <= 4) {
-			StringBuilder maskedName = new StringBuilder();
-	        for (int i = 0; i < name.length(); i++) {
-	            maskedName.append("*");
-	        }
-
-	        return maskedName.toString();
+			sb.append(name.substring(0, length -2));
+			sb.append("**");
+		} else {
+			sb.append(name.substring(0, 4));
+			for (int i = 0; i < length - 4; i++) {
+				sb.append("*");
+			}
 		}
 
-		StringBuilder maskedPart = new StringBuilder();
-        for (int i = 0; i < name.length() - 4; i++) {
-            maskedPart.append("*");
-        }
-
-        return name.substring(0, 4) + maskedPart.toString();
+		return sb.toString();
 	}
 
 	/**
