@@ -329,13 +329,10 @@ public class MaskingUtil {
 			return "";
 		}
 
-		// 입력값에 '-' 포함 여부 확인
         boolean hasHyphen = birthdate.contains("-");
 
-		// 숫자만 추출
 		String digitsOnly = birthdate.replaceAll("[^\\d]", "");
 
-		// 올바른 형식인지 확인
         if (digitsOnly.length() == 8) {
         	String maskedDate = "****" + digitsOnly.substring(4, 6) + digitsOnly.substring(6, 8);
             return hasHyphen ? maskedDate.substring(0, 4) + "-" + maskedDate.substring(4, 6) + "-" + maskedDate.substring(6, 8) : maskedDate;
@@ -357,7 +354,6 @@ public class MaskingUtil {
 			return "";
 		}
 
-        // IPv4 형식 확인
 		if (ipAddress.matches("\\d+\\.\\d+\\.\\d+\\.\\d+")) {
 		    int lastDotIndex = ipAddress.lastIndexOf('.');
 		    if (lastDotIndex != -1) {
