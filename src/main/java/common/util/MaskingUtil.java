@@ -41,45 +41,57 @@ public class MaskingUtil {
 	public static String maskName(String name) {
 		if (StringUtils.isBlank(name)) {
 			return "";
-		} else if (name.length() > 50) {
+		}
+
+		if (name.length() > 50) {
 			return name;
 		}
 
 		String regex = "[ㄱ-ㅎㅏ-ㅣ가-힣]+";
 
 		if (name.matches(regex)) {
-			// 한글 이름 마스킹
-			int length = name.length();
-
-			char firstChar = name.charAt(0);
-		    char lastChar = name.charAt(length - 1);
-
-		    if (length == 2) {
-		    	return firstChar + "*";
-		    }
-
-		    StringBuilder maskedMiddle = new StringBuilder();
-		    for (int i = 0; i < length - 2; i++) {
-		        maskedMiddle.append("*");
-		    }
-
-		    return firstChar + maskedMiddle.toString() + lastChar;
+			return maskKoreanName(name);
 		} else {
-			// 영문 이름 마스킹
-			if ( name.length() <= 4 ) {
-				StringBuilder maskedName = new StringBuilder();
-		        for (int i = 0; i < name.length(); i++) {
-		            maskedName.append("*");
-		        }
-		        return maskedName.toString();
-			} else {
-				StringBuilder maskedPart = new StringBuilder();
-		        for (int i = 0; i < name.length() - 4; i++) {
-		            maskedPart.append("*");
-		        }
-		        return name.substring(0, 4) + maskedPart.toString();
-			}
+			return maskEnglishName(name);
 		}
+	}
+
+	private static String maskKoreanName(String name) {
+		int length = name.length();
+		char firstChar = name.charAt(0);
+
+	    if (length == 2) {
+	    	return firstChar + "*";
+	    }
+
+	    char lastChar = name.charAt(length - 1);
+
+	    StringBuilder maskedMiddle = new StringBuilder();
+	    for (int i = 0; i < length - 2; i++) {
+	        maskedMiddle.append("*");
+	    }
+
+	    return firstChar + maskedMiddle.toString() + lastChar;
+	}
+
+	private static String maskEnglishName(String name) {
+		int length = name.length();
+
+		if (length <= 4) {
+			StringBuilder maskedName = new StringBuilder();
+	        for (int i = 0; i < name.length(); i++) {
+	            maskedName.append("*");
+	        }
+
+	        return maskedName.toString();
+		}
+
+		StringBuilder maskedPart = new StringBuilder();
+        for (int i = 0; i < name.length() - 4; i++) {
+            maskedPart.append("*");
+        }
+
+        return name.substring(0, 4) + maskedPart.toString();
 	}
 
 	/**
