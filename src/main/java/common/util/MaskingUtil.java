@@ -157,20 +157,26 @@ public class MaskingUtil {
             return "";
         }
 
-    	String[] parts = phoneNumber.split("-");
+    	String cleanNum = phoneNumber.replaceAll("-", "");
+    	int len = cleanNum.length();
 
-    	if (parts.length == 3) {
-    		String middlePart = parts[1];
+    	if (len >= 9) {
+    		String last = cleanNum.substring(len - 4);
+
+    		int firstPartEndIdx = cleanNum.startsWith("02") ? 2 : 3;
+    		String first = cleanNum.substring(0, firstPartEndIdx);
+
+    		String middlePart = cleanNum.substring(firstPartEndIdx, len - 4);
+
     		StringBuilder maskedMiddle = new StringBuilder();
-
     		for (int i = 0; i < middlePart.length(); i++) {
     			maskedMiddle.append("*");
     		}
 
-    		return parts[0] + "-" + maskedMiddle.toString() + "-" + parts[2];
+    		return first + "-" + maskedMiddle.toString() + "-" + last;
     	}
 
-    	return phoneNumber;
+    	return cleanNum;
     }
 
 	/**
