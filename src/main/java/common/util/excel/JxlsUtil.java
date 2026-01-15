@@ -49,31 +49,28 @@ public class JxlsUtil {
 
 	/**
 	 * 템플릿 파일로부터 Workbook 생성
-	 * @param bean
+	 * @param contentsList
 	 * @param templateFileFullPath
 	 * @return
 	 */
-	private static Workbook createWorkbookTemplateFile(Map<String, Object> bean, String templateFileFullPath) {
-		if ( bean == null || bean.isEmpty() ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
+	private static Workbook createWorkbookTemplateFile(Map<String, Object> contentsList, String templateFileFullPath) {
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
 		}
 
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
 		}
 
-		Workbook workbook = null;
-
 		try ( InputStream is = new BufferedInputStream(new FileInputStream(templateFileFullPath)) ) {
 
 			XLSTransformer xls = new XLSTransformer();
-			workbook = xls.transformXLS(is, bean);
+			return xls.transformXLS(is, contentsList);
 
 		} catch ( IOException | ParsePropertyException | InvalidFormatException e) {
 			logger.error("", e);
+			return null;
 		}
-
-		return workbook;
 	}
 
 	/**
