@@ -93,7 +93,7 @@ public class MaskingUtil {
 
 	/**
 	 * <pre>
-	 * 주민등록번호 마스킹
+	 * 주민등록번호 마스킹 (하이픈 포함)
 	 *  - 뒷자리 마스킹
 	 * </pre>
 	 *
@@ -268,25 +268,41 @@ public class MaskingUtil {
         	throw new IllegalArgumentException("Invalid start index. It should be either 7 or 9.");
         }
 
-        char[] chars = cardNumber.toCharArray();
-        int digitCount = 0;
+        String digitsOnly = cardNumber.replaceAll("[^\\d]", "");
+        int length = digitsOnly.length();
+
+        char[] chars = digitsOnly.toCharArray();
 
         // 마스킹 제한 설정 (7일 때 6개, 9일 때 4개)
         int maskLimit = (startIndex == 7) ? 6 : 4;
         int maskedSoFar = 0;
 
         for (int i = 0; i < chars.length; i++) {
-        	if (Character.isDigit(chars[i])) {
-        		digitCount++;
-
-        		if (digitCount >= startIndex && maskedSoFar < maskLimit) {
-        			chars[i] = '*';
-        			maskedSoFar++;
-        		}
-        	}
+        	if ((i + 1) >= startIndex && maskedSoFar < maskLimit) {
+        		chars[i] = '*';
+        		maskedSoFar++;
+    		}
         }
 
-        return new String(chars);
+        String maskedStr = new String(chars);
+
+        return formatByLength(maskedStr, length);
+    }
+
+    private static String formatByLength(String maskedStr, int length) {
+    	if (length == 16) {
+            return maskedStr.substring(0, 4) + "-" +
+                    maskedStr.substring(4, 8) + "-" +
+                    maskedStr.substring(8, 12) + "-" +
+                    maskedStr.substring(12);
+         }
+    	 else if (length == 15) {
+            return maskedStr.substring(0, 4) + "-" +
+                   maskedStr.substring(4, 10) + "-" +
+                   maskedStr.substring(10);
+        }
+
+        return maskedStr;
     }
 
 	/**
