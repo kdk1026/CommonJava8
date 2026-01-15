@@ -257,8 +257,8 @@ public class MaskingUtil {
     /**
      * <pre>
      * 카드번호 마스킹
-     * - startIndex 부터 지정된 길이만큼 마스킹
-     * - 일반적으로 16자리 중 7번째부터 12번째 숫자 (혹은 9번째부터 12번째 숫자)를
+     * - startIndex (7 or 9)
+     * - 일반적으로 15/16자리 중 7번째부터 12번째 숫자 (혹은 9번째부터 12번째 숫자)를 마스킹
      * </pre>
      *
      * @param cardNumber
