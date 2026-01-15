@@ -157,7 +157,7 @@ public class MaskingUtil {
             return "";
         }
 
-    	String cleanNum = phoneNumber.replaceAll("-", "");
+    	String cleanNum = phoneNumber.replace("-", "");
     	int len = cleanNum.length();
 
     	if (len >= 9) {
