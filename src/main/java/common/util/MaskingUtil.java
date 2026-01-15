@@ -27,7 +27,9 @@ public class MaskingUtil {
 	/**
 	 * <pre>
 	 * 이름 마스킹
-	 *  - 한글 : 첫자리, 마지막자리 제외한 마스킹
+	 *  - 한글
+	 *   : 2글자 첫자리 제외한 마스킹
+	 *   : 첫자리, 마지막자리 제외한 마스킹
 	 *  - 영문
 	 *   : 4자리 이하 : 전부 마스킹
 	 *   : 4자리 이상 : 앞 4자리 제외하고 마스킹
@@ -51,6 +53,10 @@ public class MaskingUtil {
 
 			char firstChar = name.charAt(0);
 		    char lastChar = name.charAt(length - 1);
+
+		    if (length == 2) {
+		    	return firstChar + "*";
+		    }
 
 		    StringBuilder maskedMiddle = new StringBuilder();
 		    for (int i = 0; i < length - 2; i++) {
