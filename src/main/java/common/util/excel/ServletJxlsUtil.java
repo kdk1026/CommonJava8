@@ -57,14 +57,14 @@ public class ServletJxlsUtil {
 	 * @param fileName
 	 */
 	public static void downloadExcel(Workbook workbook, HttpServletRequest request, HttpServletResponse response
-			, Map<String, Object> bean, String templateFileFullPath, String fileName) {
+			, Map<String, Object> contentsList, String templateFileFullPath, String fileName) {
 
 		Objects.requireNonNull(workbook, ExceptionMessage.isNull("workbook"));
 		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
-		if ( bean == null || bean.isEmpty() ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
 		}
 
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
@@ -79,9 +79,7 @@ public class ServletJxlsUtil {
 			fileName = setFileNameByBrowser(request, fileName);
 			response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName+ "\"");
 
-			if (workbook != null) {
-				workbook.write(response.getOutputStream());
-			}
+			workbook.write(response.getOutputStream());
 
 		} catch ( IOException | ParsePropertyException e) {
 			logger.error("", e);
