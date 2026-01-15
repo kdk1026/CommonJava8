@@ -271,6 +271,7 @@ public class MaskingUtil {
         char[] chars = cardNumber.toCharArray();
         int digitCount = 0;
 
+        // 마스킹 제한 설정 (7일 때 6개, 9일 때 4개)
         int maskLimit = (startIndex == 7) ? 6 : 4;
         int maskedSoFar = 0;
 
