@@ -1,6 +1,9 @@
 package common.util.excel;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -10,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.sf.jxls.exception.ParsePropertyException;
+import net.sf.jxls.transformer.XLSTransformer;
 
 /**
  * <pre>
@@ -49,17 +54,15 @@ public class ServletJxlsUtil {
 
 	/**
 	 * 템플릿 파일 이용해서 엑셀 파일 다운로드
-	 * @param workbook
 	 * @param request
 	 * @param response
 	 * @param bean
 	 * @param templateFileFullPath
 	 * @param fileName
 	 */
-	public static void downloadExcel(Workbook workbook, HttpServletRequest request, HttpServletResponse response
+	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
 			, Map<String, Object> contentsList, String templateFileFullPath, String fileName) {
 
-		Objects.requireNonNull(workbook, ExceptionMessage.isNull("workbook"));
 		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
@@ -79,6 +82,7 @@ public class ServletJxlsUtil {
 			fileName = setFileNameByBrowser(request, fileName);
 			response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName+ "\"");
 
+			Workbook workbook = createWorkbookTemplateFile(contentsList, templateFileFullPath);
 			workbook.write(response.getOutputStream());
 
 		} catch ( IOException | ParsePropertyException e) {
@@ -105,6 +109,32 @@ public class ServletJxlsUtil {
 		}
 
 		return sRes;
+	}
+
+	/**
+	 * 템플릿 파일로부터 Workbook 생성
+	 * @param contentsList
+	 * @param templateFileFullPath
+	 * @return
+	 */
+	private static Workbook createWorkbookTemplateFile(Map<String, Object> contentsList, String templateFileFullPath) {
+		if ( contentsList == null || contentsList.isEmpty() ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("contentsList"));
+		}
+
+		if ( StringUtils.isBlank(templateFileFullPath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
+		}
+
+		try ( InputStream is = new BufferedInputStream(new FileInputStream(templateFileFullPath)) ) {
+
+			XLSTransformer xls = new XLSTransformer();
+			return xls.transformXLS(is, contentsList);
+
+		} catch ( IOException | ParsePropertyException | InvalidFormatException e) {
+			logger.error("", e);
+			return null;
+		}
 	}
 
 }
