@@ -107,8 +107,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.apache.tika/tika-core
 	implementation group: 'org.apache.tika', name: 'tika-core', version: '1.17'
 
-	// https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.16'
+	// Source: https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+	implementation("org.apache.poi:poi-ooxml:5.5.1")
 
 /* Google */
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson

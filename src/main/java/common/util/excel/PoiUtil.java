@@ -129,11 +129,11 @@ public class PoiUtil {
 	}
 
 	private static Object getCellValue(Cell cell, boolean isDecimal) {
-		if (cell == null || cell.getCellTypeEnum() == CellType.BLANK) {
+		if (cell == null || cell.getCellType() == CellType.BLANK) {
 	        return "";
 	    }
 
-		switch (cell.getCellTypeEnum()) {
+		switch (cell.getCellType()) {
 		case NUMERIC:
 			double val = cell.getNumericCellValue();
             return isDecimal ? val : (int) val;
