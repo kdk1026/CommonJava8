@@ -179,8 +179,8 @@ public class PoiUtil {
 		Workbook workbook = createWorkbookFromContents(fileName, contentsList, cellTitles);
 
 		try (
-				FileOutputStream fis = new FileOutputStream(new File(destFilePath + File.separator + fileName));
-				OutputStream os = new BufferedOutputStream(fis)
+			FileOutputStream fis = new FileOutputStream(new File(destFilePath + File.separator + fileName));
+			OutputStream os = new BufferedOutputStream(fis)
 		) {
 		    workbook.write(os);
 		    return true;

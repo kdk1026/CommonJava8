@@ -101,24 +101,21 @@ public class JxlsUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("bean"));
 		}
 
-		boolean isSuccess = false;
-
 		Workbook workbook = createWorkbookTemplateFile(bean, templateFileFullPath);
-
 		if (workbook == null) {
-			return isSuccess;
+			return false;
 		}
 
-		File outFile = new File(destFilePath + File.separator + fileName);
-
-		try ( OutputStream os = new BufferedOutputStream(new FileOutputStream(outFile)) ) {
-			workbook.write(os);
-			isSuccess = true;
+		try (
+			FileOutputStream fis = new FileOutputStream(new File(destFilePath + File.separator + fileName));
+			OutputStream os = new BufferedOutputStream(fis)
+		) {
+		    workbook.write(os);
+		    return true;
 		} catch (IOException e) {
-			logger.error("", e);
+		    logger.error("", e);
+		    return false;
 		}
-
-		return isSuccess;
 	}
 
 
