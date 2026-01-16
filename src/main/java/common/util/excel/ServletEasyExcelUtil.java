@@ -1,14 +1,9 @@
 package common.util.excel;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jxls.builder.JxlsOutput;
-import org.jxls.transform.poi.JxlsPoiTemplateFillerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.alibaba.excel.EasyExcelFactory;
+import com.alibaba.excel.ExcelWriter;
+import com.alibaba.excel.write.metadata.WriteSheet;
+import com.alibaba.excel.write.metadata.fill.FillConfig;
 
 /**
  * <pre>
@@ -32,11 +30,11 @@ import org.slf4j.LoggerFactory;
  *
  * @author 김대광
  */
-public class ServletJxls3Util {
+public class ServletEasyExcelUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(ServletJxls3Util.class);
+	private static final Logger logger = LoggerFactory.getLogger(ServletEasyExcelUtil.class);
 
-	private ServletJxls3Util() {
+	private ServletEasyExcelUtil() {
 		super();
 	}
 
@@ -54,21 +52,17 @@ public class ServletJxls3Util {
 
 	/**
 	 * 템플릿 파일 이용해서 엑셀 파일 다운로드
-	 *  - 3.x.x 은 JDK 17 이상에서 동작
 	 * @param request
 	 * @param response
 	 * @param templateFileFullPath
 	 * @param fileName
 	 * @param dataMap
-	 * @param attributeName
+	 * @param listKey
 	 *
 	 * <pre>
-	 * A1 메모: jx:area(lastCell="B6")
-	 *
-	 * 일반 : ${dataMap.customerName}
-	 *
-	 * 리스트 메모(예: A6) : jx:each(items="dataMap.productList" var="product" lastCell="B6")
-	 * 리스트 값(예: A6, B6) : ${product.productName} | ${product.amount}
+	 * 템플릿 작성
+	 * 	일반 : {customerName}
+	 * 	리스트 : {.productName} | {.amount}
 	 * </pre>
 	 *
 	 * <pre>
@@ -79,14 +73,14 @@ public class ServletJxls3Util {
 	 * 	dataMap.put("customerName", "홍길동");
 	 * 	dataMap.put("productList", list);
 	 *
-	 * 	ServletJxls3Util.downloadExcel(request, response, templateFileFullPath, fileName, dataMap, attributeName);
+	 * 	ServletEasyExcelUtil.downloadExcel(request, response, templateFileFullPath, fileName, dataMap, listKey);
 	 *
 	 * 	return ResponseEntity.noContent().build();
 	 * }
 	 * </pre>
 	 */
 	public static void downloadExcel(HttpServletRequest request, HttpServletResponse response
-			, String templateFileFullPath, String fileName, Map<String, Object> dataMap, String attributeName) {
+			, String templateFileFullPath, String fileName, Map<String, Object> dataMap, String listKey) {
 
 		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
@@ -103,33 +97,22 @@ public class ServletJxls3Util {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		if ( StringUtils.isBlank(attributeName) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("attributeName"));
-		}
+		try (ExcelWriter excelWriter = EasyExcelFactory.write(response.getOutputStream()).withTemplate(templateFileFullPath).build()) {
+		    WriteSheet writeSheet = EasyExcelFactory.writerSheet().build();
 
-		try (
-			InputStream is = new BufferedInputStream(new FileInputStream(templateFileFullPath));
-		) {
 			fileName = setFileNameByBrowser(request, fileName);
 			response.setHeader("Content-Disposition", "attachment; fileName=\"" + fileName+ "\"");
 
-			Map<String, Object> data = new HashMap<>();
-			data.put(attributeName, dataMap);
+		    excelWriter.fill(dataMap, writeSheet);
 
-			JxlsPoiTemplateFillerBuilder.newInstance()
-				.withTemplate(new File(templateFileFullPath))
-				.build()
-				.fill(data, new JxlsOutput() {
+		    if ( !StringUtils.isBlank(listKey) ) {
+		    	@SuppressWarnings("unchecked")
+		    	List<Map<String, Object>> list = (List<Map<String, Object>>) dataMap.get(listKey);
 
-					@Override
-					public OutputStream getOutputStream() throws IOException {
-						return response.getOutputStream();
-					}
-				});
-
-			response.getOutputStream().flush();
-
-		} catch ( IOException e) {
+		    	FillConfig fillConfig = FillConfig.builder().forceNewRow(true).build();
+		    	excelWriter.fill(list, fillConfig, writeSheet);
+		    }
+		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}

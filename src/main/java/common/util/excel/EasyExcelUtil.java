@@ -27,6 +27,12 @@ import com.alibaba.excel.write.metadata.fill.FillConfig;
  * </pre>
  *
  * <pre>
+ * 템플릿 작성
+ * 	일반 : {customerName}
+ * 	리스트 : {.productName} | {.amount}
+ * </pre>
+ *
+ * <pre>
  * 템플릿 없이 쓰기 가능
  * - VO 멤버 변수에 @ExcelProperty("헤더 이름 지정")
  *
