@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.alibaba.excel.EasyExcelFactory;
 import com.alibaba.excel.ExcelWriter;
@@ -64,8 +62,6 @@ import com.alibaba.excel.write.metadata.fill.FillConfig;
  */
 public class EasyExcelUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(EasyExcelUtil.class);
-
 	private EasyExcelUtil() {
 		super();
 	}
@@ -100,7 +96,7 @@ public class EasyExcelUtil {
 	 * 리스트 값(예: A6, B6) : {.productName} | {.amount}
 	 * </pre>
 	 */
-	public static boolean writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> dataMap, String listKey) {
+	public static void writeExcel(String templateFileFullPath, String destFilePath, String fileName, Map<String, Object> dataMap, String listKey) {
 		if ( StringUtils.isBlank(templateFileFullPath) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("templateFileFullPath"));
 		}
@@ -131,11 +127,6 @@ public class EasyExcelUtil {
 		    	FillConfig fillConfig = FillConfig.builder().forceNewRow(true).build();
 		    	excelWriter.fill(list, fillConfig, writeSheet);
 		    }
-
-		    return true;
-		} catch (Exception e) {
-			logger.error("", e);
-		    return false;
 		}
 	}
 
