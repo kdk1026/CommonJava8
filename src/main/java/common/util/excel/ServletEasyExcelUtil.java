@@ -131,7 +131,7 @@ public class ServletEasyExcelUtil {
 				// 브라우저에서는 처리되지만 Swagger에서는 한글 깨짐
 				// fileName = new String(str.getBytes(UTF_8), ISO_8859_1);
 
-				fileName = URLEncoder.encode(str, "UTF-8");
+				fileName = URLEncoder.encode(str, UTF_8);
 			}
 
 		} catch (IOException e) {

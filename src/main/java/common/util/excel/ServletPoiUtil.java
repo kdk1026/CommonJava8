@@ -101,24 +101,27 @@ public class ServletPoiUtil {
 	}
 
 	private static String setFileNameByBrowser(HttpServletRequest request, String str) {
-		String sRes = "";
+		String fileName = "";
 		String userAgent = request.getHeader("User-Agent");
 
 		try {
 			final String UTF_8 = StandardCharsets.UTF_8.name();
-			final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
+			// final String ISO_8859_1 = StandardCharsets.ISO_8859_1.name();
 
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF_8).replace("\\+", " ");
+				fileName = URLEncoder.encode(str, UTF_8).replace("\\+", " ");
 			} else {
-				sRes = new String(str.getBytes(UTF_8), ISO_8859_1);
+				// 브라우저에서는 처리되지만 Swagger에서는 한글 깨짐
+				// fileName = new String(str.getBytes(UTF_8), ISO_8859_1);
+
+				fileName = URLEncoder.encode(str, UTF_8);
 			}
 
 		} catch (IOException e) {
 			logger.error("", e);
 		}
 
-		return sRes;
+		return fileName;
 	}
 
 	/**
