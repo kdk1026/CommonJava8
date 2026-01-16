@@ -25,6 +25,13 @@ import com.alibaba.excel.write.metadata.fill.FillConfig;
  * </pre>
  *
  * <pre>
+ * {@code
+ * dataMap.put("customerName", "홍길동");
+ * dataMap.put("productList", list);
+ * }
+ * </pre>
+ *
+ * <pre>
  * 템플릿 작성
  * 	일반 : {customerName}
  * 	리스트 : {.productName} | {.amount}
@@ -55,7 +62,6 @@ import com.alibaba.excel.write.metadata.fill.FillConfig;
  * }
  *
  * EasyExcel.read(fileName, DemoData.class, new DemoDataListener()).sheet().doRead();
- * </pre>
  * </pre>
  *
  * @author 김대광
