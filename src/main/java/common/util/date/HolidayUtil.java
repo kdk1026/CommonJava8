@@ -61,6 +61,13 @@ public class HolidayUtil {
 		private String seq;
 	}
 
+	/**
+	 * 공휴일 조회
+	 * @param serviceEncodingKey
+	 * @param year
+	 * @return
+	 * @throws IOException
+	 */
 	public static List<HolidayData> getHolidayList(String serviceEncodingKey, int year) throws IOException {
 		if ( StringUtils.isBlank(serviceEncodingKey) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("serviceEncodingKey"));

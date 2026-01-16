@@ -109,6 +109,14 @@ public class WeatherUtil {
 		private String fcstUnit;
 	}
 
+	/**
+	 * 날씨 조회
+	 * @param serviceEncodingKey
+	 * @param lat
+	 * @param lon
+	 * @return
+	 * @throws IOException
+	 */
 	public static List<WeatherData> getWeatherList(String serviceEncodingKey, double lat, double lon) throws IOException {
 		if ( StringUtils.isBlank(serviceEncodingKey) ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("serviceEncodingKey"));
