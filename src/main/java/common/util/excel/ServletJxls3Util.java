@@ -62,9 +62,22 @@ public class ServletJxls3Util {
 	 * @param attributeName
 	 *
 	 * <pre>
+	 * A1 메모: jx:area(lastCell="B6")
+	 *
+	 * 일반 : ${dataMap.customerName}
+	 *
+	 * 리스트 메모(예: A6) : jx:each(items="dataMap.productList" var="product" lastCell="B6")
+	 * 리스트 값(예: A6, B6) : ${product.productName} | ${product.amount}
+	 * </pre>
+	 *
+	 * <pre>
 	 * {@code
 	 * @GetMapping("/download-excel")
 	 * public ResponseEntity<Void> downloadExcel(HttpServletRequest request, HttpServletResponse response)
+	 * 	Map<String, Object> dataMap = new HashMap<>();
+	 * 	dataMap.put("customerName", "홍길동");
+	 * 	dataMap.put("productList", list);
+	 *
 	 * 	ServletJxls3Util.downloadExcel(request, response, templateFileFullPath, fileName, dataMap, attributeName);
 	 *
 	 * 	return ResponseEntity.noContent().build();
