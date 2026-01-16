@@ -171,6 +171,9 @@ dependencies {
 	// Source: https://mvnrepository.com/artifact/org.jxls/jxls-poi
 	implementation("org.jxls:jxls-poi:3.0.0")
 
+	// Source: https://mvnrepository.com/artifact/com.alibaba/easyexcel
+	implementation("com.alibaba:easyexcel:4.0.3")
+
 /* Test */
 	testImplementation group: 'junit', name: 'junit', version: junitVersion
 }
