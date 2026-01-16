@@ -168,6 +168,9 @@ dependencies {
 	// Source: https://mvnrepository.com/artifact/de.focus-shift/jollyday-jackson
 	implementation("de.focus-shift:jollyday-jackson:1.8.0")
 
+	// Source: https://mvnrepository.com/artifact/org.jxls/jxls-poi
+	implementation("org.jxls:jxls-poi:3.0.0")
+
 /* Test */
 	testImplementation group: 'junit', name: 'junit', version: junitVersion
 }
