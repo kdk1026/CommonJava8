@@ -54,6 +54,7 @@ public class ServletJxls3Util {
 
 	/**
 	 * 템플릿 파일 이용해서 엑셀 파일 다운로드
+	 *  - 3.x.x 은 JDK 17 이상에서 동작
 	 * @param request
 	 * @param response
 	 * @param templateFileFullPath
