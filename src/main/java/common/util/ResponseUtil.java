@@ -61,15 +61,7 @@ public class ResponseUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		String userAgent = request.getHeader("User-Agent");
-
 		try {
-			// IE / Edge (Trident) 대응
-			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				return URLEncoder.encode(fileName, UTF8).replace("+", "%20");
-			}
-
-			// RFC 5987 표준 방식 (최신 브라우저 및 Swagger 대응)
 			return URLEncoder.encode(fileName, UTF8).replace("+", "%20");
 
 		} catch (UnsupportedEncodingException e) {
@@ -86,10 +78,19 @@ public class ResponseUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		String reportFileName = getEncodedFileName(request, fileName);
+		String encodedFileName = getEncodedFileName(request, fileName);
+
+		String userAgent = request.getHeader("User-Agent");
 
 		response.setHeader("Content-Transfer-Encoding", "binary");
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + reportFileName+ "\"");
+
+		// IE / Edge (Trident) 대응
+		if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName+ "\"");
+		} else {
+			// 최신 브라우저: filename* 파라미터 사용 (RFC 5987)
+			response.setHeader("Content-Disposition", "attachment; filename*=UTF-8''" + encodedFileName);
+		}
 	}
 
 	public static void setJsonResponse(HttpServletResponse response, String message) throws IOException {
