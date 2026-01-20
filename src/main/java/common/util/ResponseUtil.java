@@ -49,39 +49,33 @@ public class ResponseUtil {
 	}
 
 	/**
-	 * <pre>
-	 * 브라우저에 따른 인코딩 설정
-	 *   - str은 다운로드할 파일명이나 출력할 문자열
-	 * </pre>
+	 * 브라우저에 따른 파일명 인코딩 설정 (Content-Disposition 값 생성)
 	 * @param request
 	 * @param str
 	 * @return
 	 */
-	public static String contentDisposition(HttpServletRequest request, String str) {
+	public static String getEncodedFileName(HttpServletRequest request, String fileName) {
 		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 
-		if ( StringUtils.isBlank(str) ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
+		if ( StringUtils.isBlank(fileName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		String fileName = "";
 		String userAgent = request.getHeader("User-Agent");
 
 		try {
+			// IE / Edge (Trident) 대응
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				fileName = URLEncoder.encode(str, UTF8).replace("\\+", " ");
-			} else {
-				// 브라우저에서는 처리되지만 Swagger에서는 한글 깨짐
-				// fileName = new String(str.getBytes(UTF8), StandardCharsets.ISO_8859_1);
-
-				fileName = URLEncoder.encode(str, StandardCharsets.UTF_8.toString());
+				return URLEncoder.encode(fileName, UTF8).replace("+", "%20");
 			}
+
+			// RFC 5987 표준 방식 (최신 브라우저 및 Swagger 대응)
+			return URLEncoder.encode(fileName, UTF8).replace("+", "%20");
 
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
+			return fileName;
 		}
-
-		return fileName;
 	}
 
 	public static void downloadReportFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
@@ -92,7 +86,7 @@ public class ResponseUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("fileName"));
 		}
 
-		String reportFileName = contentDisposition(request, fileName);
+		String reportFileName = getEncodedFileName(request, fileName);
 
 		response.setHeader("Content-Transfer-Encoding", "binary");
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + reportFileName+ "\"");
