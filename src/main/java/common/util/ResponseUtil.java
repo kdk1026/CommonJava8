@@ -70,7 +70,13 @@ public class ResponseUtil {
 		}
 	}
 
-	public static void downloadReportFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
+	/**
+	 * 브라우저별로 최적화된 파일 다운로드 응답 헤더를 설정
+	 * @param request
+	 * @param response
+	 * @param fileName
+	 */
+	public static void setContentDisposition(HttpServletRequest request, HttpServletResponse response, String fileName) {
 		Objects.requireNonNull(request, ExceptionMessage.isNull("request"));
 		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
@@ -93,7 +99,13 @@ public class ResponseUtil {
 		}
 	}
 
-	public static void setJsonResponse(HttpServletResponse response, String message) throws IOException {
+	/**
+	 * HttpServletResponse 객체에 JSON 문자열을 직접 작성하여 응답
+	 * @param response
+	 * @param message
+	 * @throws IOException
+	 */
+	public static void writeJsonResponse(HttpServletResponse response, String message) throws IOException {
 		Objects.requireNonNull(response, ExceptionMessage.isNull("response"));
 
 		if ( StringUtils.isBlank(message) ) {
