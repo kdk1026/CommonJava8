@@ -64,21 +64,24 @@ public class ResponseUtil {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("str"));
 		}
 
-		String sRes = "";
+		String fileName = "";
 		String userAgent = request.getHeader("User-Agent");
 
 		try {
 			if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-				sRes = URLEncoder.encode(str, UTF8).replace("\\+", " ");
+				fileName = URLEncoder.encode(str, UTF8).replace("\\+", " ");
 			} else {
-				sRes = new String(str.getBytes(UTF8), StandardCharsets.ISO_8859_1);
+				// 브라우저에서는 처리되지만 Swagger에서는 한글 깨짐
+				// fileName = new String(str.getBytes(UTF8), StandardCharsets.ISO_8859_1);
+
+				fileName = URLEncoder.encode(str, StandardCharsets.UTF_8.toString());
 			}
 
 		} catch (UnsupportedEncodingException e) {
 			logger.error("", e);
 		}
 
-		return sRes;
+		return fileName;
 	}
 
 	public static void downloadReportFile(HttpServletRequest request, HttpServletResponse response, String fileName) {
