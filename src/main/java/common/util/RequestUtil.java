@@ -46,7 +46,7 @@ public class RequestUtil {
 	public static String getRequestIpAddress(HttpServletRequest request) {
 		Objects.requireNonNull(request, REQUEST_IS_NULL);
 
-	    String[] sHeaders = {
+	    String[] headers = {
 	    		"X-Forwarded-For",
 	    		"Proxy-Client-IP",
 	    		"WL-Proxy-Client-IP",
@@ -57,11 +57,15 @@ public class RequestUtil {
 	    		"REMOTE_ADDR"
 	    };
 
-	    for ( String header : sHeaders ) {
-	    	String sIp = request.getHeader(header);
+	    for ( String header : headers ) {
+	    	String ip = request.getHeader(header);
 
-	    	if ( sIp != null && !sIp.isEmpty() && !"unknown".equalsIgnoreCase(sIp) ) {
-	    		return sIp;
+	    	if ( ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip) ) {
+	    		// X-Forwarded-For는 "client, proxy1, proxy2" 형태일 수 있으므로 첫 번째 IP 선택
+	    		if ( ip.contains(",") ) {
+	    			return ip.split(",")[0].trim();
+	    		}
+	    		return ip;
 	    	}
 	    }
 
