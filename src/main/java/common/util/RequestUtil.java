@@ -73,7 +73,7 @@ public class RequestUtil {
 	}
 
 	/**
-	 * 도메인 가져오기 (포트 있는 경우, 포트 포함)
+	 * 포트와 컨텍스트 경로를 포함한 전체 베이스 URL 가져오기
 	 * @param request
 	 * @return
 	 */
@@ -95,7 +95,7 @@ public class RequestUtil {
 	}
 
 	/**
-	 * 기본 도메인 가져오기 (포트 미포함)
+	 * 기본 도메인 가져오기 (포트 미포함, 호스트명만)
 	 * @param request
 	 * @return
 	 */
