@@ -62,6 +62,10 @@ public class PoiUtil {
 	        return String.format("'%s' is null or empty", paramName);
 	    }
 
+		public static String isNegative(String paramName) {
+			return String.format("'%s' is negative", paramName);
+		}
+
 	}
 
 	/**
@@ -74,6 +78,10 @@ public class PoiUtil {
 	 */
 	public static List<Map<String, Object>> readExcel(File file, String[] customKeys, int startRow) {
 		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
+
+		if ( startRow <= 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNegative("startRow"));
+		}
 
 		try ( InputStream is = new BufferedInputStream(new FileInputStream(file)) ) {
 			Workbook workbook = createWorkbook(is, file.getName());
