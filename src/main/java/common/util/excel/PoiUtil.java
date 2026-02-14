@@ -69,14 +69,11 @@ public class PoiUtil {
 	 * @param file
 	 * @param customKeys
 	 * @param startRow
+	 *  - customKeys가 null인 경우 헤더 로우부터, null이 아니면 헤더 로우 다음 행
 	 * @return
 	 */
 	public static List<Map<String, Object>> readExcel(File file, String[] customKeys, int startRow) {
 		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
-
-		if ( customKeys == null || customKeys.length <= 0 ) {
-			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellNames"));
-		}
 
 		try ( InputStream is = new BufferedInputStream(new FileInputStream(file)) ) {
 			Workbook workbook = createWorkbook(is, file.getName());
@@ -106,28 +103,64 @@ public class PoiUtil {
 
 	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] customKeys, int startRow) {
 		List<Map<String, Object>> resList = new ArrayList<>();
-		int nRowCnt = sheet.getLastRowNum();
+		int lastRowIdx = sheet.getLastRowNum();
 
-		for (int rowIdx = startRow; rowIdx <= nRowCnt; rowIdx++) {
+		String[] dynamicCellNames = customKeys;
+		int dataStartRow = startRow;
+
+		Map<String, Object> headerMap = getHeaderKey(sheet, customKeys, dataStartRow);
+		if ( !headerMap.isEmpty() ) {
+			dynamicCellNames = (String[]) headerMap.get("dynamicCellNames");
+			dataStartRow = (int) headerMap.get("dataStartRow");
+		}
+
+		// 데이터 행 루프
+		for (int rowIdx = dataStartRow; rowIdx <= lastRowIdx; rowIdx++) {
 			Row row = sheet.getRow(rowIdx);
 			if (row == null) continue;
 
-			// 행 단위 처리
 			Map<String, Object> map = new HashMap<>();
-			int nCellCnt = row.getPhysicalNumberOfCells();
 
-			for (int cellIdx = 0; cellIdx < nCellCnt; cellIdx++) {
-				if (cellIdx >= customKeys.length) break;
-
+			for (int cellIdx = 0; cellIdx < dynamicCellNames.length; cellIdx++) {
 				Cell cell = row.getCell(cellIdx);
-				String columnName = customKeys[cellIdx];
-				map.put(columnName, getCellValue(cell));
+				String columnName = dynamicCellNames[cellIdx];
+
+				if (columnName != null && !columnName.isEmpty()) {
+					map.put(columnName, getCellValue(cell));
+				}
 			}
 
 			resList.add(map);
 		}
 
 		return resList;
+	}
+
+	private static Map<String, Object> getHeaderKey(Sheet sheet, String[] customKeys, int startRow) {
+		Map<String, Object> map = new HashMap<>();
+
+		String[] dynamicCellNames = customKeys;
+		int dataStartRow = startRow;
+
+		if (dynamicCellNames == null) {
+			Row headerRow = sheet.getRow(startRow);
+			if (headerRow != null) {
+				int lastCellNum = headerRow.getLastCellNum();
+				dynamicCellNames = new String[lastCellNum];
+
+				for (int i = 0; i < lastCellNum; i++) {
+					Cell cell = headerRow.getCell(i);
+					dynamicCellNames[i] = (cell == null) ? "column" + i : getCellValue(cell).toString();
+				}
+
+				dataStartRow = startRow + 1;
+
+				map.put("dynamicCellNames", dynamicCellNames);
+				map.put("dataStartRow", dataStartRow);
+			}
+		}
+
+		return map;
 	}
 
 	private static Object getCellValue(Cell cell) {
