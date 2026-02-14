@@ -21,6 +21,7 @@ import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
@@ -67,9 +68,11 @@ public class PoiUtil {
 	 * 엑셀 파일 읽기
 	 * @param file
 	 * @param cellNames
+	 * @param startRow
+	 * @param isDecimal
 	 * @return
 	 */
-	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, boolean isDecimal) {
+	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, int startRow, boolean isDecimal) {
 		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
 
 		if ( cellNames == null || cellNames.length <= 0 ) {
@@ -83,7 +86,7 @@ public class PoiUtil {
 				return Collections.emptyList();
 			}
 
-			return parseSheet(workbook.getSheetAt(0), cellNames, isDecimal);
+			return parseSheet(workbook.getSheetAt(0), cellNames, startRow, isDecimal);
 
 
 		} catch (IOException e) {
@@ -102,11 +105,11 @@ public class PoiUtil {
 		return null;
 	}
 
-	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] cellNames, boolean isDecimal) {
+	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] cellNames, int startRow, boolean isDecimal) {
 		List<Map<String, Object>> resList = new ArrayList<>();
-		int nRowCnt = sheet.getPhysicalNumberOfRows();
+		int nRowCnt = sheet.getLastRowNum();
 
-		for (int rowIdx = 1; rowIdx < nRowCnt; rowIdx++) {
+		for (int rowIdx = startRow; rowIdx <= nRowCnt; rowIdx++) {
 			Row row = sheet.getRow(rowIdx);
 			if (row == null) continue;
 
@@ -133,10 +136,11 @@ public class PoiUtil {
 	        return "";
 	    }
 
+		DataFormatter formatter = new DataFormatter();
+
 		switch (cell.getCellType()) {
 		case NUMERIC:
-			double val = cell.getNumericCellValue();
-            return isDecimal ? val : (int) val;
+			return formatter.formatCellValue(cell);
 		case STRING:
 			return cell.getStringCellValue();
 		case FORMULA:
