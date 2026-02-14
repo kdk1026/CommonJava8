@@ -140,7 +140,6 @@ public class PoiUtil {
 		Map<String, Object> map = new HashMap<>();
 
 		String[] dynamicCellNames = customKeys;
-		int dataStartRow = startRow;
 
 		if (dynamicCellNames == null) {
 			Row headerRow = sheet.getRow(startRow);
@@ -153,7 +152,7 @@ public class PoiUtil {
 					dynamicCellNames[i] = (cell == null) ? "column" + i : getCellValue(cell).toString();
 				}
 
-				dataStartRow = startRow + 1;
+				int dataStartRow = startRow + 1;
 
 				map.put("dynamicCellNames", dynamicCellNames);
 				map.put("dataStartRow", dataStartRow);
