@@ -67,14 +67,14 @@ public class PoiUtil {
 	/**
 	 * 엑셀 파일 읽기
 	 * @param file
-	 * @param cellNames
+	 * @param customKeys
 	 * @param startRow
 	 * @return
 	 */
-	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, int startRow) {
+	public static List<Map<String, Object>> readExcel(File file, String[] customKeys, int startRow) {
 		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
 
-		if ( cellNames == null || cellNames.length <= 0 ) {
+		if ( customKeys == null || customKeys.length <= 0 ) {
 			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("cellNames"));
 		}
 
@@ -85,7 +85,7 @@ public class PoiUtil {
 				return Collections.emptyList();
 			}
 
-			return parseSheet(workbook.getSheetAt(0), cellNames, startRow);
+			return parseSheet(workbook.getSheetAt(0), customKeys, startRow);
 
 
 		} catch (IOException e) {
@@ -104,7 +104,7 @@ public class PoiUtil {
 		return null;
 	}
 
-	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] cellNames, int startRow) {
+	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] customKeys, int startRow) {
 		List<Map<String, Object>> resList = new ArrayList<>();
 		int nRowCnt = sheet.getLastRowNum();
 
@@ -117,10 +117,10 @@ public class PoiUtil {
 			int nCellCnt = row.getPhysicalNumberOfCells();
 
 			for (int cellIdx = 0; cellIdx < nCellCnt; cellIdx++) {
-				if (cellIdx >= cellNames.length) break;
+				if (cellIdx >= customKeys.length) break;
 
 				Cell cell = row.getCell(cellIdx);
-				String columnName = cellNames[cellIdx];
+				String columnName = customKeys[cellIdx];
 				map.put(columnName, getCellValue(cell));
 			}
 
