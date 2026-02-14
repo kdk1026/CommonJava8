@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
@@ -27,6 +28,14 @@ public class IniUtil {
 		super();
 	}
 
+	private static class ExceptionMessage {
+
+		public static String isNullOrEmpty(String paramName) {
+	        return String.format("'%s' is null or empty", paramName);
+	    }
+
+	}
+
 	/**
 	 * ini 파일 읽기
 	 * @param filePath
@@ -36,6 +45,18 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static String getIni(String filePath, String sectionName, String key) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
 		File file = new File(filePath);
 		Ini ini = new Ini(file);
 
@@ -50,6 +71,14 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static List<String> getIniSection(String filePath, String sectionName) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
 		List<String> valueList = null;
 
 		File file = new File(filePath);
@@ -73,6 +102,14 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static String getIniKey(String filePath, String key) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
 		String value = null;
 
 		File file = new File(filePath);
@@ -99,6 +136,22 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static void addIni(String filePath, String sectionName, String key, String value) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
+		if ( StringUtils.isBlank(value) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("value"));
+		}
+
 		File file = new File(filePath);
 		Ini ini = new Ini(file);
 
@@ -116,6 +169,22 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static void setIni(String filePath, String sectionName, String key, String value) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
+		if ( StringUtils.isBlank(value) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("value"));
+		}
+
 		File file = new File(filePath);
 		Ini ini = new Ini(file);
 
@@ -131,6 +200,14 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static void clearIni(String filePath, String sectionName) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
 		File file = new File(filePath);
 		Ini ini = new Ini(file);
 
@@ -149,6 +226,18 @@ public class IniUtil {
 	 * @throws IOException
 	 */
 	public static void clearIni(String filePath, String sectionName, String key) throws IOException {
+		if ( StringUtils.isBlank(filePath) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("filePath"));
+		}
+
+		if ( StringUtils.isBlank(sectionName) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("sectionName"));
+		}
+
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNullOrEmpty("key"));
+		}
+
 		File file = new File(filePath);
 		Ini ini = new Ini(file);
 
