@@ -69,10 +69,9 @@ public class PoiUtil {
 	 * @param file
 	 * @param cellNames
 	 * @param startRow
-	 * @param isDecimal
 	 * @return
 	 */
-	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, int startRow, boolean isDecimal) {
+	public static List<Map<String, Object>> readExcel(File file, String[] cellNames, int startRow) {
 		Objects.requireNonNull(file, ExceptionMessage.isNull("file"));
 
 		if ( cellNames == null || cellNames.length <= 0 ) {
@@ -86,7 +85,7 @@ public class PoiUtil {
 				return Collections.emptyList();
 			}
 
-			return parseSheet(workbook.getSheetAt(0), cellNames, startRow, isDecimal);
+			return parseSheet(workbook.getSheetAt(0), cellNames, startRow);
 
 
 		} catch (IOException e) {
@@ -105,7 +104,7 @@ public class PoiUtil {
 		return null;
 	}
 
-	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] cellNames, int startRow, boolean isDecimal) {
+	private static List<Map<String, Object>> parseSheet(Sheet sheet, String[] cellNames, int startRow) {
 		List<Map<String, Object>> resList = new ArrayList<>();
 		int nRowCnt = sheet.getLastRowNum();
 
@@ -122,7 +121,7 @@ public class PoiUtil {
 
 				Cell cell = row.getCell(cellIdx);
 				String columnName = cellNames[cellIdx];
-				map.put(columnName, getCellValue(cell, isDecimal));
+				map.put(columnName, getCellValue(cell));
 			}
 
 			resList.add(map);
@@ -131,7 +130,7 @@ public class PoiUtil {
 		return resList;
 	}
 
-	private static Object getCellValue(Cell cell, boolean isDecimal) {
+	private static Object getCellValue(Cell cell) {
 		if (cell == null || cell.getCellType() == CellType.BLANK) {
 	        return "";
 	    }
