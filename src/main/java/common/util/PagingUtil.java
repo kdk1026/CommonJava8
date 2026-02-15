@@ -99,6 +99,7 @@ public class PagingUtil {
 		this.totalCnt = totalCnt;
 		this.setCurrentPage(Integer.valueOf(currentPage));
 		this.setLinkUrl(linkUrl);
+
 		this.pagingProcess();
 	}
 
