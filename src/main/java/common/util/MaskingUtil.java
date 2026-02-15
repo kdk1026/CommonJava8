@@ -204,7 +204,8 @@ public class MaskingUtil {
 		int length = id.length();
 
 		if (length <= 3) {
-			return id; // 아이디가 3글자 이하인 경우 마스킹하지 않음
+			// 아이디가 3글자 이하인 경우 마스킹하지 않음
+			return id;
 		} else {
 			int repeatCount = length - 3;
 
@@ -213,7 +214,8 @@ public class MaskingUtil {
                 maskedStars.append("*");
             }
 
-			return id.substring(0, 3) + maskedStars.toString(); // 앞 3글자만 표시하고 나머지 마스킹
+			// 앞 3글자만 표시하고 나머지 마스킹
+			return id.substring(0, 3) + maskedStars.toString();
 		}
 	}
 
