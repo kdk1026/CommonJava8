@@ -57,6 +57,10 @@ public class MaskingUtil {
 	}
 
 	private static String maskKoreanName(String name) {
+		if (StringUtils.isBlank(name)) {
+			return "";
+		}
+
 		int length = name.length();
 		char firstChar = name.charAt(0);
 
@@ -75,6 +79,10 @@ public class MaskingUtil {
 	}
 
 	private static String maskEnglishName(String name) {
+		if (StringUtils.isBlank(name)) {
+			return "";
+		}
+
 		int length = name.length();
 		StringBuilder sb = new StringBuilder();
 
